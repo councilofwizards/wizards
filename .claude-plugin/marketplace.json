@@ -1,0 +1,17 @@
+{
+  "name": "agent-teams",
+  "owner": {
+    "name": "Zachary Mowrey"
+  },
+  "metadata": {
+    "description": "Curated Claude Code plugins for orchestrating AI agent teams to plan, build, and operate SaaS products",
+    "pluginRoot": "./plugins"
+  },
+  "plugins": [
+    {
+      "name": "agent-teams",
+      "source": "./plugins/agent-teams",
+      "description": "Agent team orchestration skills for planning, building, and quality assurance of SaaS products"
+    }
+  ]
+}
