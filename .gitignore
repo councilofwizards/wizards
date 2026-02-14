@@ -1,1 +1,21 @@
+# IDE
 .idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+
+# Environment / Secrets
+.env
+.env.*
+
+# Logs
+*.log
+
+# Dependencies
+node_modules/
+vendor/
+
+# Claude Code local settings
+.claude/settings.local.json

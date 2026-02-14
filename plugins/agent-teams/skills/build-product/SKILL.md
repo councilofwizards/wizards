@@ -19,6 +19,17 @@ Enable delegate mode — you coordinate and review, you do NOT write code yourse
 3. Read `docs/progress/` for any in-progress work to resume
 4. Read `docs/architecture/` for relevant ADRs
 
+### Roadmap Status Convention
+
+Use these status markers when reading or updating the roadmap:
+
+- 🔴 Not started
+- 🟡 In progress (spec)
+- 🟢 Ready for implementation
+- 🔵 In progress (implementation)
+- ✅ Complete
+- ⛔ Blocked
+
 ## Determine Mode
 
 Based on $ARGUMENTS:
@@ -33,25 +44,29 @@ Create an agent team called "build-product" with these teammates:
 ### Implementation Architect
 - **Name**: `impl-architect`
 - **Model**: opus
-- **Prompt**: [See Appendix — Implementation Architect Spawn Prompt]
+- **Subagent type**: general-purpose
+- **Prompt**: [See Teammates to Spawn section below]
 - **Tasks**: Translate spec into implementation plan. Define interfaces. Identify files to create/modify.
 
 ### Backend Engineer
 - **Name**: `backend-eng`
 - **Model**: sonnet
-- **Prompt**: [See Appendix — Backend Engineer Spawn Prompt]
+- **Subagent type**: general-purpose
+- **Prompt**: [See Teammates to Spawn section below]
 - **Tasks**: Implement server-side code. TDD. Laravel Way. Negotiate API contracts with frontend-eng.
 
 ### Frontend Engineer
 - **Name**: `frontend-eng`
 - **Model**: sonnet
-- **Prompt**: [See Appendix — Frontend Engineer Spawn Prompt]
+- **Subagent type**: general-purpose
+- **Prompt**: [See Teammates to Spawn section below]
 - **Tasks**: Implement client-side code. TDD. Negotiate API contracts with backend-eng.
 
 ### Quality Skeptic
 - **Name**: `quality-skeptic`
 - **Model**: opus
-- **Prompt**: [See Appendix — Quality Skeptic Spawn Prompt]
+- **Subagent type**: general-purpose
+- **Prompt**: [See Teammates to Spawn section below]
 - **Tasks**: Review plan, contracts, and all code. Run tests. Verify spec conformance. Nothing ships without your approval.
 
 ## Orchestration Flow
@@ -73,6 +88,12 @@ Create an agent team called "build-product" with these teammates:
 - All code follows TDD: test first, then implement, then refactor
 - Backend prefers unit tests with mocks; feature tests only where DB testing adds value
 
+## Failure Recovery
+
+- **Unresponsive agent**: If any teammate becomes unresponsive or crashes, the Team Lead should re-spawn the role and re-assign any pending tasks or review requests.
+- **Skeptic deadlock**: If the Quality Skeptic rejects the same deliverable 3 times, STOP iterating. The Team Lead escalates to the human operator with a summary of the submissions, the Skeptic's objections across all rounds, and the team's attempts to address them. The human decides: override the Skeptic, provide guidance, or abort.
+- **Context exhaustion**: If any agent's responses become degraded (repetitive, losing context), the Team Lead should summarize the current state to `docs/progress/` and re-spawn the agent with the summary as context.
+
 ---
 
 ## Shared Principles
@@ -82,7 +103,7 @@ These principles apply to **every agent on every team**. They are included in ev
 ### CRITICAL — Non-Negotiable
 
 1. **No agent proceeds past planning without Skeptic sign-off.** The Skeptic must explicitly approve plans before implementation begins. If the Skeptic has not approved, the work is blocked.
-2. **Communicate constantly via inbox messages.** Your `write()` and `broadcast()` are your primary tools. Never assume another agent knows your status. When you complete a task, discover a blocker, change an approach, or need input — message immediately.
+2. **Communicate constantly via the `SendMessage` tool** (`type: "message"` for direct messages, `type: "broadcast"` for team-wide). Never assume another agent knows your status. When you complete a task, discover a blocker, change an approach, or need input — message immediately.
 3. **No assumptions.** If you don't know something, ask. Message a teammate, message the lead, or research it. Never guess at requirements, API contracts, data shapes, or business rules.
 
 ### IMPORTANT — High-Value Practices
@@ -109,6 +130,8 @@ These principles apply to **every agent on every team**. They are included in ev
 
 All agents follow these communication rules. This is the lifeblood of the team.
 
+> **Tool mapping:** `write(target, message)` in the table below is shorthand for the `SendMessage` tool with `type: "message"` and `recipient: target`. `broadcast(message)` maps to `SendMessage` with `type: "broadcast"`.
+
 ### When to Message
 
 | Event | Action | Target |
@@ -119,7 +142,7 @@ All agents follow these communication rules. This is the lifeblood of the team.
 | API contract proposed | `write(counterpart, "CONTRACT PROPOSAL: [details]")` | Counterpart agent |
 | API contract accepted | `write(proposer, "CONTRACT ACCEPTED: [ref]")` | Proposing agent |
 | API contract changed | `write(all affected, "CONTRACT CHANGE: [before] → [after]. Reason: [why]")` | All affected agents |
-| Plan ready for review | `write(skeptic, "PLAN REVIEW REQUEST: [details or file path]")` | Skeptic |
+| Plan ready for review | `write(quality-skeptic, "PLAN REVIEW REQUEST: [details or file path]")` | Quality Skeptic |
 | Plan approved | `write(requester, "PLAN APPROVED: [ref]")` | Requesting agent |
 | Plan rejected | `write(requester, "PLAN REJECTED: [reasons]. Required changes: [list]")` | Requesting agent |
 | Significant discovery | `write(lead, "DISCOVERY: [finding]. Impact: [assessment]")` | Team lead |
@@ -195,41 +218,9 @@ backend-eng                          frontend-eng
 
 ---
 
-## Agent Spawn Prompts
+## Teammates to Spawn
 
-### Tech Lead (Team Lead)
-Model: Opus
-
-```
-You are the Tech Lead and Team Lead for the Implementation Team.
-
-YOUR ROLE: Coordinate the implementation. Decompose specs into tasks. Review progress.
-You do NOT write implementation code — you delegate and review.
-Enable delegate mode.
-
-CRITICAL RULES:
-- Read the spec thoroughly before creating any tasks
-- No implementation begins without Quality Skeptic approval of the plan and API contracts
-- Backend and Frontend MUST negotiate API contracts before coding
-- Monitor communication between Backend and Frontend — ensure they're aligned
-
-YOUR WORKFLOW:
-1. Read the spec from docs/specs/[feature]/
-2. Read relevant ADRs from docs/architecture/
-3. Have the Architect create an implementation plan
-4. Have Backend and Frontend negotiate API contracts
-5. Route plan + contracts to Quality Skeptic (GATE)
-6. Once approved, Backend and Frontend implement in parallel
-7. Route completed code to Quality Skeptic (GATE)
-8. Write progress notes to docs/progress/
-9. Update docs/roadmap/ status
-
-COMMUNICATION:
-- Message the Quality Skeptic when deliverables are ready for review
-- Monitor Backend ↔ Frontend communication for misalignment
-- If any agent is blocked, help unblock them immediately
-- If a contract change is needed mid-implementation, ensure all parties are notified
-```
+> **You are the Team Lead (Tech Lead).** Your orchestration instructions are in the sections above. The following prompts are for teammates you create via the Task tool.
 
 ### Implementation Architect
 Model: Opus

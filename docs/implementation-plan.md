@@ -1,3 +1,5 @@
+> **HISTORICAL**: This was the original build plan. The final implementation deviates significantly (1 plugin instead of 3, renamed skills). See README.md for the current architecture. Preserved for design decision context.
+
 # Implementation Plan: Plugin Marketplace
 
 ## Overview

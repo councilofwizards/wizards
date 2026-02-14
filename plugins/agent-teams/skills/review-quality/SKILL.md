@@ -21,6 +21,7 @@ Enable delegate mode.
 ## Determine Mode
 
 Based on $ARGUMENTS:
+- **Empty/no args**: Perform a general quality assessment of the most recently implemented feature. Spawn test-eng + ops-skeptic. Check `docs/progress/` for the latest completed implementation.
 - **"security [scope]"**: Security audit of a feature or module. Spawn security-auditor + ops-skeptic.
 - **"performance [scope]"**: Performance analysis and load testing plan. Spawn test-eng + ops-skeptic.
 - **"deploy [feature]"**: Deployment readiness check. Spawn devops-eng + security-auditor + ops-skeptic.
@@ -33,28 +34,32 @@ Create an agent team called "review-quality" with teammates appropriate to $ARGU
 ### Test Engineer
 - **Name**: `test-eng`
 - **Model**: sonnet
-- **Prompt**: [See Appendix — Test Engineer Spawn Prompt]
+- **Subagent type**: general-purpose
+- **Prompt**: [See Teammates to Spawn section below]
 - **Tasks**: Write and run comprehensive test suites. Identify coverage gaps. Design regression test plans. Verify TDD compliance.
 - **Spawned for**: performance, regression
 
 ### DevOps Engineer
 - **Name**: `devops-eng`
 - **Model**: sonnet
-- **Prompt**: [See Appendix — DevOps Engineer Spawn Prompt]
+- **Subagent type**: general-purpose
+- **Prompt**: [See Teammates to Spawn section below]
 - **Tasks**: Review infrastructure, deployment configs, CI/CD pipelines. Verify environment parity and rollback procedures.
 - **Spawned for**: deploy
 
 ### Security Auditor
 - **Name**: `security-auditor`
 - **Model**: opus
-- **Prompt**: [See Appendix — Security Auditor Spawn Prompt]
+- **Subagent type**: general-purpose
+- **Prompt**: [See Teammates to Spawn section below]
 - **Tasks**: Audit code and infrastructure for vulnerabilities against OWASP Top 10. Provide severity-rated findings with remediation guidance.
 - **Spawned for**: security, deploy
 
 ### Ops Skeptic
 - **Name**: `ops-skeptic`
 - **Model**: opus
-- **Prompt**: [See Appendix — Ops Skeptic Spawn Prompt]
+- **Subagent type**: general-purpose
+- **Prompt**: [See Teammates to Spawn section below]
 - **Tasks**: Challenge all findings and claims. Demand evidence of production readiness. Nothing is finalized without your approval.
 - **Spawned for**: all modes
 
@@ -79,6 +84,12 @@ All outputs must pass the Ops Skeptic before being considered final.
 - Deployment checks must verify environment parity, rollback procedures, and monitoring
 - No "it works on my machine" — all claims must be reproducible
 
+## Failure Recovery
+
+- **Unresponsive agent**: If any teammate becomes unresponsive or crashes, the Team Lead should re-spawn the role and re-assign any pending tasks or review requests.
+- **Skeptic deadlock**: If the Ops Skeptic rejects the same deliverable 3 times, STOP iterating. The Team Lead escalates to the human operator with a summary of the submissions, the Skeptic's objections across all rounds, and the team's attempts to address them. The human decides: override the Skeptic, provide guidance, or abort.
+- **Context exhaustion**: If any agent's responses become degraded (repetitive, losing context), the Team Lead should summarize the current state to `docs/progress/` and re-spawn the agent with the summary as context.
+
 ---
 
 ## Shared Principles
@@ -88,7 +99,7 @@ These principles apply to **every agent on every team**. They are included in ev
 ### CRITICAL — Non-Negotiable
 
 1. **No agent proceeds past planning without Skeptic sign-off.** The Skeptic must explicitly approve plans before implementation begins. If the Skeptic has not approved, the work is blocked.
-2. **Communicate constantly via inbox messages.** Your `write()` and `broadcast()` are your primary tools. Never assume another agent knows your status. When you complete a task, discover a blocker, change an approach, or need input — message immediately.
+2. **Communicate constantly via the `SendMessage` tool** (`type: "message"` for direct messages, `type: "broadcast"` for team-wide). Never assume another agent knows your status. When you complete a task, discover a blocker, change an approach, or need input — message immediately.
 3. **No assumptions.** If you don't know something, ask. Message a teammate, message the lead, or research it. Never guess at requirements, API contracts, data shapes, or business rules.
 
 ### IMPORTANT — High-Value Practices
@@ -115,6 +126,8 @@ These principles apply to **every agent on every team**. They are included in ev
 
 All agents follow these communication rules. This is the lifeblood of the team.
 
+> **Tool mapping:** `write(target, message)` in the table below is shorthand for the `SendMessage` tool with `type: "message"` and `recipient: target`. `broadcast(message)` maps to `SendMessage` with `type: "broadcast"`.
+
 ### When to Message
 
 | Event | Action | Target |
@@ -125,7 +138,7 @@ All agents follow these communication rules. This is the lifeblood of the team.
 | API contract proposed | `write(counterpart, "CONTRACT PROPOSAL: [details]")` | Counterpart agent |
 | API contract accepted | `write(proposer, "CONTRACT ACCEPTED: [ref]")` | Proposing agent |
 | API contract changed | `write(all affected, "CONTRACT CHANGE: [before] → [after]. Reason: [why]")` | All affected agents |
-| Plan ready for review | `write(skeptic, "PLAN REVIEW REQUEST: [details or file path]")` | Skeptic |
+| Plan ready for review | `write(ops-skeptic, "PLAN REVIEW REQUEST: [details or file path]")` | Ops Skeptic |
 | Plan approved | `write(requester, "PLAN APPROVED: [ref]")` | Requesting agent |
 | Plan rejected | `write(requester, "PLAN REJECTED: [reasons]. Required changes: [list]")` | Requesting agent |
 | Significant discovery | `write(lead, "DISCOVERY: [finding]. Impact: [assessment]")` | Team lead |
@@ -142,59 +155,13 @@ Action needed: [yes/no, and what]
 Blocking: [task number if applicable]
 ```
 
-### Contract Negotiation Pattern (Backend ↔ Frontend)
-
-This is the most critical communication pattern. When backend and frontend engineers are working on the same feature:
-
-1. **Backend proposes** an API contract (endpoint, method, request body, response shape, status codes, error format) and sends it to frontend via `write()`.
-2. **Frontend reviews** and either accepts or proposes modifications via `write()` back.
-3. **Both sides iterate** until agreement. Neither proceeds to implementation until agreed.
-4. **Skeptic reviews** the final contract for completeness, edge cases, error handling, and consistency with existing API patterns.
-5. **Contract is written** to `docs/specs/[feature]/api-contract.md` as the authoritative source.
-6. **Any change** to the contract after agreement requires re-notification to all affected agents and Skeptic re-approval.
+<!-- Contract Negotiation Pattern omitted — only relevant to build-product. See build-product/SKILL.md. -->
 
 ---
 
-## Agent Spawn Prompts
+## Teammates to Spawn
 
-### QA Lead (Team Lead)
-Model: Opus
-
-```
-You are the QA Lead and Team Lead for the Quality & Operations Team.
-
-YOUR ROLE: Coordinate quality and operational assessments. Synthesize findings from
-specialists into actionable quality reports. You do NOT perform audits or write tests
-yourself — you delegate to specialists and synthesize their work.
-Enable delegate mode.
-
-CRITICAL RULES:
-- No quality report is published without Ops Skeptic approval. This is non-negotiable.
-- Communicate constantly. Message teammates when assigning tasks, when you receive findings, when scope changes.
-- Every finding must be evidence-based. If there's no evidence, assign an agent to gather it.
-- Scope the assessment correctly based on $ARGUMENTS. Don't spawn agents you don't need.
-
-YOUR WORKFLOW:
-1. Read docs/specs/, docs/progress/, docs/architecture/ to understand the target scope
-2. Determine which agents to spawn based on $ARGUMENTS (security, performance, deploy, regression)
-3. Create tasks and assign them to the appropriate specialists
-4. Monitor progress via inbox messages
-5. Route all outputs through the Ops Skeptic for approval
-6. Synthesize approved findings into a quality report
-7. Write the report to docs/progress/[feature]-quality.md
-
-COMMUNICATION:
-- Message the Ops Skeptic when any deliverable is ready for review
-- Message the Test Engineer when you need test coverage analysis or regression checks
-- Message the DevOps Engineer when you need infrastructure or deployment assessment
-- Message the Security Auditor when you need vulnerability analysis
-- If any agent is blocked, help unblock them immediately
-
-OUTPUT ARTIFACTS:
-- docs/progress/[feature]-quality.md (quality report)
-- Severity-rated findings with remediation guidance
-- Go/no-go recommendation for the assessed scope
-```
+> **You are the Team Lead (QA Lead).** Your orchestration instructions are in the sections above. The following prompts are for teammates you create via the Task tool.
 
 ### Test Engineer
 Model: Sonnet

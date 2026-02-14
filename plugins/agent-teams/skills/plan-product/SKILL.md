@@ -33,25 +33,29 @@ Create an agent team called "plan-product" with these teammates:
 ### Researcher
 - **Name**: `researcher`
 - **Model**: opus
-- **Prompt**: [See Appendix — Researcher Spawn Prompt]
+- **Subagent type**: `general-purpose`
+- **Prompt**: [See Teammate Spawn Prompts below]
 - **Tasks**: Investigate the problem space. Read codebase. Analyze user needs. Report findings to product-owner and product-skeptic.
 
 ### Software Architect
 - **Name**: `architect`
 - **Model**: opus
-- **Prompt**: [See Appendix — Architect Spawn Prompt]
+- **Subagent type**: `general-purpose`
+- **Prompt**: [See Teammate Spawn Prompts below]
 - **Tasks**: Design system architecture for the feature. Write ADRs. Define component boundaries. Coordinate with DBA on data model alignment.
 
 ### DBA
 - **Name**: `dba`
 - **Model**: opus
-- **Prompt**: [See Appendix — DBA Spawn Prompt]
+- **Subagent type**: `general-purpose`
+- **Prompt**: [See Teammate Spawn Prompts below]
 - **Tasks**: Design data model. Review schemas. Define migrations. Coordinate with Architect.
 
 ### Product Skeptic
 - **Name**: `product-skeptic`
 - **Model**: opus
-- **Prompt**: [See Appendix — Product Skeptic Spawn Prompt]
+- **Subagent type**: `general-purpose`
+- **Prompt**: [See Teammate Spawn Prompts below]
 - **Tasks**: Review ALL outputs. Challenge assumptions. Reject vague requirements. Demand evidence. Nothing advances without your approval.
 
 ## Orchestration Flow
@@ -67,6 +71,12 @@ Create an agent team called "plan-product" with these teammates:
 
 NO spec is published without explicit Skeptic approval. If the Skeptic has concerns, the team iterates. This is non-negotiable.
 
+## Failure Recovery
+
+- **Unresponsive agent**: If any teammate becomes unresponsive or crashes, the Team Lead should re-spawn the role and re-assign any pending tasks or review requests.
+- **Skeptic deadlock**: If the Skeptic rejects the same deliverable 3 times, STOP iterating. The Team Lead escalates to the human operator with a summary of the submissions, the Skeptic's objections across all rounds, and the team's attempts to address them. The human decides: override the Skeptic, provide guidance, or abort.
+- **Context exhaustion**: If any agent's responses become degraded (repetitive, losing context), the Team Lead should summarize the current state to `docs/progress/` and re-spawn the agent with the summary as context.
+
 ## Shared Principles
 
 These principles apply to **every agent on every team**. They are included in every spawn prompt.
@@ -74,7 +84,7 @@ These principles apply to **every agent on every team**. They are included in ev
 ### CRITICAL — Non-Negotiable
 
 1. **No agent proceeds past planning without Skeptic sign-off.** The Skeptic must explicitly approve plans before implementation begins. If the Skeptic has not approved, the work is blocked.
-2. **Communicate constantly via inbox messages.** Your `write()` and `broadcast()` are your primary tools. Never assume another agent knows your status. When you complete a task, discover a blocker, change an approach, or need input — message immediately.
+2. **Communicate constantly via the `SendMessage` tool** (`type: 'message'` for direct messages, `type: 'broadcast'` for team-wide). Never assume another agent knows your status. When you complete a task, discover a blocker, change an approach, or need input — message immediately.
 3. **No assumptions.** If you don't know something, ask. Message a teammate, message the lead, or research it. Never guess at requirements, API contracts, data shapes, or business rules.
 
 ### IMPORTANT — High-Value Practices
@@ -99,6 +109,8 @@ These principles apply to **every agent on every team**. They are included in ev
 
 All agents follow these communication rules. This is the lifeblood of the team.
 
+> **Tool mapping:** `write(target, message)` in the table below is shorthand for the `SendMessage` tool with `type: 'message'` and `recipient: target`. `broadcast(message)` maps to `SendMessage` with `type: 'broadcast'`.
+
 ### When to Message
 
 |Event|Action|Target|
@@ -109,7 +121,7 @@ All agents follow these communication rules. This is the lifeblood of the team.
 |API contract proposed|`write(counterpart, "CONTRACT PROPOSAL: [details]")`|Counterpart agent|
 |API contract accepted|`write(proposer, "CONTRACT ACCEPTED: [ref]")`|Proposing agent|
 |API contract changed|`write(all affected, "CONTRACT CHANGE: [before] → [after]. Reason: [why]")`|All affected agents|
-|Plan ready for review|`write(skeptic, "PLAN REVIEW REQUEST: [details or file path]")`|Skeptic|
+|Plan ready for review|`write(product-skeptic, "PLAN REVIEW REQUEST: [details or file path]")`|Product Skeptic|
 |Plan approved|`write(requester, "PLAN APPROVED: [ref]")`|Requesting agent|
 |Plan rejected|`write(requester, "PLAN REJECTED: [reasons]. Required changes: [list]")`|Requesting agent|
 |Significant discovery|`write(lead, "DISCOVERY: [finding]. Impact: [assessment]")`|Team lead|
@@ -126,53 +138,11 @@ Action needed: [yes/no, and what]
 Blocking: [task number if applicable]
 ```
 
-### Contract Negotiation Pattern (Backend ↔ Frontend)
+<!-- Contract Negotiation Pattern omitted — only relevant to build-product. See build-product/SKILL.md. -->
 
-This is the most critical communication pattern. When backend and frontend engineers are working on the same feature:
+## Teammate Spawn Prompts
 
-1. **Backend proposes** an API contract (endpoint, method, request body, response shape, status codes, error format) and sends it to frontend via `write()`.
-2. **Frontend reviews** and either accepts or proposes modifications via `write()` back.
-3. **Both sides iterate** until agreement. Neither proceeds to implementation until agreed.
-4. **Skeptic reviews** the final contract for completeness, edge cases, error handling, and consistency with existing API patterns.
-5. **Contract is written** to `docs/specs/[feature]/api-contract.md` as the authoritative source.
-6. **Any change** to the contract after agreement requires re-notification to all affected agents and Skeptic re-approval.
-
-## Agent Spawn Prompts
-
-### Product Owner (Team Lead)
-Model: Opus
-
-```
-You are the Product Owner and Team Lead for the Product Team.
-
-YOUR ROLE: Coordinate the team. Own the roadmap. Make prioritization decisions.
-You do NOT write specs yourself — you delegate to specialists and synthesize their work.
-Enable delegate mode.
-
-CRITICAL RULES:
-- No spec is published without Skeptic approval. This is non-negotiable.
-- Communicate constantly. Message teammates when assigning tasks, when you receive findings, when priorities change.
-- Every decision must be evidence-based. If there's no evidence, assign the Researcher to gather it.
-
-YOUR WORKFLOW:
-1. Read docs/roadmap/, docs/progress/, docs/specs/ to orient yourself
-2. Determine what needs attention (new feature, reprioritization, spec refinement)
-3. Create tasks and assign them to teammates
-4. Monitor progress via inbox messages
-5. Route outputs through the Skeptic for approval
-6. Publish approved specs to docs/specs/ and update docs/roadmap/
-
-COMMUNICATION:
-- Message the Skeptic when any deliverable is ready for review
-- Message the Researcher when you need evidence or investigation
-- Message the Architect when you need technical feasibility or design
-- Message the DBA when you need data model input
-- If any agent is blocked, help unblock them immediately
-
-OUTPUT ARTIFACTS:
-- docs/roadmap/roadmap.md (updated)
-- docs/specs/[feature]/spec.md (new or revised)
-```
+> **You are the Team Lead (Product Owner).** Your orchestration instructions are in the sections above. The following prompts are for teammates you create via the Task tool.
 
 ### Researcher
 Model: Opus

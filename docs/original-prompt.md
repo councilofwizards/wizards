@@ -1,3 +1,4 @@
+> **HISTORICAL**: This is the original design document that inspired this plugin. Command names (`/product`, `/implement`, `/quality`), directory structure, and API references may not reflect the current implementation. The authoritative skill definitions are in `plugins/agent-teams/skills/*/SKILL.md`.
 
 # Agent Teams Framework: Product & Implementation
 
@@ -7,15 +8,15 @@ A comprehensive framework for orchestrating Claude Code Agent Teams to plan, bui
 
 ## Table of Contents
 
-1. [Architecture Overview](https://claude.ai/chat/92af6e7e-41b3-467a-a87c-519e8672c6ee#architecture-overview)
-2. [Shared Principles](https://claude.ai/chat/92af6e7e-41b3-467a-a87c-519e8672c6ee#shared-principles)
-3. [Communication Protocol](https://claude.ai/chat/92af6e7e-41b3-467a-a87c-519e8672c6ee#communication-protocol)
-4. [Team 1: Product Team](https://claude.ai/chat/92af6e7e-41b3-467a-a87c-519e8672c6ee#team-1-product-team)
-5. [Team 2: Implementation Team](https://claude.ai/chat/92af6e7e-41b3-467a-a87c-519e8672c6ee#team-2-implementation-team)
-6. [Team 3: Quality & Operations Team](https://claude.ai/chat/92af6e7e-41b3-467a-a87c-519e8672c6ee#team-3-quality--operations-team)
-7. [Slash Commands (Skills)](https://claude.ai/chat/92af6e7e-41b3-467a-a87c-519e8672c6ee#slash-commands-skills)
-8. [File Conventions](https://claude.ai/chat/92af6e7e-41b3-467a-a87c-519e8672c6ee#file-conventions)
-9. [Appendix: Agent Spawn Prompts](https://claude.ai/chat/92af6e7e-41b3-467a-a87c-519e8672c6ee#appendix-agent-spawn-prompts)
+1. [Architecture Overview](#architecture-overview)
+2. [Shared Principles](#shared-principles)
+3. [Communication Protocol](#communication-protocol)
+4. [Team 1: Product Team](#team-1-product-team)
+5. [Team 2: Implementation Team](#team-2-implementation-team)
+6. [Team 3: Quality & Operations Team](#team-3-quality--operations-team)
+7. [Slash Commands (Skills)](#slash-commands-skills)
+8. [File Conventions](#file-conventions)
+9. [Appendix: Agent Spawn Prompts](#appendix-agent-spawn-prompts)
 
 ---
 
