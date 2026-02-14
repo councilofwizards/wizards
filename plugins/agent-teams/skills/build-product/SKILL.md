@@ -14,10 +14,15 @@ Enable delegate mode — you coordinate and review, you do NOT write code yourse
 
 ## Setup
 
-1. Read `docs/roadmap/` to find the next "ready for implementation" item
-2. Read the target spec from `docs/specs/[feature-name]/`
-3. Read `docs/progress/` for any in-progress work to resume
-4. Read `docs/architecture/` for relevant ADRs
+1. **Ensure project directory structure exists.** Create any missing directories. For each empty directory, ensure a `.gitkeep` file exists so git tracks it:
+   - `docs/roadmap/`
+   - `docs/specs/`
+   - `docs/progress/`
+   - `docs/architecture/`
+2. Read `docs/roadmap/` to find the next "ready for implementation" item
+3. Read the target spec from `docs/specs/[feature-name]/`
+4. Read `docs/progress/` for any in-progress work to resume
+5. Read `docs/architecture/` for relevant ADRs
 
 ### Roadmap Status Convention
 

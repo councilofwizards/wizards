@@ -13,10 +13,15 @@ Enable delegate mode.
 
 ## Setup
 
-1. Read `docs/roadmap/` to understand what features are in play
-2. Read `docs/specs/` for the target feature's spec and API contracts
-3. Read `docs/progress/` for implementation status and known issues
-4. Read `docs/architecture/` for relevant ADRs and system design
+1. **Ensure project directory structure exists.** Create any missing directories. For each empty directory, ensure a `.gitkeep` file exists so git tracks it:
+   - `docs/roadmap/`
+   - `docs/specs/`
+   - `docs/progress/`
+   - `docs/architecture/`
+2. Read `docs/roadmap/` to understand what features are in play
+3. Read `docs/specs/` for the target feature's spec and API contracts
+4. Read `docs/progress/` for implementation status and known issues
+5. Read `docs/architecture/` for relevant ADRs and system design
 
 ## Determine Mode
 

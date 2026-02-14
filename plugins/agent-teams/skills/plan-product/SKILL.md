@@ -14,9 +14,14 @@ Enable delegate mode — you coordinate, you do NOT write specs yourself.
 
 ## Setup
 
-1. Read `docs/roadmap/` to understand current state
-2. Read `docs/progress/` for latest implementation status
-3. Read `docs/specs/` for existing specs
+1. **Ensure project directory structure exists.** Create any missing directories. For each empty directory, ensure a `.gitkeep` file exists so git tracks it:
+   - `docs/roadmap/`
+   - `docs/specs/`
+   - `docs/progress/`
+   - `docs/architecture/`
+2. Read `docs/roadmap/` to understand current state
+3. Read `docs/progress/` for latest implementation status
+4. Read `docs/specs/` for existing specs
 
 ## Determine Mode
 
