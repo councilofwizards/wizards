@@ -19,11 +19,12 @@ Enable delegate mode.
    - `docs/progress/`
    - `docs/architecture/`
    - `docs/stack-hints/`
-2. **Detect project stack.** Read the project root for dependency manifests (`package.json`, `composer.json`, `Gemfile`, `go.mod`, `requirements.txt`, `Cargo.toml`, `pom.xml`, etc.) to identify the tech stack. If a matching stack hint file exists at `docs/stack-hints/{stack}.md`, read it and prepend its guidance to all spawn prompts.
-3. Read `docs/roadmap/` to understand what features are in play
-4. Read `docs/specs/` for the target feature's spec and API contracts
-5. Read `docs/progress/` for implementation status and known issues
-6. Read `docs/architecture/` for relevant ADRs and system design
+2. Read `docs/progress/_template.md` if it exists. Use it as a reference format when writing findings.
+3. **Detect project stack.** Read the project root for dependency manifests (`package.json`, `composer.json`, `Gemfile`, `go.mod`, `requirements.txt`, `Cargo.toml`, `pom.xml`, etc.) to identify the tech stack. If a matching stack hint file exists at `docs/stack-hints/{stack}.md`, read it and prepend its guidance to all spawn prompts.
+4. Read `docs/roadmap/` to understand what features are in play
+5. Read `docs/specs/` for the target feature's spec and API contracts
+6. Read `docs/progress/` for implementation status and known issues
+7. Read `docs/architecture/` for relevant ADRs and system design
 
 ## Write Safety
 

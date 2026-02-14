@@ -20,11 +20,12 @@ Enable delegate mode — you coordinate and review, you do NOT write code yourse
    - `docs/progress/`
    - `docs/architecture/`
    - `docs/stack-hints/`
-2. **Detect project stack.** Read the project root for dependency manifests (`package.json`, `composer.json`, `Gemfile`, `go.mod`, `requirements.txt`, `Cargo.toml`, `pom.xml`, etc.) to identify the tech stack. If a matching stack hint file exists at `docs/stack-hints/{stack}.md`, read it and prepend its guidance to all spawn prompts.
-3. Read `docs/roadmap/` to find the next "ready for implementation" item
-4. Read the target spec from `docs/specs/[feature-name]/`
-5. Read `docs/progress/` for any in-progress work to resume
-6. Read `docs/architecture/` for relevant ADRs
+2. Read `docs/specs/_template.md` and `docs/progress/_template.md` if they exist. Use these as reference formats when producing artifacts.
+3. **Detect project stack.** Read the project root for dependency manifests (`package.json`, `composer.json`, `Gemfile`, `go.mod`, `requirements.txt`, `Cargo.toml`, `pom.xml`, etc.) to identify the tech stack. If a matching stack hint file exists at `docs/stack-hints/{stack}.md`, read it and prepend its guidance to all spawn prompts.
+4. Read `docs/roadmap/` to find the next "ready for implementation" item
+5. Read the target spec from `docs/specs/[feature-name]/`
+6. Read `docs/progress/` for any in-progress work to resume
+7. Read `docs/architecture/` for relevant ADRs
 
 ### Roadmap Status Convention
 

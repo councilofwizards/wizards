@@ -1,6 +1,6 @@
 ---
 title: "Artifact Format Templates"
-status: "not_started"
+status: "complete"
 priority: "P2"
 category: "core-framework"
 effort: "medium"
@@ -8,6 +8,7 @@ impact: "high"
 dependencies: ["project-bootstrap"]
 created: "2026-02-14"
 updated: "2026-02-14"
+spec: "docs/specs/artifact-format-templates/spec.md"
 ---
 
 # Artifact Format Templates

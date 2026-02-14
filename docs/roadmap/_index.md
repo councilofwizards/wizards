@@ -60,7 +60,7 @@ Items are prioritized using two dimensions:
 | 7 | [Progress Observability](P2-03-progress-observability.md) | quality-reliability | 🔴 | Medium |
 | 8 | [Automated Testing Pipeline](P2-04-automated-testing.md) | quality-reliability | 🔴 | Large |
 | 9 | [Content Deduplication](P2-05-content-deduplication.md) | core-framework | 🔴 | Medium |
-| 10 | [Artifact Format Templates](P2-06-format-templates.md) | core-framework | 🔴 | Medium |
+| 10 | [Artifact Format Templates](P2-06-format-templates.md) | core-framework | ✅ | Medium |
 
 ### P3 — Nice-to-Have
 

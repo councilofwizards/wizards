@@ -20,10 +20,11 @@ Enable delegate mode — you coordinate, you do NOT write specs yourself.
    - `docs/progress/`
    - `docs/architecture/`
    - `docs/stack-hints/`
-2. **Detect project stack.** Read the project root for dependency manifests (`package.json`, `composer.json`, `Gemfile`, `go.mod`, `requirements.txt`, `Cargo.toml`, `pom.xml`, etc.) to identify the tech stack. If a matching stack hint file exists at `docs/stack-hints/{stack}.md`, read it and prepend its guidance to all spawn prompts.
-3. Read `docs/roadmap/` to understand current state
-4. Read `docs/progress/` for latest implementation status
-5. Read `docs/specs/` for existing specs
+2. Read `docs/specs/_template.md`, `docs/progress/_template.md`, and `docs/architecture/_template.md` if they exist. Use these as reference formats when producing artifacts.
+3. **Detect project stack.** Read the project root for dependency manifests (`package.json`, `composer.json`, `Gemfile`, `go.mod`, `requirements.txt`, `Cargo.toml`, `pom.xml`, etc.) to identify the tech stack. If a matching stack hint file exists at `docs/stack-hints/{stack}.md`, read it and prepend its guidance to all spawn prompts.
+4. Read `docs/roadmap/` to understand current state
+5. Read `docs/progress/` for latest implementation status
+6. Read `docs/specs/` for existing specs
 
 ## Write Safety
 
