@@ -1,4 +1,4 @@
-# Agent Teams
+# Wizards
 
 A Claude Code plugin marketplace for orchestrating AI agent teams to plan, build, and operate SaaS products.
 
@@ -111,8 +111,8 @@ Every agent on every team operates under shared principles:
 ### Install the Marketplace
 
 ```
-/plugin marketplace add zbmowrey/agent-teams
-/plugin install agent-teams@agent-teams
+/plugin marketplace add councilofwizards/wizards
+/plugin install conclave@wizards
 ```
 
 ### Auto-Install for Teams
@@ -122,15 +122,15 @@ Add to your project's `.claude/settings.json` so collaborators are prompted auto
 ```json
 {
   "extraKnownMarketplaces": {
-    "agent-teams": {
+    "wizards": {
       "source": {
         "source": "github",
-        "repo": "zbmowrey/agent-teams"
+        "repo": "councilofwizards/wizards"
       }
     }
   },
   "enabledPlugins": {
-    "agent-teams@agent-teams": true
+    "conclave@wizards": true
   }
 }
 ```
@@ -138,11 +138,11 @@ Add to your project's `.claude/settings.json` so collaborators are prompted auto
 ## Project Structure
 
 ```
-agent-teams/
+wizards/
   .claude-plugin/
     marketplace.json              # Marketplace catalog (1 plugin)
   plugins/
-    agent-teams/
+    conclave/
       .claude-plugin/
         plugin.json               # Plugin manifest
       skills/

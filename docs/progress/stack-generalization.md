@@ -12,9 +12,9 @@ Removed all hard-coded Laravel/PHP references from SKILL.md files. Replaced with
 
 ## Files Modified
 
-- `plugins/agent-teams/skills/plan-product/SKILL.md` — Stack detection in Setup, framework-agnostic Shared Principle #4
-- `plugins/agent-teams/skills/build-product/SKILL.md` — Stack detection in Setup, framework-agnostic spawn prompts and principles
-- `plugins/agent-teams/skills/review-quality/SKILL.md` — Stack detection in Setup, framework-agnostic principles
+- `plugins/conclave/skills/plan-product/SKILL.md` — Stack detection in Setup, framework-agnostic Shared Principle #4
+- `plugins/conclave/skills/build-product/SKILL.md` — Stack detection in Setup, framework-agnostic spawn prompts and principles
+- `plugins/conclave/skills/review-quality/SKILL.md` — Stack detection in Setup, framework-agnostic principles
 
 ## Files Created
 

@@ -28,9 +28,9 @@ Added `--light` flag support to all 3 SKILL.md files and documented lightweight 
 
 ## Files Modified
 
-- `plugins/agent-teams/skills/plan-product/SKILL.md` — Lightweight Mode section, cost summary step, argument-hint
-- `plugins/agent-teams/skills/build-product/SKILL.md` — Lightweight Mode section, cost summary step, argument-hint
-- `plugins/agent-teams/skills/review-quality/SKILL.md` — Lightweight Mode section, cost summary step, argument-hint
+- `plugins/conclave/skills/plan-product/SKILL.md` — Lightweight Mode section, cost summary step, argument-hint
+- `plugins/conclave/skills/build-product/SKILL.md` — Lightweight Mode section, cost summary step, argument-hint
+- `plugins/conclave/skills/review-quality/SKILL.md` — Lightweight Mode section, cost summary step, argument-hint
 - `README.md` — Lightweight Mode subsection in Cost Considerations
 
 ## Verification

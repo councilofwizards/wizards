@@ -20,7 +20,7 @@ The duplication was intentional (each skill must be self-contained for portabili
 
 ## Proposed Solution
 
-1. **Extract shared content to CLAUDE.md or a shared reference file**: Move Shared Principles and Communication Protocol to a project-level file (e.g., `CLAUDE.md` or `plugins/agent-teams/shared/principles.md`) that agents inherit via Claude Code's context mechanism.
+1. **Extract shared content to CLAUDE.md or a shared reference file**: Move Shared Principles and Communication Protocol to a project-level file (e.g., `CLAUDE.md` or `plugins/conclave/shared/principles.md`) that agents inherit via Claude Code's context mechanism.
 2. **Replace in-skill duplication with a reference**: Each SKILL.md includes a brief note pointing to the shared file, with a fallback summary for portability.
 3. **Validate consistency**: If full extraction isn't feasible (portability constraint), add a CI check (see P2-04) that verifies the duplicated sections are identical across all three skills.
 

@@ -12,9 +12,9 @@ Added directory-creation bootstrap step as Step 1 in all 3 SKILL.md Setup sectio
 
 ## Files Modified
 
-- `plugins/agent-teams/skills/plan-product/SKILL.md` — New Step 1 + renumbered steps 2-4
-- `plugins/agent-teams/skills/build-product/SKILL.md` — New Step 1 + renumbered steps 2-5
-- `plugins/agent-teams/skills/review-quality/SKILL.md` — New Step 1 + renumbered steps 2-5
+- `plugins/conclave/skills/plan-product/SKILL.md` — New Step 1 + renumbered steps 2-4
+- `plugins/conclave/skills/build-product/SKILL.md` — New Step 1 + renumbered steps 2-5
+- `plugins/conclave/skills/review-quality/SKILL.md` — New Step 1 + renumbered steps 2-5
 
 ## Verification
 

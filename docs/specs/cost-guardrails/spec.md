@@ -234,9 +234,9 @@ Update the `argument-hint` in each SKILL.md frontmatter to include `--light`:
 
 | File | Change |
 |------|--------|
-| `plugins/agent-teams/skills/plan-product/SKILL.md` | Add Lightweight Mode section, cost summary step, update argument-hint |
-| `plugins/agent-teams/skills/build-product/SKILL.md` | Add Lightweight Mode section, cost summary step, update argument-hint |
-| `plugins/agent-teams/skills/review-quality/SKILL.md` | Add Lightweight Mode section, cost summary step, update argument-hint |
+| `plugins/conclave/skills/plan-product/SKILL.md` | Add Lightweight Mode section, cost summary step, update argument-hint |
+| `plugins/conclave/skills/build-product/SKILL.md` | Add Lightweight Mode section, cost summary step, update argument-hint |
+| `plugins/conclave/skills/review-quality/SKILL.md` | Add Lightweight Mode section, cost summary step, update argument-hint |
 | `README.md` | Add Lightweight Mode subsection to Cost Considerations |
 
 No new files are created (cost summary files are created at runtime by the Team Lead).

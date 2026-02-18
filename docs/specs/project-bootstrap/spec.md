@@ -24,7 +24,7 @@ Insert a new Step 1 in each SKILL.md's `## Setup` section before the existing re
 
 ## Files to Modify
 
-### 1. `plugins/agent-teams/skills/plan-product/SKILL.md`
+### 1. `plugins/conclave/skills/plan-product/SKILL.md`
 
 **Before** (lines 15–19):
 ```markdown
@@ -49,7 +49,7 @@ Insert a new Step 1 in each SKILL.md's `## Setup` section before the existing re
 4. Read `docs/specs/` for existing specs
 ```
 
-### 2. `plugins/agent-teams/skills/build-product/SKILL.md`
+### 2. `plugins/conclave/skills/build-product/SKILL.md`
 
 **Before** (lines 15–20):
 ```markdown
@@ -76,7 +76,7 @@ Insert a new Step 1 in each SKILL.md's `## Setup` section before the existing re
 5. Read `docs/architecture/` for relevant ADRs
 ```
 
-### 3. `plugins/agent-teams/skills/review-quality/SKILL.md`
+### 3. `plugins/conclave/skills/review-quality/SKILL.md`
 
 **Before** (lines 15–20):
 ```markdown

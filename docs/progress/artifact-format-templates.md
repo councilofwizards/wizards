@@ -31,9 +31,9 @@ Created 3 template files that standardize the format of specs, progress summarie
 
 ## Files Modified
 
-- `plugins/agent-teams/skills/plan-product/SKILL.md` -- Added Step 2 (template read), renumbered Steps 2-5 to 3-6
-- `plugins/agent-teams/skills/build-product/SKILL.md` -- Added Step 2 (template read), renumbered Steps 2-6 to 3-7
-- `plugins/agent-teams/skills/review-quality/SKILL.md` -- Added Step 2 (template read), renumbered Steps 2-6 to 3-7
+- `plugins/conclave/skills/plan-product/SKILL.md` -- Added Step 2 (template read), renumbered Steps 2-5 to 3-6
+- `plugins/conclave/skills/build-product/SKILL.md` -- Added Step 2 (template read), renumbered Steps 2-6 to 3-7
+- `plugins/conclave/skills/review-quality/SKILL.md` -- Added Step 2 (template read), renumbered Steps 2-6 to 3-7
 
 ## Verification
 

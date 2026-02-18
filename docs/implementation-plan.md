@@ -4,7 +4,7 @@
 
 ## Overview
 
-Build the `zbmowrey/agent-teams` Claude Code plugin marketplace. Three plugins package the Agent Teams framework (from `docs/original-prompt.md`) into installable Claude Code plugins following the marketplace spec (from `docs/plugin-marketplaces.md`).
+Build the `councilofwizards/wizards` Claude Code plugin marketplace. Three plugins package the Agent Teams framework (from `docs/original-prompt.md`) into installable Claude Code plugins following the marketplace spec (from `docs/plugin-marketplaces.md`).
 
 ## Decisions Made
 
@@ -49,7 +49,7 @@ Forger and Scribe work in parallel. Skeptic waits for all 4 tasks, then does lin
 
 ```json
 {
-  "name": "agent-teams",
+  "name": "wizards",
   "owner": {
     "name": "Zachary Mowrey"
   },
@@ -158,7 +158,7 @@ Forger and Scribe work in parallel. Skeptic waits for all 4 tasks, then does lin
 ## Final Directory Structure
 
 ```
-agent-teams/
+wizards/
   .claude-plugin/
     marketplace.json
   plugins/
@@ -194,7 +194,7 @@ The Skeptic must verify ALL of the following before approving:
 
 - [ ] Directory layout matches plugin-marketplaces.md spec exactly
 - [ ] marketplace.json has all required fields (name, owner, plugins)
-- [ ] marketplace name "agent-teams" not in reserved names list
+- [ ] marketplace name "wizards" not in reserved names list
 - [ ] All plugin.json files have required fields (name, description, version)
 - [ ] Plugin names match between marketplace.json and plugin.json
 - [ ] Source paths in marketplace.json point to real directories

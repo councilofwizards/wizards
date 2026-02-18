@@ -20,7 +20,7 @@ This plan adds file-per-concern partitioning to all 3 SKILL.md files so parallel
 
 ---
 
-## File 1: plugins/agent-teams/skills/plan-product/SKILL.md (6 edits)
+## File 1: plugins/conclave/skills/plan-product/SKILL.md (6 edits)
 
 ### Edit A: Add Write Safety section after Setup
 
@@ -146,7 +146,7 @@ WRITE SAFETY:
 
 ---
 
-## File 2: plugins/agent-teams/skills/build-product/SKILL.md (5 edits)
+## File 2: plugins/conclave/skills/build-product/SKILL.md (5 edits)
 
 ### Edit G: Add Write Safety section after Roadmap Status Convention
 
@@ -242,7 +242,7 @@ TEST STRATEGY:
 
 ---
 
-## File 3: plugins/agent-teams/skills/review-quality/SKILL.md (6 edits)
+## File 3: plugins/conclave/skills/review-quality/SKILL.md (6 edits)
 
 ### Edit L: Add Write Safety section after Setup
 

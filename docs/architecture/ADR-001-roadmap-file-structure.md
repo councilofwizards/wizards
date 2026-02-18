@@ -6,7 +6,7 @@ Proposed
 
 ## Context
 
-The agent-teams project needs a roadmap system that:
+The wizards project needs a roadmap system that:
 1. Multiple agents can read concurrently during `/plan-product` and `/build-product` operations
 2. Avoids file-level write conflicts when parallel agents update roadmap state
 3. Provides machine-readable metadata (status, priority, dependencies) that agents can parse

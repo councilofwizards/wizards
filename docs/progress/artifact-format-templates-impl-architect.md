@@ -156,7 +156,7 @@ superseded_by: ""                # ADR number, if applicable
 
 Each SKILL.md gets one new step inserted as Step 2 in its Setup section, after the existing Step 1 (directory creation) and before the existing Step 2 (detect stack). All subsequent steps are renumbered.
 
-### 2A. `plugins/agent-teams/skills/plan-product/SKILL.md`
+### 2A. `plugins/conclave/skills/plan-product/SKILL.md`
 
 **Location**: Setup section, lines 17-26.
 
@@ -181,7 +181,7 @@ Each SKILL.md gets one new step inserted as Step 2 in its Setup section, after t
 
 ---
 
-### 2B. `plugins/agent-teams/skills/build-product/SKILL.md`
+### 2B. `plugins/conclave/skills/build-product/SKILL.md`
 
 **Location**: Setup section, lines 17-27.
 
@@ -208,7 +208,7 @@ Each SKILL.md gets one new step inserted as Step 2 in its Setup section, after t
 
 ---
 
-### 2C. `plugins/agent-teams/skills/review-quality/SKILL.md`
+### 2C. `plugins/conclave/skills/review-quality/SKILL.md`
 
 **Location**: Setup section, lines 16-26.
 
@@ -240,9 +240,9 @@ Each SKILL.md gets one new step inserted as Step 2 in its Setup section, after t
 1. [ ] Create `docs/specs/_template.md` (content from Part 1A)
 2. [ ] Create `docs/progress/_template.md` (content from Part 1B)
 3. [ ] Create `docs/architecture/_template.md` (content from Part 1C)
-4. [ ] Edit `plugins/agent-teams/skills/plan-product/SKILL.md` (Part 2A)
-5. [ ] Edit `plugins/agent-teams/skills/build-product/SKILL.md` (Part 2B)
-6. [ ] Edit `plugins/agent-teams/skills/review-quality/SKILL.md` (Part 2C)
+4. [ ] Edit `plugins/conclave/skills/plan-product/SKILL.md` (Part 2A)
+5. [ ] Edit `plugins/conclave/skills/build-product/SKILL.md` (Part 2B)
+6. [ ] Edit `plugins/conclave/skills/review-quality/SKILL.md` (Part 2C)
 
 **Total**: 3 files created, 3 files modified. No code. No tests.
 

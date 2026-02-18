@@ -1,5 +1,5 @@
 {
-  "name": "agent-teams",
+  "name": "wizards",
   "owner": {
     "name": "Zachary Mowrey"
   },
@@ -10,8 +10,8 @@
   },
   "plugins": [
     {
-      "name": "agent-teams",
-      "source": "./plugins/agent-teams",
+      "name": "conclave",
+      "source": "./plugins/conclave",
       "description": "Agent team orchestration skills for planning, building, and quality assurance of SaaS products"
     }
   ]

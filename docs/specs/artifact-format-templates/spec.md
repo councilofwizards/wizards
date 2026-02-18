@@ -243,9 +243,9 @@ No changes to SKILL.md Step 1 (directory creation). No runtime seeding logic.
 
 | File | Change |
 |------|--------|
-| `plugins/agent-teams/skills/plan-product/SKILL.md` | Insert template read step as new Step 2 in Setup. Renumber Steps 2-5 to 3-6. |
-| `plugins/agent-teams/skills/build-product/SKILL.md` | Insert template read step as new Step 2 in Setup. Renumber Steps 2-6 to 3-7. |
-| `plugins/agent-teams/skills/review-quality/SKILL.md` | Insert template read step as new Step 2 in Setup. Renumber Steps 2-6 to 3-7. |
+| `plugins/conclave/skills/plan-product/SKILL.md` | Insert template read step as new Step 2 in Setup. Renumber Steps 2-5 to 3-6. |
+| `plugins/conclave/skills/build-product/SKILL.md` | Insert template read step as new Step 2 in Setup. Renumber Steps 2-6 to 3-7. |
+| `plugins/conclave/skills/review-quality/SKILL.md` | Insert template read step as new Step 2 in Setup. Renumber Steps 2-6 to 3-7. |
 
 ## Success Criteria
 

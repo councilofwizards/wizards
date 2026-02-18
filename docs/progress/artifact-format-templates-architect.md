@@ -379,9 +379,9 @@ plan-product reads all three templates (~720 tokens). build-product reads two (~
 
 | File | Change |
 |------|--------|
-| `plugins/agent-teams/skills/plan-product/SKILL.md` | Extend Step 1 with template seeding (Section 5), add template read step in Setup (Section 4.1) |
-| `plugins/agent-teams/skills/build-product/SKILL.md` | Extend Step 1 with template seeding (Section 5), add template read step in Setup (Section 4.2) |
-| `plugins/agent-teams/skills/review-quality/SKILL.md` | Extend Step 1 with template seeding (Section 5), add template read step in Setup (Section 4.3) |
+| `plugins/conclave/skills/plan-product/SKILL.md` | Extend Step 1 with template seeding (Section 5), add template read step in Setup (Section 4.1) |
+| `plugins/conclave/skills/build-product/SKILL.md` | Extend Step 1 with template seeding (Section 5), add template read step in Setup (Section 4.2) |
+| `plugins/conclave/skills/review-quality/SKILL.md` | Extend Step 1 with template seeding (Section 5), add template read step in Setup (Section 4.3) |
 
 ## 10. Deviation Policy
 

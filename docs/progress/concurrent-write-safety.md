@@ -12,9 +12,9 @@ Added Write Safety sections to all 3 SKILL.md files establishing file-per-concer
 
 ## Files Modified
 
-- `plugins/agent-teams/skills/plan-product/SKILL.md` — Added Write Safety section with role-scoped naming for Researcher, Architect, DBA
-- `plugins/agent-teams/skills/build-product/SKILL.md` — Added Write Safety section with role-scoped naming for Backend/Frontend engineers
-- `plugins/agent-teams/skills/review-quality/SKILL.md` — Added Write Safety section with role-scoped naming for auditors and test engineers
+- `plugins/conclave/skills/plan-product/SKILL.md` — Added Write Safety section with role-scoped naming for Researcher, Architect, DBA
+- `plugins/conclave/skills/build-product/SKILL.md` — Added Write Safety section with role-scoped naming for Backend/Frontend engineers
+- `plugins/conclave/skills/review-quality/SKILL.md` — Added Write Safety section with role-scoped naming for auditors and test engineers
 
 ## Verification
 

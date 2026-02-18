@@ -2,11 +2,11 @@
 
 ## What This Project Is
 
-This repo (`zbmowrey/agent-teams`) is a Claude Code **plugin marketplace** — a git repository with a specific structure that Claude Code natively understands. Friends and collaborators add it with a single command and pick which plugins to enable. No install scripts, no website, no external tooling. Everything happens inside Claude Code via `/plugin`.
+This repo (`councilofwizards/wizards`) is a Claude Code **plugin marketplace** — a git repository with a specific structure that Claude Code natively understands. Friends and collaborators add it with a single command and pick which plugins to enable. No install scripts, no website, no external tooling. Everything happens inside Claude Code via `/plugin`.
 
 ```
-/plugin marketplace add zbmowrey/agent-teams
-/plugin install review-plugin@agent-teams
+/plugin marketplace add councilofwizards/wizards
+/plugin install review-plugin@wizards
 ```
 
 ## How Claude Code Marketplaces Work
@@ -31,7 +31,7 @@ Users interact entirely through Claude Code's built-in `/plugin` commands:
 ## Repository Structure
 
 ```
-agent-teams/
+wizards/
   .claude-plugin/
     marketplace.json          # The marketplace catalog
   plugins/
@@ -76,7 +76,7 @@ The file `.claude-plugin/marketplace.json` is the catalog. It lists every plugin
 
 ```json
 {
-  "name": "agent-teams",
+  "name": "wizards",
   "owner": {
     "name": "Zachary Mowrey"
   },
@@ -213,8 +213,8 @@ By default, `strict: true` — marketplace entry fields merge with the plugin's 
 
 ### For friends and collaborators (our use case)
 
-1. Push this repo to `zbmowrey/agent-teams` on GitHub
-2. Tell people to run: `/plugin marketplace add zbmowrey/agent-teams`
+1. Push this repo to `councilofwizards/wizards` on GitHub
+2. Tell people to run: `/plugin marketplace add councilofwizards/wizards`
 3. They browse available plugins and install what they want
 4. Updates: `/plugin marketplace update` pulls latest
 
@@ -225,10 +225,10 @@ Add the marketplace to a project's `.claude/settings.json` so team members are p
 ```json
 {
   "extraKnownMarketplaces": {
-    "agent-teams": {
+    "wizards": {
       "source": {
         "source": "github",
-        "repo": "zbmowrey/agent-teams"
+        "repo": "councilofwizards/wizards"
       }
     }
   }
@@ -240,8 +240,8 @@ Pre-enable specific plugins:
 ```json
 {
   "enabledPlugins": {
-    "review-plugin@agent-teams": true,
-    "deploy-tools@agent-teams": true
+    "review-plugin@wizards": true,
+    "deploy-tools@wizards": true
   }
 }
 ```

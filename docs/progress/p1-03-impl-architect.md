@@ -40,7 +40,7 @@ Via grep for `Laravel|Eloquent|Form Request|artisan|"Laravel Way"`:
 
 ---
 
-## File 1: plugins/agent-teams/skills/plan-product/SKILL.md (4 edits)
+## File 1: plugins/conclave/skills/plan-product/SKILL.md (4 edits)
 
 ### Edit A: Add stack detection to Setup + add stack-hints directory
 
@@ -100,7 +100,7 @@ Via grep for `Laravel|Eloquent|Form Request|artisan|"Laravel Way"`:
 
 ---
 
-## File 2: plugins/agent-teams/skills/build-product/SKILL.md (8 edits)
+## File 2: plugins/conclave/skills/build-product/SKILL.md (8 edits)
 
 ### Edit E: Add stack detection to Setup + add stack-hints directory
 
@@ -224,7 +224,7 @@ IMPLEMENTATION STANDARDS:
 
 ---
 
-## File 3: plugins/agent-teams/skills/review-quality/SKILL.md (2 edits)
+## File 3: plugins/conclave/skills/review-quality/SKILL.md (2 edits)
 
 ### Edit M: Add stack detection to Setup + add stack-hints directory
 

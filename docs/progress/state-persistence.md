@@ -12,9 +12,9 @@ Added Checkpoint Protocol sections to all 3 SKILL.md files. Agents now write str
 
 ## Files Modified
 
-- `plugins/agent-teams/skills/plan-product/SKILL.md` — Checkpoint Protocol section, resume logic in Determine Mode, checkpoint triggers in spawn prompts
-- `plugins/agent-teams/skills/build-product/SKILL.md` — Checkpoint Protocol section, resume logic in Determine Mode, checkpoint triggers in spawn prompts
-- `plugins/agent-teams/skills/review-quality/SKILL.md` — Checkpoint Protocol section, checkpoint triggers in spawn prompts
+- `plugins/conclave/skills/plan-product/SKILL.md` — Checkpoint Protocol section, resume logic in Determine Mode, checkpoint triggers in spawn prompts
+- `plugins/conclave/skills/build-product/SKILL.md` — Checkpoint Protocol section, resume logic in Determine Mode, checkpoint triggers in spawn prompts
+- `plugins/conclave/skills/review-quality/SKILL.md` — Checkpoint Protocol section, checkpoint triggers in spawn prompts
 
 ## Verification
 

@@ -37,7 +37,7 @@ This plan adds structured checkpoints and a resume protocol to all 3 SKILL.md fi
 
 ---
 
-## File 1: plugins/agent-teams/skills/plan-product/SKILL.md (6 edits)
+## File 1: plugins/conclave/skills/plan-product/SKILL.md (6 edits)
 
 ### Edit A: Add Checkpoint Protocol section after Write Safety
 
@@ -192,7 +192,7 @@ WRITE SAFETY:
 
 ---
 
-## File 2: plugins/agent-teams/skills/build-product/SKILL.md (6 edits)
+## File 2: plugins/conclave/skills/build-product/SKILL.md (6 edits)
 
 ### Edit G: Add Checkpoint Protocol section after Write Safety
 
@@ -345,7 +345,7 @@ TEST STRATEGY:
 
 ---
 
-## File 3: plugins/agent-teams/skills/review-quality/SKILL.md (6 edits)
+## File 3: plugins/conclave/skills/review-quality/SKILL.md (6 edits)
 
 ### Edit M: Add Checkpoint Protocol section after Write Safety
 

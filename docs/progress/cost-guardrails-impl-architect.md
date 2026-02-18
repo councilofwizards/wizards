@@ -25,7 +25,7 @@ updated: "2026-02-14T18:00:00Z"
 
 ---
 
-## File 1: `plugins/agent-teams/skills/plan-product/SKILL.md`
+## File 1: `plugins/conclave/skills/plan-product/SKILL.md`
 
 ### Edit 1A — Update argument-hint (line 7)
 
@@ -88,7 +88,7 @@ Insert after step 6 (line 118: `6. **Team Lead only**: Update `docs/roadmap/` wi
 
 ---
 
-## File 2: `plugins/agent-teams/skills/build-product/SKILL.md`
+## File 2: `plugins/conclave/skills/build-product/SKILL.md`
 
 ### Edit 2A — Update argument-hint (line 7)
 
@@ -150,7 +150,7 @@ Insert after step 7 (line 129: `7. **Team Lead only**: Update roadmap status and
 
 ---
 
-## File 3: `plugins/agent-teams/skills/review-quality/SKILL.md`
+## File 3: `plugins/conclave/skills/review-quality/SKILL.md`
 
 ### Edit 3A — Update argument-hint (line 6)
 

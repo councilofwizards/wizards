@@ -1,4 +1,4 @@
-> **HISTORICAL**: This is the original design document that inspired this plugin. Command names (`/product`, `/implement`, `/quality`), directory structure, and API references may not reflect the current implementation. The authoritative skill definitions are in `plugins/agent-teams/skills/*/SKILL.md`.
+> **HISTORICAL**: This is the original design document that inspired this plugin. Command names (`/product`, `/implement`, `/quality`), directory structure, and API references may not reflect the current implementation. The authoritative skill definitions are in `plugins/conclave/skills/*/SKILL.md`.
 
 # Agent Teams Framework: Product & Implementation
 
