@@ -1,3 +1,13 @@
+---
+title: "Project Bootstrap & Initialization"
+status: "approved"
+priority: "P1"
+category: "core-framework"
+approved_by: "product-skeptic"
+created: "2026-02-14"
+updated: "2026-02-14"
+---
+
 # P1-00: Project Bootstrap & Initialization — Implementation Spec
 
 ## Summary

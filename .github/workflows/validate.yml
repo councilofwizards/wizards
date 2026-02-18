@@ -1,0 +1,16 @@
+name: Validate Plugin Structure
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run validation
+        run: bash scripts/validate.sh

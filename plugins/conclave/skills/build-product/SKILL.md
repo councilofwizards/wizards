@@ -223,6 +223,7 @@ Details: [1-3 sentences max]
 Action needed: [yes/no, and what]
 Blocking: [task number if applicable]
 ```
+
 <!-- END SHARED: communication-protocol -->
 
 <!-- BEGIN SKILL-SPECIFIC: communication-extras -->
