@@ -49,7 +49,14 @@ has_frontmatter() {
     awk 'NR>1 && /^---$/{found=1; exit} END{exit !found}' "$file"
 }
 
-VALID_TEAMS="plan-product build-product review-quality"
+# Dynamically derive valid teams from skill directory names
+# Each skill directory under plugins/*/skills/ is a valid team name
+VALID_TEAMS=""
+while IFS= read -r -d '' skill_dir; do
+    team_name="$(basename "$skill_dir")"
+    VALID_TEAMS="$VALID_TEAMS $team_name"
+done < <(find "$REPO_ROOT/plugins" -mindepth 3 -maxdepth 3 -type d -path "*/skills/*" -print0 2>/dev/null | sort -z)
+VALID_TEAMS="${VALID_TEAMS# }"  # trim leading space
 VALID_STATUSES="in_progress blocked awaiting_review complete"
 
 total_files=0
@@ -95,7 +102,7 @@ while IFS= read -r file; do
             "$rel_file" \
             "One of: $VALID_TEAMS" \
             "\"$team\"" \
-            "Change team to one of the valid values: plan-product | build-product | review-quality"
+            "Change team to one of the valid values: $(echo "$VALID_TEAMS" | sed 's/ / | /g')"
         file_ok=false
     fi
 

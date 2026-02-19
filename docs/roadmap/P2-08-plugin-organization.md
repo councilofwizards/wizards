@@ -3,7 +3,7 @@ title: "Plugin Organization (Multi-Plugin)"
 status: "not_started"
 priority: "P2"
 category: "core-framework"
-effort: "Medium"
+effort: "medium"
 impact: "medium"
 dependencies: []
 created: "2026-02-19"

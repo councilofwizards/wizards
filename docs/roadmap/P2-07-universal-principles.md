@@ -3,7 +3,7 @@ title: "Universal Shared Principles"
 status: "not_started"
 priority: "P2"
 category: "core-framework"
-effort: "Medium"
+effort: "medium"
 impact: "medium"
 dependencies: ["content-deduplication"]
 created: "2026-02-19"

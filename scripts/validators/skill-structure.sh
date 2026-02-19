@@ -114,14 +114,14 @@ for filepath in "${skill_files[@]}"; do
 
     # -------------------------------------------------------------------------
     # A2: Required Sections
+    # Grep directly on file to avoid printf truncation on large (30KB+) files
     # -------------------------------------------------------------------------
-    file_content="$(cat "$filepath")"
     a2_file_fail=0
 
     if [ "$is_single_agent" -eq 1 ]; then
         # Single-agent: only require ## Setup and ## Determine Mode
         for section in "## Setup" "## Determine Mode"; do
-            if ! printf '%s\n' "$file_content" | grep -qF "$section"; then
+            if ! grep -qF "$section" "$filepath"; then
                 echo "[FAIL] A2/required-sections: Missing required section"
                 echo "  File: $filepath"
                 echo "  Expected: Section heading \"$section\" present in file"
@@ -147,7 +147,7 @@ for filepath in "${skill_files[@]}"; do
         )
 
         for section in "${required_sections[@]}"; do
-            if ! printf '%s\n' "$file_content" | grep -qF "$section"; then
+            if ! grep -qF "$section" "$filepath"; then
                 echo "[FAIL] A2/required-sections: Missing required section"
                 echo "  File: $filepath"
                 echo "  Expected: Section heading \"$section\" present in file"
@@ -159,8 +159,8 @@ for filepath in "${skill_files[@]}"; do
         done
 
         # At least one of: ## Critical Rules OR ## Quality Gate
-        if ! printf '%s\n' "$file_content" | grep -qF "## Critical Rules" && \
-           ! printf '%s\n' "$file_content" | grep -qF "## Quality Gate"; then
+        if ! grep -qF "## Critical Rules" "$filepath" && \
+           ! grep -qF "## Quality Gate" "$filepath"; then
             echo "[FAIL] A2/required-sections: Missing required section (need at least one)"
             echo "  File: $filepath"
             echo "  Expected: At least one of \"## Critical Rules\" or \"## Quality Gate\""
@@ -171,8 +171,8 @@ for filepath in "${skill_files[@]}"; do
         fi
 
         # At least one of: ## Teammate Spawn Prompts OR ## Teammates to Spawn
-        if ! printf '%s\n' "$file_content" | grep -qF "## Teammate Spawn Prompts" && \
-           ! printf '%s\n' "$file_content" | grep -qF "## Teammates to Spawn"; then
+        if ! grep -qF "## Teammate Spawn Prompts" "$filepath" && \
+           ! grep -qF "## Teammates to Spawn" "$filepath"; then
             echo "[FAIL] A2/required-sections: Missing required section (need at least one)"
             echo "  File: $filepath"
             echo "  Expected: At least one of \"## Teammate Spawn Prompts\" or \"## Teammates to Spawn\""

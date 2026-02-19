@@ -3,7 +3,7 @@ title: "Investor Update Skill (/draft-investor-update)"
 status: "complete"
 priority: "P3"
 category: "business-skills"
-effort: "Small-Medium"
+effort: "medium"
 impact: "medium"
 dependencies: []
 created: "2026-02-19"

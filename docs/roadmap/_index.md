@@ -86,7 +86,7 @@ Items are prioritized using two dimensions:
 
 | # | Item | Category | Status | Effort |
 |---|------|----------|--------|--------|
-| 20 | [Sales Planning Skill](P3-10-plan-sales.md) | business-skills | 🟢 | Medium |
+| 20 | [Sales Planning Skill](P3-10-plan-sales.md) | business-skills | ✅ | Medium |
 | 21 | [Marketing Planning Skill](P3-11-plan-marketing.md) | business-skills | 🔴 | Medium |
 | 22 | [Finance Planning Skill](P3-12-plan-finance.md) | business-skills | 🔴 | Medium-Large |
 | 23 | [Hiring Planning Skill](P3-14-plan-hiring.md) | business-skills | 🔴 | Medium |

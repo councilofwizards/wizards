@@ -1,9 +1,9 @@
 ---
 title: "Sales Planning Skill (/plan-sales)"
-status: "ready"
+status: "complete"
 priority: "P3"
 category: "business-skills"
-effort: "Medium"
+effort: "medium"
 impact: "medium"
 dependencies: []
 created: "2026-02-19"
