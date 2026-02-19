@@ -1,7 +1,7 @@
 # Product Roadmap
 
 > **Source of truth**: Individual item files in this directory. This index is a convenience summary.
-> **Last updated**: 2026-02-18
+> **Last updated**: 2026-02-19
 
 ## Categories
 
@@ -86,7 +86,7 @@ Items are prioritized using two dimensions:
 
 | # | Item | Category | Status | Effort |
 |---|------|----------|--------|--------|
-| 20 | [Sales Planning Skill](P3-10-plan-sales.md) | business-skills | 🔴 | Medium |
+| 20 | [Sales Planning Skill](P3-10-plan-sales.md) | business-skills | 🟢 | Medium |
 | 21 | [Marketing Planning Skill](P3-11-plan-marketing.md) | business-skills | 🔴 | Medium |
 | 22 | [Finance Planning Skill](P3-12-plan-finance.md) | business-skills | 🔴 | Medium-Large |
 | 23 | [Hiring Planning Skill](P3-14-plan-hiring.md) | business-skills | 🔴 | Medium |
@@ -102,4 +102,4 @@ Items are prioritized using two dimensions:
 | 28 | [Analytics Planning Skill](P3-19-plan-analytics.md) | business-skills | 🔴 | Medium |
 | 29 | [Operations Planning Skill](P3-20-plan-operations.md) | business-skills | 🔴 | Medium |
 | 30 | [Employee Onboarding Skill](P3-21-plan-onboarding.md) | business-skills | 🔴 | Small-Medium |
-| 31 | [Investor Update Skill](P3-22-draft-investor-update.md) | business-skills | 🔴 | Small-Medium |
+| 31 | [Investor Update Skill](P3-22-draft-investor-update.md) | business-skills | ✅ | Small-Medium |
