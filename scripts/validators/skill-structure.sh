@@ -109,6 +109,37 @@ for filepath in "${skill_files[@]}"; do
         a1_fail=$((a1_fail + 1))
     fi
 
+    # Validate tier field if present (optional, must be 1 or 2)
+    tier_value="$(printf '%s\n' "$fm_content" | grep "^tier:" | head -1 | sed 's/^tier:[[:space:]]*//' || true)"
+    if [ -n "$tier_value" ]; then
+        if [ "$tier_value" != "1" ] && [ "$tier_value" != "2" ]; then
+            echo "[FAIL] A1/frontmatter: Invalid \"tier\" field value"
+            echo "  File: $filepath"
+            echo "  Expected: tier: 1 or tier: 2"
+            echo "  Found: tier: $tier_value"
+            echo "  Fix: Set tier to 1 (granular) or 2 (composite)"
+            a1_fail=$((a1_fail + 1))
+        fi
+    fi
+
+    # Detect tier 2 composite (must come after tier_value is extracted)
+    is_composite=0
+    if [ "$tier_value" = "2" ]; then
+        is_composite=1
+    fi
+
+    # Validate chains field: if present, tier must be 2
+    if printf '%s\n' "$fm_content" | grep -q "^chains:"; then
+        if [ "$tier_value" != "2" ]; then
+            echo "[FAIL] A1/frontmatter: \"chains\" field requires tier: 2"
+            echo "  File: $filepath"
+            echo "  Expected: tier: 2 when chains field is present"
+            echo "  Found: tier: ${tier_value:-<not set>}"
+            echo "  Fix: Add \"tier: 2\" to the frontmatter or remove the \"chains\" field"
+            a1_fail=$((a1_fail + 1))
+        fi
+    fi
+
     # Track A1 pass for this file if no failures added
     a1_pass=$((a1_pass + 1))
 
@@ -121,6 +152,28 @@ for filepath in "${skill_files[@]}"; do
     if [ "$is_single_agent" -eq 1 ]; then
         # Single-agent: only require ## Setup and ## Determine Mode
         for section in "## Setup" "## Determine Mode"; do
+            if ! grep -qF "$section" "$filepath"; then
+                echo "[FAIL] A2/required-sections: Missing required section"
+                echo "  File: $filepath"
+                echo "  Expected: Section heading \"$section\" present in file"
+                echo "  Found: Section heading not found"
+                echo "  Fix: Add \"$section\" heading to the file"
+                a2_fail=$((a2_fail + 1))
+                a2_file_fail=$((a2_file_fail + 1))
+            fi
+        done
+    elif [ "$is_composite" -eq 1 ]; then
+        # Tier 2 composite: require pipeline-specific sections (no spawn, no shared content)
+        composite_sections=(
+            "## Setup"
+            "## Determine Mode"
+            "## Artifact Detection"
+            "## Pipeline"
+            "## Lightweight Mode"
+            "## Failure Handling"
+        )
+
+        for section in "${composite_sections[@]}"; do
             if ! grep -qF "$section" "$filepath"; then
                 echo "[FAIL] A2/required-sections: Missing required section"
                 echo "  File: $filepath"
@@ -190,8 +243,8 @@ for filepath in "${skill_files[@]}"; do
     # -------------------------------------------------------------------------
     # A3: Spawn Definitions (H3 entries under ## Spawn the Team)
     # -------------------------------------------------------------------------
-    if [ "$is_single_agent" -eq 1 ]; then
-        # Single-agent: skip A3 entirely
+    if [ "$is_single_agent" -eq 1 ] || [ "$is_composite" -eq 1 ]; then
+        # Single-agent and tier 2 composites: skip A3 (no spawn definitions)
         a3_pass=$((a3_pass + 1))
     else
 
@@ -283,8 +336,8 @@ for filepath in "${skill_files[@]}"; do
     # -------------------------------------------------------------------------
     # A4: Shared Content Markers
     # -------------------------------------------------------------------------
-    if [ "$is_single_agent" -eq 1 ]; then
-        # Single-agent: skip A4 entirely
+    if [ "$is_single_agent" -eq 1 ] || [ "$is_composite" -eq 1 ]; then
+        # Single-agent and tier 2 composites: skip A4 (no shared content markers)
         a4_pass=$((a4_pass + 1))
     else
 

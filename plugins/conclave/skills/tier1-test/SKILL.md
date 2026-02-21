@@ -3,6 +3,7 @@ name: tier1-test
 description: >
   Phase 0 PoC: Minimal Tier 1 skill that produces a test artifact.
   Used to validate Tier 2 -> Tier 1 invocation via the Skill tool.
+argument-hint: "[text to pass through]"
 tier: 1
 type: single-agent
 ---
@@ -10,6 +11,14 @@ type: single-agent
 # Tier 1 Test Skill
 
 You are executing a minimal Tier 1 skill for proof-of-concept testing.
+
+## Setup
+
+No setup required. This is a minimal test skill.
+
+## Determine Mode
+
+Always run in default mode. Ignore any mode flags.
 
 ## Instructions
 

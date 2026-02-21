@@ -4,6 +4,7 @@ description: >
   Invoke the Quality & Operations Team for security audits, performance
   analysis, deployment readiness, or regression testing.
 argument-hint: "[--light] [status | security <scope> | performance <scope> | deploy <feature> | regression]"
+tier: 1
 ---
 
 # Quality & Operations Team Orchestration
@@ -151,7 +152,7 @@ All outputs must pass the Ops Skeptic before being considered final.
 ---
 
 <!-- BEGIN SHARED: principles -->
-<!-- Authoritative source: plan-product/SKILL.md. Keep in sync across all skills. -->
+<!-- Authoritative source: plugins/conclave/shared/principles.md. Keep in sync across all skills. -->
 ## Shared Principles
 
 These principles apply to **every agent on every team**. They are included in every spawn prompt.
@@ -184,7 +185,7 @@ These principles apply to **every agent on every team**. They are included in ev
 ---
 
 <!-- BEGIN SHARED: communication-protocol -->
-<!-- Authoritative source: plan-product/SKILL.md. Keep in sync across all skills. -->
+<!-- Authoritative source: plugins/conclave/shared/communication-protocol.md. Keep in sync across all skills. -->
 ## Communication Protocol
 
 All agents follow these communication rules. This is the lifeblood of the team.

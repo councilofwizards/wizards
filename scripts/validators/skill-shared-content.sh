@@ -13,17 +13,16 @@ while IFS= read -r -d '' f; do
     skill_files+=("$f")
 done < <(find "$REPO_ROOT/plugins" -path "*/skills/*/SKILL.md" -print0 2>/dev/null | sort -z)
 
-# Determine the authoritative source file (plan-product/SKILL.md per spec)
-authoritative_source=""
-for f in "${skill_files[@]}"; do
-    if [ "$(basename "$(dirname "$f")")" = "plan-product" ]; then
-        authoritative_source="$f"
-        break
-    fi
-done
-# Fall back to first file if plan-product is not found
-if [ -z "$authoritative_source" ] && [ "${#skill_files[@]}" -gt 0 ]; then
-    authoritative_source="${skill_files[0]}"
+# Authoritative source files live in plugins/conclave/shared/
+SHARED_DIR="$REPO_ROOT/plugins/conclave/shared"
+PRINCIPLES_SOURCE="$SHARED_DIR/principles.md"
+PROTOCOL_SOURCE="$SHARED_DIR/communication-protocol.md"
+
+if [ ! -f "$PRINCIPLES_SOURCE" ] || [ ! -f "$PROTOCOL_SOURCE" ]; then
+    echo "[FAIL] B1/principles-drift: Authoritative source files missing in $SHARED_DIR"
+    echo "[FAIL] B2/protocol-drift: Authoritative source files missing in $SHARED_DIR"
+    echo "[PASS] B3/authoritative-source: Skipped (authoritative source files missing)"
+    exit 1
 fi
 
 if [ "${#skill_files[@]}" -eq 0 ]; then
@@ -65,11 +64,19 @@ normalize_skeptic_names() {
         -e 's/bias-skeptic/SKEPTIC_NAME/g' \
         -e 's/Bias Skeptic/SKEPTIC_NAME/g' \
         -e 's/fit-skeptic/SKEPTIC_NAME/g' \
-        -e 's/Fit Skeptic/SKEPTIC_NAME/g'
+        -e 's/Fit Skeptic/SKEPTIC_NAME/g' \
+        -e 's/story-skeptic/SKEPTIC_NAME/g' \
+        -e 's/Story Skeptic/SKEPTIC_NAME/g' \
+        -e 's/spec-skeptic/SKEPTIC_NAME/g' \
+        -e 's/Spec Skeptic/SKEPTIC_NAME/g' \
+        -e 's/plan-skeptic/SKEPTIC_NAME/g' \
+        -e 's/Plan Skeptic/SKEPTIC_NAME/g' \
+        -e 's/task-skeptic/SKEPTIC_NAME/g' \
+        -e 's/Task Skeptic/SKEPTIC_NAME/g'
 }
 
-# Build lookup of single-agent skill files (skip shared content checks for these)
-single_agent_files=()
+# Build lookup of files to skip shared content checks (single-agent and tier 2 composites)
+skip_shared_files=()
 for f in "${skill_files[@]}"; do
     fm_end=0
     while IFS= read -r line; do
@@ -83,14 +90,16 @@ for f in "${skill_files[@]}"; do
     if [ "$fm_end" -gt 0 ]; then
         fm_content="$(sed -n "2,$((fm_end - 1))p" "$f")"
         if printf '%s\n' "$fm_content" | grep -q "^type:[[:space:]]*single-agent"; then
-            single_agent_files+=("$f")
+            skip_shared_files+=("$f")
+        elif printf '%s\n' "$fm_content" | grep -q "^tier:[[:space:]]*2"; then
+            skip_shared_files+=("$f")
         fi
     fi
 done
 
-is_single_agent_file() {
+should_skip_shared() {
     local target="$1"
-    for f in "${single_agent_files[@]}"; do
+    for f in "${skip_shared_files[@]}"; do
         [ "$f" = "$target" ] && return 0
     done
     return 1
@@ -101,13 +110,10 @@ is_single_agent_file() {
 # -------------------------------------------------------------------------
 b1_fail=0
 
-auth_principles_block=""
-if [ -n "$authoritative_source" ]; then
-    auth_principles_block="$(extract_block "$authoritative_source" "<!-- BEGIN SHARED: principles -->" "<!-- END SHARED: principles -->")"
-fi
+auth_principles_block="$(extract_block "$PRINCIPLES_SOURCE" "<!-- BEGIN SHARED: principles -->" "<!-- END SHARED: principles -->")"
 
 for filepath in "${skill_files[@]}"; do
-    is_single_agent_file "$filepath" && continue
+    should_skip_shared "$filepath" && continue
 
     block="$(extract_block "$filepath" "<!-- BEGIN SHARED: principles -->" "<!-- END SHARED: principles -->")"
     if [ -z "$block" ]; then
@@ -120,9 +126,6 @@ for filepath in "${skill_files[@]}"; do
         continue
     fi
 
-    # Skip comparison if this is the authoritative source itself
-    [ "$filepath" = "$authoritative_source" ] && continue
-
     if [ "$block" != "$auth_principles_block" ]; then
         diff_output="$(diff \
             <(printf '%s\n' "$auth_principles_block") \
@@ -130,10 +133,10 @@ for filepath in "${skill_files[@]}"; do
             || true)"
         echo "[FAIL] B1/principles-drift: Shared Principles content differs"
         echo "  File: $filepath"
-        echo "  Expected: Byte-identical to $authoritative_source (authoritative source)"
+        echo "  Expected: Byte-identical to $PRINCIPLES_SOURCE (authoritative source)"
         echo "  Found: Content differs (see diff below)"
-        echo "  Fix: Copy Shared Principles block from $authoritative_source to $filepath"
-        printf '%s\n' "$diff_output" | sed "s|^---|  --- $(basename "$(dirname "$authoritative_source")")/SKILL.md (authoritative)|" | sed "s|^+++|  +++ $(basename "$(dirname "$filepath")")/SKILL.md|" | sed 's/^/  /'
+        echo "  Fix: Run 'bash scripts/sync-shared-content.sh' or copy from $PRINCIPLES_SOURCE"
+        printf '%s\n' "$diff_output" | sed "s|^---|  --- shared/principles.md (authoritative)|" | sed "s|^+++|  +++ $(basename "$(dirname "$filepath")")/SKILL.md|" | sed 's/^/  /'
         b1_fail=$((b1_fail + 1))
     fi
 done
@@ -150,15 +153,11 @@ fi
 # -------------------------------------------------------------------------
 b2_fail=0
 
-auth_protocol_block=""
-auth_protocol_normalized=""
-if [ -n "$authoritative_source" ]; then
-    auth_protocol_block="$(extract_block "$authoritative_source" "<!-- BEGIN SHARED: communication-protocol -->" "<!-- END SHARED: communication-protocol -->")"
-    auth_protocol_normalized="$(printf '%s\n' "$auth_protocol_block" | normalize_skeptic_names)"
-fi
+auth_protocol_block="$(extract_block "$PROTOCOL_SOURCE" "<!-- BEGIN SHARED: communication-protocol -->" "<!-- END SHARED: communication-protocol -->")"
+auth_protocol_normalized="$(printf '%s\n' "$auth_protocol_block" | normalize_skeptic_names)"
 
 for filepath in "${skill_files[@]}"; do
-    is_single_agent_file "$filepath" && continue
+    should_skip_shared "$filepath" && continue
 
     block="$(extract_block "$filepath" "<!-- BEGIN SHARED: communication-protocol -->" "<!-- END SHARED: communication-protocol -->")"
     if [ -z "$block" ]; then
@@ -171,9 +170,6 @@ for filepath in "${skill_files[@]}"; do
         continue
     fi
 
-    # Skip comparison if this is the authoritative source itself
-    [ "$filepath" = "$authoritative_source" ] && continue
-
     normalized="$(printf '%s\n' "$block" | normalize_skeptic_names)"
 
     if [ "$normalized" != "$auth_protocol_normalized" ]; then
@@ -183,10 +179,10 @@ for filepath in "${skill_files[@]}"; do
             || true)"
         echo "[FAIL] B2/protocol-drift: Communication Protocol structure differs (after skeptic-name normalization)"
         echo "  File: $filepath"
-        echo "  Expected: Structurally equivalent to $authoritative_source (after normalizing all skeptic name variants)"
+        echo "  Expected: Structurally equivalent to $PROTOCOL_SOURCE (after normalizing all skeptic name variants)"
         echo "  Found: Content differs after normalization (see diff below)"
-        echo "  Fix: Sync Communication Protocol structure from $authoritative_source to $filepath (skeptic names like quality-skeptic vs product-skeptic are intentional and not flagged)"
-        printf '%s\n' "$diff_output" | sed "s|^---|  --- $(basename "$(dirname "$authoritative_source")")/SKILL.md (normalized)|" | sed "s|^+++|  +++ $(basename "$(dirname "$filepath")")/SKILL.md (normalized)|" | sed 's/^/  /'
+        echo "  Fix: Run 'bash scripts/sync-shared-content.sh' or sync from $PROTOCOL_SOURCE"
+        printf '%s\n' "$diff_output" | sed "s|^---|  --- shared/communication-protocol.md (normalized)|" | sed "s|^+++|  +++ $(basename "$(dirname "$filepath")")/SKILL.md (normalized)|" | sed 's/^/  /'
         b2_fail=$((b2_fail + 1))
     fi
 done
@@ -210,9 +206,18 @@ for filepath in "${skill_files[@]}"; do
         lineno="${match%%	*}"
         next_lineno=$((lineno + 1))
         next_line="$(sed -n "${next_lineno}p" "$filepath")"
-        expected_comment="<!-- Authoritative source: plan-product/SKILL.md. Keep in sync across all skills. -->"
+        marker_content="$(sed -n "${lineno}p" "$filepath")"
+
+        # Determine expected authoritative source based on block type
+        if printf '%s' "$marker_content" | grep -q "principles"; then
+            expected_comment="<!-- Authoritative source: plugins/conclave/shared/principles.md. Keep in sync across all skills. -->"
+        elif printf '%s' "$marker_content" | grep -q "communication-protocol"; then
+            expected_comment="<!-- Authoritative source: plugins/conclave/shared/communication-protocol.md. Keep in sync across all skills. -->"
+        else
+            expected_comment="<!-- Authoritative source: plugins/conclave/shared/. Keep in sync across all skills. -->"
+        fi
+
         if [ "$next_line" != "$expected_comment" ]; then
-            marker_content="$(sed -n "${lineno}p" "$filepath")"
             echo "[FAIL] B3/authoritative-source: BEGIN SHARED marker not followed by authoritative source comment"
             echo "  File: $filepath"
             echo "  Expected: Line $next_lineno is \"$expected_comment\""

@@ -17,7 +17,7 @@ You are a single agent running a deterministic setup pipeline. There is no team 
 Read the project root to understand current state before doing anything else:
 
 1. Check whether `CLAUDE.md` exists in the project root.
-2. Check whether `docs/` exists and which subdirectories are present (`roadmap/`, `specs/`, `progress/`, `architecture/`, `stack-hints/`).
+2. Check whether `docs/` exists and which subdirectories are present (`roadmap/`, `specs/`, `progress/`, `architecture/`, `stack-hints/`, `research/`, `ideas/`, `templates/artifacts/`).
 3. Check whether `docs/roadmap/_index.md` exists.
 4. Check whether the template files exist: `docs/specs/_template.md`, `docs/progress/_template.md`, `docs/architecture/_template.md`.
 5. List any files already in `docs/stack-hints/`.
@@ -72,6 +72,9 @@ docs/specs/
 docs/progress/
 docs/architecture/
 docs/stack-hints/
+docs/research/
+docs/ideas/
+docs/templates/artifacts/
 ```
 
 For each directory that is newly created and empty, add a `.gitkeep` file so git tracks it. Do not add `.gitkeep` retroactively to directories that already exist and contain files.
@@ -232,6 +235,9 @@ When generating CLAUDE.md, use this structure:
 - `docs/progress/` — Agent progress checkpoints
 - `docs/architecture/` — Architecture Decision Records (ADRs)
 - `docs/stack-hints/` — Framework-specific guidance for agents
+- `docs/research/` — Market research and analysis artifacts
+- `docs/ideas/` — Product ideation artifacts
+- `docs/templates/artifacts/` — Artifact schema templates for skill pipelines
 
 ## Workflow
 - Use `/plan-product` to plan features and create specs

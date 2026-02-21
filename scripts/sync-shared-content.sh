@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
-# Sync shared content blocks from the authoritative source (plan-product/SKILL.md)
-# to all other multi-agent SKILL.md files.
+# Sync shared content blocks from the authoritative source files in
+# plugins/conclave/shared/ to all multi-agent SKILL.md files.
 #
-# This script is the P2-07 precursor — it automates the manual process of
-# editing shared content in plan-product and copying to 5+ other files.
+# This is P2-07: shared content extraction. The authoritative source for
+# each shared block lives in plugins/conclave/shared/ as standalone files,
+# not inside any individual SKILL.md.
 #
 # Usage: sync-shared-content.sh [repo_root]
 #   repo_root defaults to the parent of the directory containing this script.
 #
 # What it does:
-#   1. Extracts the Shared Principles block from plan-product/SKILL.md
-#   2. Extracts the Communication Protocol block from plan-product/SKILL.md
+#   1. Reads the Shared Principles block from plugins/conclave/shared/principles.md
+#   2. Reads the Communication Protocol block from plugins/conclave/shared/communication-protocol.md
 #   3. For each multi-agent SKILL.md, replaces the content between markers
 #   4. Preserves per-skill skeptic names in the Communication Protocol
 #
@@ -25,6 +26,20 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="${1:-$(cd "$SCRIPT_DIR/.." && pwd)}"
 
+# Authoritative source files
+SHARED_DIR="$REPO_ROOT/plugins/conclave/shared"
+PRINCIPLES_SOURCE="$SHARED_DIR/principles.md"
+PROTOCOL_SOURCE="$SHARED_DIR/communication-protocol.md"
+
+if [ ! -f "$PRINCIPLES_SOURCE" ]; then
+    echo "ERROR: $PRINCIPLES_SOURCE not found. Cannot sync."
+    exit 1
+fi
+if [ ! -f "$PROTOCOL_SOURCE" ]; then
+    echo "ERROR: $PROTOCOL_SOURCE not found. Cannot sync."
+    exit 1
+fi
+
 # Find all SKILL.md files
 skill_files=()
 while IFS= read -r -d '' f; do
@@ -34,20 +49,6 @@ done < <(find "$REPO_ROOT/plugins" -path "*/skills/*/SKILL.md" -print0 2>/dev/nu
 if [ "${#skill_files[@]}" -eq 0 ]; then
     echo "No SKILL.md files found under $REPO_ROOT/plugins"
     exit 0
-fi
-
-# Find the authoritative source (plan-product/SKILL.md)
-authoritative_source=""
-for f in "${skill_files[@]}"; do
-    if [ "$(basename "$(dirname "$f")")" = "plan-product" ]; then
-        authoritative_source="$f"
-        break
-    fi
-done
-
-if [ -z "$authoritative_source" ]; then
-    echo "ERROR: plan-product/SKILL.md not found. Cannot sync."
-    exit 1
 fi
 
 # Helper: extract content between two markers (inclusive of markers)
@@ -62,8 +63,8 @@ extract_block() {
     ' "$file"
 }
 
-# Helper: detect if a file is a single-agent skill (skip these)
-is_single_agent() {
+# Helper: detect if a file should be skipped (single-agent or tier 2 composite)
+should_skip_sync() {
     local file="$1"
     local fm_end=0
     while IFS= read -r line; do
@@ -77,6 +78,9 @@ is_single_agent() {
         local fm_content
         fm_content="$(sed -n "2,$((fm_end - 1))p" "$file")"
         if printf '%s\n' "$fm_content" | grep -q "^type:[[:space:]]*single-agent"; then
+            return 0
+        fi
+        if printf '%s\n' "$fm_content" | grep -q "^tier:[[:space:]]*2"; then
             return 0
         fi
     fi
@@ -152,20 +156,16 @@ replace_block() {
     rm -f "$tmpfile"
 }
 
-# Extract authoritative blocks
-auth_principles="$(extract_block "$authoritative_source" \
-    "<!-- BEGIN SHARED: principles -->" \
-    "<!-- END SHARED: principles -->")"
-auth_protocol="$(extract_block "$authoritative_source" \
-    "<!-- BEGIN SHARED: communication-protocol -->" \
-    "<!-- END SHARED: communication-protocol -->")"
+# Read authoritative blocks from shared/ files
+auth_principles="$(cat "$PRINCIPLES_SOURCE")"
+auth_protocol="$(cat "$PROTOCOL_SOURCE")"
 
 if [ -z "$auth_principles" ]; then
-    echo "ERROR: Could not extract Shared Principles block from $authoritative_source"
+    echo "ERROR: $PRINCIPLES_SOURCE is empty"
     exit 1
 fi
 if [ -z "$auth_protocol" ]; then
-    echo "ERROR: Could not extract Communication Protocol block from $authoritative_source"
+    echo "ERROR: $PROTOCOL_SOURCE is empty"
     exit 1
 fi
 
@@ -179,14 +179,9 @@ skipped=0
 for filepath in "${skill_files[@]}"; do
     skill_name="$(basename "$(dirname "$filepath")")"
 
-    # Skip the authoritative source itself
-    if [ "$filepath" = "$authoritative_source" ]; then
-        continue
-    fi
-
-    # Skip single-agent skills
-    if is_single_agent "$filepath"; then
-        echo "  SKIP  $skill_name (single-agent, no shared content)"
+    # Skip single-agent and tier 2 composite skills
+    if should_skip_sync "$filepath"; then
+        echo "  SKIP  $skill_name (no shared content)"
         skipped=$((skipped + 1))
         continue
     fi

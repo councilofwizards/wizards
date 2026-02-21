@@ -3,6 +3,7 @@ name: tier2-test
 description: >
   Phase 0 PoC: Minimal Tier 2 composite skill that invokes tier1-test
   via the Skill tool, then verifies the artifact was produced.
+argument-hint: "(no arguments needed)"
 tier: 2
 chains:
   - tier1-test
@@ -12,6 +13,14 @@ type: single-agent
 # Tier 2 Test Skill (Composite)
 
 You are executing a minimal Tier 2 composite skill for proof-of-concept testing.
+
+## Setup
+
+No setup required. This is a minimal test skill.
+
+## Determine Mode
+
+Always run in default mode. Ignore any mode flags.
 
 ## Context Persistence Test
 
