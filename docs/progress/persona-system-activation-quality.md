@@ -1,7 +1,11 @@
 ---
 feature: "persona-system-activation"
 team: "review-quality"
+agent: "qa-lead"
+phase: "review"
 status: "complete"
+last_action: "Synthesized test-eng and ops-skeptic findings into final quality report"
+updated: "2026-03-10T14:30:00Z"
 completed: "2026-03-10"
 ---
 
