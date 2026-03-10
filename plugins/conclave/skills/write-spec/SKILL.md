@@ -95,26 +95,25 @@ If `$ARGUMENTS` begins with `--light`, strip the flag and enable lightweight mod
 
 ## Spawn the Team
 
-Create an agent team called "write-spec" with these teammates:
+**Step 1:** Call `TeamCreate` with `team_name: "write-spec"`.
+**Step 2:** Call `TaskCreate` to define work items from the Orchestration Flow below.
+**Step 3:** Spawn each teammate using the `Agent` tool with `team_name: "write-spec"` and each teammate's `name`, `model`, and `prompt` as specified below.
 
 ### Software Architect
 - **Name**: `architect`
 - **Model**: opus
-- **Subagent type**: `general-purpose`
 - **Prompt**: [See Teammate Spawn Prompts below]
 - **Tasks**: Design system architecture for the feature. Define component boundaries, interface definitions, and integration points. Write ADRs. Coordinate with DBA on data model alignment.
 
 ### DBA
 - **Name**: `dba`
 - **Model**: opus
-- **Subagent type**: `general-purpose`
 - **Prompt**: [See Teammate Spawn Prompts below]
 - **Tasks**: Design data model. Define tables, relationships, indexes, and migrations. Coordinate with Architect on data model alignment.
 
 ### Spec Skeptic
 - **Name**: `spec-skeptic`
 - **Model**: opus
-- **Subagent type**: `general-purpose`
 - **Prompt**: [See Teammate Spawn Prompts below]
 - **Tasks**: Review ALL outputs. Challenge completeness, consistency, and testability. Reject vague designs. Nothing advances without your approval.
 
@@ -251,7 +250,7 @@ Blocking: [task number if applicable]
 
 ## Teammate Spawn Prompts
 
-> **You are the Team Lead (Strategist).** Your orchestration instructions are in the sections above. The following prompts are for teammates you create via the Task tool.
+> **You are the Team Lead (Strategist).** Your orchestration instructions are in the sections above. The following prompts are for teammates you spawn via the `Agent` tool with `team_name: "write-spec"`.
 
 ### Software Architect
 Model: Opus

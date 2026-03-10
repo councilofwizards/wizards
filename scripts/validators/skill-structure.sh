@@ -259,11 +259,10 @@ for filepath in "${skill_files[@]}"; do
         current_h3=""
         has_name=0
         has_model=0
-        has_subagent=0
 
         _spawn_fail_count=0
         check_spawn_entry() {
-            local h3="$1" hname="$2" hmodel="$3" hsubagent="$4" fpath="$5"
+            local h3="$1" hname="$2" hmodel="$3" fpath="$4"
             _spawn_fail_count=0
             if [ "$hname" -eq 0 ]; then
                 echo "[FAIL] A3/spawn-definitions: Spawn entry missing \"**Name**:\" field"
@@ -281,21 +280,13 @@ for filepath in "${skill_files[@]}"; do
                 echo "  Fix: Add \"- **Model**: opus\" or \"- **Model**: sonnet\" to the spawn entry"
                 _spawn_fail_count=$((_spawn_fail_count + 1))
             fi
-            if [ "$hsubagent" -eq 0 ]; then
-                echo "[FAIL] A3/spawn-definitions: Spawn entry missing \"**Subagent type**:\" field"
-                echo "  File: $fpath"
-                echo "  Expected: H3 entry \"$h3\" contains a \"**Subagent type**:\" field"
-                echo "  Found: No \"**Subagent type**:\" field in spawn entry"
-                echo "  Fix: Add \"- **Subagent type**: general-purpose\" to the spawn entry"
-                _spawn_fail_count=$((_spawn_fail_count + 1))
-            fi
         }
 
         while IFS= read -r line; do
             if printf '%s\n' "$line" | grep -q "^### "; then
                 # Check previous H3 entry if any
                 if [ -n "$current_h3" ]; then
-                    check_spawn_entry "$current_h3" "$has_name" "$has_model" "$has_subagent" "$filepath"
+                    check_spawn_entry "$current_h3" "$has_name" "$has_model" "$filepath"
                     if [ "$_spawn_fail_count" -gt 0 ]; then
                         a3_file_fail=$((a3_file_fail + _spawn_fail_count))
                     fi
@@ -303,7 +294,6 @@ for filepath in "${skill_files[@]}"; do
                 current_h3="$line"
                 has_name=0
                 has_model=0
-                has_subagent=0
             fi
             if printf '%s\n' "$line" | grep -q '\*\*Name\*\*:.*`'; then
                 has_name=1
@@ -311,14 +301,11 @@ for filepath in "${skill_files[@]}"; do
             if printf '%s\n' "$line" | grep -qiE '\*\*Model\*\*:[[:space:]]*(opus|sonnet)'; then
                 has_model=1
             fi
-            if printf '%s\n' "$line" | grep -q '\*\*Subagent type\*\*:'; then
-                has_subagent=1
-            fi
         done <<< "$spawn_section"
 
         # Check the last H3 entry
         if [ -n "$current_h3" ]; then
-            check_spawn_entry "$current_h3" "$has_name" "$has_model" "$has_subagent" "$filepath"
+            check_spawn_entry "$current_h3" "$has_name" "$has_model" "$filepath"
             if [ "$_spawn_fail_count" -gt 0 ]; then
                 a3_file_fail=$((a3_file_fail + _spawn_fail_count))
             fi

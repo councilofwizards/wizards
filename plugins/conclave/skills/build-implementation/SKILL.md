@@ -100,26 +100,25 @@ If `$ARGUMENTS` begins with `--light`, strip the flag and enable lightweight mod
 
 ## Spawn the Team
 
-Create an agent team called "build-implementation" with these teammates:
+**Step 1:** Call `TeamCreate` with `team_name: "build-implementation"`.
+**Step 2:** Call `TaskCreate` to define work items from the Orchestration Flow below.
+**Step 3:** Spawn each teammate using the `Agent` tool with `team_name: "build-implementation"` and each teammate's `name`, `model`, and `prompt` as specified below.
 
 ### Backend Engineer
 - **Name**: `backend-eng`
 - **Model**: sonnet
-- **Subagent type**: `general-purpose`
 - **Prompt**: [See Teammate Spawn Prompts below]
 - **Tasks**: Implement server-side code. TDD. Follow framework conventions. Negotiate API contracts with frontend-eng.
 
 ### Frontend Engineer
 - **Name**: `frontend-eng`
 - **Model**: sonnet
-- **Subagent type**: `general-purpose`
 - **Prompt**: [See Teammate Spawn Prompts below]
 - **Tasks**: Implement client-side code. TDD. Negotiate API contracts with backend-eng.
 
 ### Quality Skeptic
 - **Name**: `quality-skeptic`
 - **Model**: opus
-- **Subagent type**: `general-purpose`
 - **Prompt**: [See Teammate Spawn Prompts below]
 - **Tasks**: Review plan, contracts, and all code. Run tests. Verify spec conformance. Nothing ships without your approval.
 
@@ -315,7 +314,7 @@ backend-eng                          frontend-eng
 
 ## Teammate Spawn Prompts
 
-> **You are the Team Lead (Tech Lead).** Your orchestration instructions are in the sections above. The following prompts are for teammates you create via the Task tool.
+> **You are the Team Lead (Tech Lead).** Your orchestration instructions are in the sections above. The following prompts are for teammates you spawn via the `Agent` tool with `team_name: "build-implementation"`.
 
 ### Backend Engineer
 Model: Sonnet

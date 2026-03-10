@@ -85,19 +85,19 @@ If `$ARGUMENTS` begins with `--light`, strip the flag and enable lightweight mod
 
 ## Spawn the Team
 
-Create an agent team called "research-market" with these teammates:
+**Step 1:** Call `TeamCreate` with `team_name: "research-market"`.
+**Step 2:** Call `TaskCreate` to define work items from the Orchestration Flow below.
+**Step 3:** Spawn each teammate using the `Agent` tool with `team_name: "research-market"` and each teammate's `name`, `model`, and `prompt` as specified below.
 
 ### Market Researcher
 - **Name**: `market-researcher`
 - **Model**: sonnet
-- **Subagent type**: `general-purpose`
 - **Prompt**: [See Teammate Spawn Prompts below]
 - **Tasks**: Competitive landscape, market sizing, industry trends
 
 ### Customer Researcher
 - **Name**: `customer-researcher`
 - **Model**: sonnet
-- **Subagent type**: `general-purpose`
 - **Prompt**: [See Teammate Spawn Prompts below]
 - **Tasks**: Customer segments, pain points, buyer personas
 
@@ -228,7 +228,7 @@ Blocking: [task number if applicable]
 
 ## Teammate Spawn Prompts
 
-> **You are the Team Lead (Research Director).** Your orchestration instructions are in the sections above. The following prompts are for teammates you create via the Task tool.
+> **You are the Team Lead (Research Director).** Your orchestration instructions are in the sections above. The following prompts are for teammates you spawn via the `Agent` tool with `team_name: "research-market"`.
 
 ### Market Researcher
 Model: Sonnet

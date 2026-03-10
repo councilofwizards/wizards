@@ -88,19 +88,19 @@ If `$ARGUMENTS` begins with `--light`, strip the flag and enable lightweight mod
 
 ## Spawn the Team
 
-Create an agent team called "plan-implementation" with these teammates:
+**Step 1:** Call `TeamCreate` with `team_name: "plan-implementation"`.
+**Step 2:** Call `TaskCreate` to define work items from the Orchestration Flow below.
+**Step 3:** Spawn each teammate using the `Agent` tool with `team_name: "plan-implementation"` and each teammate's `name`, `model`, and `prompt` as specified below.
 
 ### Implementation Architect
 - **Name**: `impl-architect`
 - **Model**: opus
-- **Subagent type**: `general-purpose`
 - **Prompt**: [See Teammate Spawn Prompts below]
 - **Tasks**: File-by-file plan, interface definitions, dependency graph, test strategy
 
 ### Plan Skeptic
 - **Name**: `plan-skeptic`
 - **Model**: opus
-- **Subagent type**: `general-purpose`
 - **Prompt**: [See Teammate Spawn Prompts below]
 - **Tasks**: Review plan for completeness, spec conformance, missing edge cases
 
@@ -235,7 +235,7 @@ Blocking: [task number if applicable]
 
 ## Teammate Spawn Prompts
 
-> **You are the Team Lead (Planning Lead).** Your orchestration instructions are in the sections above. The following prompts are for teammates you create via the Task tool.
+> **You are the Team Lead (Planning Lead).** Your orchestration instructions are in the sections above. The following prompts are for teammates you spawn via the `Agent` tool with `team_name: "plan-implementation"`.
 
 ### Implementation Architect
 Model: Opus

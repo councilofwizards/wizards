@@ -87,12 +87,13 @@ If `$ARGUMENTS` begins with `--light`, strip the flag but make no changes to age
 
 ## Spawn the Team
 
-Create an agent team called "review-quality" with teammates appropriate to $ARGUMENTS.
+**Step 1:** Call `TeamCreate` with `team_name: "review-quality"`.
+**Step 2:** Call `TaskCreate` to define work items from the Orchestration Flow below.
+**Step 3:** Spawn teammates appropriate to $ARGUMENTS using the `Agent` tool with `team_name: "review-quality"` and each teammate's `name`, `model`, and `prompt` as specified below.
 
 ### Test Engineer
 - **Name**: `test-eng`
 - **Model**: sonnet
-- **Subagent type**: general-purpose
 - **Prompt**: [See Teammates to Spawn section below]
 - **Tasks**: Write and run comprehensive test suites. Identify coverage gaps. Design regression test plans. Verify TDD compliance.
 - **Spawned for**: performance, regression
@@ -100,7 +101,6 @@ Create an agent team called "review-quality" with teammates appropriate to $ARGU
 ### DevOps Engineer
 - **Name**: `devops-eng`
 - **Model**: sonnet
-- **Subagent type**: general-purpose
 - **Prompt**: [See Teammates to Spawn section below]
 - **Tasks**: Review infrastructure, deployment configs, CI/CD pipelines. Verify environment parity and rollback procedures.
 - **Spawned for**: deploy
@@ -108,7 +108,6 @@ Create an agent team called "review-quality" with teammates appropriate to $ARGU
 ### Security Auditor
 - **Name**: `security-auditor`
 - **Model**: opus
-- **Subagent type**: general-purpose
 - **Prompt**: [See Teammates to Spawn section below]
 - **Tasks**: Audit code and infrastructure for vulnerabilities against OWASP Top 10. Provide severity-rated findings with remediation guidance.
 - **Spawned for**: security, deploy
@@ -116,7 +115,6 @@ Create an agent team called "review-quality" with teammates appropriate to $ARGU
 ### Ops Skeptic
 - **Name**: `ops-skeptic`
 - **Model**: opus
-- **Subagent type**: general-purpose
 - **Prompt**: [See Teammates to Spawn section below]
 - **Tasks**: Challenge all findings and claims. Demand evidence of production readiness. Nothing is finalized without your approval.
 - **Spawned for**: all modes
@@ -259,7 +257,7 @@ Blocking: [task number if applicable]
 
 ## Teammates to Spawn
 
-> **You are the Team Lead (QA Lead).** Your orchestration instructions are in the sections above. The following prompts are for teammates you create via the Task tool.
+> **You are the Team Lead (QA Lead).** Your orchestration instructions are in the sections above. The following prompts are for teammates you spawn via the `Agent` tool with `team_name: "review-quality"`.
 
 ### Test Engineer
 Model: Sonnet

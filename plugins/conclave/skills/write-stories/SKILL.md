@@ -84,19 +84,19 @@ If `$ARGUMENTS` begins with `--light`, strip the flag and enable lightweight mod
 
 ## Spawn the Team
 
-Create an agent team called "write-stories" with these teammates:
+**Step 1:** Call `TeamCreate` with `team_name: "write-stories"`.
+**Step 2:** Call `TaskCreate` to define work items from the Orchestration Flow below.
+**Step 3:** Spawn each teammate using the `Agent` tool with `team_name: "write-stories"` and each teammate's `name`, `model`, and `prompt` as specified below.
 
 ### Story Writer
 - **Name**: `story-writer`
 - **Model**: sonnet
-- **Subagent type**: `general-purpose`
 - **Prompt**: [See Teammate Spawn Prompts below]
 - **Tasks**: Draft user stories conforming to the artifact template, apply INVEST criteria, define acceptance criteria and edge cases.
 
 ### Story Skeptic
 - **Name**: `story-skeptic`
 - **Model**: opus
-- **Subagent type**: `general-purpose`
 - **Prompt**: [See Teammate Spawn Prompts below]
 - **Tasks**: Review ALL story outputs. Challenge testability, completeness, and ambiguity. Reject stories that fail INVEST criteria. Nothing advances without your approval.
 
@@ -233,7 +233,7 @@ Blocking: [task number if applicable]
 
 ## Teammate Spawn Prompts
 
-> **You are the Team Lead (Strategist).** Your orchestration instructions are in the sections above. The following prompts are for teammates you create via the Task tool.
+> **You are the Team Lead (Strategist).** Your orchestration instructions are in the sections above. The following prompts are for teammates you spawn via the `Agent` tool with `team_name: "write-stories"`.
 
 ### Story Writer
 Model: Sonnet

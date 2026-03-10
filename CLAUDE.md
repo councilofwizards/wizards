@@ -71,10 +71,10 @@ wizards/
 
 | Tier               | Skills                                                                                                                                          | Pattern                                                                       |
 |--------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------|
-| Tier 1 (granular)  | research-market, ideate-product, manage-roadmap, write-stories, write-spec, plan-implementation, build-implementation, review-quality, run-task | Hub-and-Spoke with own teams and skeptic gates                                |
+| Tier 1 (granular)  | research-market, ideate-product, manage-roadmap, write-stories, write-spec, plan-implementation, build-implementation, review-quality, run-task | Agent Teams (TeamCreate + Agent with team_name) with skeptic gates            |
 | Tier 2 (composite) | plan-product, build-product                                                                                                                     | Chain Tier 1 skills via Skill tool; artifact detection skips completed stages |
 | Utility            | setup-project, wizard-guide                                                                                                                     | Single-agent, no teams                                                        |
-| Business           | draft-investor-update, plan-sales, plan-hiring                                                                                                  | Unchanged from pre-migration                                                  |
+| Business           | draft-investor-update, plan-sales, plan-hiring                                                                                                  | Agent Teams (TeamCreate + Agent with team_name) with skeptic gates            |
 
 ### Tier 2 Composite Pipelines
 
@@ -110,7 +110,7 @@ bash scripts/validate.sh
 Check categories:
 
 - **A-series** (skill-structure.sh): YAML frontmatter (incl. optional tier/chains), required sections (3 paths:
-  single-agent, tier-2 composite, multi-agent), spawn definitions, shared content markers
+  single-agent, tier-2 composite, multi-agent), spawn definitions (Name + Model fields), shared content markers
 - **B-series** (skill-shared-content.sh): Shared principles/protocol drift, authoritative source verification (reads
   from shared/)
 - **C-series** (roadmap-frontmatter.sh): Roadmap file frontmatter and filename conventions

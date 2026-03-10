@@ -81,6 +81,10 @@ If `$ARGUMENTS` begins with `--light`, strip the flag and enable lightweight mod
 
 ## Spawn the Team
 
+**Step 1:** Call `TeamCreate` with `team_name: "run-task"`.
+**Step 2:** Call `TaskCreate` to define work items from the Orchestration Flow below.
+**Step 3:** Spawn teammates using the `Agent` tool with `team_name: "run-task"` and each teammate's `name`, `model`, and `prompt` as specified below.
+
 **Dynamic team composition.** You do NOT have fixed agents. Analyze the task description and compose a team using these guidelines:
 
 **Team Sizing:**
@@ -235,7 +239,7 @@ Blocking: [task number if applicable]
 
 ## Teammate Spawn Prompts
 
-> **You are the Team Lead (Task Coordinator).** Your orchestration instructions are in the sections above. The following are TEMPLATE prompts — customize them based on the specific task.
+> **You are the Team Lead (Task Coordinator).** Your orchestration instructions are in the sections above. The following are TEMPLATE prompts — customize them based on the specific task. Spawn teammates via the `Agent` tool with `team_name: "run-task"`.
 
 ### Engineer Template
 Model: Sonnet (default) or Opus (for complex architectural work)

@@ -91,33 +91,31 @@ If `$ARGUMENTS` begins with `--light`, strip the flag and enable lightweight mod
 
 ## Spawn the Team
 
-Create an agent team called "draft-investor-update" with these teammates:
+**Step 1:** Call `TeamCreate` with `team_name: "draft-investor-update"`.
+**Step 2:** Call `TaskCreate` to define work items from the Orchestration Flow below.
+**Step 3:** Spawn each teammate using the `Agent` tool with `team_name: "draft-investor-update"` and each teammate's `name`, `model`, and `prompt` as specified below.
 
 ### Researcher
 - **Name**: `researcher`
 - **Model**: opus
-- **Subagent type**: `general-purpose`
 - **Prompt**: [See Teammate Spawn Prompts below]
 - **Tasks**: Investigate project artifacts. Gather metrics, milestones, blockers. Produce Research Dossier.
 
 ### Drafter
 - **Name**: `drafter`
 - **Model**: sonnet
-- **Subagent type**: `general-purpose`
 - **Prompt**: [See Teammate Spawn Prompts below]
 - **Tasks**: Compose investor update from Research Dossier. Revise based on skeptic feedback.
 
 ### Accuracy Skeptic
 - **Name**: `accuracy-skeptic`
 - **Model**: opus
-- **Subagent type**: `general-purpose`
 - **Prompt**: [See Teammate Spawn Prompts below]
 - **Tasks**: Verify all factual claims against evidence. Check numbers, milestones, timelines. Apply business quality checklist.
 
 ### Narrative Skeptic
 - **Name**: `narrative-skeptic`
 - **Model**: opus
-- **Subagent type**: `general-purpose`
 - **Prompt**: [See Teammate Spawn Prompts below]
 - **Tasks**: Detect spin, omissions, prior-update inconsistency. Check balanced framing and audience appropriateness. Apply business quality checklist.
 
@@ -292,7 +290,7 @@ Blocking: [task number if applicable]
 
 ## Teammate Spawn Prompts
 
-> **You are the Team Lead.** Your orchestration instructions are in the sections above. The following prompts are for teammates you create via the Task tool.
+> **You are the Team Lead.** Your orchestration instructions are in the sections above. The following prompts are for teammates you spawn via the `Agent` tool with `team_name: "draft-investor-update"`.
 
 ### Researcher
 Model: Opus

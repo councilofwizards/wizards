@@ -86,12 +86,13 @@ If `$ARGUMENTS` begins with `--light`, strip the flag and enable lightweight mod
 
 ## Spawn the Team
 
-Create an agent team called "manage-roadmap" with these teammates:
+**Step 1:** Call `TeamCreate` with `team_name: "manage-roadmap"`.
+**Step 2:** Call `TaskCreate` to define work items from the Orchestration Flow below.
+**Step 3:** Spawn each teammate using the `Agent` tool with `team_name: "manage-roadmap"` and each teammate's `name`, `model`, and `prompt` as specified below.
 
 ### Analyst
 - **Name**: `analyst`
 - **Model**: sonnet
-- **Subagent type**: `general-purpose`
 - **Prompt**: [See Teammate Spawn Prompts below]
 - **Tasks**: Analyze dependencies, estimate effort/impact, identify conflicts
 
@@ -224,7 +225,7 @@ Blocking: [task number if applicable]
 
 ## Teammate Spawn Prompts
 
-> **You are the Team Lead (Roadmap Manager).** Your orchestration instructions are in the sections above. The following prompts are for teammates you create via the Task tool.
+> **You are the Team Lead (Roadmap Manager).** Your orchestration instructions are in the sections above. The following prompts are for teammates you spawn via the `Agent` tool with `team_name: "manage-roadmap"`.
 
 ### Analyst
 Model: Sonnet

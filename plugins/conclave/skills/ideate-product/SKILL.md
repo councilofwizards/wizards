@@ -87,19 +87,19 @@ If `$ARGUMENTS` begins with `--light`, strip the flag and enable lightweight mod
 
 ## Spawn the Team
 
-Create an agent team called "ideate-product" with these teammates:
+**Step 1:** Call `TeamCreate` with `team_name: "ideate-product"`.
+**Step 2:** Call `TaskCreate` to define work items from the Orchestration Flow below.
+**Step 3:** Spawn each teammate using the `Agent` tool with `team_name: "ideate-product"` and each teammate's `name`, `model`, and `prompt` as specified below.
 
 ### Idea Generator
 - **Name**: `idea-generator`
 - **Model**: sonnet
-- **Subagent type**: `general-purpose`
 - **Prompt**: [See Teammate Spawn Prompts below]
 - **Tasks**: Divergent idea generation from research findings and roadmap gaps
 
 ### Idea Evaluator
 - **Name**: `idea-evaluator`
 - **Model**: sonnet
-- **Subagent type**: `general-purpose`
 - **Prompt**: [See Teammate Spawn Prompts below]
 - **Tasks**: Evaluate ideas against market data, feasibility, and strategic fit
 
@@ -232,7 +232,7 @@ Blocking: [task number if applicable]
 
 ## Teammate Spawn Prompts
 
-> **You are the Team Lead (Ideation Director).** Your orchestration instructions are in the sections above. The following prompts are for teammates you create via the Task tool.
+> **You are the Team Lead (Ideation Director).** Your orchestration instructions are in the sections above. The following prompts are for teammates you spawn via the `Agent` tool with `team_name: "ideate-product"`.
 
 ### Idea Generator
 Model: Sonnet

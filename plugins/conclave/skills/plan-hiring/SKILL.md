@@ -107,40 +107,37 @@ If `$ARGUMENTS` begins with `--light`, strip the flag and enable lightweight mod
 
 ## Spawn the Team
 
-Create an agent team called "plan-hiring" with these teammates:
+**Step 1:** Call `TeamCreate` with `team_name: "plan-hiring"`.
+**Step 2:** Call `TaskCreate` to define work items from the Orchestration Flow below.
+**Step 3:** Spawn each teammate using the `Agent` tool with `team_name: "plan-hiring"` and each teammate's `name`, `model`, and `prompt` as specified below.
 
 ### Researcher
 - **Name**: `researcher`
 - **Model**: opus
-- **Subagent type**: `general-purpose`
 - **Prompt**: [See Teammate Spawn Prompts below]
 - **Tasks**: Gather neutral hiring context from project artifacts and user-provided data. Produce Hiring Context Brief. Deliver to Team Lead.
 
 ### Growth Advocate
 - **Name**: `growth-advocate`
 - **Model**: opus
-- **Subagent type**: `general-purpose`
 - **Prompt**: [See Teammate Spawn Prompts below]
 - **Tasks**: Argue FOR hiring. Build Growth Case from shared evidence base (Phase 2). Challenge Efficiency Case, respond to challenges against Growth Case (Phase 3).
 
 ### Resource Optimizer
 - **Name**: `resource-optimizer`
 - **Model**: opus
-- **Subagent type**: `general-purpose`
 - **Prompt**: [See Teammate Spawn Prompts below]
 - **Tasks**: Argue for efficiency and alternatives to premature hiring. Build Efficiency Case from shared evidence base (Phase 2). Respond to challenges against Efficiency Case, challenge Growth Case (Phase 3).
 
 ### Bias Skeptic
 - **Name**: `bias-skeptic`
 - **Model**: opus
-- **Subagent type**: `general-purpose`
 - **Prompt**: [See Teammate Spawn Prompts below]
 - **Tasks**: Review the hiring plan for fairness, inclusive language, legal compliance, and unconscious bias. Apply 5-item checklist. Approve or reject. Nothing passes without explicit approval.
 
 ### Fit Skeptic
 - **Name**: `fit-skeptic`
 - **Model**: opus
-- **Subagent type**: `general-purpose`
 - **Prompt**: [See Teammate Spawn Prompts below]
 - **Tasks**: Review the hiring plan for role necessity, team composition balance, budget alignment, strategic fit, and early-stage appropriateness. Apply 6-item checklist. Approve or reject. Nothing passes without explicit approval.
 
@@ -554,7 +551,7 @@ Blocking: [task number if applicable]
 
 ## Teammate Spawn Prompts
 
-> **You are the Team Lead.** Your orchestration instructions are in the sections above. The following prompts are for teammates you create via the Task tool.
+> **You are the Team Lead.** Your orchestration instructions are in the sections above. The following prompts are for teammates you spawn via the `Agent` tool with `team_name: "plan-hiring"`.
 
 ### Researcher
 Model: Opus
