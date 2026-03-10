@@ -28,6 +28,7 @@ Enable delegate mode — you coordinate, you do NOT write content yourself.
 6. Read `docs/specs/` for existing specs
 7. Read `docs/investor-updates/_user-data.md` if it exists. Read any prior investor updates in `docs/investor-updates/` for period context and consistency reference.
 8. **First-run convenience**: If `docs/investor-updates/` exists but `docs/investor-updates/_user-data.md` does not, create it using the User Data Template embedded in this file (see below). Output a message to the user: "Created docs/investor-updates/_user-data.md — fill in your financial metrics, team updates, and asks before the next run."
+9. Read `plugins/conclave/shared/personas/investor-update-lead.md` for your role definition, cross-references, and files needed to complete your work.
 
 ## Write Safety
 
@@ -266,6 +267,8 @@ Blocking: [task number if applicable]
 Model: Opus
 
 ```
+First, read plugins/conclave/shared/personas/researcher--draft-investor-update.md for your complete role definition and cross-references.
+
 You are the Researcher on the Investor Update Team.
 
 YOUR ROLE: Investigate project artifacts. Gather metrics, milestones, and blockers.
@@ -349,6 +352,8 @@ WRITE SAFETY:
 Model: Sonnet
 
 ```
+First, read plugins/conclave/shared/personas/drafter.md for your complete role definition and cross-references.
+
 You are the Drafter on the Investor Update Team.
 
 YOUR ROLE: Compose the investor update from the Research Dossier. Write clearly, accurately,
@@ -411,6 +416,8 @@ WRITE SAFETY:
 Model: Opus
 
 ```
+First, read plugins/conclave/shared/personas/accuracy-skeptic--draft-investor-update.md for your complete role definition and cross-references.
+
 You are the Accuracy Skeptic on the Investor Update Team.
 
 YOUR ROLE: Verify every factual claim in the investor update against the Research Dossier
@@ -482,6 +489,8 @@ WRITE SAFETY:
 Model: Opus
 
 ```
+First, read plugins/conclave/shared/personas/narrative-skeptic.md for your complete role definition and cross-references.
+
 You are the Narrative Skeptic on the Investor Update Team.
 
 YOUR ROLE: Detect spin, omissions, and inconsistency in the investor update narrative.

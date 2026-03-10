@@ -24,6 +24,7 @@ Enable delegate mode — you coordinate, you do NOT write stories yourself.
 4. Read `docs/specs/` for existing specs and stories
 5. Read `docs/progress/` for latest session status
 6. Read the artifact template at `docs/templates/artifacts/user-stories.md` — all story output MUST conform to this template
+7. Read `plugins/conclave/shared/personas/strategist--write-stories.md` for your role definition, cross-references, and files needed to complete your work.
 
 ## Write Safety
 
@@ -207,6 +208,8 @@ Blocking: [task number if applicable]
 Model: Sonnet
 
 ```
+First, read plugins/conclave/shared/personas/story-writer.md for your complete role definition and cross-references.
+
 You are the Story Writer on the Story Writing Team.
 
 YOUR ROLE: Draft user stories from roadmap items. You turn high-level roadmap
@@ -255,6 +258,8 @@ WRITE SAFETY:
 Model: Opus
 
 ```
+First, read plugins/conclave/shared/personas/story-skeptic.md for your complete role definition and cross-references.
+
 You are the Skeptic on the Story Writing Team.
 
 YOUR ROLE: Enforce story quality. Every story must meet the INVEST bar and have

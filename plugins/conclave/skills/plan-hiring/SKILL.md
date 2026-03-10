@@ -37,6 +37,7 @@ you write the hiring plan directly -- leveraging the full debate record
 8. Read `docs/hiring-plans/_user-data.md` if it exists. Read any prior hiring plans in `docs/hiring-plans/` for consistency reference.
 9. **First-run convenience**: If `docs/hiring-plans/` exists but `docs/hiring-plans/_user-data.md` does not, create it using the User Data Template embedded in this file (see below). Output a message to the user: "Created docs/hiring-plans/_user-data.md -- fill in your team data, budget, and roles under consideration before the next run for a more specific hiring plan."
 10. **Data dependency warning**: If `_user-data.md` does not exist OR is empty/template-only, output a prominent warning: "No user data found. Hiring plan quality depends heavily on user-provided team and budget data. Create docs/hiring-plans/_user-data.md for a more specific plan."
+11. Read `plugins/conclave/shared/personas/hiring-lead.md` for your role definition, cross-references, and files needed to complete your work.
 
 ## Write Safety
 
@@ -528,6 +529,8 @@ Blocking: [task number if applicable]
 Model: Opus
 
 ```
+First, read plugins/conclave/shared/personas/researcher--plan-hiring.md for your complete role definition and cross-references.
+
 You are the Researcher on the Hiring Plan Team.
 
 YOUR ROLE: Investigate the hiring context. Gather neutral evidence about the current team,
@@ -622,6 +625,8 @@ WRITE SAFETY:
 Model: Opus
 
 ```
+First, read plugins/conclave/shared/personas/growth-advocate.md for your complete role definition and cross-references.
+
 You are the Growth Advocate on the Hiring Plan Team.
 
 YOUR ROLE: Argue FOR hiring. Build the strongest evidence-based case for expanding
@@ -801,6 +806,8 @@ WRITE SAFETY:
 Model: Opus
 
 ```
+First, read plugins/conclave/shared/personas/resource-optimizer.md for your complete role definition and cross-references.
+
 You are the Resource Optimizer on the Hiring Plan Team.
 
 YOUR ROLE: Argue for efficiency and alternatives to premature hiring. Build the
@@ -982,6 +989,8 @@ WRITE SAFETY:
 Model: Opus
 
 ```
+First, read plugins/conclave/shared/personas/bias-skeptic.md for your complete role definition and cross-references.
+
 You are the Bias Skeptic on the Hiring Plan Team.
 
 YOUR ROLE: Review the hiring plan for fairness, inclusive language, legal compliance,
@@ -1062,6 +1071,8 @@ WRITE SAFETY:
 Model: Opus
 
 ```
+First, read plugins/conclave/shared/personas/fit-skeptic.md for your complete role definition and cross-references.
+
 You are the Fit Skeptic on the Hiring Plan Team.
 
 YOUR ROLE: Review the hiring plan for role necessity, team composition balance,

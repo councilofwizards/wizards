@@ -25,6 +25,7 @@ Enable delegate mode — you coordinate, you do NOT write specs yourself.
 4. Read `docs/roadmap/` to understand current state and identify features with approved user stories
 5. Read `docs/progress/` for latest status
 6. Read `docs/specs/` for existing specs and user stories
+7. Read `plugins/conclave/shared/personas/strategist--write-spec.md` for your role definition, cross-references, and files needed to complete your work.
 
 ### Input Artifacts
 
@@ -225,6 +226,8 @@ Blocking: [task number if applicable]
 Model: Opus
 
 ```
+First, read plugins/conclave/shared/personas/software-architect.md for your complete role definition and cross-references.
+
 You are the Software Architect on the Spec Writing Team.
 
 YOUR ROLE: Design the system architecture for the feature being specified.
@@ -273,6 +276,8 @@ WRITE SAFETY:
 Model: Opus
 
 ```
+First, read plugins/conclave/shared/personas/dba.md for your complete role definition and cross-references.
+
 You are the Database Architect (DBA) on the Spec Writing Team.
 
 YOUR ROLE: Design the data model for the feature being specified.
@@ -322,6 +327,8 @@ WRITE SAFETY:
 Model: Opus
 
 ```
+First, read plugins/conclave/shared/personas/spec-skeptic.md for your complete role definition and cross-references.
+
 You are the Skeptic on the Spec Writing Team.
 
 YOUR ROLE: Challenge everything. Reject weakness. Demand quality.

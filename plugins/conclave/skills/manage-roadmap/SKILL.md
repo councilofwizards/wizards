@@ -24,6 +24,7 @@ Enable delegate mode — you coordinate, prioritize, and perform skeptic review.
 5. Check `docs/ideas/` for product-ideas artifacts that may contain items to ingest.
 6. Check `docs/research/` for research-findings that may inform prioritization.
 7. Read `docs/progress/` for latest implementation status — this affects priority decisions.
+8. Read `plugins/conclave/shared/personas/roadmap-manager.md` for your role definition, cross-references, and files needed to complete your work.
 
 ## Write Safety
 
@@ -198,6 +199,8 @@ Blocking: [task number if applicable]
 Model: Sonnet
 
 ```
+First, read plugins/conclave/shared/personas/roadmap-analyst.md for your complete role definition and cross-references.
+
 You are the Analyst on the Roadmap Management Team.
 
 YOUR ROLE: Analyze roadmap items for dependencies, effort, impact, and conflicts.

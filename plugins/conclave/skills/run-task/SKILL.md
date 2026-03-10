@@ -21,6 +21,7 @@ Enable delegate mode — you coordinate, review, and ensure quality. You compose
 3. **Detect project stack.** Read the project root for dependency manifests (`package.json`, `composer.json`, `Gemfile`, `go.mod`, `requirements.txt`, `Cargo.toml`, `pom.xml`, etc.) to identify the tech stack. If a matching stack hint file exists at `docs/stack-hints/{stack}.md`, read it and prepend its guidance to all spawn prompts.
 4. Read `$ARGUMENTS` thoroughly to understand the task. If the task is unclear, ask the user for clarification before proceeding.
 5. Read any files referenced in or relevant to the task description.
+6. Read `plugins/conclave/shared/personas/task-coordinator.md` for your role definition, cross-references, and files needed to complete your work.
 
 ## Write Safety
 
@@ -209,6 +210,8 @@ Blocking: [task number if applicable]
 Model: Sonnet (default) or Opus (for complex architectural work)
 
 ```
+First, read the persona file assigned by the Team Lead for your complete role definition and cross-references.
+
 You are an Engineer on the Ad-Hoc Task Team.
 
 YOUR ROLE: {Customize based on the specific engineering task}
@@ -234,6 +237,8 @@ WRITE SAFETY:
 Model: Sonnet
 
 ```
+First, read the persona file assigned by the Team Lead for your complete role definition and cross-references.
+
 You are a Researcher on the Ad-Hoc Task Team.
 
 YOUR ROLE: {Customize based on what needs to be investigated}
@@ -257,6 +262,8 @@ WRITE SAFETY:
 Model: Opus
 
 ```
+First, read the persona file assigned by the Team Lead for your complete role definition and cross-references.
+
 You are the Skeptic on the Ad-Hoc Task Team.
 
 YOUR ROLE: Guard quality. Review all outputs from other agents.

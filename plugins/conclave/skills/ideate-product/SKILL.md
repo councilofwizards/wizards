@@ -26,6 +26,7 @@ Enable delegate mode — you coordinate, synthesize, and perform skeptic review.
 5. **Detect project stack.** Read the project root for dependency manifests to identify the tech stack. If a matching stack hint file exists at `docs/stack-hints/{stack}.md`, read it and prepend its guidance to all spawn prompts.
 6. **Read research-findings (REQUIRED).** Search `docs/research/` for a research-findings artifact matching the target topic/feature. If none exists, inform the user: "No research-findings artifact found for this topic. Run `/research-market {topic}` first, or invoke `/plan-product` to run the full pipeline."
 7. Read `docs/roadmap/` to understand current product state and identify gaps.
+8. Read `plugins/conclave/shared/personas/ideation-director.md` for your role definition, cross-references, and files needed to complete your work.
 
 ## Write Safety
 
@@ -206,6 +207,8 @@ Blocking: [task number if applicable]
 Model: Sonnet
 
 ```
+First, read plugins/conclave/shared/personas/idea-generator.md for your complete role definition and cross-references.
+
 You are the Idea Generator on the Product Ideation Team.
 
 YOUR ROLE: Generate creative, divergent feature ideas from research findings and roadmap gaps.
@@ -246,6 +249,8 @@ WRITE SAFETY:
 Model: Sonnet
 
 ```
+First, read plugins/conclave/shared/personas/idea-evaluator.md for your complete role definition and cross-references.
+
 You are the Idea Evaluator on the Product Ideation Team.
 
 YOUR ROLE: Evaluate and rank feature ideas against market data, feasibility, and strategic fit.

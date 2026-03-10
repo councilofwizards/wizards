@@ -27,6 +27,7 @@ Enable delegate mode — you coordinate, review, and perform final synthesis. Yo
 6. Read `docs/specs/{feature}/stories.md` for user stories context (optional but valuable).
 7. Read `docs/architecture/` for relevant ADRs that constrain implementation.
 8. Read `docs/progress/` for any in-progress work to resume.
+9. Read `plugins/conclave/shared/personas/planning-lead.md` for your role definition, cross-references, and files needed to complete your work.
 
 ## Write Safety
 
@@ -209,6 +210,8 @@ Blocking: [task number if applicable]
 Model: Opus
 
 ```
+First, read plugins/conclave/shared/personas/impl-architect.md for your complete role definition and cross-references.
+
 You are the Implementation Architect on the Implementation Planning Team.
 
 YOUR ROLE: Translate the technical spec into a concrete implementation plan.
@@ -261,6 +264,8 @@ WRITE SAFETY:
 Model: Opus
 
 ```
+First, read plugins/conclave/shared/personas/plan-skeptic.md for your complete role definition and cross-references.
+
 You are the Plan Skeptic on the Implementation Planning Team.
 
 YOUR ROLE: Guard plan quality. You review the implementation plan for completeness,

@@ -24,6 +24,7 @@ Enable delegate mode — you coordinate, synthesize, and perform skeptic review.
 4. **Detect project stack.** Read the project root for dependency manifests (`package.json`, `composer.json`, `Gemfile`, `go.mod`, `requirements.txt`, `Cargo.toml`, `pom.xml`, etc.) to identify the tech stack. If a matching stack hint file exists at `docs/stack-hints/{stack}.md`, read it and prepend its guidance to all spawn prompts.
 5. Read `docs/roadmap/` to understand current product state and priorities.
 6. Check `docs/research/` for existing research artifacts — avoid duplicating recent work.
+7. Read `plugins/conclave/shared/personas/research-director.md` for your role definition, cross-references, and files needed to complete your work.
 
 ## Write Safety
 
@@ -202,6 +203,8 @@ Blocking: [task number if applicable]
 Model: Sonnet
 
 ```
+First, read plugins/conclave/shared/personas/market-researcher.md for your complete role definition and cross-references.
+
 You are the Market Researcher on the Market Research Team.
 
 YOUR ROLE: Investigate the competitive landscape, market size, and industry trends.
@@ -240,6 +243,8 @@ WRITE SAFETY:
 Model: Sonnet
 
 ```
+First, read plugins/conclave/shared/personas/customer-researcher.md for your complete role definition and cross-references.
+
 You are the Customer Researcher on the Market Research Team.
 
 YOUR ROLE: Investigate customer segments, pain points, and buyer personas.

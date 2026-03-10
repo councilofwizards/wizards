@@ -27,6 +27,7 @@ Enable delegate mode — you coordinate and review, you do NOT write code yourse
 6. Read `docs/specs/{feature}/stories.md` for user stories and acceptance criteria context (optional).
 7. Read `docs/architecture/` for relevant ADRs that constrain implementation.
 8. Read `docs/progress/` for any in-progress work to resume.
+9. Read `plugins/conclave/shared/personas/tech-lead.md` for your role definition, cross-references, and files needed to complete your work.
 
 ### Roadmap Status Convention
 
@@ -289,6 +290,8 @@ backend-eng                          frontend-eng
 Model: Sonnet
 
 ```
+First, read plugins/conclave/shared/personas/backend-eng.md for your complete role definition and cross-references.
+
 You are the Backend Engineer on the Implementation Build Team.
 
 YOUR ROLE: Implement server-side code. Routes, controllers, services, models,
@@ -337,6 +340,8 @@ TEST STRATEGY:
 Model: Sonnet
 
 ```
+First, read plugins/conclave/shared/personas/frontend-eng.md for your complete role definition and cross-references.
+
 You are the Frontend Engineer on the Implementation Build Team.
 
 YOUR ROLE: Implement client-side code. Components, pages, state management,
@@ -380,6 +385,8 @@ TEST STRATEGY:
 Model: Opus
 
 ```
+First, read plugins/conclave/shared/personas/quality-skeptic.md for your complete role definition and cross-references.
+
 You are the Quality Skeptic on the Implementation Build Team.
 
 YOUR ROLE: Guard quality at every stage. You review plans, contracts, and code.
