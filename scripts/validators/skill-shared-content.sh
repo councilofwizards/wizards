@@ -72,7 +72,9 @@ normalize_skeptic_names() {
         -e 's/plan-skeptic/SKEPTIC_NAME/g' \
         -e 's/Plan Skeptic/SKEPTIC_NAME/g' \
         -e 's/task-skeptic/SKEPTIC_NAME/g' \
-        -e 's/Task Skeptic/SKEPTIC_NAME/g'
+        -e 's/Task Skeptic/SKEPTIC_NAME/g' \
+        -e 's/{skill-skeptic}/SKEPTIC_NAME/g' \
+        -e 's/{Skill Skeptic}/SKEPTIC_NAME/g'
 }
 
 # Build lookup of files to skip shared content checks (single-agent and tier 2 composites)

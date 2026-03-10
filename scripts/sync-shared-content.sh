@@ -94,18 +94,28 @@ extract_skeptic_names() {
     local row
     row="$(grep "Plan ready for review" "$file" 2>/dev/null || true)"
     if [ -z "$row" ]; then
-        echo "product-skeptic"
-        echo "Product Skeptic"
+        echo "{skill-skeptic}"
+        echo "{Skill Skeptic}"
         return
     fi
-    # Extract slug: write(SLUG, "PLAN REVIEW...)
+    # Extract slug: write(SLUG, "PLAN REVIEW...) — handles optional {/} around slug
     local slug
-    slug="$(printf '%s' "$row" | sed -n 's/.*write(\([a-z-]*\),.*/\1/p')"
-    # Extract display name: | Display Name |
+    slug="$(printf '%s' "$row" | sed -n 's/.*write([{]*\([a-z-]*\)[}]*,.*/\1/p')"
+    # Filter out placeholder value (sans braces)
+    if [ "$slug" = "skill-skeptic" ]; then slug=""; fi
+    # Extract display name: | Display Name | — strip stray braces
     local display
-    display="$(printf '%s' "$row" | awk -F'|' '{gsub(/^[[:space:]]+|[[:space:]]+$/,"",$4); print $4}')"
-    echo "${slug:-product-skeptic}"
-    echo "${display:-Product Skeptic}"
+    display="$(printf '%s' "$row" | awk -F'|' '{gsub(/^[[:space:]]+|[[:space:]]+$/,"",$4); gsub(/[{}]/,"",$4); print $4}')"
+    # Filter out placeholder display
+    if [ "$display" = "Skill Skeptic" ]; then display=""; fi
+    # If slug is empty but display is valid, derive slug from display
+    if [ -z "$slug" ] && [ -n "$display" ]; then
+        slug="$(printf '%s' "$display" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')"
+    fi
+    local default_slug='{skill-skeptic}'
+    local default_display='{Skill Skeptic}'
+    echo "${slug:-$default_slug}"
+    echo "${display:-$default_display}"
 }
 
 # Helper: replace content between markers in a file
@@ -170,8 +180,8 @@ if [ -z "$auth_protocol" ]; then
 fi
 
 # Authoritative skeptic names (for substitution)
-AUTH_SKEPTIC_SLUG="product-skeptic"
-AUTH_SKEPTIC_DISPLAY="Product Skeptic"
+AUTH_SKEPTIC_SLUG="{skill-skeptic}"
+AUTH_SKEPTIC_DISPLAY="{Skill Skeptic}"
 
 synced=0
 skipped=0

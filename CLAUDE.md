@@ -2,7 +2,8 @@
 
 ## What This Is
 
-A Claude Code plugin marketplace (`wizards`) containing the `conclave` plugin — 18 skills organized in a two-tier architecture (ADR-004) that spawn coordinated AI agent teams for planning, building, and operating SaaS products.
+A Claude Code plugin marketplace (`wizards`) containing the `conclave` plugin — 18 skills organized in a two-tier
+architecture (ADR-004) that spawn coordinated AI agent teams for planning, building, and operating SaaS products.
 
 ## Tech Stack
 
@@ -68,12 +69,12 @@ wizards/
 
 ## Two-Tier Architecture
 
-| Tier | Skills | Pattern |
-|------|--------|---------|
-| Tier 1 (granular) | research-market, ideate-product, manage-roadmap, write-stories, write-spec, plan-implementation, build-implementation, review-quality, run-task | Hub-and-Spoke with own teams and skeptic gates |
-| Tier 2 (composite) | plan-product, build-product | Chain Tier 1 skills via Skill tool; artifact detection skips completed stages |
-| Utility | setup-project, wizard-guide | Single-agent, no teams |
-| Business | draft-investor-update, plan-sales, plan-hiring | Unchanged from pre-migration |
+| Tier               | Skills                                                                                                                                          | Pattern                                                                       |
+|--------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------|
+| Tier 1 (granular)  | research-market, ideate-product, manage-roadmap, write-stories, write-spec, plan-implementation, build-implementation, review-quality, run-task | Hub-and-Spoke with own teams and skeptic gates                                |
+| Tier 2 (composite) | plan-product, build-product                                                                                                                     | Chain Tier 1 skills via Skill tool; artifact detection skips completed stages |
+| Utility            | setup-project, wizard-guide                                                                                                                     | Single-agent, no teams                                                        |
+| Business           | draft-investor-update, plan-sales, plan-hiring                                                                                                  | Unchanged from pre-migration                                                  |
 
 ### Tier 2 Composite Pipelines
 
@@ -83,6 +84,7 @@ wizards/
 ### Artifact Contract System
 
 Tier 1 skills produce and consume typed artifacts with YAML frontmatter. Templates at `docs/templates/artifacts/`:
+
 - `research-findings.md` — produced by research-market, consumed by ideate-product
 - `product-ideas.md` — produced by ideate-product, consumed by manage-roadmap
 - `user-stories.md` — produced by write-stories, consumed by write-spec
@@ -100,13 +102,17 @@ Tier 1 skills produce and consume typed artifacts with YAML frontmatter. Templat
 ## Validation
 
 Run all validators:
+
 ```bash
 bash scripts/validate.sh
 ```
 
 Check categories:
-- **A-series** (skill-structure.sh): YAML frontmatter (incl. optional tier/chains), required sections (3 paths: single-agent, tier-2 composite, multi-agent), spawn definitions, shared content markers
-- **B-series** (skill-shared-content.sh): Shared principles/protocol drift, authoritative source verification (reads from shared/)
+
+- **A-series** (skill-structure.sh): YAML frontmatter (incl. optional tier/chains), required sections (3 paths:
+  single-agent, tier-2 composite, multi-agent), spawn definitions, shared content markers
+- **B-series** (skill-shared-content.sh): Shared principles/protocol drift, authoritative source verification (reads
+  from shared/)
 - **C-series** (roadmap-frontmatter.sh): Roadmap file frontmatter and filename conventions
 - **D-series** (spec-frontmatter.sh): Spec file frontmatter
 - **E-series** (progress-checkpoint.sh): Checkpoint file frontmatter
@@ -121,11 +127,14 @@ Check categories:
 
 ## Development Guidelines
 
-- SKILL.md files are the product. Every edit to shared content must be made in `plugins/conclave/shared/` and synced via `bash scripts/sync-shared-content.sh`.
+- SKILL.md files are the product. Every edit to shared content must be made in `plugins/conclave/shared/` and synced via
+  `bash scripts/sync-shared-content.sh`.
 - Run `bash scripts/validate.sh` before committing. All checks must pass.
 - Roadmap items use frontmatter with `status`, `priority`, `category`, `effort`, `impact`, `dependencies`.
-- Specs follow `docs/specs/_template.md`. Progress files follow `docs/progress/_template.md`. ADRs follow `docs/architecture/_template.md`.
-- Business skills are larger than engineering skills due to output templates and domain-specific formats. This is expected.
+- Specs follow `docs/specs/_template.md`. Progress files follow `docs/progress/_template.md`. ADRs follow
+  `docs/architecture/_template.md`.
+- Business skills are larger than engineering skills due to output templates and domain-specific formats. This is
+  expected.
 - The Skeptic role is non-negotiable in every multi-agent skill. Never remove or weaken it.
 
 ## Current Roadmap Status

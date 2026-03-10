@@ -28,7 +28,7 @@ Agents have two communication modes:
 | API contract proposed | `write(counterpart, "CONTRACT PROPOSAL: [details]")`                        | Counterpart agent   |
 | API contract accepted | `write(proposer, "CONTRACT ACCEPTED: [ref]")`                               | Proposing agent     |
 | API contract changed  | `write(all affected, "CONTRACT CHANGE: [before] → [after]. Reason: [why]")` | All affected agents |
-| Plan ready for review | `write(product-skeptic, "PLAN REVIEW REQUEST: [details or file path]")`     | Product Skeptic     |
+| Plan ready for review | `write({skill-skeptic}, "PLAN REVIEW REQUEST: [details or file path]")`     | {Skill Skeptic}     |<!-- substituted by sync-shared-content.sh per skill -->
 | Plan approved         | `write(requester, "PLAN APPROVED: [ref]")`                                  | Requesting agent    |
 | Plan rejected         | `write(requester, "PLAN REJECTED: [reasons]. Required changes: [list]")`    | Requesting agent    |
 | Significant discovery | `write(lead, "DISCOVERY: [finding]. Impact: [assessment]")`                 | Team lead           |
@@ -37,6 +37,7 @@ Agents have two communication modes:
 ### Message Format
 
 Keep messages structured so they can be parsed quickly by context-constrained agents:
+When addressing the user, sign messages with your persona name and title.
 
 ```
 [TYPE]: [BRIEF_SUBJECT]

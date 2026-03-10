@@ -1,7 +1,7 @@
 # Product Roadmap
 
 > **Source of truth**: Individual item files in this directory. This index is a convenience summary.
-> **Last updated**: 2026-02-19
+> **Last updated**: 2026-03-10
 
 ## Categories
 
@@ -63,22 +63,29 @@ Items are prioritized using two dimensions:
 | 9 | [Content Deduplication](P2-05-content-deduplication.md) | core-framework | ✅ | Medium |
 | 10 | [Artifact Format Templates](P2-06-format-templates.md) | core-framework | ✅ | Medium |
 
-| 11 | [Universal Shared Principles](P2-07-universal-principles.md) | core-framework | 🔴 | Medium |
+| 11 | [Role-Based Principles Split](P2-07-universal-principles.md) | core-framework | 🔴 | Medium |
 | 12 | [Plugin Organization (Multi-Plugin)](P2-08-plugin-organization.md) | core-framework | 🔴 | Medium |
+| 13 | [Persona System Activation](P2-09-persona-system-activation.md) | core-framework | 🔴 | Small-Medium |
+| 14 | [Skill Discoverability Improvements](P2-10-skill-discoverability.md) | developer-experience | 🔴 | Small |
 
 > **P2-08 prerequisite**: Defer plugin organization until 2+ business skills are built and validated. Real-world skill structure should inform plugin boundaries.
+> **P2-09 + P2-10**: Highest-ROI items from conclave-plugin-improvements research. Wave 1 implementation recommended.
 
 ### P3 — Nice-to-Have (Engineering)
 
 | # | Item | Category | Status | Effort |
 |---|------|----------|--------|--------|
-| 13 | [Custom Agent Roles](P3-01-custom-agent-roles.md) | new-skills | 🔴 | Large |
-| 14 | [Onboarding Wizard Skill](P3-02-onboarding-wizard.md) | developer-experience | ✅ | Small |
-| 15 | [Architecture & Contribution Guide](P3-03-contribution-guide.md) | documentation | 🔴 | Small |
-| 16 | [Incident Triage Skill](P3-04-triage-incident.md) | new-skills | 🔴 | Medium |
-| 17 | [Tech Debt Review Skill](P3-05-review-debt.md) | new-skills | 🔴 | Medium |
-| 18 | [API Design Skill](P3-06-design-api.md) | new-skills | 🔴 | Medium |
-| 19 | [Migration Planning Skill](P3-07-plan-migration.md) | new-skills | 🔴 | Large |
+| 15 | [Custom Agent Roles](P3-01-custom-agent-roles.md) | new-skills | 🔴 | Large |
+| 16 | [Onboarding Wizard Skill](P3-02-onboarding-wizard.md) | developer-experience | ✅ | Small |
+| 17 | [Architecture & Contribution Guide](P3-03-contribution-guide.md) | documentation | 🔴 | Small |
+| 18 | [Incident Triage Skill](P3-04-triage-incident.md) | new-skills | 🔴 | Medium |
+| 19 | [Tech Debt Review Skill](P3-05-review-debt.md) | new-skills | 🔴 | Medium |
+| 20 | [API Design Skill](P3-06-design-api.md) | new-skills | 🔴 | Medium |
+| 21 | [Migration Planning Skill](P3-07-plan-migration.md) | new-skills | 🔴 | Large |
+| 22 | [Persona Reference Validator](P3-08-persona-reference-validator.md) | quality-reliability | 🔴 | Medium |
+| 23 | [Artifact Continuity Badges](P3-09-artifact-continuity-badges.md) | core-framework | 🔴 | Small |
+
+> **P3-08 dependency**: Must be implemented AFTER P2-09 (Persona System Activation). Validator checks for fictional names in spawn prompts — will fail if P2-09 is not done first.
 
 ### P3 — Nice-to-Have (Business)
 
@@ -86,20 +93,30 @@ Items are prioritized using two dimensions:
 
 | # | Item | Category | Status | Effort |
 |---|------|----------|--------|--------|
-| 20 | [Sales Planning Skill](P3-10-plan-sales.md) | business-skills | ✅ | Medium |
-| 21 | [Marketing Planning Skill](P3-11-plan-marketing.md) | business-skills | 🔴 | Medium |
-| 22 | [Finance Planning Skill](P3-12-plan-finance.md) | business-skills | 🔴 | Medium-Large |
-| 23 | [Hiring Planning Skill](P3-14-plan-hiring.md) | business-skills | ✅ | Medium |
-| 24 | [Customer Success Skill](P3-15-plan-customer-success.md) | business-skills | 🔴 | Medium |
-| 25 | [Sales Collateral Skill](P3-16-build-sales-collateral.md) | business-skills | 🔴 | Medium |
-| 26 | [Content Production Skill](P3-17-build-content.md) | business-skills | 🔴 | Medium |
-| 27 | [Legal Review Skill](P3-18-review-legal.md) | business-skills | 🔴 | Medium-Large |
+| 24 | [Sales Planning Skill](P3-10-plan-sales.md) | business-skills | ✅ | Medium |
+| 25 | [Marketing Planning Skill](P3-11-plan-marketing.md) | business-skills | 🔴 | Medium |
+| 26 | [Finance Planning Skill](P3-12-plan-finance.md) | business-skills | 🔴 | Medium-Large |
+| 27 | [Hiring Planning Skill](P3-14-plan-hiring.md) | business-skills | ✅ | Medium |
+| 28 | [Customer Success Skill](P3-15-plan-customer-success.md) | business-skills | 🔴 | Medium |
+| 29 | [Sales Collateral Skill](P3-16-build-sales-collateral.md) | business-skills | 🔴 | Medium |
+| 30 | [Content Production Skill](P3-17-build-content.md) | business-skills | 🔴 | Medium |
+| 31 | [Legal Review Skill](P3-18-review-legal.md) | business-skills | 🔴 | Medium-Large |
 
 ### P3 — Nice-to-Have (Business — Scale & Optimize)
 
 | # | Item | Category | Status | Effort |
 |---|------|----------|--------|--------|
-| 28 | [Analytics Planning Skill](P3-19-plan-analytics.md) | business-skills | 🔴 | Medium |
-| 29 | [Operations Planning Skill](P3-20-plan-operations.md) | business-skills | 🔴 | Medium |
-| 30 | [Employee Onboarding Skill](P3-21-plan-onboarding.md) | business-skills | 🔴 | Small-Medium |
-| 31 | [Investor Update Skill](P3-22-draft-investor-update.md) | business-skills | ✅ | Small-Medium |
+| 32 | [Analytics Planning Skill](P3-19-plan-analytics.md) | business-skills | 🔴 | Medium |
+| 33 | [Operations Planning Skill](P3-20-plan-operations.md) | business-skills | 🔴 | Medium |
+| 34 | [Employee Onboarding Skill](P3-21-plan-onboarding.md) | business-skills | 🔴 | Small-Medium |
+| 35 | [Investor Update Skill](P3-22-draft-investor-update.md) | business-skills | ✅ | Small-Medium |
+
+### P3 — Nice-to-Have (Persona & Documentation)
+
+| # | Item | Category | Status | Effort |
+|---|------|----------|--------|--------|
+| 36 | [Persona System ADR (ADR-005)](P3-23-persona-system-adr.md) | documentation | 🔴 | Small |
+| 37 | [run-task Persona Archetypes](P3-24-run-task-persona-archetypes.md) | core-framework | 🔴 | Medium |
+| 38 | [PoC Skills Deprecation Banner](P3-25-poc-deprecation-banner.md) | developer-experience | 🔴 | Small |
+
+> **P3-23, P3-24 dependency**: Both depend on P2-09 (Persona System Activation). ADR documents the completed system; run-task archetypes follow the injection pattern established by P2-09.
