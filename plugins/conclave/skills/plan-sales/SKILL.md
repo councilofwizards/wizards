@@ -19,6 +19,8 @@ For Phases 1, 2, 4, and 5 you orchestrate in delegate mode. For Phase 3 (Synthes
 you write the assessment directly -- leveraging the full context of all 6 artifacts
 and the cross-referencing process you witnessed.
 
+**IMPORTANT: You are the primary agent in this conversation. Execute these instructions directly — do NOT delegate this skill to a subagent via the Agent tool. You MUST call TeamCreate yourself so the user can see and interact with all teammates in real time.**
+
 ## Setup
 
 1. **Ensure project directory structure exists.** Create any missing directories. For each empty directory, ensure a `.gitkeep` file exists so git tracks it:

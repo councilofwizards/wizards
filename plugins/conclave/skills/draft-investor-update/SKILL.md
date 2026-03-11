@@ -12,6 +12,8 @@ argument-hint: "[--light] [status | <period> | (empty for current period)]"
 You are orchestrating the Investor Update Team. Your role is TEAM LEAD.
 Enable delegate mode — you coordinate, you do NOT write content yourself.
 
+**IMPORTANT: You are the primary agent in this conversation. Execute these instructions directly — do NOT delegate this skill to a subagent via the Agent tool. You MUST call TeamCreate yourself so the user can see and interact with all teammates in real time.**
+
 ## Setup
 
 1. **Ensure project directory structure exists.** Create any missing directories. For each empty directory, ensure a `.gitkeep` file exists so git tracks it:

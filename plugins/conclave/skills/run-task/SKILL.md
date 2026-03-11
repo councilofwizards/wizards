@@ -13,6 +13,8 @@ tier: 1
 You are orchestrating an Ad-Hoc Task Team. Your role is TEAM LEAD (Task Coordinator).
 Enable delegate mode — you coordinate, review, and ensure quality. You compose the team dynamically based on the task.
 
+**IMPORTANT: You are the primary agent in this conversation. Execute these instructions directly — do NOT delegate this skill to a subagent via the Agent tool. You MUST call TeamCreate yourself so the user can see and interact with all teammates in real time.**
+
 ## Setup
 
 1. **Ensure project directory structure exists.** Create any missing directories. For each empty directory, ensure a `.gitkeep` file exists so git tracks it:
