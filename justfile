@@ -158,6 +158,62 @@ set +args:
         esac
     fi
 
+# Bump version by type: just bump version major|minor|patch [--noninteractive]
+bump +args:
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    property=""
+    bump_type=""
+    noninteractive=0
+    for arg in {{args}}; do
+        case "$arg" in
+            --noninteractive) noninteractive=1 ;;
+            *)
+                if [ -z "$property" ]; then
+                    property="$arg"
+                elif [ -z "$bump_type" ]; then
+                    bump_type="$arg"
+                else
+                    echo "Too many arguments. Usage: just bump version major|minor|patch [--noninteractive]"
+                    exit 1
+                fi
+                ;;
+        esac
+    done
+
+    if [ "$property" != "version" ]; then
+        echo "Unknown property: $property"
+        echo "Available: version"
+        exit 1
+    fi
+
+    if [ -z "$bump_type" ]; then
+        echo "Usage: just bump version major|minor|patch [--noninteractive]"
+        exit 1
+    fi
+
+    current=$(grep '"version"' {{plugin_json}} | sed 's/.*"version": *"\([^"]*\)".*/\1/')
+    IFS='.' read -r cur_major cur_minor cur_patch <<< "$current"
+
+    case "$bump_type" in
+        major) new_version="$((cur_major + 1)).0.0" ;;
+        minor) new_version="${cur_major}.$((cur_minor + 1)).0" ;;
+        patch) new_version="${cur_major}.${cur_minor}.$((cur_patch + 1))" ;;
+        *)
+            echo "Invalid bump type: $bump_type"
+            echo "Must be one of: major, minor, patch"
+            exit 1
+            ;;
+    esac
+
+    flags=""
+    if [ "$noninteractive" -eq 1 ]; then
+        flags="--noninteractive"
+    fi
+
+    just set version "$new_version" $flags
+
 # Run all validators
 validate:
     bash scripts/validate.sh
