@@ -80,9 +80,6 @@ should_skip_sync() {
         if printf '%s\n' "$fm_content" | grep -q "^type:[[:space:]]*single-agent"; then
             return 0
         fi
-        if printf '%s\n' "$fm_content" | grep -q "^tier:[[:space:]]*2"; then
-            return 0
-        fi
     fi
     return 1
 }

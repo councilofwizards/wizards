@@ -2,8 +2,8 @@
 
 ## What This Is
 
-A Claude Code plugin marketplace (`wizards`) containing the `conclave` plugin — 18 skills organized in a two-tier
-architecture (ADR-004) that spawn coordinated AI agent teams for planning, building, and operating SaaS products.
+A Claude Code plugin marketplace (`wizards`) containing the `conclave` plugin — 17 skills that spawn coordinated AI
+agent teams for planning, building, and operating SaaS products.
 
 ## Tech Stack
 
@@ -20,7 +20,7 @@ wizards/
   plugins/conclave/
     .claude-plugin/plugin.json       # Plugin manifest (v1.0.0)
     skills/
-      # Tier 1: Granular skills (invoked directly or chained by Tier 2)
+      # Granular skills (independently invocable)
       research-market/SKILL.md       # Market research (Hub-and-Spoke, Lead-as-Skeptic)
       ideate-product/SKILL.md        # Product ideation (Hub-and-Spoke, Lead-as-Skeptic)
       manage-roadmap/SKILL.md        # Roadmap management (Hub-and-Spoke, Lead-as-Skeptic)
@@ -30,19 +30,18 @@ wizards/
       build-implementation/SKILL.md  # Code implementation (Hub-and-Spoke, dedicated skeptic)
       review-quality/SKILL.md        # Quality & ops (Hub-and-Spoke, dedicated skeptic)
       run-task/SKILL.md              # Ad-hoc tasks (Dynamic Hub-and-Spoke)
-      # Tier 2: Composite skills (chain Tier 1 via Skill tool)
-      plan-product/SKILL.md          # Planning pipeline (chains 5 Tier 1 skills)
-      build-product/SKILL.md         # Implementation pipeline (chains 3 Tier 1 skills)
+      # Pipeline skills (multi-stage with own Agent Teams)
+      plan-product/SKILL.md          # Planning pipeline: research → ideation → roadmap → stories → spec
+      build-product/SKILL.md         # Implementation pipeline: planning → build → quality review
       # Utility / Single-Agent
       setup-project/SKILL.md         # Project bootstrap (Single-Agent)
       wizard-guide/SKILL.md          # Skill ecosystem guide (Single-Agent)
-      # Business skills (unchanged)
+      # Business skills
       draft-investor-update/SKILL.md # Investor updates (Pipeline)
       plan-sales/SKILL.md            # Sales strategy (Collaborative Analysis)
       plan-hiring/SKILL.md           # Hiring plans (Structured Debate)
       # PoC / Test
       tier1-test/SKILL.md            # Phase 0 PoC Tier 1 test skill
-      tier2-test/SKILL.md            # Phase 0 PoC Tier 2 test skill
     shared/                          # Authoritative shared content
       principles.md                  # Shared Principles block
       communication-protocol.md      # Communication Protocol block
@@ -67,28 +66,32 @@ wizards/
     templates/artifacts/             # Artifact schema templates for skill pipelines
 ```
 
-## Two-Tier Architecture
+## Skill Architecture
 
-| Tier               | Skills                                                                                                                                          | Pattern                                                                       |
+| Category           | Skills                                                                                                                                          | Pattern                                                                       |
 |--------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------|
-| Tier 1 (granular)  | research-market, ideate-product, manage-roadmap, write-stories, write-spec, plan-implementation, build-implementation, review-quality, run-task | Agent Teams (TeamCreate + Agent with team_name) with skeptic gates            |
-| Tier 2 (composite) | plan-product, build-product                                                                                                                     | Chain Tier 1 skills via Skill tool; artifact detection skips completed stages |
+| Granular           | research-market, ideate-product, manage-roadmap, write-stories, write-spec, plan-implementation, build-implementation, review-quality, run-task | Agent Teams (TeamCreate + Agent with team_name) with skeptic gates            |
+| Pipeline           | plan-product, build-product                                                                                                                     | Agent Teams with multi-stage orchestration; artifact detection skips stages   |
 | Utility            | setup-project, wizard-guide                                                                                                                     | Single-agent, no teams                                                        |
 | Business           | draft-investor-update, plan-sales, plan-hiring                                                                                                  | Agent Teams (TeamCreate + Agent with team_name) with skeptic gates            |
 
-### Tier 2 Composite Pipelines
+### Pipeline Skills
 
-- **plan-product**: research-market → ideate-product → manage-roadmap → write-stories → write-spec
-- **build-product**: plan-implementation → build-implementation → review-quality
+Pipeline skills spawn their own Agent Teams directly and orchestrate agents through sequential stages:
+
+- **plan-product**: 5 stages (research → ideation → roadmap → stories → spec), 9 agents + lead
+- **build-product**: 3 stages (planning → build → quality review), 6 agents + lead
+
+Both use frontmatter-based artifact detection to skip completed stages on re-invocation.
 
 ### Artifact Contract System
 
-Tier 1 skills produce and consume typed artifacts with YAML frontmatter. Templates at `docs/templates/artifacts/`:
+Skills produce and consume typed artifacts with YAML frontmatter. Templates at `docs/templates/artifacts/`:
 
-- `research-findings.md` — produced by research-market, consumed by ideate-product
-- `product-ideas.md` — produced by ideate-product, consumed by manage-roadmap
-- `user-stories.md` — produced by write-stories, consumed by write-spec
-- `implementation-plan.md` — produced by plan-implementation, consumed by build-implementation
+- `research-findings.md` — produced by research-market / plan-product, consumed by ideate-product
+- `product-ideas.md` — produced by ideate-product / plan-product, consumed by manage-roadmap
+- `user-stories.md` — produced by write-stories / plan-product, consumed by write-spec
+- `implementation-plan.md` — produced by plan-implementation / build-product, consumed by build-implementation
 
 ## Shared Content Architecture
 
@@ -97,7 +100,7 @@ Tier 1 skills produce and consume typed artifacts with YAML frontmatter. Templat
 - **Markers**: `<!-- BEGIN SHARED: principles -->` / `<!-- END SHARED: principles -->` (and `communication-protocol`)
 - **Drift detection**: `scripts/validators/skill-shared-content.sh` (B1-B3 checks)
 - **Per-skill variation**: Skeptic name in Communication Protocol differs per skill (13 name pairs in normalizer)
-- **Exclusions**: Skills with `type: single-agent` or `tier: 2` are skipped by shared content checks and sync
+- **Exclusions**: Skills with `type: single-agent` are skipped by shared content checks and sync
 
 ## Validation
 
@@ -109,8 +112,8 @@ bash scripts/validate.sh
 
 Check categories:
 
-- **A-series** (skill-structure.sh): YAML frontmatter (incl. optional tier/chains), required sections (3 paths:
-  single-agent, tier-2 composite, multi-agent), spawn definitions (Name + Model fields), shared content markers
+- **A-series** (skill-structure.sh): YAML frontmatter (incl. optional tier), required sections (2 paths:
+  single-agent, multi-agent), spawn definitions (Name + Model fields), shared content markers
 - **B-series** (skill-shared-content.sh): Shared principles/protocol drift, authoritative source verification (reads
   from shared/)
 - **C-series** (roadmap-frontmatter.sh): Roadmap file frontmatter and filename conventions
@@ -123,7 +126,7 @@ Check categories:
 - **ADR-001**: Roadmap file structure (one file per item, YAML frontmatter)
 - **ADR-002**: Content deduplication strategy (validated duplication with HTML markers)
 - **ADR-003**: Onboarding wizard single-agent pattern
-- **ADR-004**: Two-tier skill architecture (Tier 1 granular, Tier 2 composite)
+- **ADR-004**: Two-tier skill architecture (superseded — flattened to single tier)
 
 ## Development Guidelines
 
@@ -142,5 +145,5 @@ Check categories:
 - **P1**: All 4 items complete (bootstrap, write safety, state persistence, stack generalization)
 - **P2**: 7/8 complete. P2-07 (shared content extraction) done. P2-08 (plugin organization) remaining.
 - **P3**: 4/19 complete. 15 items not started across engineering, business, and documentation categories.
-- P2-02 (Skill Composability) is parked, superseded by ADR-004 two-tier architecture.
-- **Two-tier migration**: ALL 6 PHASES COMPLETE (0-5). 18 skills, 12/12 validators pass.
+- P2-02 (Skill Composability) is parked, superseded by ADR-004 (now also superseded).
+- **Architecture**: All skills use Agent Teams directly. 17 skills, 12/12 validators pass.

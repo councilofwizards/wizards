@@ -1,16 +1,18 @@
 ---
 title: "Two-Tier Skill Architecture with Artifact Contracts"
-status: "accepted"
+status: "superseded"
 created: "2026-02-21"
-updated: "2026-02-21"
-superseded_by: ""
+updated: "2026-03-10"
+superseded_by: "Flattened to single-tier: plan-product and build-product are now multi-agent skills that spawn their own Agent Teams directly, rather than delegating to Tier 1 skills via the Skill tool."
 ---
 
 # ADR-004: Two-Tier Skill Architecture with Artifact Contracts
 
 ## Status
 
-Accepted
+Superseded (2026-03-10)
+
+The two-tier architecture was reverted. Tier 2 composites (plan-product, build-product) invoked Tier 1 skills via the Skill tool, which caused their agent teams to run as nested subagents — losing Agent Teams visibility for the user. These skills were rewritten as standard multi-agent skills that create their own Agent Teams directly. Tier 1 skills remain unchanged and independently invocable. The tier2-test PoC skill was removed. Artifact detection and pipeline sequencing logic was preserved inline within the rewritten skills.
 
 ## Context
 

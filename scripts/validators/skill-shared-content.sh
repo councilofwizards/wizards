@@ -93,8 +93,6 @@ for f in "${skill_files[@]}"; do
         fm_content="$(sed -n "2,$((fm_end - 1))p" "$f")"
         if printf '%s\n' "$fm_content" | grep -q "^type:[[:space:]]*single-agent"; then
             skip_shared_files+=("$f")
-        elif printf '%s\n' "$fm_content" | grep -q "^tier:[[:space:]]*2"; then
-            skip_shared_files+=("$f")
         fi
     fi
 done
