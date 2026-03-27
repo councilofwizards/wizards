@@ -64,7 +64,7 @@ Items are prioritized using two dimensions:
 | 10 | [Artifact Format Templates](P2-06-format-templates.md) | core-framework | ✅ | Medium |
 
 | 11 | [Role-Based Principles Split](P2-07-universal-principles.md) | core-framework | ✅ | Medium |
-| 12 | [Plugin Organization (Multi-Plugin)](P2-08-plugin-organization.md) | core-framework | 🔴 | Medium |
+| 12 | [Plugin Organization — Internal Taxonomy & Infrastructure](P2-08-plugin-organization.md) | core-framework | 🟢 | Small |
 | 13 | [Persona System Activation](P2-09-persona-system-activation.md) | core-framework | ✅ | Small-Medium |
 | 14 | [Skill Discoverability Improvements](P2-10-skill-discoverability.md) | developer-experience | ✅ | Small |
 | 15 | [Sprint Contracts / Definition of Done](P2-11-sprint-contracts.md) | core-framework | ✅ | Medium |
@@ -80,13 +80,13 @@ Items are prioritized using two dimensions:
 
 | # | Item | Category | Status | Effort |
 |---|------|----------|--------|--------|
-| 18 | [Custom Agent Roles](P3-01-custom-agent-roles.md) | new-skills | 🔴 | Large |
+| 18 | [Custom Agent Roles](P3-01-custom-agent-roles.md) | new-skills | 🟢 | Large |
 | 19 | [Onboarding Wizard Skill](P3-02-onboarding-wizard.md) | developer-experience | ✅ | Small |
 | 20 | [Architecture & Contribution Guide](P3-03-contribution-guide.md) | documentation | 🔴 | Small |
-| 21 | [Incident Triage Skill](P3-04-triage-incident.md) | new-skills | 🔴 | Medium |
-| 22 | [Tech Debt Review Skill](P3-05-review-debt.md) | new-skills | 🔴 | Medium |
-| 23 | [API Design Skill](P3-06-design-api.md) | new-skills | 🔴 | Medium |
-| 24 | [Migration Planning Skill](P3-07-plan-migration.md) | new-skills | 🔴 | Large |
+| 21 | [Incident Triage Skill](P3-04-triage-incident.md) | new-skills | 🟢 | Medium |
+| 22 | [Tech Debt Review Skill](P3-05-review-debt.md) | new-skills | 🟢 | Medium |
+| 23 | [API Design Skill](P3-06-design-api.md) | new-skills | 🟢 | Medium |
+| 24 | [Migration Planning Skill](P3-07-plan-migration.md) | new-skills | 🟢 | Large |
 | 25 | [Persona Reference Validator](P3-08-persona-reference-validator.md) | quality-reliability | 🔴 | Medium |
 | 26 | [Artifact Continuity Badges](P3-09-artifact-continuity-badges.md) | core-framework | 🔴 | Small |
 
@@ -99,10 +99,10 @@ Items are prioritized using two dimensions:
 | # | Item | Category | Status | Effort |
 |---|------|----------|--------|--------|
 | 27 | [Sales Planning Skill](P3-10-plan-sales.md) | business-skills | ✅ | Medium |
-| 28 | [Marketing Planning Skill](P3-11-plan-marketing.md) | business-skills | 🔴 | Medium |
-| 29 | [Finance Planning Skill](P3-12-plan-finance.md) | business-skills | 🔴 | Medium-Large |
+| 28 | [Marketing Planning Skill](P3-11-plan-marketing.md) | business-skills | 🟢 | Medium |
+| 29 | [Finance Planning Skill](P3-12-plan-finance.md) | business-skills | 🟢 | Medium-Large |
 | 30 | [Hiring Planning Skill](P3-14-plan-hiring.md) | business-skills | ✅ | Medium |
-| 31 | [Customer Success Skill](P3-15-plan-customer-success.md) | business-skills | 🔴 | Medium |
+| 31 | [Customer Success Skill](P3-15-plan-customer-success.md) | business-skills | 🟢 | Medium |
 | 32 | [Sales Collateral Skill](P3-16-build-sales-collateral.md) | business-skills | 🔴 | Medium |
 | 33 | [Content Production Skill](P3-17-build-content.md) | business-skills | 🔴 | Medium |
 | 34 | [Legal Review Skill](P3-18-review-legal.md) | business-skills | 🔴 | Medium-Large |
@@ -120,7 +120,7 @@ Items are prioritized using two dimensions:
 
 | # | Item | Category | Status | Effort |
 |---|------|----------|--------|--------|
-| 39 | [Persona System ADR (ADR-005)](P3-23-persona-system-adr.md) | documentation | 🔴 | Small |
+| 39 | [Persona System ADR (ADR-006)](P3-23-persona-system-adr.md) | documentation | 🔴 | Small |
 | 40 | [run-task Persona Archetypes](P3-24-run-task-persona-archetypes.md) | core-framework | 🔴 | Medium |
 | 41 | [PoC Skills Deprecation Banner](P3-25-poc-deprecation-banner.md) | developer-experience | 🔴 | Small |
 
@@ -132,12 +132,12 @@ Items are prioritized using two dimensions:
 
 | # | Item | Category | Status | Effort |
 |---|------|----------|--------|--------|
-| 42 | [Configurable Skeptic Iteration Limits](P3-26-configurable-iteration-limits.md) | core-framework | 🔴 | Small |
-| 43 | [Complexity-Adaptive Pipeline](P3-27-complexity-adaptive-pipeline.md) | core-framework | 🔴 | Medium |
-| 44 | [Lead-as-Skeptic Consistency Fix](P3-28-lead-skeptic-consistency.md) | quality-reliability | 🔴 | Medium |
-| 45 | [Evaluator Tuning Mechanism](P3-29-evaluator-tuning.md) | quality-reliability | 🔴 | Medium |
-| 46 | [Checkpoint Frequency Configurability](P3-30-checkpoint-configurability.md) | developer-experience | 🔴 | Small |
-| 47 | [Design Assumptions Documentation](P3-31-design-assumptions-docs.md) | documentation | 🔴 | Small |
+| 42 | [Configurable Skeptic Iteration Limits](P3-26-configurable-iteration-limits.md) | core-framework | 🟢 | Small |
+| 43 | [Complexity-Adaptive Pipeline](P3-27-complexity-adaptive-pipeline.md) | core-framework | 🟢 | Medium |
+| 44 | [Lead-as-Skeptic Consistency Fix](P3-28-lead-skeptic-consistency.md) | quality-reliability | 🟢 | Medium |
+| 45 | [Evaluator Tuning Mechanism](P3-29-evaluator-tuning.md) | quality-reliability | 🟢 | Medium |
+| 46 | [Checkpoint Frequency Configurability](P3-30-checkpoint-configurability.md) | developer-experience | 🟢 | Small |
+| 47 | [Design Assumptions Documentation](P3-31-design-assumptions-docs.md) | documentation | 🟢 | Small |
 
 > **P3-27 + P3-28 batching**: Both modify plan-product SKILL.md — implement together.
 > **P3-29 dependencies**: Requires P2-11, P2-12, P2-13, and P3-28 producing evaluation data before calibration is meaningful.

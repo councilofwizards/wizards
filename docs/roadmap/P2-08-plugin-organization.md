@@ -1,36 +1,55 @@
 ---
-title: "Plugin Organization (Multi-Plugin)"
-status: "not_started"
+title: "Plugin Organization — Internal Taxonomy & Infrastructure"
+status: "spec_in_progress"
 priority: "P2"
 category: "core-framework"
-effort: "medium"
-impact: "medium"
+effort: "small"
+impact: "high"
 dependencies: ["universal-shared-principles"]
 created: "2026-02-19"
-updated: "2026-02-19"
+updated: "2026-03-27"
 ---
 
-# Plugin Organization (Multi-Plugin)
+# Plugin Organization — Internal Taxonomy & Infrastructure
 
 ## Problem
 
-All skills currently live in a single `conclave` plugin. As the skill count grows and diversifies across engineering and business domains, a single-plugin structure may become unwieldy. Plugin boundaries should be informed by real-world usage patterns.
+All skills currently live in a single `conclave` plugin. As the skill count grows (17 today, 27+ at P3 completion) and diversifies across engineering and business domains, users need better taxonomy and discovery. Research confirms a domain split is premature at current scale (3 business skills) but will become necessary when business skills reach 7-10. The right move now is internal reorganization that enables a clean split later.
 
-## Prerequisite
+## Research Findings
 
-Defer until 2+ business skills are built and validated. Real-world skill structure should inform plugin boundaries.
+- **Primary user segment** (technical founders) uses both domains — a split increases their friction
+- **Shared content coupling** (sync scripts, validators, personas) makes splitting expensive today
+- **Business domain too small** (3 skills) to justify split overhead; threshold estimated at 7-10
+- **Option 3 (internal reorg) dominates** at current scale: zero infrastructure risk, enables clean split later
 
-Current status: 2/2 business skills complete (`/draft-investor-update` + `/plan-sales`). Prerequisite met as of 2026-02-19.
+See: `docs/research/plugin-organization-research.md`, `docs/ideas/plugin-organization-ideas.md`
 
-## Proposed Solution
+## Solution — 4 Sub-tasks
 
-TBD — depends on patterns observed after building 2+ business skills. Likely options:
-1. Split into `conclave-engineering` and `conclave-business` plugins
-2. Split by collaboration pattern (hub-spoke, pipeline, collaborative-analysis)
-3. Keep single plugin but reorganize internal directory structure
+### Sub-task 1: Category Metadata + Skill Discovery Tags (batch with wizard-guide updates)
+Add `category` and `tags` fields to SKILL.md frontmatter and plugin.json manifest. Update wizard-guide with progressive disclosure (role-gated opening prompt for Technical Founder / Engineering Team / Founder-Operator).
+
+### Sub-task 2: Split Readiness ADR (ADR-005) + Automated Gate
+Write ADR-005 documenting the 7-10 business skill threshold, prerequisites for a domain split (parameterized infra + persona extraction), and trigger conditions. Add bash validator that emits WARN when threshold is crossed.
+
+### Sub-task 3: Parameterized Shared Content Infrastructure
+Refactor `SHARED_DIR` hardcodes in `scripts/sync-shared-content.sh` and `scripts/validators/skill-shared-content.sh` to accept env var or CLI argument. ~20 lines of bash. Removes primary technical blocker.
+
+### Sub-task 4: Progressive Disclosure in wizard-guide
+Batch with Sub-task 1's wizard-guide edits. Role-gated skill presentation for different user segments.
+
+## Implementation Sequence
+
+Sub-task 1 → Sub-task 2 (needs taxonomy vocabulary) → Sub-task 3 (ADR defines infra contract) → Sub-task 4 (batch with Sub-task 1)
+
+Deferred: Persona Extraction (Idea 5) → P3-gated, captured in ADR-005 as trigger prerequisite.
 
 ## Success Criteria
 
-- Plugin boundaries reflect meaningful domain or pattern groupings
-- Skills can be installed/updated independently if split
-- No regression in CI validation or shared content management
+- All 17 SKILL.md files have `category` and `tags` frontmatter fields
+- ADR-005 written with threshold, prerequisites, and trigger conditions
+- `SHARED_DIR` in sync script and B-series validator accepts env var/CLI arg
+- wizard-guide presents role-appropriate skill subsets
+- All 12/12 validators pass
+- No regression in shared content management

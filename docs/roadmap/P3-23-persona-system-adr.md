@@ -1,5 +1,5 @@
 ---
-title: "Persona System ADR (ADR-005)"
+title: "Persona System ADR (ADR-006)"
 status: "not_started"
 priority: "P3"
 category: "documentation"
@@ -10,7 +10,7 @@ created: "2026-03-10"
 updated: "2026-03-10"
 ---
 
-# Persona System ADR (ADR-005)
+# Persona System ADR (ADR-006)
 
 ## Problem
 
@@ -18,7 +18,7 @@ The persona system is the largest undocumented architectural decision in the pro
 
 ## Proposed Solution
 
-Write ADR-005 documenting:
+Write ADR-006 documenting:
 - Why 45+ personas with fictional identities
 - The cross-reference structure between persona files and SKILL.md spawn prompts
 - The dual communication style design
@@ -32,6 +32,6 @@ Write ADR-005 documenting:
 
 ## Success Criteria
 
-- ADR-005 written following existing ADR template at `docs/architecture/_template.md`
+- ADR-006 written following existing ADR template at `docs/architecture/_template.md`
 - Documents decisions, rationale, and consequences per ADR format
 - References persona files, spawn prompt patterns, and communication protocol
