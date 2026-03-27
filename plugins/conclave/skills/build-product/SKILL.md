@@ -5,6 +5,8 @@ description: >
   Picks up the next ready item from the roadmap if no spec is specified.
   Resumes in-progress work if any exists.
 argument-hint: "[--light] [status | <spec-name> | review | (empty for next item)]"
+category: engineering
+tags: [implementation, pipeline, quality-review]
 ---
 
 # Implementation Team Orchestration

@@ -57,7 +57,11 @@ while IFS= read -r -d '' f; do
 done < <(find "$REPO_ROOT/plugins" -path "*/skills/*/SKILL.md" -print0 2>/dev/null | sort -z)
 
 # Authoritative source files live in plugins/conclave/shared/
-SHARED_DIR="$REPO_ROOT/plugins/conclave/shared"
+SHARED_DIR="${CONCLAVE_SHARED_DIR:-$REPO_ROOT/plugins/conclave/shared}"
+if [ -n "${CONCLAVE_SHARED_DIR:-}" ] && [ ! -d "$SHARED_DIR" ]; then
+    echo "ERROR: CONCLAVE_SHARED_DIR is set to '$SHARED_DIR' but the directory does not exist."
+    exit 1
+fi
 PRINCIPLES_SOURCE="$SHARED_DIR/principles.md"
 PROTOCOL_SOURCE="$SHARED_DIR/communication-protocol.md"
 

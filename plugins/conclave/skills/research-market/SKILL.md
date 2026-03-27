@@ -6,6 +6,8 @@ description: >
   downstream skills (ideate-product, write-stories, write-spec, plan-sales).
 argument-hint: "[--light] [status | <topic-or-feature> | (empty for general market review)]"
 tier: 1
+category: planning
+tags: [research, market-analysis, competitive-intelligence]
 ---
 
 # Market Research Team Orchestration

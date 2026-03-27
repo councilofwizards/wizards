@@ -6,6 +6,8 @@ description: >
   a skeptic voice reviews all outputs.
 argument-hint: "<task description>"
 tier: 1
+category: engineering
+tags: [ad-hoc, dynamic, general-purpose]
 ---
 
 # Ad-Hoc Task Team Orchestration

@@ -6,6 +6,8 @@ description: >
   skills (manage-roadmap).
 argument-hint: "[--light] [status | <topic-or-feature> | (empty for general ideation)]"
 tier: 1
+category: planning
+tags: [ideation, product-strategy]
 ---
 
 # Product Ideation Team Orchestration

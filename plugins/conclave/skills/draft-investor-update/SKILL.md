@@ -5,6 +5,8 @@ description: >
   from the roadmap, progress files, and specs, then drafts, reviews, and
   refines a structured investor update through dual-skeptic validation.
 argument-hint: "[--light] [status | <period> | (empty for current period)]"
+category: business
+tags: [investor-relations, reporting, metrics]
 ---
 
 # Investor Update Team Orchestration

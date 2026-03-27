@@ -6,6 +6,8 @@ description: >
   Produces an implementation-plan artifact for build-implementation.
 argument-hint: "[--light] [status | <feature-name> | (empty for next spec)]"
 tier: 1
+category: engineering
+tags: [planning, implementation, dependency-ordering]
 ---
 
 # Implementation Planning Team Orchestration

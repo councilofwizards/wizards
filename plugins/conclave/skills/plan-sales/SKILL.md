@@ -5,6 +5,8 @@ description: >
   research market, product positioning, and go-to-market, then cross-reference
   and challenge each other's findings before dual-skeptic validation.
 argument-hint: "[--light] [status | (empty for new assessment)]"
+category: business
+tags: [sales, go-to-market, positioning]
 ---
 
 # Sales Strategy Team Orchestration

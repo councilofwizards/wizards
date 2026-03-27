@@ -5,6 +5,8 @@ description: >
   growth vs. efficiency, cross-examine each other's cases, then dual-skeptic
   validation ensures fairness and strategic fit.
 argument-hint: "[--light] [status | (empty for new plan)]"
+category: business
+tags: [hiring, team-building, workforce-planning]
 ---
 
 # Hiring Plan Team Orchestration

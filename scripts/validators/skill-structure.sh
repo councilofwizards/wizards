@@ -86,8 +86,8 @@ for filepath in "${skill_files[@]}"; do
         is_single_agent=1
     fi
 
-    # Check required fields: name, description, argument-hint
-    for field in name description argument-hint; do
+    # Check required fields: name, description, argument-hint, category
+    for field in name description argument-hint category; do
         if ! printf '%s\n' "$fm_content" | grep -q "^${field}:"; then
             echo "[FAIL] A1/frontmatter: Missing required field \"$field\""
             echo "  File: $filepath"
@@ -120,6 +120,22 @@ for filepath in "${skill_files[@]}"; do
             echo "  Fix: Set tier to 1 or remove the tier field"
             a1_fail=$((a1_fail + 1))
         fi
+    fi
+
+    # Validate category field value (required, must be one of allowed values)
+    category_value="$(printf '%s\n' "$fm_content" | grep "^category:" | head -1 | sed 's/^category:[[:space:]]*//')"
+    if [ -n "$category_value" ]; then
+        case "$category_value" in
+            engineering|business|planning|utility) ;;
+            *)
+                echo "[FAIL] A1/frontmatter: Invalid \"category\" field value"
+                echo "  File: $filepath"
+                echo "  Expected: category: engineering | business | planning | utility"
+                echo "  Found: category: $category_value"
+                echo "  Fix: Set category to one of: engineering, business, planning, utility"
+                a1_fail=$((a1_fail + 1))
+                ;;
+        esac
     fi
 
     # Track A1 pass for this file if no failures added

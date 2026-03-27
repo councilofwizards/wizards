@@ -1,6 +1,6 @@
 ---
 title: "Plugin Organization — Internal Taxonomy & Infrastructure"
-status: "ready"
+status: "complete"
 priority: "P2"
 category: "core-framework"
 effort: "small"

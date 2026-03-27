@@ -6,6 +6,8 @@ description: >
   structured stories ready for implementation planning.
 argument-hint: "[--light] [status | <feature-name> | (empty for next ready item)]"
 tier: 1
+category: planning
+tags: [user-stories, requirements, acceptance-criteria]
 ---
 
 # Story Writing Team Orchestration

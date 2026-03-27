@@ -27,7 +27,11 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="${1:-$(cd "$SCRIPT_DIR/.." && pwd)}"
 
 # Authoritative source files
-SHARED_DIR="$REPO_ROOT/plugins/conclave/shared"
+SHARED_DIR="${CONCLAVE_SHARED_DIR:-$REPO_ROOT/plugins/conclave/shared}"
+if [ -n "${CONCLAVE_SHARED_DIR:-}" ] && [ ! -d "$SHARED_DIR" ]; then
+    echo "ERROR: CONCLAVE_SHARED_DIR is set to '$SHARED_DIR' but the directory does not exist."
+    exit 1
+fi
 PRINCIPLES_SOURCE="$SHARED_DIR/principles.md"
 PROTOCOL_SOURCE="$SHARED_DIR/communication-protocol.md"
 

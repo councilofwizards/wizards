@@ -6,6 +6,8 @@ description: >
   the proven build-product pattern with dedicated quality gates.
 argument-hint: "[--light] [status | <feature-name> | review | (empty for next plan)]"
 tier: 1
+category: engineering
+tags: [implementation, tdd, code-generation]
 ---
 
 # Implementation Build Team Orchestration

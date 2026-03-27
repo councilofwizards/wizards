@@ -6,6 +6,8 @@ description: >
   conflicts, and update priorities.
 argument-hint: "[--light] [status | reprioritize | ingest <source> | <item-id> | (empty for review)]"
 tier: 1
+category: planning
+tags: [roadmap, prioritization, backlog]
 ---
 
 # Roadmap Management Team Orchestration

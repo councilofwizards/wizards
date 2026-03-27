@@ -6,6 +6,8 @@ description: >
   starter roadmap, and guides the user to next steps.
 argument-hint: "[--force | --dry-run]"
 type: single-agent
+category: utility
+tags: [bootstrap, scaffolding, onboarding]
 ---
 
 # Setup Project

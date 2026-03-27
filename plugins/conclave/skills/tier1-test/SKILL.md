@@ -6,6 +6,8 @@ description: >
 argument-hint: "[text to pass through]"
 tier: 1
 type: single-agent
+category: utility
+tags: [testing, poc, validation]
 ---
 
 # Tier 1 Test Skill

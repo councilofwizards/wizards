@@ -5,6 +5,8 @@ description: >
   through the conclave skill ecosystem. Conversational — no files written.
 argument-hint: "[list | recommend <goal> | explain <skill-name> | (empty for overview)]"
 type: single-agent
+category: utility
+tags: [help, discovery, documentation]
 ---
 
 # Wizard Guide
@@ -22,7 +24,23 @@ You are a single agent providing interactive guidance about the conclave skill e
 
 Based on $ARGUMENTS:
 
-- **Empty/no args**: Provide a friendly overview of the skill ecosystem. Open with the lore preamble and persona spotlight, then list all available skills grouped by category (granular, pipeline, business, utility) and explain the general workflow (plan → build → review). Omit preamble and spotlight in list mode and explain mode.
+- **Empty/no args**: First, ask the user about their role to personalize the skill listing:
+
+  > **What best describes your role?**
+  > 1. **Technical Founder** — I wear both hats, show me everything
+  > 2. **Engineering Team** — I build software, show me engineering skills
+  > 3. **Business / Operations** — I run the business, show me business skills
+  >
+  > *(Or just ask me anything — I'll show all skills by default.)*
+
+  Based on selection, filter the Skill Ecosystem Overview:
+  - **Technical Founder** (or no selection): Show all skills grouped by category (current behavior). Open with the lore preamble and persona spotlight.
+  - **Engineering Team**: Show `engineering` + `planning` + `utility` category skills. Omit `business` skills from the primary listing.
+  - **Business / Operations**: Show `business` + `utility` category skills. Omit `engineering` and `planning` skills from the primary listing.
+
+  Always include: "Ask me about any skill by name to see details — no skill is hidden, just prioritized for your role."
+
+  If the user doesn't answer the role prompt and just asks a question directly, default to Technical Founder (show all) and answer their question. Omit preamble and spotlight in list mode and explain mode.
 
 - **"list"**: Output a concise table of all skills with name, category, and one-line description. No narrative, no lore preamble, no persona spotlight — just the reference table. Include all 16 skills (granular, pipeline, business, utility).
 

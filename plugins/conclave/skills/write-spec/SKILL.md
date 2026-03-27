@@ -5,6 +5,8 @@ description: >
   boundaries, data models, API contracts, and implementation constraints.
 argument-hint: "[--light] [status | <feature-name> | (empty for next ready item)]"
 tier: 1
+category: engineering
+tags: [specification, architecture, design]
 ---
 
 # Spec Writing Team Orchestration

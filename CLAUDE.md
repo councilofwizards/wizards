@@ -110,6 +110,19 @@ block. Single-agent skills are skipped entirely.
 **Unknown skills**: default to engineering at sync/validation time with a `WARN` log. Add to the list in both
 `sync-shared-content.sh` and `skill-shared-content.sh`.
 
+### Category Taxonomy
+
+Skills are also classified by domain category for discovery and taxonomy purposes:
+
+| Category | Skills |
+|----------|--------|
+| `engineering` | write-spec, plan-implementation, build-implementation, review-quality, run-task, plan-product, build-product |
+| `planning` | research-market, ideate-product, manage-roadmap, write-stories |
+| `business` | plan-sales, plan-hiring, draft-investor-update |
+| `utility` | setup-project, wizard-guide, tier1-test |
+
+Category-to-classification mapping: `engineering` → engineering (both principle blocks); `planning`, `business`, `utility` → non-engineering (universal principles only).
+
 ## Shared Content Architecture
 
 - **Authoritative source**: `plugins/conclave/shared/` owns Shared Principles and Communication Protocol
@@ -137,6 +150,7 @@ Check categories:
 - **D-series** (spec-frontmatter.sh): Spec file frontmatter
 - **E-series** (progress-checkpoint.sh): Checkpoint file frontmatter
 - **F-series** (artifact-templates.sh): Artifact template existence and correct type fields
+- **G-series** (split-readiness.sh): Advisory gate — warns when business skill count reaches split threshold (ADR-005)
 
 ## Key ADRs
 
@@ -144,6 +158,7 @@ Check categories:
 - **ADR-002**: Content deduplication strategy (validated duplication with HTML markers)
 - **ADR-003**: Onboarding wizard single-agent pattern
 - **ADR-004**: Two-tier skill architecture (superseded — flattened to single tier)
+- **ADR-005**: Plugin split readiness gate (keep single plugin until business skills reach 7)
 
 ## Development Guidelines
 

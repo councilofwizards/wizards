@@ -5,6 +5,8 @@ description: >
   analysis, deployment readiness, or regression testing.
 argument-hint: "[--light] [status | security <scope> | performance <scope> | deploy <feature> | regression]"
 tier: 1
+category: engineering
+tags: [quality-assurance, security, performance]
 ---
 
 # Quality & Operations Team Orchestration

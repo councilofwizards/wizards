@@ -64,7 +64,7 @@ Items are prioritized using two dimensions:
 | 10 | [Artifact Format Templates](P2-06-format-templates.md) | core-framework | ✅ | Medium |
 
 | 11 | [Role-Based Principles Split](P2-07-universal-principles.md) | core-framework | ✅ | Medium |
-| 12 | [Plugin Organization — Internal Taxonomy & Infrastructure](P2-08-plugin-organization.md) | core-framework | 🟢 | Small |
+| 12 | [Plugin Organization — Internal Taxonomy & Infrastructure](P2-08-plugin-organization.md) | core-framework | ✅ | Small |
 | 13 | [Persona System Activation](P2-09-persona-system-activation.md) | core-framework | ✅ | Small-Medium |
 | 14 | [Skill Discoverability Improvements](P2-10-skill-discoverability.md) | developer-experience | ✅ | Small |
 | 15 | [Sprint Contracts / Definition of Done](P2-11-sprint-contracts.md) | core-framework | ✅ | Medium |

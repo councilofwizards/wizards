@@ -5,6 +5,8 @@ description: >
   define requirements, and create implementation specs. Use when you need
   to plan new features, reprioritize the backlog, or refine existing specs.
 argument-hint: "[--light] [status | new <idea> | review <spec-name> | reprioritize | (empty for general review)]"
+category: engineering
+tags: [planning, pipeline, product-strategy]
 ---
 
 # Product Planning Team Orchestration
