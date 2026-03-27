@@ -30,6 +30,10 @@ subdirs_present: [list of existing subdirs]
 roadmap_index_exists: bool
 stack_hints_present: [list of existing hint files]
 templates_present: [list of existing templates]
+conclave_dir_exists: bool
+conclave_subdirs_present: [list of existing subdirs]
+gitignore_exists: bool
+gitignore_covers_conclave: bool
 ```
 
 This state map drives all conditional logic in the pipeline. Every write operation checks it before proceeding.
@@ -93,6 +97,46 @@ If no bundled hint exists for the detected stack, inform the user:
 > No bundled stack hint exists for `{stack}`. You can create one at `docs/stack-hints/{stack}.md`. Stack hint files contain framework-specific conventions that are injected into agent prompts by `plan-product`, `build-product`, and `review-quality`. See an existing hint file for the format.
 
 **Idempotency:** In normal mode, only create what does not already exist. In `--force` mode, overwrite scaffolding files and templates (but not CLAUDE.md — see Step 4). In `--dry-run` mode, print `[would create]` for each item without writing.
+
+Report what was created vs. skipped in the Step 6 summary.
+
+### Step 3.5: Scaffold .claude/conclave/ Configuration Directory
+
+Create the user-writable configuration directory used by conclave skills for project-specific overrides.
+
+**Directories to create (if missing, or if `--force`):**
+```
+.claude/conclave/
+.claude/conclave/templates/
+.claude/conclave/eval-examples/
+.claude/conclave/guidance/
+```
+
+**README.md files to create (if missing, or if `--force`):**
+
+Create a `README.md` in each subdirectory using the content from the Embedded Configuration READMEs section below.
+
+**Idempotency:** In normal mode, only create directories and README.md files that do not already exist. In `--force` mode, overwrite README.md files but never delete user-created files. In `--dry-run` mode, print `[would create]` for each item without writing.
+
+**Error handling:**
+- If `.claude/` exists as a file (not a directory): log a clear error and skip this step entirely. Do not overwrite the file.
+- If `.claude/` or `.claude/conclave/` cannot be created due to permissions: log a clear error and continue with the rest of setup. Do not fail the entire pipeline.
+
+**`.gitignore` entry:**
+
+After scaffolding, check the project's `.gitignore` file:
+
+1. If no `.gitignore` exists and a `.git/` directory exists: create `.gitignore` with the entry below.
+2. If `.gitignore` exists: check whether it already contains `.claude/conclave/` or a broader pattern that covers it (e.g., `.claude/`, `**/.claude/`). If not already covered, append the entry below.
+3. If no `.git/` directory exists: skip `.gitignore` handling with a note.
+
+Entry to add:
+```
+# Conclave plugin config — may contain project-sensitive configuration
+.claude/conclave/
+```
+
+This append is idempotent — it checks before adding. In `--dry-run` mode, print `[would add to .gitignore]` without modifying.
 
 Report what was created vs. skipped in the Step 6 summary.
 
@@ -179,13 +223,17 @@ Output a clear summary of everything that was done:
 - [ ] docs/roadmap/_index.md (already existed, skipped)   ← only if skipped
 - [x] Template files (spec, progress, architecture)
 - [x] docs/stack-hints/{stack}.md (bundled hint copied)   ← only if applicable
+- [x] .claude/conclave/ configuration skeleton (3 directories, 3 READMEs)  ← only if created
+- [ ] .claude/conclave/ (already existed, skipped)  ← only if skipped
+- [x] .gitignore updated with .claude/conclave/ entry  ← only if added
 
 ### Detected Stack: {stack}
 
 ### Next Steps:
 1. Review the generated CLAUDE.md and adjust conventions to match your project
-2. Run `/plan-product` to start planning your first feature
-3. (Optional) Add or refine the stack hint at docs/stack-hints/{stack}.md for deeper framework guidance
+2. Run `/wizard-guide` to explore all available skills and find the right one for your task
+3. Run `/plan-product` to start planning your first feature
+4. (Optional) Add or refine the stack hint at docs/stack-hints/{stack}.md for deeper framework guidance
 ```
 
 For `--dry-run` mode, prefix the header with `## Dry Run — No files were written` and list all items as `[would create]` or `[would skip]`.
@@ -371,6 +419,80 @@ superseded_by: ""                # ADR number, if applicable
 
 - **Positive**: ...
 - **Negative**: ...
+````
+
+## Embedded Configuration READMEs
+
+Use these verbatim when creating README.md files in Step 3.5.
+
+### .claude/conclave/templates/README.md
+
+````markdown
+# Templates
+
+Custom artifact template overrides for conclave skills.
+
+Files placed here override the built-in artifact templates used by skills. For example,
+a `sprint-contract.md` here would override the default sprint contract template.
+
+## Format
+
+Each file should be a Markdown file matching the name of the template it overrides.
+
+## More Information
+
+Run `/wizard-guide` and ask about "Project Configuration" for full documentation.
+````
+
+### .claude/conclave/eval-examples/README.md
+
+````markdown
+# Evaluation Examples
+
+Per-skill skeptic calibration examples.
+
+Files placed here provide few-shot examples that calibrate how the skeptic evaluates
+outputs for a specific skill. Name files after the skill they calibrate (e.g.,
+`build-implementation.md`, `write-spec.md`).
+
+## Status
+
+This directory is reserved for a future feature (P3-29: Evaluator Tuning).
+No skills currently read from this directory.
+
+## More Information
+
+Run `/wizard-guide` and ask about "Project Configuration" for full documentation.
+````
+
+### .claude/conclave/guidance/README.md
+
+````markdown
+# Guidance
+
+Project-specific agent guidance files.
+
+Files placed here are read by conclave skills and incorporated as context during
+execution. Use this to document your project's conventions, tech stack preferences,
+and patterns that agents should follow.
+
+## Example
+
+Create `stack-preferences.md` with content like:
+
+```
+- Prefer Pest over PHPUnit for tests
+- Use Form Requests for validation, never validate in controllers
+- Use UUIDs for all model primary keys
+```
+
+## Active Consumers
+
+- `build-implementation` — reads all guidance files during setup
+
+## More Information
+
+Run `/wizard-guide` and ask about "Project Configuration" for full documentation.
 ````
 
 ## Constraints

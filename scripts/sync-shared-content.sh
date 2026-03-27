@@ -31,6 +31,49 @@ SHARED_DIR="$REPO_ROOT/plugins/conclave/shared"
 PRINCIPLES_SOURCE="$SHARED_DIR/principles.md"
 PROTOCOL_SOURCE="$SHARED_DIR/communication-protocol.md"
 
+# Engineering skills receive both universal-principles and engineering-principles.
+# Non-engineering skills receive only universal-principles.
+# Classification criteria: engineering = the skill's agents write or review code.
+# Unknown skills default to engineering (safe default: more principles, not fewer).
+#
+# To classify a new skill: add it to one of the two arrays below.
+# Also update the matching list in scripts/validators/skill-shared-content.sh.
+ENGINEERING_SKILLS=(
+    write-spec
+    plan-implementation
+    build-implementation
+    review-quality
+    run-task
+    plan-product
+    build-product
+)
+
+NON_ENGINEERING_SKILLS=(
+    research-market
+    ideate-product
+    manage-roadmap
+    write-stories
+    plan-sales
+    plan-hiring
+    draft-investor-update
+)
+
+is_engineering_skill() {
+    local name="$1"
+    for s in "${ENGINEERING_SKILLS[@]}"; do
+        [ "$s" = "$name" ] && return 0
+    done
+    return 1
+}
+
+is_known_skill() {
+    local name="$1"
+    for s in "${ENGINEERING_SKILLS[@]}" "${NON_ENGINEERING_SKILLS[@]}"; do
+        [ "$s" = "$name" ] && return 0
+    done
+    return 1
+}
+
 if [ ! -f "$PRINCIPLES_SOURCE" ]; then
     echo "ERROR: $PRINCIPLES_SOURCE not found. Cannot sync."
     exit 1
@@ -164,13 +207,21 @@ replace_block() {
 }
 
 # Read authoritative blocks from shared/ files
-auth_principles="$(cat "$PRINCIPLES_SOURCE")"
-auth_protocol="$(cat "$PROTOCOL_SOURCE")"
+auth_universal="$(extract_block "$PRINCIPLES_SOURCE" \
+    "<!-- BEGIN SHARED: universal-principles -->" \
+    "<!-- END SHARED: universal-principles -->")"
 
-if [ -z "$auth_principles" ]; then
-    echo "ERROR: $PRINCIPLES_SOURCE is empty"
+auth_engineering="$(extract_block "$PRINCIPLES_SOURCE" \
+    "<!-- BEGIN SHARED: engineering-principles -->" \
+    "<!-- END SHARED: engineering-principles -->")"
+
+if [ -z "$auth_universal" ] || [ -z "$auth_engineering" ]; then
+    echo "ERROR: $PRINCIPLES_SOURCE missing universal-principles or engineering-principles sub-blocks"
     exit 1
 fi
+
+auth_protocol="$(cat "$PROTOCOL_SOURCE")"
+
 if [ -z "$auth_protocol" ]; then
     echo "ERROR: $PROTOCOL_SOURCE is empty"
     exit 1
@@ -193,9 +244,21 @@ for filepath in "${skill_files[@]}"; do
         continue
     fi
 
+    # Warn about unknown/unclassified skills
+    if ! is_known_skill "$skill_name"; then
+        echo "  WARN  $skill_name: Unclassified skill — defaulting to engineering (both blocks). Add to classification list in this script."
+    fi
+
+    # Transition guard: old marker not yet migrated
+    if grep -q "<!-- BEGIN SHARED: principles -->" "$filepath"; then
+        echo "  WARN  $skill_name: Still has old 'principles' markers — migrate to universal-principles / engineering-principles, then re-run sync"
+        skipped=$((skipped + 1))
+        continue
+    fi
+
     # Check that markers exist in the target
-    if ! grep -q "<!-- BEGIN SHARED: principles -->" "$filepath"; then
-        echo "  WARN  $skill_name: Missing principles markers, skipping"
+    if ! grep -q "<!-- BEGIN SHARED: universal-principles -->" "$filepath"; then
+        echo "  WARN  $skill_name: Missing universal-principles markers, skipping"
         skipped=$((skipped + 1))
         continue
     fi
@@ -219,11 +282,23 @@ for filepath in "${skill_files[@]}"; do
         target_protocol="$(printf '%s' "$target_protocol" | sed "s/$AUTH_SKEPTIC_DISPLAY/$target_display/g")"
     fi
 
-    # Replace both blocks
+    # Always inject universal-principles
     replace_block "$filepath" \
-        "<!-- BEGIN SHARED: principles -->" \
-        "<!-- END SHARED: principles -->" \
-        "$auth_principles"
+        "<!-- BEGIN SHARED: universal-principles -->" \
+        "<!-- END SHARED: universal-principles -->" \
+        "$auth_universal"
+
+    # Inject engineering-principles for engineering skills only
+    if is_engineering_skill "$skill_name" || ! is_known_skill "$skill_name"; then
+        if grep -q "<!-- BEGIN SHARED: engineering-principles -->" "$filepath"; then
+            replace_block "$filepath" \
+                "<!-- BEGIN SHARED: engineering-principles -->" \
+                "<!-- END SHARED: engineering-principles -->" \
+                "$auth_engineering"
+        else
+            echo "  WARN  $skill_name: Classified as engineering but missing engineering-principles markers"
+        fi
+    fi
 
     replace_block "$filepath" \
         "<!-- BEGIN SHARED: communication-protocol -->" \

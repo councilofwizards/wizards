@@ -20,7 +20,8 @@ f1_checked=0
 expected_templates="research-findings:research-findings
 product-ideas:product-ideas
 user-stories:user-stories
-implementation-plan:implementation-plan"
+implementation-plan:implementation-plan
+sprint-contract:sprint-contract"
 
 while IFS=: read -r template_name expected_type; do
     template_file="$TEMPLATES_DIR/${template_name}.md"

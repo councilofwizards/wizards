@@ -1,6 +1,6 @@
 ---
 title: "Skill Discoverability Improvements"
-status: "not_started"
+status: "complete"
 priority: "P2"
 category: "developer-experience"
 effort: "small"

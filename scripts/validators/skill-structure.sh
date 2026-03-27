@@ -290,7 +290,7 @@ for filepath in "${skill_files[@]}"; do
 
     a4_file_fail=0
 
-    for shared_name in "principles" "communication-protocol"; do
+    for shared_name in "universal-principles" "communication-protocol"; do
         begin_marker="<!-- BEGIN SHARED: $shared_name -->"
         end_marker="<!-- END SHARED: $shared_name -->"
 

@@ -1,6 +1,6 @@
 ---
 title: "Role-Based Principles Split"
-status: "not_started"
+status: "complete"
 priority: "P2"
 category: "core-framework"
 effort: "medium"

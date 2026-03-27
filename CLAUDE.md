@@ -93,11 +93,28 @@ Skills produce and consume typed artifacts with YAML frontmatter. Templates at `
 - `user-stories.md` — produced by write-stories / plan-product, consumed by write-spec
 - `implementation-plan.md` — produced by plan-implementation / build-product, consumed by build-implementation
 
+## Skill Classification
+
+Skills are classified as engineering or non-engineering for shared content injection. Engineering skills receive both
+Universal Principles and Engineering Principles blocks. Non-engineering skills receive only the Universal Principles
+block. Single-agent skills are skipped entirely.
+
+| Classification | Skills |
+|----------------|--------|
+| Engineering | write-spec, plan-implementation, build-implementation, review-quality, run-task, plan-product, build-product |
+| Non-engineering | research-market, ideate-product, manage-roadmap, write-stories, plan-sales, plan-hiring, draft-investor-update |
+| Single-agent (skipped) | setup-project, wizard-guide |
+
+**`write-stories`**: non-engineering — its agents produce story artifacts but do not write code.
+**`run-task`**: engineering — generic agents may implement code; engineering is the safe default.
+**Unknown skills**: default to engineering at sync/validation time with a `WARN` log. Add to the list in both
+`sync-shared-content.sh` and `skill-shared-content.sh`.
+
 ## Shared Content Architecture
 
 - **Authoritative source**: `plugins/conclave/shared/` owns Shared Principles and Communication Protocol
 - **Sync**: Run `bash scripts/sync-shared-content.sh` to push shared/ content to all multi-agent SKILL.md files
-- **Markers**: `<!-- BEGIN SHARED: principles -->` / `<!-- END SHARED: principles -->` (and `communication-protocol`)
+- **Markers**: `<!-- BEGIN SHARED: universal-principles -->` / `<!-- END SHARED: universal-principles -->` (all multi-agent skills), `<!-- BEGIN SHARED: engineering-principles -->` / `<!-- END SHARED: engineering-principles -->` (engineering skills only), and `communication-protocol`
 - **Drift detection**: `scripts/validators/skill-shared-content.sh` (B1-B3 checks)
 - **Per-skill variation**: Skeptic name in Communication Protocol differs per skill (13 name pairs in normalizer)
 - **Exclusions**: Skills with `type: single-agent` are skipped by shared content checks and sync

@@ -22,7 +22,10 @@ Enable delegate mode — you coordinate, review, and perform final synthesis. Yo
    - `docs/progress/`
    - `docs/architecture/`
    - `docs/stack-hints/`
-2. Read `docs/templates/artifacts/implementation-plan.md` — this is the output template your team must produce.
+2. Read `docs/templates/artifacts/implementation-plan.md` — this is the output template your team must produce. Also read the sprint contract template using this lookup order:
+   - First, check `.claude/conclave/templates/sprint-contract.md` (custom override)
+   - If absent, read `docs/templates/artifacts/sprint-contract.md` (default)
+   - Apply the defensive reading contract: custom file absent → use default silently; custom file unreadable or empty → log warning, fall back to default; custom file with `type` field not equal to `sprint-contract` → log warning, fall back to default; `.claude/conclave/` absent → use default silently
 3. Read `docs/progress/_template.md` if it exists. Use as reference for checkpoint format.
 4. **Detect project stack.** Read the project root for dependency manifests (`package.json`, `composer.json`, `Gemfile`, `go.mod`, `requirements.txt`, `Cargo.toml`, `pom.xml`, etc.) to identify the tech stack. If a matching stack hint file exists at `docs/stack-hints/{stack}.md`, read it and prepend its guidance to all spawn prompts.
 5. **Read technical-spec (REQUIRED).** Search `docs/specs/` for a spec matching the target feature. If none exists, inform the user: "No technical-spec found for this feature. Run `/write-spec {feature}` first, or invoke `/plan-product` to run the full pipeline."
@@ -110,13 +113,20 @@ If `$ARGUMENTS` begins with `--light`, strip the flag and enable lightweight mod
 
 1. Share the technical spec and user stories (if available) with both agents
 2. impl-architect produces the implementation plan
-3. plan-skeptic reviews the plan against the spec (GATE — blocks finalization)
-4. If the skeptic rejects, send specific feedback and have impl-architect revise
-5. Iterate until plan-skeptic approves
-6. **Lead-as-Skeptic**: Review the approved plan yourself. Challenge for gaps the skeptic may have missed — particularly around existing codebase patterns and framework conventions. This is your additional skeptic duty.
-7. **Team Lead only**: Write the final implementation plan to `docs/specs/{feature}/implementation-plan.md` conforming to the template at `docs/templates/artifacts/implementation-plan.md`
-8. **Team Lead only**: Write cost summary to `docs/progress/{skill}-{feature}-{timestamp}-cost-summary.md`
-9. **Team Lead only**: Write end-of-session summary to `docs/progress/{feature}-summary.md` using the format from `docs/progress/_template.md`
+3. **Contract Negotiation** (GATE — must complete before plan review):
+   - **Resumption guard**: If `docs/specs/{feature}/sprint-contract.md` exists with `status: "signed"`, read it and skip to step 4. Output: "Sprint contract found — signed by {signed-by}. Using existing contract."
+   - **Lead proposes**: Derive initial acceptance criteria from the spec's success criteria and user story ACs. If no success criteria exist, synthesize from the spec's Scope section. Format as numbered pass/fail items per the sprint contract template.
+   - **Send to plan-skeptic**: `write(plan-skeptic, "SPRINT CONTRACT PROPOSAL: [criteria list]")`. Plan-skeptic reviews for: specificity (each criterion must be evaluable as pass/fail by reading code), completeness (all spec requirements covered), measurability (no subjective terms like "should feel fast").
+   - **Iterate**: If plan-skeptic counters, revise and re-propose. Max 3 rounds — same deadlock protocol as existing skeptic gates (see Failure Recovery).
+   - **Sign**: When plan-skeptic approves, write the signed contract to `docs/specs/{feature}/sprint-contract.md` using the template, with `status: "signed"` and `signed-by: ["planning-lead", "plan-skeptic"]`.
+   - The contract negotiation step is preserved in `--light` mode — the contract gate is non-negotiable regardless of mode.
+4. plan-skeptic reviews the plan against the spec AND the sprint contract (GATE — blocks finalization). The plan review prompt explicitly references the contract: plan conformance is checked against contract criteria, not only against the spec.
+5. If the skeptic rejects, send specific feedback and have impl-architect revise
+6. Iterate until plan-skeptic approves
+7. **Lead-as-Skeptic**: Review the approved plan yourself. Challenge for gaps the skeptic may have missed — particularly around existing codebase patterns and framework conventions. This is your additional skeptic duty.
+8. **Team Lead only**: Write the final implementation plan to `docs/specs/{feature}/implementation-plan.md` conforming to the template at `docs/templates/artifacts/implementation-plan.md`. The frontmatter MUST include `sprint-contract: "docs/specs/{feature}/sprint-contract.md"` linking the two artifacts.
+9. **Team Lead only**: Write cost summary to `docs/progress/{skill}-{feature}-{timestamp}-cost-summary.md`
+10. **Team Lead only**: Write end-of-session summary to `docs/progress/{feature}-summary.md` using the format from `docs/progress/_template.md`
 
 ## Critical Rules
 
@@ -134,7 +144,7 @@ If `$ARGUMENTS` begins with `--light`, strip the flag and enable lightweight mod
 
 ---
 
-<!-- BEGIN SHARED: principles -->
+<!-- BEGIN SHARED: universal-principles -->
 <!-- Authoritative source: plugins/conclave/shared/principles.md. Keep in sync across all skills. -->
 ## Shared Principles
 
@@ -146,6 +156,23 @@ These principles apply to **every agent on every team**. They are included in ev
 2. **Communicate constantly via the `SendMessage` tool** (`type: "message"` for direct messages, `type: "broadcast"` for team-wide). Never assume another agent knows your status. When you complete a task, discover a blocker, change an approach, or need input — message immediately.
 3. **No assumptions.** If you don't know something, ask. Message a teammate, message the lead, or research it. Never guess at requirements, API contracts, data shapes, or business rules.
 
+### ESSENTIAL — Quality Standards
+
+9. **Document decisions, not just code.** When you make a non-obvious choice, write a brief note explaining why. ADRs for architecture. Inline comments for tricky logic. Spec annotations for requirement interpretations.
+10. **Delegate mode for leads.** Team leads coordinate, review, and synthesize. They do not implement. If you are a team lead, use delegate mode — your job is orchestration, not execution.
+
+### NICE-TO-HAVE — When Feasible
+
+11. **Progressive disclosure in specs.** Start with a one-paragraph summary, then expand into details. Readers should be able to stop reading at any depth and still have a useful understanding.
+12. **Use Sonnet for execution agents, Opus for reasoning agents.** Researchers, architects, and skeptics benefit from deeper reasoning (Opus). Engineers executing well-defined specs can use Sonnet for cost efficiency.
+<!-- END SHARED: universal-principles -->
+
+<!-- BEGIN SHARED: engineering-principles -->
+<!-- Authoritative source: plugins/conclave/shared/principles.md. Keep in sync across all skills. -->
+## Engineering Principles
+
+These principles apply to engineering skills only (write-spec, plan-implementation, build-implementation, review-quality, run-task, plan-product, build-product).
+
 ### IMPORTANT — High-Value Practices
 
 4. **Minimal, clean solutions.** Write the least code that correctly solves the problem. Prefer framework-provided tools over custom implementations — follow the conventions of the project's framework and language. Every line of code is a liability.
@@ -156,14 +183,7 @@ These principles apply to **every agent on every team**. They are included in ev
 ### ESSENTIAL — Quality Standards
 
 8. **Contracts are sacred.** When a backend engineer and frontend engineer agree on an API contract (request shape, response shape, status codes, error format), that contract is documented and neither side deviates without explicit renegotiation and Skeptic approval.
-9. **Document decisions, not just code.** When you make a non-obvious choice, write a brief note explaining why. ADRs for architecture. Inline comments for tricky logic. Spec annotations for requirement interpretations.
-10. **Delegate mode for leads.** Team leads coordinate, review, and synthesize. They do not implement. If you are a team lead, use delegate mode — your job is orchestration, not execution.
-
-### NICE-TO-HAVE — When Feasible
-
-11. **Progressive disclosure in specs.** Start with a one-paragraph summary, then expand into details. Readers should be able to stop reading at any depth and still have a useful understanding.
-12. **Use Sonnet for execution agents, Opus for reasoning agents.** Researchers, architects, and skeptics benefit from deeper reasoning (Opus). Engineers executing well-defined specs can use Sonnet for cost efficiency.
-<!-- END SHARED: principles -->
+<!-- END SHARED: engineering-principles -->
 
 ---
 

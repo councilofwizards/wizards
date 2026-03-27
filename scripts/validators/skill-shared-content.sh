@@ -8,6 +8,49 @@ REPO_ROOT="${1:?REPO_ROOT argument required}"
 passed=0
 failed=0
 
+# Engineering skills receive both universal-principles and engineering-principles.
+# Non-engineering skills receive only universal-principles.
+# Classification criteria: engineering = the skill's agents write or review code.
+# Unknown skills default to engineering (safe default: more principles, not fewer).
+#
+# To classify a new skill: add it to one of the two arrays below.
+# Also update the matching list in scripts/sync-shared-content.sh.
+ENGINEERING_SKILLS=(
+    write-spec
+    plan-implementation
+    build-implementation
+    review-quality
+    run-task
+    plan-product
+    build-product
+)
+
+NON_ENGINEERING_SKILLS=(
+    research-market
+    ideate-product
+    manage-roadmap
+    write-stories
+    plan-sales
+    plan-hiring
+    draft-investor-update
+)
+
+is_engineering_skill() {
+    local name="$1"
+    for s in "${ENGINEERING_SKILLS[@]}"; do
+        [ "$s" = "$name" ] && return 0
+    done
+    return 1
+}
+
+is_known_skill() {
+    local name="$1"
+    for s in "${ENGINEERING_SKILLS[@]}" "${NON_ENGINEERING_SKILLS[@]}"; do
+        [ "$s" = "$name" ] && return 0
+    done
+    return 1
+}
+
 skill_files=()
 while IFS= read -r -d '' f; do
     skill_files+=("$f")
@@ -106,43 +149,86 @@ should_skip_shared() {
 }
 
 # -------------------------------------------------------------------------
-# B1: Shared Principles — byte identity
+# B1: Shared Principles — dual-block awareness
 # -------------------------------------------------------------------------
 b1_fail=0
 
-auth_principles_block="$(extract_block "$PRINCIPLES_SOURCE" "<!-- BEGIN SHARED: principles -->" "<!-- END SHARED: principles -->")"
+auth_universal_block="$(extract_block "$PRINCIPLES_SOURCE" "<!-- BEGIN SHARED: universal-principles -->" "<!-- END SHARED: universal-principles -->")"
+auth_engineering_block="$(extract_block "$PRINCIPLES_SOURCE" "<!-- BEGIN SHARED: engineering-principles -->" "<!-- END SHARED: engineering-principles -->")"
+
+if [ -z "$auth_universal_block" ] || [ -z "$auth_engineering_block" ]; then
+    echo "[FAIL] B1/principles-drift: $PRINCIPLES_SOURCE missing universal-principles or engineering-principles sub-blocks"
+    failed=$((failed + 1))
+else
 
 for filepath in "${skill_files[@]}"; do
     should_skip_shared "$filepath" && continue
 
-    block="$(extract_block "$filepath" "<!-- BEGIN SHARED: principles -->" "<!-- END SHARED: principles -->")"
-    if [ -z "$block" ]; then
-        echo "[FAIL] B1/principles-drift: Could not extract Shared Principles block"
+    skill_name="$(basename "$(dirname "$filepath")")"
+
+    # Check for old retired marker
+    if grep -q "<!-- BEGIN SHARED: principles -->" "$filepath"; then
+        echo "[FAIL] B1/principles-drift: old 'principles' marker found in $skill_name — migrate to universal-principles / engineering-principles markers."
         echo "  File: $filepath"
-        echo "  Expected: Content between <!-- BEGIN SHARED: principles --> and <!-- END SHARED: principles -->"
-        echo "  Found: No content extracted (markers may be missing or mismatched)"
-        echo "  Fix: Ensure the file has properly paired <!-- BEGIN SHARED: principles --> and <!-- END SHARED: principles --> markers with content between them"
+        echo "  Fix: update markers, then run bash scripts/sync-shared-content.sh"
         b1_fail=$((b1_fail + 1))
         continue
     fi
 
-    if [ "$block" != "$auth_principles_block" ]; then
-        diff_output="$(diff \
-            <(printf '%s\n' "$auth_principles_block") \
-            <(printf '%s\n' "$block") \
-            || true)"
-        echo "[FAIL] B1/principles-drift: Shared Principles content differs"
+    # Check universal-principles block
+    universal_block="$(extract_block "$filepath" "<!-- BEGIN SHARED: universal-principles -->" "<!-- END SHARED: universal-principles -->")"
+    if [ -z "$universal_block" ]; then
+        echo "[FAIL] B1/principles-drift: Missing universal-principles block in $skill_name."
         echo "  File: $filepath"
-        echo "  Expected: Byte-identical to $PRINCIPLES_SOURCE (authoritative source)"
-        echo "  Found: Content differs (see diff below)"
-        echo "  Fix: Run 'bash scripts/sync-shared-content.sh' or copy from $PRINCIPLES_SOURCE"
-        printf '%s\n' "$diff_output" | sed "s|^---|  --- shared/principles.md (authoritative)|" | sed "s|^+++|  +++ $(basename "$(dirname "$filepath")")/SKILL.md|" | sed 's/^/  /'
+        echo "  Fix: update markers, then run bash scripts/sync-shared-content.sh"
         b1_fail=$((b1_fail + 1))
+        continue
+    fi
+
+    if [ "$universal_block" != "$auth_universal_block" ]; then
+        echo "[FAIL] B1/principles-drift: universal-principles content differs in $skill_name."
+        echo "  File: $filepath"
+        echo "  Fix: bash scripts/sync-shared-content.sh"
+        b1_fail=$((b1_fail + 1))
+    fi
+
+    # Engineering block checks
+    has_engineering_block=false
+    if grep -q "<!-- BEGIN SHARED: engineering-principles -->" "$filepath"; then
+        has_engineering_block=true
+    fi
+
+    if is_engineering_skill "$skill_name" || ! is_known_skill "$skill_name"; then
+        # Engineering skill: must have engineering block
+        if [ "$has_engineering_block" = "false" ]; then
+            echo "[FAIL] B1/principles-drift: engineering-principles block missing in engineering skill $skill_name."
+            echo "  File: $filepath"
+            echo "  Fix: add markers and run bash scripts/sync-shared-content.sh"
+            b1_fail=$((b1_fail + 1))
+        else
+            engineering_block="$(extract_block "$filepath" "<!-- BEGIN SHARED: engineering-principles -->" "<!-- END SHARED: engineering-principles -->")"
+            if [ "$engineering_block" != "$auth_engineering_block" ]; then
+                echo "[FAIL] B1/principles-drift: engineering-principles content differs in $skill_name."
+                echo "  File: $filepath"
+                echo "  Fix: bash scripts/sync-shared-content.sh"
+                b1_fail=$((b1_fail + 1))
+            fi
+        fi
+    else
+        # Non-engineering skill: must NOT have engineering block
+        if [ "$has_engineering_block" = "true" ]; then
+            echo "[FAIL] B1/principles-drift: engineering-principles block found in non-engineering skill $skill_name."
+            echo "  File: $filepath"
+            echo "  Fix: remove the engineering-principles block and re-sync."
+            b1_fail=$((b1_fail + 1))
+        fi
     fi
 done
 
+fi  # end auth block check
+
 if [ "$b1_fail" -eq 0 ]; then
-    echo "[PASS] B1/principles-drift: Shared Principles blocks are byte-identical across all skills (${#skill_files[@]} files checked)"
+    echo "[PASS] B1/principles-drift: Shared Principles blocks are correct across all skills (${#skill_files[@]} files checked)"
     passed=$((passed + 1))
 else
     failed=$((failed + 1))
@@ -207,6 +293,15 @@ for filepath in "${skill_files[@]}"; do
         next_lineno=$((lineno + 1))
         next_line="$(sed -n "${next_lineno}p" "$filepath")"
         marker_content="$(sed -n "${lineno}p" "$filepath")"
+
+        # Flag retired outer-principles marker
+        if printf '%s' "$marker_content" | grep -q "BEGIN SHARED: principles -->$"; then
+            echo "[FAIL] B3/authoritative-source: Retired 'principles' marker found"
+            echo "  File: $filepath"
+            echo "  Fix: Replace with universal-principles / engineering-principles markers"
+            b3_fail=$((b3_fail + 1))
+            continue
+        fi
 
         # Determine expected authoritative source based on block type
         if printf '%s' "$marker_content" | grep -q "principles"; then
