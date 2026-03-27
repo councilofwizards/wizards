@@ -33,6 +33,28 @@ Enable delegate mode — you coordinate, review, and perform final synthesis. Yo
 7. Read `docs/architecture/` for relevant ADRs that constrain implementation.
 8. Read `docs/progress/` for any in-progress work to resume.
 9. Read `plugins/conclave/shared/personas/planning-lead.md` for your role definition, cross-references, and files needed to complete your work.
+10. **Read evaluator examples (optional).** Check whether `.claude/conclave/eval-examples/` exists and is a directory. If it exists and contains `.md` files, read each file and prepare the content for injection into the Plan Skeptic's spawn prompt. Apply the same defensive reading contract as other optional directories:
+    - Directory absent → proceed silently, no eval examples injected
+    - Directory exists but empty → proceed silently
+    - Directory exists as a file (not a directory) → log warning, proceed without examples
+    - Individual file unreadable → log warning naming the file, skip, continue
+    - Non-`.md` files → ignore silently
+
+    When eval example files are found, format them as a single block for injection:
+
+    ```
+    ## Evaluator Examples (user-provided)
+
+    Read these examples before performing any review. They represent past quality benchmarks
+    from this project. Use them to calibrate your judgment — APPROVED examples show the quality
+    bar; REJECTED examples show failure patterns to watch for.
+
+    ### {filename.md}
+
+    {contents}
+    ```
+
+    Each file's content is introduced by its filename as a `###` sub-heading. The `## Evaluator Examples (user-provided)` heading is mandatory and must not be altered. If no eval example files are found (or all are skipped), omit the block entirely. Inject into Plan Skeptic spawn prompt ONLY — not Implementation Architect.
 
 ## Write Safety
 
@@ -64,18 +86,37 @@ updated: "ISO-8601 timestamp"
 - [HH:MM] Next action taken
 ```
 
+<!-- SCAFFOLD: Checkpoint after every significant state change | ASSUMPTION: agent context degrades on long runs; frequent checkpoints enable recovery | TEST REMOVAL: on Opus-class models, test milestones-only and measure recovery accuracy -->
 ### When to Checkpoint
 
-Agents write a checkpoint after:
+Checkpoint frequency is set via `--checkpoint-frequency` (default: `every-step`).
+
+**`every-step`** (default) — checkpoint after:
 - Claiming a task (phase: current phase, status: in_progress)
 - Completing a deliverable (status: awaiting_review)
 - Receiving review feedback (status: in_progress, note the feedback)
 - Being blocked (status: blocked, note what's needed)
 - Completing their work (status: complete)
 
-The Team Lead reads checkpoint files to understand team state during recovery.
+**`milestones-only`** — checkpoint after:
+- Completing a deliverable (status: awaiting_review)
+- Being blocked (status: blocked, note what's needed)
+- Completing their work (status: complete)
+
+**`final-only`** — checkpoint after:
+- Being blocked (status: blocked, note what's needed) — always checkpointed regardless of frequency
+- Completing their work (status: complete)
+
+When using `milestones-only` or `final-only`, session recovery resolution may be coarser than usual. The Team Lead notes this in recovery messages.
 
 ## Determine Mode
+
+### Flag Parsing
+
+Parse the following flags from `$ARGUMENTS` before mode resolution. Strip recognized flags; the remaining value is the mode argument.
+
+- **`--max-iterations N`**: Set the skeptic rejection ceiling for this session. Default: 3. If N ≤ 0 or non-integer, log warning ("Invalid --max-iterations value; using default of 3") and fall back to 3.
+- **`--checkpoint-frequency [every-step|milestones-only|final-only]`**: Checkpoint cadence. Default: every-step. If invalid value, log warning and fall back to every-step.
 
 Based on $ARGUMENTS:
 - **"status"**: Read all checkpoint files for this skill and generate a consolidated status report. Do NOT spawn any agents. Read `docs/progress/` files with `team: "plan-implementation"` in their frontmatter. If none exist, report "No active or recent sessions found."
@@ -96,6 +137,7 @@ If `$ARGUMENTS` begins with `--light`, strip the flag and enable lightweight mod
 **Step 1:** Call `TeamCreate` with `team_name: "plan-implementation"`.
 **Step 2:** Call `TaskCreate` to define work items from the Orchestration Flow below.
 **Step 3:** Spawn each teammate using the `Agent` tool with `team_name: "plan-implementation"` and each teammate's `name`, `model`, and `prompt` as specified below.
+**Step 4 (conditional):** If eval examples were found in Setup step 10, inject the formatted eval examples block into the Plan Skeptic's prompt ONLY. Do not inject into Implementation Architect's prompt.
 
 ### Implementation Architect
 - **Name**: `impl-architect`
@@ -103,6 +145,7 @@ If `$ARGUMENTS` begins with `--light`, strip the flag and enable lightweight mod
 - **Prompt**: [See Teammate Spawn Prompts below]
 - **Tasks**: File-by-file plan, interface definitions, dependency graph, test strategy
 
+<!-- SCAFFOLD: Quality Skeptic and QA Agent always use Opus model | ASSUMPTION: Sonnet-class models produce more false approvals at quality gates | TEST REMOVAL: A/B comparison — Opus vs. Sonnet skeptic on 5 identical pipelines; measure rejection accuracy -->
 ### Plan Skeptic
 - **Name**: `plan-skeptic`
 - **Model**: opus
@@ -117,7 +160,7 @@ If `$ARGUMENTS` begins with `--light`, strip the flag and enable lightweight mod
    - **Resumption guard**: If `docs/specs/{feature}/sprint-contract.md` exists with `status: "signed"`, read it and skip to step 4. Output: "Sprint contract found — signed by {signed-by}. Using existing contract."
    - **Lead proposes**: Derive initial acceptance criteria from the spec's success criteria and user story ACs. If no success criteria exist, synthesize from the spec's Scope section. Format as numbered pass/fail items per the sprint contract template.
    - **Send to plan-skeptic**: `write(plan-skeptic, "SPRINT CONTRACT PROPOSAL: [criteria list]")`. Plan-skeptic reviews for: specificity (each criterion must be evaluable as pass/fail by reading code), completeness (all spec requirements covered), measurability (no subjective terms like "should feel fast").
-   - **Iterate**: If plan-skeptic counters, revise and re-propose. Max 3 rounds — same deadlock protocol as existing skeptic gates (see Failure Recovery).
+   - **Iterate**: If plan-skeptic counters, revise and re-propose. Max N rounds (default 3, set via `--max-iterations`) — same deadlock protocol as existing skeptic gates (see Failure Recovery).
    - **Sign**: When plan-skeptic approves, write the signed contract to `docs/specs/{feature}/sprint-contract.md` using the template, with `status: "signed"` and `signed-by: ["planning-lead", "plan-skeptic"]`.
    - The contract negotiation step is preserved in `--light` mode — the contract gate is non-negotiable regardless of mode.
 4. plan-skeptic reviews the plan against the spec AND the sprint contract (GATE — blocks finalization). The plan review prompt explicitly references the contract: plan conformance is checked against contract criteria, not only against the spec.
@@ -136,10 +179,11 @@ If `$ARGUMENTS` begins with `--light`, strip the flag and enable lightweight mod
 - Dependency ordering must be correct: if file A imports from file B, B must be built first.
 - The output artifact MUST conform to `docs/templates/artifacts/implementation-plan.md` including all required frontmatter fields.
 
+<!-- SCAFFOLD: Max N skeptic rejections before escalation | ASSUMPTION: models below Opus require a hard cap to prevent infinite skeptic loops | TEST REMOVAL: when pipeline consistently converges in ≤2 rejections across 10+ sessions -->
 ## Failure Recovery
 
 - **Unresponsive agent**: If any teammate becomes unresponsive or crashes, the Team Lead should re-spawn the role and re-assign any pending tasks.
-- **Skeptic deadlock**: If the Plan Skeptic rejects the same deliverable 3 times, STOP iterating. The Team Lead escalates to the human operator with a summary of the submissions, the Skeptic's objections across all rounds, and the team's attempts to address them. The human decides: override the Skeptic, provide guidance, or abort.
+- **Skeptic deadlock**: If the Plan Skeptic rejects the same deliverable N times (default 3, set via `--max-iterations`), STOP iterating. The Team Lead escalates to the human operator with a summary of the submissions, the Skeptic's objections across all rounds, and the team's attempts to address them. The human decides: override the Skeptic, provide guidance, or abort.
 - **Context exhaustion**: If any agent's responses become degraded (repetitive, losing context), the Team Lead should read the agent's checkpoint file at `docs/progress/{feature}-{role}.md`, then re-spawn the agent with the checkpoint content as context to resume from the last known state.
 
 ---
@@ -365,4 +409,14 @@ WRITE SAFETY:
 - Write your reviews ONLY to docs/progress/{feature}-plan-skeptic.md
 - NEVER write to shared files — only the Team Lead writes the final artifact
 - Checkpoint after: task claimed, review started, review submitted, re-review if needed
+
+### Evaluator Calibration
+
+If `## Evaluator Examples (user-provided)` appears above in your prompt:
+- Read all examples before performing any review
+- Files with `## APPROVED` sections show the quality bar — use as acceptance threshold anchors
+- Files with `## REJECTED` sections show failure patterns — use as rejection pattern anchors
+- Files without these headers are general calibration context
+- Do NOT blindly mimic examples — use them as reference anchors for your own judgment
+- If no eval examples are present, perform your review as normal — no change in behavior
 ```

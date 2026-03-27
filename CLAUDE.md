@@ -157,6 +157,28 @@ Check categories:
   expected.
 - The Skeptic role is non-negotiable in every multi-agent skill. Never remove or weaken it.
 
+### SCAFFOLD Comments
+
+SKILL.md files encode assumptions about model capabilities that may become stale as models improve. Document these
+assumptions with inline HTML comments using this format:
+
+```
+<!-- SCAFFOLD: [what this scaffolding does] | ASSUMPTION: [model-capability assumption] | TEST REMOVAL: [condition for testing removal] -->
+```
+
+All three fields are required. A comment missing any field is considered malformed.
+
+Examples:
+- `<!-- SCAFFOLD: Max N skeptic rejections before escalation | ASSUMPTION: models below Opus require a hard cap to prevent infinite skeptic loops | TEST REMOVAL: when pipeline consistently converges in ≤2 rejections across 10+ sessions -->`
+- `<!-- SCAFFOLD: Lead performs inline skeptic review for Stages 1-3 | ASSUMPTION: Sonnet-class model sufficient for early-stage review; dedicated Opus skeptic adds cost without quality gain | TEST REMOVAL: benchmark --full vs. default quality on the same pipeline topic -->`
+
+**Placement rules**:
+- Place directly above or on the same line as the construct it documents
+- NEVER place inside spawn prompt code blocks (verbatim content injected into agent context) — agents may misinterpret the comment as an instruction
+- SCAFFOLD comment content must NOT contain `##`-prefixed lines (would interfere with A-series section detection)
+
+SCAFFOLD comments are documentation for skill maintainers, not end-user-visible. No validator enforces the convention — enforcement is by code review.
+
 ## Current Roadmap Status
 
 - **P1**: All 4 items complete (bootstrap, write safety, state persistence, stack generalization)

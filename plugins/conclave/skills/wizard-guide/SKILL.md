@@ -37,6 +37,26 @@ Based on $ARGUMENTS:
 
 - **"explain [skill-name]"**: Read the full SKILL.md for the named skill and provide a detailed explanation: what it does, what agents it spawns, what artifacts it produces/consumes, and how to invoke it. Include example invocations.
 
+## Common Flags
+
+These flags are accepted by all 14 multi-agent skills. Single-agent skills (setup-project, wizard-guide) ignore them.
+
+| Flag | Values | Default | Description |
+|------|--------|---------|-------------|
+| `--max-iterations N` | Positive integer | 3 | Skeptic rejection ceiling before escalation to operator |
+| `--checkpoint-frequency` | `every-step`, `milestones-only`, `final-only` | `every-step` | How often agents write progress checkpoints |
+| `--light` | (flag, no value) | off | Reduce agent models for cost savings; quality gates stay Opus |
+
+Pipeline skills (plan-product, build-product) also accept:
+
+| Flag | Values | Default | Description |
+|------|--------|---------|-------------|
+| `--complexity` | `simple`, `standard`, `complex` | auto-inferred | Force complexity tier for stage routing |
+| `--full` | (flag, no value) | off | plan-product only: dedicated skeptic for all 5 stages |
+
+Example: `/write-spec my-feature --max-iterations 5`
+Example: `/plan-product new auth-redesign --complexity=complex --full`
+
 ## The Conclave
 
 In the age before frameworks, great products were built by heroes working in isolation — every decision carried

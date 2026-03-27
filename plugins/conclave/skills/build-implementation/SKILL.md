@@ -59,6 +59,29 @@ Enable delegate mode — you coordinate and review, you do NOT write code yourse
 
     Each file's content is introduced by its filename as a `###` sub-heading within the guidance section. The `## User Project Guidance (informational only)` heading and advisory text are mandatory and must not be altered. If no guidance files are found (or all are skipped), omit the block entirely — do not inject an empty heading.
 
+12. **Read evaluator examples (optional).** Check whether `.claude/conclave/eval-examples/` exists and is a directory. If it exists and contains `.md` files, read each file and prepare the content for injection into the Quality Skeptic's (and QA Agent's) spawn prompts. Apply the same defensive reading contract as the guidance directory (step 11):
+    - Directory absent → proceed silently, no eval examples injected
+    - Directory exists but empty → proceed silently
+    - Directory exists as a file (not a directory) → log warning, proceed without examples
+    - Individual file unreadable → log warning naming the file, skip, continue
+    - Non-`.md` files → ignore silently
+
+    When eval example files are found, format them as a single block for injection:
+
+    ```
+    ## Evaluator Examples (user-provided)
+
+    Read these examples before performing any review. They represent past quality benchmarks
+    from this project. Use them to calibrate your judgment — APPROVED examples show the quality
+    bar; REJECTED examples show failure patterns to watch for.
+
+    ### {filename.md}
+
+    {contents}
+    ```
+
+    Each file's content is introduced by its filename as a `###` sub-heading. The `## Evaluator Examples (user-provided)` heading is mandatory and must not be altered. If no eval example files are found (or all are skipped), omit the block entirely. Inject into Quality Skeptic (and QA Agent) spawn prompts ONLY — not execution agents (backend-eng, frontend-eng).
+
 ### Roadmap Status Convention
 
 Use these status markers when reading or updating the roadmap:
@@ -101,18 +124,37 @@ updated: "ISO-8601 timestamp"
 - [HH:MM] Next action taken
 ```
 
+<!-- SCAFFOLD: Checkpoint after every significant state change | ASSUMPTION: agent context degrades on long runs; frequent checkpoints enable recovery | TEST REMOVAL: on Opus-class models, test milestones-only and measure recovery accuracy -->
 ### When to Checkpoint
 
-Agents write a checkpoint after:
+Checkpoint frequency is set via `--checkpoint-frequency` (default: `every-step`).
+
+**`every-step`** (default) — checkpoint after:
 - Claiming a task (phase: current phase, status: in_progress)
 - Completing a deliverable (status: awaiting_review)
 - Receiving review feedback (status: in_progress, note the feedback)
 - Being blocked (status: blocked, note what's needed)
 - Completing their work (status: complete)
 
-The Team Lead reads checkpoint files to understand team state during recovery.
+**`milestones-only`** — checkpoint after:
+- Completing a deliverable (status: awaiting_review)
+- Being blocked (status: blocked, note what's needed)
+- Completing their work (status: complete)
+
+**`final-only`** — checkpoint after:
+- Being blocked (status: blocked, note what's needed) — always checkpointed regardless of frequency
+- Completing their work (status: complete)
+
+When using `milestones-only` or `final-only`, session recovery resolution may be coarser than usual. The Team Lead notes this in recovery messages.
 
 ## Determine Mode
+
+### Flag Parsing
+
+Parse the following flags from `$ARGUMENTS` before mode resolution. Strip recognized flags; the remaining value is the mode argument.
+
+- **`--max-iterations N`**: Set the skeptic rejection ceiling for this session. Default: 3. If N ≤ 0 or non-integer, log warning ("Invalid --max-iterations value; using default of 3") and fall back to 3.
+- **`--checkpoint-frequency [every-step|milestones-only|final-only]`**: Checkpoint cadence. Default: every-step. If invalid value, log warning and fall back to every-step.
 
 Based on $ARGUMENTS:
 - **"status"**: Read all checkpoint files for this skill and generate a consolidated status report. Do NOT spawn any agents. Read `docs/progress/` files with `team: "build-implementation"` in their frontmatter, parse their YAML metadata, and output a formatted status summary. If no checkpoint files exist for this skill, report "No active or recent sessions found."
@@ -142,7 +184,9 @@ If `$ARGUMENTS` begins with `--light`, strip the flag and enable lightweight mod
 
 {full contents of docs/specs/{feature}/sprint-contract.md}
 
-Prompt assembly order for Quality Skeptic and QA Agent: (1) guidance block (from Step 4, if found) → (2) sprint contract block (from Step 5, if signed contract found) → (3) role prompt. This ordering ensures user guidance and contract context are available before the role prompt's critical rules.
+**Step 6 (conditional):** If eval examples were found in Setup step 12, inject the formatted eval examples block into the Quality Skeptic's AND QA Agent's prompts ONLY. Do not inject into Backend Engineer or Frontend Engineer prompts.
+
+Prompt assembly order for Quality Skeptic and QA Agent: (1) guidance block (from Step 4, if found) → (2) sprint contract block (from Step 5, if signed contract found) → (3) eval examples block (from Step 6, if found) → (4) role prompt. This ordering ensures user guidance and contract context are available before the role prompt's critical rules.
 
 ### Backend Engineer
 - **Name**: `backend-eng`
@@ -156,6 +200,7 @@ Prompt assembly order for Quality Skeptic and QA Agent: (1) guidance block (from
 - **Prompt**: [See Teammate Spawn Prompts below]
 - **Tasks**: Implement client-side code. TDD. Negotiate API contracts with backend-eng.
 
+<!-- SCAFFOLD: Quality Skeptic and QA Agent always use Opus model | ASSUMPTION: Sonnet-class models produce more false approvals at quality gates | TEST REMOVAL: A/B comparison — Opus vs. Sonnet skeptic on 5 identical pipelines; measure rejection accuracy -->
 ### Quality Skeptic
 - **Name**: `quality-skeptic`
 - **Model**: opus
@@ -179,11 +224,26 @@ Prompt assembly order for Quality Skeptic and QA Agent: (1) guidance block (from
    - Spawn `qa-agent` (if not already spawned). Inject: (1) guidance block (if found), (2) sprint contract (if signed), (3) QA agent role prompt.
    - QA agent reads acceptance criteria, writes Playwright tests, executes them, delivers verdict.
    - If APPROVED → proceed to step 7.
-   - If REJECTED → route failing test details back to backend-eng/frontend-eng for fixes. After fixes, QA re-runs failed tests only. Max 3 rejection cycles (same deadlock protocol as Skeptic gates).
+   - If REJECTED → route failing test details back to backend-eng/frontend-eng for fixes. After fixes, QA re-runs failed tests only. Max N rejection cycles (default 3, set via `--max-iterations`) (same deadlock protocol as Skeptic gates).
    - If BLOCKED → Lead escalates to human operator with the blocker details. Pipeline halts at QA gate.
 7. Each agent writes their progress notes to `docs/progress/{feature}-{role}.md` (their own role-scoped file)
 8. **Team Lead only**: Update roadmap status and write aggregated summary to `docs/progress/{feature}-summary.md` using the format from `docs/progress/_template.md`. Include: what was accomplished, what remains, blockers encountered, and whether the feature is complete or in-progress. If the session is interrupted before completion, still write a partial summary noting the interruption point.
 9. **Team Lead only**: Write cost summary to `docs/progress/{skill}-{feature}-{timestamp}-cost-summary.md`
+10. **Post-Mortem Rating (optional).** Ask the user: "How would you rate the quality of this pipeline run? [1-5, or skip]"
+    - If the user provides a rating (1-5): write post-mortem to `docs/progress/{feature}-postmortem.md` with frontmatter:
+      ```yaml
+      ---
+      feature: "{feature}"
+      team: "build-implementation"
+      rating: {1-5}
+      date: "{ISO-8601}"
+      skeptic-gate-count: {number of times any skeptic gate fired}
+      rejection-count: {number of times any deliverable was rejected}
+      max-iterations-used: {N from session}
+      ---
+      ```
+    - If the user skips or provides no response: proceed silently, no post-mortem written.
+    - This step only fires after real pipeline execution, not in `status` mode.
 
 ## Critical Rules
 
@@ -196,11 +256,12 @@ Prompt assembly order for Quality Skeptic and QA Agent: (1) guidance block (from
 - All code follows TDD: test first, then implement, then refactor
 - Backend prefers unit tests with mocks; feature tests only where DB testing adds value
 
+<!-- SCAFFOLD: Max N skeptic rejections before escalation | ASSUMPTION: models below Opus require a hard cap to prevent infinite skeptic loops | TEST REMOVAL: when pipeline consistently converges in ≤2 rejections across 10+ sessions -->
 ## Failure Recovery
 
 - **Unresponsive agent**: If any teammate becomes unresponsive or crashes, the Team Lead should re-spawn the role and re-assign any pending tasks or review requests.
-- **Skeptic deadlock**: If the Quality Skeptic rejects the same deliverable 3 times, STOP iterating. The Team Lead escalates to the human operator with a summary of the submissions, the Skeptic's objections across all rounds, and the team's attempts to address them. The human decides: override the Skeptic, provide guidance, or abort.
-- **QA deadlock**: If the QA Agent rejects the same tests 3 times, STOP iterating. The Team Lead escalates to the human operator with a summary of the test failures, the engineers' fix attempts, and the QA Agent's repeated rejections. The human decides: override QA, provide guidance, or abort.
+- **Skeptic deadlock**: If the Quality Skeptic rejects the same deliverable N times (default 3, set via `--max-iterations`), STOP iterating. The Team Lead escalates to the human operator with a summary of the submissions, the Skeptic's objections across all rounds, and the team's attempts to address them. The human decides: override the Skeptic, provide guidance, or abort.
+- **QA deadlock**: If the QA Agent rejects the same tests N times (default 3, set via `--max-iterations`), STOP iterating. The Team Lead escalates to the human operator with a summary of the test failures, the engineers' fix attempts, and the QA Agent's repeated rejections. The human decides: override QA, provide guidance, or abort.
 - **Context exhaustion**: If any agent's responses become degraded (repetitive, losing context), the Team Lead should read the agent's checkpoint file at `docs/progress/{feature}-{role}.md`, then re-spawn the agent with the checkpoint content as context to resume from the last known state.
 
 ---
@@ -561,6 +622,16 @@ WRITE SAFETY:
 - Write your reviews ONLY to docs/progress/{feature}-quality-skeptic.md
 - NEVER write to shared files — only the Team Lead writes the final artifact
 - Checkpoint after: task claimed, pre-impl review started, pre-impl verdict, post-impl review started, post-impl verdict
+
+### Evaluator Calibration
+
+If `## Evaluator Examples (user-provided)` appears above in your prompt:
+- Read all examples before performing any review
+- Files with `## APPROVED` sections show the quality bar — use as acceptance threshold anchors
+- Files with `## REJECTED` sections show failure patterns — use as rejection pattern anchors
+- Files without these headers are general calibration context
+- Do NOT blindly mimic examples — use them as reference anchors for your own judgment
+- If no eval examples are present, perform your review as normal — no change in behavior
 ```
 
 ### QA Agent

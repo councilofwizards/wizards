@@ -1,16 +1,20 @@
 ---
 title: "Skill Composability"
-status: "not_started"
+status: "closed"
 priority: "P2"
 category: "new-skills"
 effort: "large"
 impact: "medium"
 dependencies: ["state-persistence"]
 created: "2026-02-14"
-updated: "2026-02-14"
+updated: "2026-03-27"
 ---
 
-# Skill Composability
+# Skill Composability (CLOSED)
+
+## Status: Closed (2026-03-27)
+
+Superseded by ADR-004 (two-tier architecture, itself superseded) and the current single-tier skill architecture. The artifact detection system in plan-product and build-product already provides implicit chaining — skills detect each other's artifacts via frontmatter and skip completed stages. Explicit workflow composition adds complexity without demonstrated user need.
 
 ## Problem
 

@@ -57,7 +57,7 @@ Items are prioritized using two dimensions:
 | # | Item | Category | Status | Effort |
 |---|------|----------|--------|--------|
 | 5 | [Cost Guardrails](P2-01-cost-guardrails.md) | developer-experience | ✅ | Medium |
-| 6 | [Skill Composability](P2-02-skill-composability.md) | new-skills | 🔴 | Large |
+| 6 | [Skill Composability](P2-02-skill-composability.md) | new-skills | ⛔ closed | Large |
 | 7 | [Progress Observability](P2-03-progress-observability.md) | quality-reliability | ✅ | Medium |
 | 8 | [Automated Testing Pipeline](P2-04-automated-testing.md) | quality-reliability | ✅ | Large |
 | 9 | [Content Deduplication](P2-05-content-deduplication.md) | core-framework | ✅ | Medium |
@@ -132,12 +132,12 @@ Items are prioritized using two dimensions:
 
 | # | Item | Category | Status | Effort |
 |---|------|----------|--------|--------|
-| 42 | [Configurable Skeptic Iteration Limits](P3-26-configurable-iteration-limits.md) | core-framework | 🟢 | Small |
-| 43 | [Complexity-Adaptive Pipeline](P3-27-complexity-adaptive-pipeline.md) | core-framework | 🟢 | Medium |
-| 44 | [Lead-as-Skeptic Consistency Fix](P3-28-lead-skeptic-consistency.md) | quality-reliability | 🟢 | Medium |
-| 45 | [Evaluator Tuning Mechanism](P3-29-evaluator-tuning.md) | quality-reliability | 🟢 | Medium |
-| 46 | [Checkpoint Frequency Configurability](P3-30-checkpoint-configurability.md) | developer-experience | 🟢 | Small |
-| 47 | [Design Assumptions Documentation](P3-31-design-assumptions-docs.md) | documentation | 🟢 | Small |
+| 42 | [Configurable Skeptic Iteration Limits](P3-26-configurable-iteration-limits.md) | core-framework | ✅ | Small |
+| 43 | [Complexity-Adaptive Pipeline](P3-27-complexity-adaptive-pipeline.md) | core-framework | ✅ | Medium |
+| 44 | [Lead-as-Skeptic Consistency Fix](P3-28-lead-skeptic-consistency.md) | quality-reliability | ✅ | Medium |
+| 45 | [Evaluator Tuning Mechanism](P3-29-evaluator-tuning.md) | quality-reliability | ✅ | Medium |
+| 46 | [Checkpoint Frequency Configurability](P3-30-checkpoint-configurability.md) | developer-experience | ✅ | Small |
+| 47 | [Design Assumptions Documentation](P3-31-design-assumptions-docs.md) | documentation | ✅ | Small |
 
 > **P3-27 + P3-28 batching**: Both modify plan-product SKILL.md — implement together.
 > **P3-29 dependencies**: Requires P2-11, P2-12, P2-13, and P3-28 producing evaluation data before calibration is meaningful.

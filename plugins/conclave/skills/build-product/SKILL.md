@@ -32,6 +32,28 @@ Enable delegate mode — you coordinate, review, and manage the build pipeline. 
 6. Read the target spec from `docs/specs/{feature}/`.
 7. Read `docs/progress/` for any in-progress work to resume.
 8. Read `docs/architecture/` for relevant ADRs.
+9. **Read evaluator examples (optional).** Check whether `.claude/conclave/eval-examples/` exists and is a directory. If it exists and contains `.md` files, read each file and prepare the content for injection into the Quality Skeptic's spawn prompt. Apply the same defensive reading contract as the guidance directory:
+    - Directory absent → proceed silently, no eval examples injected
+    - Directory exists but empty → proceed silently
+    - Directory exists as a file (not a directory) → log warning, proceed without examples
+    - Individual file unreadable → log warning naming the file, skip, continue
+    - Non-`.md` files → ignore silently
+
+    When eval example files are found, format them as a single block for the Quality Skeptic's spawn prompt:
+
+    ```
+    ## Evaluator Examples (user-provided)
+
+    Read these examples before performing any review. They represent past quality benchmarks
+    from this project. Use them to calibrate your judgment — APPROVED examples show the quality
+    bar; REJECTED examples show failure patterns to watch for.
+
+    ### {filename.md}
+
+    {contents}
+    ```
+
+    Inject into Quality Skeptic spawn prompt ONLY — not execution agents (backend-eng, frontend-eng).
 
 ### Roadmap Status Convention
 
@@ -75,16 +97,28 @@ updated: "ISO-8601 timestamp"
 - [HH:MM] Next action taken
 ```
 
+<!-- SCAFFOLD: Checkpoint after every significant state change | ASSUMPTION: agent context degrades on long runs; frequent checkpoints enable recovery | TEST REMOVAL: on Opus-class models, test milestones-only and measure recovery accuracy -->
 ### When to Checkpoint
 
-Agents write a checkpoint after:
+Checkpoint frequency is set via `--checkpoint-frequency` (default: `every-step`).
+
+**`every-step`** (default) — checkpoint after:
 - Claiming a task (phase: current phase, status: in_progress)
 - Completing a deliverable (status: awaiting_review)
 - Receiving review feedback (status: in_progress, note the feedback)
 - Being blocked (status: blocked, note what's needed)
 - Completing their work (status: complete)
 
-The Team Lead reads checkpoint files to understand team state during recovery.
+**`milestones-only`** — checkpoint after:
+- Completing a deliverable (status: awaiting_review)
+- Being blocked (status: blocked, note what's needed)
+- Completing their work (status: complete)
+
+**`final-only`** — checkpoint after:
+- Being blocked (status: blocked, note what's needed) — always checkpointed regardless of frequency
+- Completing their work (status: complete)
+
+When using `milestones-only` or `final-only`, session recovery resolution may be coarser than usual. The Team Lead notes this in recovery messages.
 
 ## Determine Mode
 
@@ -93,6 +127,32 @@ Based on $ARGUMENTS:
 - **Empty/no args**: First, scan `docs/progress/` for checkpoint files with `team: "build-product"` and `status` of `in_progress`, `blocked`, or `awaiting_review`. If found, **resume from the last checkpoint** — re-spawn the relevant agents with their checkpoint content as context. If no incomplete checkpoints exist, run artifact detection, then execute the pipeline from the earliest missing stage. If no specs are ready for implementation, report: `"No features ready for implementation. Run /plan-product to create a spec first."`
 - **"[spec-name]"**: Build the named spec through the full pipeline.
 - **"review"**: Run Stage 3 (Quality Review) only for the current implementation.
+
+### Flag Parsing
+
+Parse the following flags from `$ARGUMENTS` before mode resolution. Strip recognized flags; the remaining value is the mode argument (spec-name, etc.).
+
+- **`--light`**: Enable lightweight mode (existing behavior, see Lightweight Mode section)
+- **`--complexity=[simple|standard|complex]`**: Force complexity tier. If absent, the Lead infers it (see Complexity Classification below). If value is not one of the three valid tiers, log warning and default to Standard.
+- **`--max-iterations N`**: Configurable skeptic rejection ceiling (see Group B — P3-26). Default: 3.
+- **`--checkpoint-frequency [every-step|milestones-only|final-only]`**: Checkpoint cadence (see Group D — P3-30). Default: every-step.
+
+All flags are independent and composable. `--light` affects model selection, `--complexity` affects stage routing — they do not conflict.
+
+### Complexity Classification
+
+Immediately after flag parsing and before artifact detection, the Team Lead classifies the task:
+
+1. If `--complexity` override is present, use that tier directly.
+2. Otherwise, infer the tier based on:
+   - **Simple**: Single well-defined feature, implementation-plan artifact already exists, narrow scope (one or two files), clear spec with no architectural ambiguity
+   - **Standard**: Multi-component feature, partial or no implementation-plan, moderate scope — this is the default when signals are ambiguous
+   - **Complex**: Multi-feature implementation, cross-cutting concerns, architecture-level changes, no implementation-plan, explicit user indication of high complexity
+3. Report the classification to the user before proceeding:
+   ```
+   Complexity: [tier] — [one-sentence rationale]
+   ```
+   If inferred (no `--complexity` flag), add: "(override with --complexity=[simple|standard|complex])"
 
 ### Artifact Detection
 
@@ -131,6 +191,7 @@ Report artifact detection results to the user before proceeding:
 
 ```
 Artifact Detection for "{feature}":
+  Complexity:          [tier] ([rationale])
   Prerequisites:
     technical-spec:      [FOUND / NOT_FOUND]
     user-stories:        [FOUND / NOT_FOUND] (optional)
@@ -140,13 +201,13 @@ Artifact Detection for "{feature}":
     build:               [result]
     quality-review:      [result]
 
-Pipeline will run: [stages to execute]
-Skipping:          [stages with FOUND/COMPLETE artifacts]
+Pipeline will run: [stages to execute, reflecting complexity routing]
+Skipping:          [stages skipped by artifact detection + complexity routing]
 ```
 
 ## Lightweight Mode
 
-If `$ARGUMENTS` begins with `--light`, strip the flag and enable lightweight mode:
+`--light` is parsed as part of the Flag Parsing subsection above. When the `--light` flag is present, enable lightweight mode:
 - Output to user: "Lightweight mode enabled: planning and build stages use reduced teams. Quality review runs at full strength."
 - impl-architect: spawn with model **sonnet** instead of opus
 - plan-skeptic: unchanged (ALWAYS Opus)
@@ -190,6 +251,7 @@ If `$ARGUMENTS` begins with `--light`, strip the flag and enable lightweight mod
 - **Tasks**: Implement client-side code. TDD. Negotiate API contracts with backend-eng.
 - **Stage**: 2 (Build)
 
+<!-- SCAFFOLD: Quality Skeptic and QA Agent always use Opus model | ASSUMPTION: Sonnet-class models produce more false approvals at quality gates | TEST REMOVAL: A/B comparison — Opus vs. Sonnet skeptic on 5 identical pipelines; measure rejection accuracy -->
 ### Quality Skeptic
 - **Name**: `quality-skeptic`
 - **Model**: opus
@@ -216,6 +278,16 @@ If `$ARGUMENTS` begins with `--light`, strip the flag and enable lightweight mod
 Execute stages sequentially. Each stage must complete before the next begins.
 Skip stages where artifacts are FOUND/COMPLETE per artifact detection.
 
+### Complexity Routing
+
+The complexity tier modifies stage execution as follows:
+
+- **Simple**: If implementation-plan is NOT_FOUND, skip Stage 1 (Planning) — the Team Lead synthesizes a minimal inline plan from the spec and user stories before proceeding to Stage 2. If implementation-plan is FOUND, use it normally. Report: "Complexity: Simple — Stage 1 skipped (inline plan synthesized)"
+- **Standard**: No routing changes. Artifact detection controls stage execution as before. This is the current behavior.
+- **Complex**: All stages execute per artifact detection. Additionally, insert a **mid-build complexity review** after API contract negotiation (Stage 2 step 3) and before implementation begins: quality-skeptic performs an intermediate review examining scope boundaries and dependency risks (separate from the existing pre-implementation gate). This is in addition to the normal pre-implementation gate, not a replacement.
+
+Artifact detection still runs for all 3 stages regardless of tier — it determines which artifacts are available as inputs even when a stage's execution is modified.
+
 ### Stage 1: Implementation Planning
 
 Skip if implementation-plan FOUND with status "approved".
@@ -226,7 +298,7 @@ Skip if implementation-plan FOUND with status "approved".
    - **Resumption guard**: If sprint-contract detected as SIGNED, skip to step 4.
    - Lead proposes initial acceptance criteria derived from spec success criteria and user story ACs. If no success criteria exist, synthesize from the spec's Scope section.
    - `write(plan-skeptic, "SPRINT CONTRACT PROPOSAL: [criteria list]")`. Plan-skeptic checks specificity, completeness, measurability.
-   - Iterate max 3 rounds (same deadlock protocol as existing skeptic gates — see Failure Recovery).
+   - Iterate max N rounds (default 3, set via `--max-iterations`) (same deadlock protocol as existing skeptic gates — see Failure Recovery).
    - When approved, write signed contract to `docs/specs/{feature}/sprint-contract.md` with `status: "signed"` and `signed-by: ["planning-lead", "plan-skeptic"]`.
    - **Edge case** (Stage 1 skipped but sprint-contract NOT_FOUND): If the artifact detection result was `implementation-plan: FOUND` but `sprint-contract: NOT_FOUND`, run this negotiation at the start of Stage 2 instead, using quality-skeptic as the signing skeptic (see Stage 2 step 1 below). In that case, `signed-by: ["implementation-coordinator", "quality-skeptic"]`.
    - The contract negotiation step is preserved in `--light` mode — non-negotiable regardless of mode.
@@ -260,7 +332,7 @@ Skip if build progress checkpoints show status "complete".
    - Otherwise: spawn `qa-agent` (if not already spawned). Inject: (1) guidance block (if found), (2) sprint contract (if signed), (3) QA agent role prompt.
    - QA agent reads acceptance criteria, writes Playwright tests, executes them, delivers verdict.
    - If APPROVED → proceed to step 8.
-   - If REJECTED → route failing test details back to backend-eng/frontend-eng for fixes. After fixes, QA re-runs failed tests only. Max 3 rejection cycles (same deadlock protocol as Skeptic gates).
+   - If REJECTED → route failing test details back to backend-eng/frontend-eng for fixes. After fixes, QA re-runs failed tests only. Max N rejection cycles (default 3, set via `--max-iterations`) (same deadlock protocol as Skeptic gates).
    - If BLOCKED → Lead escalates to human operator with the blocker details. Pipeline halts at QA gate.
 8. Each agent writes progress to `docs/progress/{feature}-{role}.md`
 9. Update roadmap status to 🔵 In progress (implementation)
@@ -294,6 +366,21 @@ After each stage completes:
 After the final stage:
 1. **Team Lead only**: Write cost summary to `docs/progress/build-product-{feature}-{timestamp}-cost-summary.md`
 2. **Team Lead only**: Write end-of-session summary to `docs/progress/{feature}-summary.md` using the format from `docs/progress/_template.md`. Include: what was accomplished, what remains, blockers encountered, and which stages completed.
+3. **Post-Mortem Rating (optional).** Ask the user: "How would you rate the quality of this pipeline run? [1-5, or skip]"
+    - If the user provides a rating (1-5): write post-mortem to `docs/progress/{feature}-postmortem.md` with frontmatter:
+      ```yaml
+      ---
+      feature: "{feature}"
+      team: "build-product"
+      rating: {1-5}
+      date: "{ISO-8601}"
+      skeptic-gate-count: {number of times any skeptic gate fired}
+      rejection-count: {number of times any deliverable was rejected}
+      max-iterations-used: {N from session}
+      ---
+      ```
+    - If the user skips or provides no response: proceed silently, no post-mortem written.
+    - This step only fires after real pipeline execution, not in `status` mode.
 
 ## Critical Rules
 
@@ -306,11 +393,12 @@ After the final stage:
 - All code follows TDD: test first, then implement, then refactor
 - Backend prefers unit tests with mocks; feature tests only where DB testing adds value
 
+<!-- SCAFFOLD: Max N skeptic rejections before escalation | ASSUMPTION: models below Opus require a hard cap to prevent infinite skeptic loops | TEST REMOVAL: when pipeline consistently converges in ≤2 rejections across 10+ sessions -->
 ## Failure Recovery
 
 - **Unresponsive agent**: If any teammate becomes unresponsive or crashes, the Team Lead should re-spawn the role and re-assign any pending tasks or review requests.
-- **Skeptic deadlock**: If the quality-skeptic or plan-skeptic rejects the same deliverable 3 times, STOP iterating. The Team Lead escalates to the human operator with a summary of the submissions, the Skeptic's objections across all rounds, and the team's attempts to address them. The human decides: override the Skeptic, provide guidance, or abort.
-- **QA deadlock**: If the QA Agent rejects the same tests 3 times, STOP iterating. The Team Lead escalates to the human operator with a summary of the test failures, the engineers' fix attempts, and the QA Agent's repeated rejections. The human decides: override QA, provide guidance, or abort.
+- **Skeptic deadlock**: If the quality-skeptic or plan-skeptic rejects the same deliverable N times (default 3, set via `--max-iterations`), STOP iterating. The Team Lead escalates to the human operator with a summary of the submissions, the Skeptic's objections across all rounds, and the team's attempts to address them. The human decides: override the Skeptic, provide guidance, or abort.
+- **QA deadlock**: If the QA Agent rejects the same tests N times (default 3, set via `--max-iterations`), STOP iterating. The Team Lead escalates to the human operator with a summary of the test failures, the engineers' fix attempts, and the QA Agent's repeated rejections. The human decides: override QA, provide guidance, or abort.
 - **Context exhaustion**: If any agent's responses become degraded (repetitive, losing context), the Team Lead should read the agent's checkpoint file at `docs/progress/{feature}-{role}.md`, then re-spawn the agent with the checkpoint content as context to resume from the last known state.
 - **Stage failure**: Do NOT proceed to the next stage — downstream stages depend on prior outputs. Report the failure and suggest re-running the skill.
 - **Partial pipeline**: All completed stages' outputs are preserved. Re-running the pipeline detects existing artifacts via frontmatter and resumes from the correct stage.
@@ -759,6 +847,16 @@ WRITE SAFETY:
 - Write your reviews ONLY to docs/progress/{feature}-quality-skeptic.md
 - NEVER write to shared files — only the Team Lead writes the final artifact
 - Checkpoint after: task claimed, pre-impl review started, pre-impl verdict, post-impl review started, post-impl verdict
+
+### Evaluator Calibration
+
+If `## Evaluator Examples (user-provided)` appears above in your prompt:
+- Read all examples before performing any review
+- Files with `## APPROVED` sections show the quality bar — use as acceptance threshold anchors
+- Files with `## REJECTED` sections show failure patterns — use as rejection pattern anchors
+- Files without these headers are general calibration context
+- Do NOT blindly mimic examples — use them as reference anchors for your own judgment
+- If no eval examples are present, perform your review as normal — no change in behavior
 ```
 
 ### Security Auditor

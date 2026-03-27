@@ -72,18 +72,37 @@ updated: "ISO-8601 timestamp"
 - [HH:MM] Next action taken
 ```
 
+<!-- SCAFFOLD: Checkpoint after every significant state change | ASSUMPTION: agent context degrades on long runs; frequent checkpoints enable recovery | TEST REMOVAL: on Opus-class models, test milestones-only and measure recovery accuracy -->
 ### When to Checkpoint
 
-Agents write a checkpoint after:
+Checkpoint frequency is set via `--checkpoint-frequency` (default: `every-step`).
+
+**`every-step`** (default) — checkpoint after:
 - Claiming a task (phase: current phase, status: in_progress)
 - Completing a deliverable (status: awaiting_review)
 - Receiving review feedback (status: in_progress, note the feedback)
 - Being blocked (status: blocked, note what's needed)
 - Completing their work (status: complete)
 
-The Team Lead reads checkpoint files to understand team state during recovery.
+**`milestones-only`** — checkpoint after:
+- Completing a deliverable (status: awaiting_review)
+- Being blocked (status: blocked, note what's needed)
+- Completing their work (status: complete)
+
+**`final-only`** — checkpoint after:
+- Being blocked (status: blocked, note what's needed) — always checkpointed regardless of frequency
+- Completing their work (status: complete)
+
+When using `milestones-only` or `final-only`, session recovery resolution may be coarser than usual. The Team Lead notes this in recovery messages.
 
 ## Determine Mode
+
+### Flag Parsing
+
+Parse the following flags from `$ARGUMENTS` before mode resolution. Strip recognized flags; the remaining value is the mode argument.
+
+- **`--max-iterations N`**: Set the skeptic rejection ceiling for this session. Default: 3. If N ≤ 0 or non-integer, log warning ("Invalid --max-iterations value; using default of 3") and fall back to 3.
+- **`--checkpoint-frequency [every-step|milestones-only|final-only]`**: Checkpoint cadence. Default: every-step. If invalid value, log warning and fall back to every-step.
 
 Based on $ARGUMENTS:
 - **"status"**: Read all checkpoint files for this skill and generate a consolidated status report. Do NOT spawn any agents. Read `docs/progress/` files with `team: "plan-sales"` in their frontmatter, parse their YAML metadata, and output a formatted status summary. If no checkpoint files exist for this skill, report "No active or recent sessions found."
@@ -124,6 +143,7 @@ If `$ARGUMENTS` begins with `--light`, strip the flag and enable lightweight mod
 - **Prompt**: [See Teammate Spawn Prompts below]
 - **Tasks**: Go-to-market channels, pricing, customer acquisition. Produce GTM Domain Brief. Cross-reference peers' findings.
 
+<!-- SCAFFOLD: Quality Skeptic and QA Agent always use Opus model | ASSUMPTION: Sonnet-class models produce more false approvals at quality gates | TEST REMOVAL: A/B comparison — Opus vs. Sonnet skeptic on 5 identical pipelines; measure rejection accuracy -->
 ### Accuracy Skeptic
 - **Name**: `accuracy-skeptic`
 - **Model**: opus
@@ -281,7 +301,7 @@ Send the draft assessment AND all 6 source artifacts to both skeptics simultaneo
 
 Revise based on ALL skeptic feedback -- address every blocking issue from both skeptics. Document what changed and why. Return to Gate 3 (both skeptics review again).
 
-Maximum 3 revision cycles. After 3 rejections from either skeptic, escalate to the human operator (see Failure Recovery).
+Maximum N revision cycles (default 3, set via `--max-iterations`). After N rejections from either skeptic, escalate to the human operator (see Failure Recovery).
 
 ### Phase 5: Finalize
 
@@ -295,12 +315,13 @@ When both skeptics approve:
 
 ## Quality Gate
 
-NO sales strategy assessment is finalized without BOTH Accuracy Skeptic AND Strategy Skeptic approval. If either skeptic has concerns, the Team Lead revises. This is non-negotiable. Maximum 3 revision cycles before escalation to the human operator.
+NO sales strategy assessment is finalized without BOTH Accuracy Skeptic AND Strategy Skeptic approval. If either skeptic has concerns, the Team Lead revises. This is non-negotiable. Maximum N revision cycles (default 3, set via `--max-iterations`) before escalation to the human operator.
 
+<!-- SCAFFOLD: Max N skeptic rejections before escalation | ASSUMPTION: models below Opus require a hard cap to prevent infinite skeptic loops | TEST REMOVAL: when pipeline consistently converges in ≤2 rejections across 10+ sessions -->
 ## Failure Recovery
 
 - **Unresponsive agent**: If any teammate becomes unresponsive or crashes, the Team Lead should re-spawn the role and re-assign any pending tasks or review requests.
-- **Skeptic deadlock**: If EITHER skeptic rejects the same deliverable 3 times, STOP iterating. The Team Lead escalates to the human operator with a summary of the submissions, both skeptics' objections across all rounds, and the team's attempts to address them. The human decides: override the skeptics, provide guidance, or abort.
+- **Skeptic deadlock**: If EITHER skeptic rejects the same deliverable N times (default 3, set via `--max-iterations`), STOP iterating. The Team Lead escalates to the human operator with a summary of the submissions, both skeptics' objections across all rounds, and the team's attempts to address them. The human decides: override the skeptics, provide guidance, or abort.
 - **Context exhaustion**: If any agent's responses become degraded (repetitive, losing context), the Team Lead should read the agent's checkpoint file at `docs/progress/plan-sales-{role}.md`, then re-spawn the agent with the checkpoint content as context to resume from the last known state.
 
 ---

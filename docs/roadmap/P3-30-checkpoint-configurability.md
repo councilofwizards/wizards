@@ -1,6 +1,6 @@
 ---
 title: "Checkpoint Frequency Configurability"
-status: ready
+status: complete
 priority: P3
 category: developer-experience
 effort: Small

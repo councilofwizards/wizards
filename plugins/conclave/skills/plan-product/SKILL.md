@@ -68,16 +68,28 @@ updated: "ISO-8601 timestamp"
 - [HH:MM] Next action taken
 ```
 
+<!-- SCAFFOLD: Checkpoint after every significant state change | ASSUMPTION: agent context degrades on long runs; frequent checkpoints enable recovery | TEST REMOVAL: on Opus-class models, test milestones-only and measure recovery accuracy -->
 ### When to Checkpoint
 
-Agents write a checkpoint after:
+Checkpoint frequency is set via `--checkpoint-frequency` (default: `every-step`).
+
+**`every-step`** (default) — checkpoint after:
 - Claiming a task (phase: current phase, status: in_progress)
 - Completing a deliverable (status: awaiting_review)
 - Receiving review feedback (status: in_progress, note the feedback)
 - Being blocked (status: blocked, note what's needed)
 - Completing their work (status: complete)
 
-The Team Lead reads checkpoint files to understand team state during recovery.
+**`milestones-only`** — checkpoint after:
+- Completing a deliverable (status: awaiting_review)
+- Being blocked (status: blocked, note what's needed)
+- Completing their work (status: complete)
+
+**`final-only`** — checkpoint after:
+- Being blocked (status: blocked, note what's needed) — always checkpointed regardless of frequency
+- Completing their work (status: complete)
+
+When using `milestones-only` or `final-only`, session recovery resolution may be coarser than usual. The Team Lead notes this in recovery messages.
 
 ## Determine Mode
 
@@ -87,6 +99,33 @@ Based on $ARGUMENTS:
 - **"new [idea]"**: Full pipeline from research through spec for a new idea. The idea description becomes the topic for Stage 1 and flows through all stages.
 - **"review [spec-name]"**: Skip to Stage 5 to review and refine an existing spec.
 - **"reprioritize"**: Run Stage 3 (Roadmap) only.
+
+### Flag Parsing
+
+Parse the following flags from `$ARGUMENTS` before mode resolution. Strip recognized flags; the remaining value is the mode argument (topic, spec-name, etc.).
+
+- **`--light`**: Enable lightweight mode (existing behavior, see Lightweight Mode section)
+- **`--complexity=[simple|standard|complex]`**: Force complexity tier. If absent, the Lead infers it (see Complexity Classification below). If value is not one of the three valid tiers, log warning and default to Standard.
+- **`--full`**: Enable dedicated product-skeptic for all five stages (see Full Skeptic Mode below). If absent, Stages 1-3 use Lead-as-Skeptic (current default).
+- **`--max-iterations N`**: Configurable skeptic rejection ceiling (see Group B — P3-26). Default: 3.
+- **`--checkpoint-frequency [every-step|milestones-only|final-only]`**: Checkpoint cadence (see Group D — P3-30). Default: every-step.
+
+All flags are independent and composable. `--light` affects model selection, `--complexity` affects stage routing, `--full` affects skeptic mode — they do not conflict.
+
+### Complexity Classification
+
+Immediately after flag parsing and before artifact detection, the Team Lead classifies the task:
+
+1. If `--complexity` override is present, use that tier directly.
+2. Otherwise, infer the tier based on:
+   - **Simple**: Single well-defined feature, existing research/ideas artifacts found, narrow scope (one component), clear requirements stated in the invocation
+   - **Standard**: Multi-component feature, partial or no existing artifacts, moderate scope — this is the default when signals are ambiguous
+   - **Complex**: Multi-feature redesign, cross-cutting concerns, no existing artifacts, architecture-level changes, explicit user indication of high complexity
+3. Report the classification to the user before proceeding:
+   ```
+   Complexity: [tier] — [one-sentence rationale]
+   ```
+   If inferred (no `--complexity` flag), add: "(override with --complexity=[simple|standard|complex])"
 
 ### Artifact Detection
 
@@ -117,19 +156,20 @@ Report artifact detection results to the user before proceeding:
 
 ```
 Artifact Detection for "{topic}":
+  Complexity:        [tier] ([rationale])
   research-findings: [result]
   product-ideas:     [result]
   roadmap-items:     [result]
   user-stories:      [result]
   technical-spec:    [result]
 
-Pipeline will run: [stages to execute]
-Skipping:          [stages with FOUND artifacts]
+Pipeline will run: [stages to execute, reflecting complexity routing]
+Skipping:          [stages skipped by artifact detection + complexity routing]
 ```
 
 ## Lightweight Mode
 
-If `$ARGUMENTS` begins with `--light`, strip the flag and enable lightweight mode:
+`--light` is parsed as part of the Flag Parsing subsection above. When the `--light` flag is present, enable lightweight mode:
 - Output to user: "Lightweight mode enabled: reduced agent team. Quality gates maintained."
 - All sonnet agents: unchanged (already sonnet)
 - architect: spawn with model **sonnet** instead of opus
@@ -199,17 +239,58 @@ If `$ARGUMENTS` begins with `--light`, strip the flag and enable lightweight mod
 - **Tasks**: Design data model, tables, relationships, indexes, migrations
 - **Stage**: 5 (Spec)
 
+<!-- SCAFFOLD: Quality Skeptic and QA Agent always use Opus model | ASSUMPTION: Sonnet-class models produce more false approvals at quality gates | TEST REMOVAL: A/B comparison — Opus vs. Sonnet skeptic on 5 identical pipelines; measure rejection accuracy -->
 ### Product Skeptic
 - **Name**: `product-skeptic`
 - **Model**: opus
 - **Prompt**: [See Teammate Spawn Prompts below]
-- **Tasks**: Review stories (Stage 4) and spec (Stage 5). Challenge completeness, consistency, testability. Nothing advances without your approval.
-- **Stage**: 4, 5
+- **Tasks**: When `--full` is active: review research (Stage 1), ideas (Stage 2), roadmap (Stage 3), stories (Stage 4), and spec (Stage 5). When `--full` is absent: review stories (Stage 4) and spec (Stage 5) only. Challenge completeness, consistency, testability. Nothing advances without your approval.
+- **Stage**: 1-5 (with `--full`) or 4-5 (default)
 
 ## Orchestration Flow
 
 Execute stages sequentially. Each stage must complete before the next begins.
 Skip stages where artifacts are FOUND per artifact detection.
+
+### Complexity Routing
+
+The complexity tier modifies stage execution as follows:
+
+- **Simple**: Skip Stage 1 (Research) and Stage 2 (Ideation) execution regardless of artifact detection. If research-findings or product-ideas artifacts exist, still consume them as inputs to Stage 3. If they don't exist, use the task description and existing docs as inputs. Stages 3-5 execute normally. Report: "Complexity: Simple — Stages 1-2 skipped"
+- **Standard**: No routing changes. Artifact detection controls stage execution as before. This is the current behavior.
+- **Complex**: All stages execute per artifact detection. Additionally, insert a **Complexity Review Checkpoint** between Stage 3 and Stage 4: the Team Lead summarizes scope, flags dependency risks across stages, and presents findings to the user before proceeding. The user may adjust scope or confirm continuation.
+
+Artifact detection still runs for all 5 stages regardless of tier — it determines which artifacts are available as inputs even when a stage's execution is skipped.
+
+### Full Skeptic Mode (`--full`)
+
+When `--full` is present:
+1. Spawn product-skeptic at session start (before Stage 1), not at Stage 4.
+2. Report to user: "Full mode: dedicated product-skeptic active for all five stages"
+3. For each of Stages 1-3, replace Lead-as-Skeptic inline review with a product-skeptic gate:
+   - After the stage's agents complete their work and the Lead synthesizes the artifact, route the artifact to product-skeptic via `SendMessage` with a `REVIEW REQUEST`.
+   - product-skeptic reviews and issues `APPROVED` or `REJECTED` with specific feedback — same verdict format as Stages 4-5.
+   - On `REJECTED`, iterate with the same deadlock protocol (N rejections, default 3).
+4. Stages 4-5 are unchanged — product-skeptic already handles those.
+5. **Eval examples injection (when `--full` active)**: Before spawning product-skeptic, check whether `.claude/conclave/eval-examples/` exists and contains `.md` files. If found, format them as:
+
+   ```
+   ## Evaluator Examples (user-provided)
+
+   Read these examples before performing any review. They represent past quality benchmarks
+   from this project. Use them to calibrate your judgment — APPROVED examples show the quality
+   bar; REJECTED examples show failure patterns to watch for.
+
+   ### {filename.md}
+
+   {contents}
+   ```
+
+   Inject this block into product-skeptic's spawn prompt, prepended before the role prompt. This applies to all stages when `--full` is active. If no eval example files are found, omit the block entirely — no change in behavior.
+
+When `--full` is absent:
+- Stages 1-3 use Lead-as-Skeptic (current behavior, unchanged).
+- product-skeptic spawns at Stage 4 (current behavior, unchanged).
 
 ### Stage 1: Market Research
 
@@ -217,11 +298,13 @@ Skip if research-findings FOUND for this topic.
 
 1. Create tasks for market-researcher and customer-researcher based on the topic
 2. Spawn both agents — they work in parallel
-3. **Lead-as-Skeptic**: Review all findings yourself. Challenge conclusions, demand evidence, identify gaps.
-4. If findings are insufficient, send specific feedback via SendMessage and have agents iterate
-5. **Team Lead only**: Synthesize findings and write the research artifact to `docs/research/{topic}-research.md` conforming to `docs/templates/artifacts/research-findings.md`
-6. Set the `expires` field in frontmatter to 30 days from today
-7. Report: `"Stage 1 (Research) complete. Artifact: docs/research/{topic}-research.md"`
+3. **Review gate** (conditional):
+   - If `--full`: Route synthesized findings to product-skeptic via `SendMessage` with `REVIEW REQUEST`. product-skeptic reviews for completeness, evidence quality, gap identification. On `REJECTED`, iterate (deadlock cap: N rejections). On `APPROVED`, proceed.
+<!-- SCAFFOLD: Lead performs inline skeptic review instead of spawning dedicated skeptic | ASSUMPTION: Sonnet-class model sufficient for early-stage research review; dedicated Opus skeptic adds cost without quality gain for research/ideation | TEST REMOVAL: benchmark --full vs. default quality on the same pipeline topic -->
+   - If default (no `--full`): **Lead-as-Skeptic**: Review all findings yourself. Challenge conclusions, demand evidence, identify gaps. If findings are insufficient, send specific feedback via SendMessage and have agents iterate.
+4. **Team Lead only**: Synthesize findings and write the research artifact to `docs/research/{topic}-research.md` conforming to `docs/templates/artifacts/research-findings.md`
+5. Set the `expires` field in frontmatter to 30 days from today
+6. Report: `"Stage 1 (Research) complete. Artifact: docs/research/{topic}-research.md"`
 
 ### Stage 2: Product Ideation
 
@@ -229,11 +312,12 @@ Skip if product-ideas FOUND for this topic.
 
 1. Share the research-findings artifact with idea-generator and idea-evaluator
 2. Spawn both agents — generator produces ideas, evaluator scores and ranks them
-3. **Lead-as-Skeptic**: Review all ideas and evaluations. Challenge viability, demand evidence for impact claims, filter out weak ideas.
-4. If quality is insufficient, send specific feedback and have agents iterate
-5. **Team Lead only**: Write the ideas artifact to `docs/ideas/{topic}-ideas.md` conforming to `docs/templates/artifacts/product-ideas.md`
-6. Set the `source_research` field in frontmatter to the path of the research artifact used
-7. Report: `"Stage 2 (Ideation) complete. Artifact: docs/ideas/{topic}-ideas.md"`
+3. **Review gate** (conditional):
+   - If `--full`: Route synthesized ideas to product-skeptic via `SendMessage` with `REVIEW REQUEST`. product-skeptic reviews for idea viability, evidence for impact claims, weak or duplicate ideas, alignment with research. On `REJECTED`, iterate (deadlock cap: N rejections). On `APPROVED`, proceed.
+   - If default (no `--full`): **Lead-as-Skeptic**: Review all ideas and evaluations. Challenge viability, demand evidence for impact claims, filter out weak ideas. If quality is insufficient, send specific feedback and have agents iterate.
+4. **Team Lead only**: Write the ideas artifact to `docs/ideas/{topic}-ideas.md` conforming to `docs/templates/artifacts/product-ideas.md`
+5. Set the `source_research` field in frontmatter to the path of the research artifact used
+6. Report: `"Stage 2 (Ideation) complete. Artifact: docs/ideas/{topic}-ideas.md"`
 
 ### Stage 3: Roadmap Management
 
@@ -241,9 +325,10 @@ Skip if roadmap items already exist for this topic.
 
 1. Share the product-ideas artifact with analyst
 2. Spawn analyst to evaluate dependencies, effort/impact, and conflicts against the existing roadmap
-3. **Lead-as-Skeptic**: Review analysis. Challenge priority rationale, demand evidence for impact claims, verify dependency chains.
-4. If analysis is insufficient, send specific feedback and have the analyst iterate
-5. **Team Lead only**: Write updated roadmap items to `docs/roadmap/` following existing frontmatter conventions (title, status, priority, category, effort, impact, dependencies, created, updated)
+3. **Review gate** (conditional):
+   - If `--full`: Route synthesized roadmap analysis to product-skeptic via `SendMessage` with `REVIEW REQUEST`. product-skeptic reviews for dependency accuracy, priority rationale, effort estimate consistency, conflicts with existing roadmap items. On `REJECTED`, iterate (deadlock cap: N rejections). On `APPROVED`, proceed.
+   - If default (no `--full`): **Lead-as-Skeptic**: Review analysis. Challenge priority rationale, demand evidence for impact claims, verify dependency chains. If analysis is insufficient, send specific feedback and have the analyst iterate.
+4. **Team Lead only**: Write updated roadmap items to `docs/roadmap/` following existing frontmatter conventions (title, status, priority, category, effort, impact, dependencies, created, updated)
 6. Report: `"Stage 3 (Roadmap) complete. Updated: docs/roadmap/"`
 
 ### Stage 4: User Stories
@@ -284,6 +369,21 @@ After each stage completes:
 After the final stage:
 1. **Team Lead only**: Write cost summary to `docs/progress/plan-product-{topic}-{timestamp}-cost-summary.md`
 2. **Team Lead only**: Write end-of-session summary to `docs/progress/{topic}-summary.md` using the format from `docs/progress/_template.md`. Include: what was accomplished, what remains, blockers encountered, and which stages completed.
+3. **Post-Mortem Rating (optional).** Ask the user: "How would you rate the quality of this pipeline run? [1-5, or skip]"
+    - If the user provides a rating (1-5): write post-mortem to `docs/progress/{topic}-postmortem.md` with frontmatter:
+      ```yaml
+      ---
+      feature: "{topic}"
+      team: "plan-product"
+      rating: {1-5}
+      date: "{ISO-8601}"
+      skeptic-gate-count: {number of times any skeptic gate fired}
+      rejection-count: {number of times any deliverable was rejected}
+      max-iterations-used: {N from session}
+      ---
+      ```
+    - If the user skips or provides no response: proceed silently, no post-mortem written.
+    - This step only fires after real pipeline execution, not in `status` mode.
 
 ## Quality Gate
 
@@ -300,10 +400,11 @@ The product-skeptic reviews specs for:
 - **Testability**: Can each requirement be verified? Are success criteria measurable?
 - **Feasibility**: Is the design achievable within the project's stack and constraints?
 
+<!-- SCAFFOLD: Max N skeptic rejections before escalation | ASSUMPTION: models below Opus require a hard cap to prevent infinite skeptic loops | TEST REMOVAL: when pipeline consistently converges in ≤2 rejections across 10+ sessions -->
 ## Failure Recovery
 
 - **Unresponsive agent**: If any teammate becomes unresponsive or crashes, the Team Lead should re-spawn the role and re-assign any pending tasks.
-- **Skeptic deadlock**: If the product-skeptic rejects the same deliverable 3 times, STOP iterating. The Team Lead escalates to the human operator with a summary of the submissions, the Skeptic's objections across all rounds, and the team's attempts to address them. The human decides: override the Skeptic, provide guidance, or abort.
+- **Skeptic deadlock**: If the product-skeptic rejects the same deliverable N times (default 3, set via `--max-iterations`), STOP iterating. The Team Lead escalates to the human operator with a summary of the submissions, the Skeptic's objections across all rounds, and the team's attempts to address them. The human decides: override the Skeptic, provide guidance, or abort.
 - **Context exhaustion**: If any agent's responses become degraded (repetitive, losing context), the Team Lead should read the agent's checkpoint file at `docs/progress/{topic}-{role}.md`, then re-spawn the agent with the checkpoint content as context to resume from the last known state.
 - **Stage failure**: Do NOT proceed to the next stage — downstream stages depend on the artifact. Report the failure and suggest re-running the skill.
 - **Partial pipeline**: All completed stages' artifacts are preserved on disk. Re-running the pipeline will detect existing artifacts via frontmatter and resume from the correct stage.
@@ -764,6 +865,8 @@ WRITE SAFETY:
 ### Product Skeptic
 Model: Opus
 
+**Note**: When `--full` is active, this agent is spawned at session start and reviews Stages 1-3 artifacts in addition to Stages 4-5. Stages 1-3 review domains are only active when `--full` is passed; when absent, this agent only reviews Stages 4-5 (current default behavior).
+
 ```
 First, read plugins/conclave/shared/personas/product-skeptic.md for your complete role definition and cross-references.
 
@@ -778,6 +881,24 @@ CRITICAL RULES:
 - When you review, be thorough and specific. Vague objections are as bad as vague specs.
 - You approve or reject. There is no "it's probably fine." Either it meets the bar or it doesn't.
 - When you reject, provide SPECIFIC, ACTIONABLE feedback. Don't just say "this is wrong" — say what's wrong, why, and what a correct version looks like.
+
+WHAT YOU REVIEW (RESEARCH — Stage 1, active only when --full is passed):
+- Completeness: Are all key market segments and competitors covered?
+- Evidence quality: Are claims backed by data, not assumptions?
+- Gap identification: Are there obvious research gaps that would invalidate downstream stages?
+- Freshness: Is the research current enough to inform product decisions?
+
+WHAT YOU REVIEW (IDEAS — Stage 2, active only when --full is passed):
+- Idea viability: Is each idea technically and commercially feasible given the research?
+- Evidence for impact claims: Are value propositions supported by research findings?
+- Weak or duplicate ideas: Flag ideas that duplicate existing roadmap items or are insufficiently differentiated
+- Alignment with research: Do ideas address the actual problems and opportunities identified in research?
+
+WHAT YOU REVIEW (ROADMAP — Stage 3, active only when --full is passed):
+- Dependency accuracy: Are dependency chains correctly identified? Are there missing dependencies?
+- Priority rationale: Is the prioritization defensible given strategic goals and effort/impact estimates?
+- Effort estimate consistency: Are effort estimates consistent across related items?
+- Conflicts with existing roadmap: Do new items conflict with or duplicate existing roadmap items?
 
 WHAT YOU REVIEW (STORIES — Stage 4):
 - INVEST compliance: Independent, Negotiable, Valuable, Estimable, Small, Testable
@@ -809,4 +930,14 @@ COMMUNICATION:
 - If you spot a critical issue, message the Team Lead immediately with urgency
 - You may ask any agent for clarification during review. Message them directly.
 - Be respectful but uncompromising. Your job is quality, not popularity.
+
+### Evaluator Calibration
+
+If `## Evaluator Examples (user-provided)` appears above in your prompt:
+- Read all examples before performing any review
+- Files with `## APPROVED` sections show the quality bar — use as acceptance threshold anchors
+- Files with `## REJECTED` sections show failure patterns — use as rejection pattern anchors
+- Files without these headers are general calibration context
+- Do NOT blindly mimic examples — use them as reference anchors for your own judgment
+- If no eval examples are present, perform your review as normal — no change in behavior
 ```

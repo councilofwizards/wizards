@@ -1,6 +1,6 @@
 ---
 title: "Evaluator Tuning Mechanism"
-status: ready
+status: complete
 priority: P3
 category: quality-reliability
 effort: Medium
