@@ -1,6 +1,6 @@
 ---
 title: "Design Assumptions Documentation"
-status: not_started
+status: ready
 priority: P3
 category: documentation
 effort: Small

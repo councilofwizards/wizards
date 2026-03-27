@@ -1,6 +1,6 @@
 ---
 title: "Complexity-Adaptive Pipeline"
-status: not_started
+status: ready
 priority: P3
 category: core-framework
 effort: Medium

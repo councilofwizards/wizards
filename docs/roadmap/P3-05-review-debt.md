@@ -1,6 +1,6 @@
 ---
 title: "Tech Debt Review Skill"
-status: "not_started"
+status: "ready"
 priority: "P3"
 category: "new-skills"
 effort: "medium"

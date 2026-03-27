@@ -1,6 +1,6 @@
 ---
 title: "Lead-as-Skeptic Consistency Fix"
-status: not_started
+status: ready
 priority: P3
 category: quality-reliability
 effort: Medium

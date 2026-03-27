@@ -1,6 +1,6 @@
 ---
 title: "Configurable Skeptic Iteration Limits"
-status: not_started
+status: ready
 priority: P3
 category: core-framework
 effort: Small
