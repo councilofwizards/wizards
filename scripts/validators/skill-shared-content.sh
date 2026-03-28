@@ -26,6 +26,7 @@ ENGINEERING_SKILLS=(
     run-task
     plan-product
     build-product
+    refine-code
 )
 
 NON_ENGINEERING_SKILLS=(
@@ -129,6 +130,8 @@ normalize_skeptic_names() {
         -e 's/Forge Auditor/SKEPTIC_NAME/g' \
         -e 's/assayer/SKEPTIC_NAME/g' \
         -e 's/The Assayer/SKEPTIC_NAME/g' \
+        -e 's/refine-skeptic/SKEPTIC_NAME/g' \
+        -e 's/Refine Skeptic/SKEPTIC_NAME/g' \
         -e 's/{skill-skeptic}/SKEPTIC_NAME/g' \
         -e 's/{Skill Skeptic}/SKEPTIC_NAME/g'
 }
