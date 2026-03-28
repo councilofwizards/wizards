@@ -268,8 +268,7 @@ Execute phases sequentially except where noted. Each phase must complete before 
 1. Determine the skill's engineering classification:
    - If the skill's agents write, review, or modify application code → add to `ENGINEERING_SKILLS`
    - Otherwise → add to `NON_ENGINEERING_SKILLS`
-2. Update `plugins/conclave/.claude-plugin/plugin.json`:
-   - Add `{ "name": "{skill-name}", "category": "{category}" }` to the `skills` array (maintain alphabetical order)
+2. **Do NOT modify `plugins/conclave/.claude-plugin/plugin.json`** — skills are auto-discovered from the directory structure. The SKILL.md file in `plugins/conclave/skills/{skill-name}/` is sufficient.
 3. Update `scripts/sync-shared-content.sh`:
    - Add `{skill-name}` to the appropriate classification array (`ENGINEERING_SKILLS` or `NON_ENGINEERING_SKILLS`)
 4. Update `scripts/validators/skill-shared-content.sh`:
@@ -487,6 +486,21 @@ MISSION DECOMPOSITION METHOD:
 5. ASSIGN AGENTS: For each phase, what specialist owns it? Name the concern they own, not the tasks they do.
 6. TEST BOUNDARIES: For every pair of agents, state the boundary in one sentence. If you can't, merge or redesign.
 
+PARALLELIZATION ANALYSIS:
+After identifying phases and agents, check for parallelization opportunities:
+1. For each pair of adjacent phases: does Phase N+1 truly depend on Phase N's complete output? Or could it begin with partial output?
+2. For agents within the same phase: do they share input dependencies? If two agents consume the same input and produce independent outputs, they can run in parallel within a single phase.
+3. For agents across phases: could a later agent start on a subset of work while an earlier agent is still completing? (e.g., a remediation agent could start fixing Critical findings while the vulnerability hunter is still scanning for Low-severity issues)
+
+Mark parallelizable agents in the Phase Decomposition table. In the Orchestration Flow, the Scribe should spawn parallelizable agents simultaneously rather than sequentially. However: the skeptic gate for a phase still blocks advancement to the NEXT phase — parallelism is within a phase, not across gates.
+
+Common patterns:
+- **Independent assessors**: Multiple agents analyzing the same input from different angles (e.g., security auditor + performance profiler). Spawn in parallel, gate both before advancing.
+- **Producer-consumer with partial output**: An early agent can stream findings to a later agent. Use explicit "start on available findings" instructions rather than waiting for the complete artifact.
+- **Hub-and-spoke**: A lead decomposes work, multiple agents execute in parallel, lead synthesizes. (See review-quality for this pattern.)
+
+Default to sequential when unsure — incorrect parallelization introduces race conditions and coordination overhead that outweigh speed gains.
+
 DELIVERABLE CHAIN ANALYSIS:
 For each phase, specify:
 - INPUT: What artifact does this phase consume? (For Phase 1: user's concept/prompt)
@@ -495,6 +509,18 @@ For each phase, specify:
 - GATE: What does the skeptic check at this gate?
 
 Validate that OUTPUT(N) == INPUT(N+1) for all adjacent phases. Gaps in the chain = missing phases.
+
+DOWNSTREAM GUIDANCE RULE:
+If a phase's output directs the next agent's work (e.g., a threat model directing a vulnerability hunt), the output MUST include a priority ranking of the top items for the downstream agent to focus on first. This prevents the downstream agent from allocating effort blindly on large codebases.
+
+IMPLEMENTATION PHASE RULE:
+If any agent writes or modifies code (fixes, implementations, configurations), that agent's procedure MUST include a verification step: run the project's existing test suite and document results. Code changes without test execution are unverified claims. The skeptic's challenge list for that phase must include demanding test evidence.
+
+MODEL ALLOCATION RULES:
+- Opus: Reasoning-intensive agents — analysis, diagnosis, root cause identification, adversarial review (skeptics). These agents must synthesize ambiguous inputs, make judgment calls, or challenge other agents' work.
+- Sonnet: Execution agents working from well-defined inputs — agents that follow structured procedures, apply checklists, or implement changes from an approved specification. If an agent's input is already validated and their methodology is procedural, Sonnet is sufficient.
+- The skeptic is ALWAYS Opus — the adversarial gate must match or exceed the reasoning capability of the agents it reviews.
+- When in doubt, use Opus. It's better to over-allocate than to under-equip a reasoning-heavy role.
 
 CLASSIFICATION METHOD:
 Determine whether the new skill is engineering or non-engineering:
@@ -523,6 +549,10 @@ YOUR OUTPUT FORMAT:
 
   Deliverable Chain:
   [concept] → Phase 1 → [artifact 1] → Phase 2 → [artifact 2] → ... → [final output]
+
+  Parallelization:
+  - [Which agents can run in parallel, if any, and why]
+  - [Which phases are strictly sequential and why]
 
   Design Rationale:
   - [Why this phase count]
@@ -727,7 +757,7 @@ STRUCTURAL TEMPLATE (sections in order):
 6. ## Determine Mode (with ### Flag Parsing, then mode list)
 7. ## Lightweight Mode
 8. ## Spawn the Team (Step 1/2/3, then ### per agent with Name/Model/Prompt/Tasks/Phase)
-9. ## Orchestration Flow (### per phase, then ### Between Phases, ### Pipeline Completion)
+9. ## Orchestration Flow (### Artifact Detection — check for completed phase artifacts before pipeline execution, then ### per phase, then ### Between Phases, ### Pipeline Completion)
 10. ## Critical Rules
 11. ## Failure Recovery
 12. --- separator
@@ -836,6 +866,7 @@ Evaluate against Principles 1 and 3:
 - Agent justification: Does every agent earn their seat? Could any two be merged without losing a distinct concern?
 - Mandate boundaries: Can the boundary between every pair of agents be stated in one sentence?
 - Deliverable chain: Is the chain complete with no gaps? Does it start from the user's input and end at a useful output?
+- Parallelization: Were parallelization opportunities considered? Are any agents unnecessarily sequenced when they could run in parallel? Conversely, are any agents marked parallel when they have data dependencies that require sequencing?
 - Classification: Is the engineering/non-engineering classification correct and justified?
 
 WHAT YOU REVIEW (PHASE 2a — ARM):
@@ -863,12 +894,13 @@ Full compliance checklist:
 - [ ] Setup section includes directory creation, template reads, stack detection
 - [ ] Write Safety section with role-scoped progress files
 - [ ] Checkpoint Protocol with correct team name and phase enum matching orchestration flow
-- [ ] Determine Mode with status, empty, concept, and at least one skill-specific mode
-- [ ] Flag Parsing with --max-iterations and --checkpoint-frequency
+- [ ] Determine Mode with status, empty, concept, and at least one skill-specific mode. No redundancy between flags and modes — if a flag duplicates a mode's behavior, remove the flag.
+- [ ] Flag Parsing with --max-iterations and --checkpoint-frequency. No flags that are equivalent to an existing mode.
 - [ ] Lightweight Mode with at least one agent downgraded, skeptic never downgraded
 - [ ] Spawn the Team with 3-step pattern (TeamCreate, TaskCreate, Agent)
 - [ ] Each teammate definition has Name, Model, Prompt, Tasks, Phase fields
 - [ ] Orchestration Flow with explicit GATE markers at every phase transition
+- [ ] Artifact Detection section before pipeline execution — checks for completed phase artifacts from prior sessions and skips completed phases on re-invocation
 - [ ] Between Phases and Pipeline Completion sections present
 - [ ] Critical Rules section present
 - [ ] Failure Recovery with unresponsive agent, skeptic deadlock, context exhaustion
@@ -877,6 +909,7 @@ Full compliance checklist:
 - [ ] Communication protocol has correct skeptic name in the review-request row
 - [ ] Every spawn prompt follows the template: persona read → persona line → YOUR ROLE → CRITICAL RULES → methodologies → output format → COMMUNICATION → WRITE SAFETY
 - [ ] Skeptic spawn prompt has WHAT YOU CHALLENGE sections for EVERY phase
+- [ ] For any phase where an agent writes or modifies code, the skeptic's challenge list demands test execution evidence
 - [ ] All Five Design Principles are satisfied in the final product
 - [ ] Generated skill would be indistinguishable in quality from squash-bugs or review-quality
 

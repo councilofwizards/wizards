@@ -44,6 +44,7 @@ PROTOCOL_SOURCE="$SHARED_DIR/communication-protocol.md"
 # Also update the matching list in scripts/validators/skill-shared-content.sh.
 ENGINEERING_SKILLS=(
     create-conclave-team
+    harden-security
     squash-bugs
     write-spec
     plan-implementation

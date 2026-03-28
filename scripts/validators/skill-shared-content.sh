@@ -17,6 +17,7 @@ failed=0
 # Also update the matching list in scripts/sync-shared-content.sh.
 ENGINEERING_SKILLS=(
     create-conclave-team
+    harden-security
     squash-bugs
     write-spec
     plan-implementation
@@ -126,6 +127,8 @@ normalize_skeptic_names() {
         -e 's/First Skeptic/SKEPTIC_NAME/g' \
         -e 's/forge-auditor/SKEPTIC_NAME/g' \
         -e 's/Forge Auditor/SKEPTIC_NAME/g' \
+        -e 's/assayer/SKEPTIC_NAME/g' \
+        -e 's/The Assayer/SKEPTIC_NAME/g' \
         -e 's/{skill-skeptic}/SKEPTIC_NAME/g' \
         -e 's/{Skill Skeptic}/SKEPTIC_NAME/g'
 }
