@@ -53,6 +53,7 @@ ENGINEERING_SKILLS=(
     run-task
     plan-product
     build-product
+    refine-code
 )
 
 NON_ENGINEERING_SKILLS=(
