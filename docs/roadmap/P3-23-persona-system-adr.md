@@ -1,6 +1,6 @@
 ---
 title: "Persona System ADR (ADR-006)"
-status: "not_started"
+status: "ready"
 priority: "P3"
 category: "documentation"
 effort: "small"

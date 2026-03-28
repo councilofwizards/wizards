@@ -1,6 +1,6 @@
 ---
 title: "Architecture & Contribution Guide"
-status: "not_started"
+status: "ready"
 priority: "P3"
 category: "documentation"
 effort: "small"

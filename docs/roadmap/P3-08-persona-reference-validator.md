@@ -1,6 +1,6 @@
 ---
 title: "Persona Reference Validator"
-status: "not_started"
+status: "ready"
 priority: "P3"
 category: "quality-reliability"
 effort: "medium"

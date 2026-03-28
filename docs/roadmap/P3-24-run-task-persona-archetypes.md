@@ -1,6 +1,6 @@
 ---
 title: "run-task Persona Archetypes"
-status: "not_started"
+status: "ready"
 priority: "P3"
 category: "core-framework"
 effort: "medium"

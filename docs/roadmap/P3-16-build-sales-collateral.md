@@ -1,6 +1,6 @@
 ---
 title: "Sales Collateral Skill"
-status: "not_started"
+status: "ready"
 priority: "P3"
 category: "business-skills"
 effort: "medium"

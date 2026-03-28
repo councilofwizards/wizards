@@ -1,9 +1,9 @@
 ---
 title: "Employee Onboarding Skill"
-status: "not_started"
+status: "ready"
 priority: "P3"
 category: "business-skills"
-effort: "small"
+effort: "medium"
 impact: "medium"
 dependencies: []
 created: "2026-02-19"

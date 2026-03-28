@@ -1,6 +1,6 @@
 ---
 title: "PoC Skills Deprecation Banner"
-status: "not_started"
+status: "ready"
 priority: "P3"
 category: "developer-experience"
 effort: "small"

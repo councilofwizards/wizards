@@ -82,13 +82,13 @@ Items are prioritized using two dimensions:
 |---|------|----------|--------|--------|
 | 18 | [Custom Agent Roles](P3-01-custom-agent-roles.md) | new-skills | 🟢 | Large |
 | 19 | [Onboarding Wizard Skill](P3-02-onboarding-wizard.md) | developer-experience | ✅ | Small |
-| 20 | [Architecture & Contribution Guide](P3-03-contribution-guide.md) | documentation | 🔴 | Small |
+| 20 | [Architecture & Contribution Guide](P3-03-contribution-guide.md) | documentation | 🟢 | Small |
 | 21 | [Incident Triage Skill](P3-04-triage-incident.md) | new-skills | 🟢 | Medium |
 | 22 | [Tech Debt Review Skill](P3-05-review-debt.md) | new-skills | 🟢 | Medium |
 | 23 | [API Design Skill](P3-06-design-api.md) | new-skills | 🟢 | Medium |
 | 24 | [Migration Planning Skill](P3-07-plan-migration.md) | new-skills | 🟢 | Large |
-| 25 | [Persona Reference Validator](P3-08-persona-reference-validator.md) | quality-reliability | 🔴 | Medium |
-| 26 | [Artifact Continuity Badges](P3-09-artifact-continuity-badges.md) | core-framework | 🔴 | Small |
+| 25 | [Persona Reference Validator](P3-08-persona-reference-validator.md) | quality-reliability | 🟢 | Medium |
+| 26 | [Artifact Continuity Badges](P3-09-artifact-continuity-badges.md) | core-framework | 🟢 | Small |
 
 > **P3-08 dependency**: Must be implemented AFTER P2-09 (Persona System Activation). Validator checks for fictional names in spawn prompts — will fail if P2-09 is not done first.
 
@@ -103,26 +103,26 @@ Items are prioritized using two dimensions:
 | 29 | [Finance Planning Skill](P3-12-plan-finance.md) | business-skills | 🟢 | Medium-Large |
 | 30 | [Hiring Planning Skill](P3-14-plan-hiring.md) | business-skills | ✅ | Medium |
 | 31 | [Customer Success Skill](P3-15-plan-customer-success.md) | business-skills | 🟢 | Medium |
-| 32 | [Sales Collateral Skill](P3-16-build-sales-collateral.md) | business-skills | 🔴 | Medium |
-| 33 | [Content Production Skill](P3-17-build-content.md) | business-skills | 🔴 | Medium |
-| 34 | [Legal Review Skill](P3-18-review-legal.md) | business-skills | 🔴 | Medium-Large |
+| 32 | [Sales Collateral Skill](P3-16-build-sales-collateral.md) | business-skills | 🟢 | Medium |
+| 33 | [Content Production Skill](P3-17-build-content.md) | business-skills | 🟢 | Medium |
+| 34 | [Legal Review Skill](P3-18-review-legal.md) | business-skills | 🟢 | Medium-Large |
 
 ### P3 — Nice-to-Have (Business — Scale & Optimize)
 
 | # | Item | Category | Status | Effort |
 |---|------|----------|--------|--------|
-| 35 | [Analytics Planning Skill](P3-19-plan-analytics.md) | business-skills | 🔴 | Medium |
-| 36 | [Operations Planning Skill](P3-20-plan-operations.md) | business-skills | 🔴 | Medium |
-| 37 | [Employee Onboarding Skill](P3-21-plan-onboarding.md) | business-skills | 🔴 | Small-Medium |
+| 35 | [Analytics Planning Skill](P3-19-plan-analytics.md) | business-skills | 🟢 | Medium |
+| 36 | [Operations Planning Skill](P3-20-plan-operations.md) | business-skills | 🟢 | Medium |
+| 37 | [Employee Onboarding Skill](P3-21-plan-onboarding.md) | business-skills | 🟢 | Medium |
 | 38 | [Investor Update Skill](P3-22-draft-investor-update.md) | business-skills | ✅ | Small-Medium |
 
 ### P3 — Nice-to-Have (Persona & Documentation)
 
 | # | Item | Category | Status | Effort |
 |---|------|----------|--------|--------|
-| 39 | [Persona System ADR (ADR-006)](P3-23-persona-system-adr.md) | documentation | 🔴 | Small |
-| 40 | [run-task Persona Archetypes](P3-24-run-task-persona-archetypes.md) | core-framework | 🔴 | Medium |
-| 41 | [PoC Skills Deprecation Banner](P3-25-poc-deprecation-banner.md) | developer-experience | 🔴 | Small |
+| 39 | [Persona System ADR (ADR-006)](P3-23-persona-system-adr.md) | documentation | 🟢 | Small |
+| 40 | [run-task Persona Archetypes](P3-24-run-task-persona-archetypes.md) | core-framework | 🟢 | Medium |
+| 41 | [PoC Skills Deprecation Banner](P3-25-poc-deprecation-banner.md) | developer-experience | 🟢 | Small |
 
 > **P3-23, P3-24 dependency**: Both depend on P2-09 (Persona System Activation). ADR documents the completed system; run-task archetypes follow the injection pattern established by P2-09.
 
