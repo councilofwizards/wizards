@@ -43,6 +43,8 @@ PROTOCOL_SOURCE="$SHARED_DIR/communication-protocol.md"
 # To classify a new skill: add it to one of the two arrays below.
 # Also update the matching list in scripts/validators/skill-shared-content.sh.
 ENGINEERING_SKILLS=(
+    create-conclave-team
+    squash-bugs
     write-spec
     plan-implementation
     build-implementation

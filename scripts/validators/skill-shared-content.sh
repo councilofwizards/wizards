@@ -16,6 +16,8 @@ failed=0
 # To classify a new skill: add it to one of the two arrays below.
 # Also update the matching list in scripts/sync-shared-content.sh.
 ENGINEERING_SKILLS=(
+    create-conclave-team
+    squash-bugs
     write-spec
     plan-implementation
     build-implementation
@@ -120,6 +122,10 @@ normalize_skeptic_names() {
         -e 's/Plan Skeptic/SKEPTIC_NAME/g' \
         -e 's/task-skeptic/SKEPTIC_NAME/g' \
         -e 's/Task Skeptic/SKEPTIC_NAME/g' \
+        -e 's/first-skeptic/SKEPTIC_NAME/g' \
+        -e 's/First Skeptic/SKEPTIC_NAME/g' \
+        -e 's/forge-auditor/SKEPTIC_NAME/g' \
+        -e 's/Forge Auditor/SKEPTIC_NAME/g' \
         -e 's/{skill-skeptic}/SKEPTIC_NAME/g' \
         -e 's/{Skill Skeptic}/SKEPTIC_NAME/g'
 }

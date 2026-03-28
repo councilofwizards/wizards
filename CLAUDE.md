@@ -2,7 +2,7 @@
 
 ## What This Is
 
-A Claude Code plugin marketplace (`wizards`) containing the `conclave` plugin — 17 skills that spawn coordinated AI
+A Claude Code plugin marketplace (`wizards`) containing the `conclave` plugin — 19 skills that spawn coordinated AI
 agent teams for planning, building, and operating SaaS products.
 
 ## Tech Stack
@@ -70,7 +70,7 @@ wizards/
 
 | Category           | Skills                                                                                                                                          | Pattern                                                                       |
 |--------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------|
-| Granular           | research-market, ideate-product, manage-roadmap, write-stories, write-spec, plan-implementation, build-implementation, review-quality, run-task | Agent Teams (TeamCreate + Agent with team_name) with skeptic gates            |
+| Granular           | research-market, ideate-product, manage-roadmap, write-stories, write-spec, plan-implementation, build-implementation, review-quality, run-task, squash-bugs, create-conclave-team | Agent Teams (TeamCreate + Agent with team_name) with skeptic gates            |
 | Pipeline           | plan-product, build-product                                                                                                                     | Agent Teams with multi-stage orchestration; artifact detection skips stages   |
 | Utility            | setup-project, wizard-guide                                                                                                                     | Single-agent, no teams                                                        |
 | Business           | draft-investor-update, plan-sales, plan-hiring                                                                                                  | Agent Teams (TeamCreate + Agent with team_name) with skeptic gates            |
@@ -101,7 +101,7 @@ block. Single-agent skills are skipped entirely.
 
 | Classification | Skills |
 |----------------|--------|
-| Engineering | write-spec, plan-implementation, build-implementation, review-quality, run-task, plan-product, build-product |
+| Engineering | create-conclave-team, squash-bugs, write-spec, plan-implementation, build-implementation, review-quality, run-task, plan-product, build-product |
 | Non-engineering | research-market, ideate-product, manage-roadmap, write-stories, plan-sales, plan-hiring, draft-investor-update |
 | Single-agent (skipped) | setup-project, wizard-guide |
 
@@ -116,7 +116,7 @@ Skills are also classified by domain category for discovery and taxonomy purpose
 
 | Category | Skills |
 |----------|--------|
-| `engineering` | write-spec, plan-implementation, build-implementation, review-quality, run-task, plan-product, build-product |
+| `engineering` | create-conclave-team, squash-bugs, write-spec, plan-implementation, build-implementation, review-quality, run-task, plan-product, build-product |
 | `planning` | research-market, ideate-product, manage-roadmap, write-stories |
 | `business` | plan-sales, plan-hiring, draft-investor-update |
 | `utility` | setup-project, wizard-guide, tier1-test |
@@ -129,7 +129,7 @@ Category-to-classification mapping: `engineering` → engineering (both principl
 - **Sync**: Run `bash scripts/sync-shared-content.sh` to push shared/ content to all multi-agent SKILL.md files
 - **Markers**: `<!-- BEGIN SHARED: universal-principles -->` / `<!-- END SHARED: universal-principles -->` (all multi-agent skills), `<!-- BEGIN SHARED: engineering-principles -->` / `<!-- END SHARED: engineering-principles -->` (engineering skills only), and `communication-protocol`
 - **Drift detection**: `scripts/validators/skill-shared-content.sh` (B1-B3 checks)
-- **Per-skill variation**: Skeptic name in Communication Protocol differs per skill (13 name pairs in normalizer)
+- **Per-skill variation**: Skeptic name in Communication Protocol differs per skill (15 name pairs in normalizer)
 - **Exclusions**: Skills with `type: single-agent` are skipped by shared content checks and sync
 
 ## Validation
@@ -200,4 +200,4 @@ SCAFFOLD comments are documentation for skill maintainers, not end-user-visible.
 - **P2**: 7/8 complete. P2-07 (shared content extraction) done. P2-08 (plugin organization) remaining.
 - **P3**: 4/19 complete. 15 items not started across engineering, business, and documentation categories.
 - P2-02 (Skill Composability) is parked, superseded by ADR-004 (now also superseded).
-- **Architecture**: All skills use Agent Teams directly. 17 skills, 12/12 validators pass.
+- **Architecture**: All skills use Agent Teams directly. 19 skills, 12/12 validators pass.
