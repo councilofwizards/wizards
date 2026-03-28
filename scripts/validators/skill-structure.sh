@@ -27,7 +27,7 @@ a4_fail=0
 skill_files=()
 while IFS= read -r -d '' f; do
     skill_files+=("$f")
-done < <(find "$REPO_ROOT/plugins" -path "*/skills/*/SKILL.md" -print0 2>/dev/null | sort -z)
+done < <(find "$REPO_ROOT/plugins/conclave" -path "*/skills/*/SKILL.md" -print0 2>/dev/null | sort -z)
 
 if [ "${#skill_files[@]}" -eq 0 ]; then
     echo "[FAIL] A1/frontmatter: No SKILL.md files found"

@@ -43,6 +43,7 @@ PROTOCOL_SOURCE="$SHARED_DIR/communication-protocol.md"
 # To classify a new skill: add it to one of the two arrays below.
 # Also update the matching list in scripts/validators/skill-shared-content.sh.
 ENGINEERING_SKILLS=(
+    craft-laravel
     create-conclave-team
     harden-security
     squash-bugs
@@ -95,7 +96,7 @@ fi
 skill_files=()
 while IFS= read -r -d '' f; do
     skill_files+=("$f")
-done < <(find "$REPO_ROOT/plugins" -path "*/skills/*/SKILL.md" -print0 2>/dev/null | sort -z)
+done < <(find "$REPO_ROOT/plugins/conclave" -path "*/skills/*/SKILL.md" -print0 2>/dev/null | sort -z)
 
 if [ "${#skill_files[@]}" -eq 0 ]; then
     echo "No SKILL.md files found under $REPO_ROOT/plugins"

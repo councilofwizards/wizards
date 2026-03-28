@@ -28,7 +28,7 @@ while IFS= read -r -d '' f; do
             biz_count=$((biz_count + 1))
         fi
     fi
-done < <(find "$REPO_ROOT/plugins" -path "*/skills/*/SKILL.md" -print0 2>/dev/null | sort -z)
+done < <(find "$REPO_ROOT/plugins/conclave" -path "*/skills/*/SKILL.md" -print0 2>/dev/null | sort -z)
 
 if [ "$biz_count" -ge 7 ]; then
     echo "[WARN] G1/split-readiness: Business skill count ($biz_count) has reached split readiness threshold. Review ADR-005."

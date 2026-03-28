@@ -16,6 +16,7 @@ failed=0
 # To classify a new skill: add it to one of the two arrays below.
 # Also update the matching list in scripts/sync-shared-content.sh.
 ENGINEERING_SKILLS=(
+    craft-laravel
     create-conclave-team
     harden-security
     squash-bugs
@@ -58,7 +59,7 @@ is_known_skill() {
 skill_files=()
 while IFS= read -r -d '' f; do
     skill_files+=("$f")
-done < <(find "$REPO_ROOT/plugins" -path "*/skills/*/SKILL.md" -print0 2>/dev/null | sort -z)
+done < <(find "$REPO_ROOT/plugins/conclave" -path "*/skills/*/SKILL.md" -print0 2>/dev/null | sort -z)
 
 # Authoritative source files live in plugins/conclave/shared/
 SHARED_DIR="${CONCLAVE_SHARED_DIR:-$REPO_ROOT/plugins/conclave/shared}"
@@ -132,6 +133,8 @@ normalize_skeptic_names() {
         -e 's/The Assayer/SKEPTIC_NAME/g' \
         -e 's/refine-skeptic/SKEPTIC_NAME/g' \
         -e 's/Refine Skeptic/SKEPTIC_NAME/g' \
+        -e 's/convention-warden/SKEPTIC_NAME/g' \
+        -e 's/Convention Warden/SKEPTIC_NAME/g' \
         -e 's/{skill-skeptic}/SKEPTIC_NAME/g' \
         -e 's/{Skill Skeptic}/SKEPTIC_NAME/g'
 }
