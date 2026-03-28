@@ -1,26 +1,5 @@
 {
   "name": "conclave",
   "description": "Agent team orchestration skills for planning, building, and quality assurance of SaaS products",
-  "version": "1.5.0",
-  "skills": [
-    { "name": "create-conclave-team", "category": "engineering" },
-    { "name": "squash-bugs", "category": "engineering" },
-    { "name": "build-implementation", "category": "engineering" },
-    { "name": "build-product", "category": "engineering" },
-    { "name": "draft-investor-update", "category": "business" },
-    { "name": "ideate-product", "category": "planning" },
-    { "name": "manage-roadmap", "category": "planning" },
-    { "name": "plan-hiring", "category": "business" },
-    { "name": "plan-implementation", "category": "engineering" },
-    { "name": "plan-product", "category": "engineering" },
-    { "name": "plan-sales", "category": "business" },
-    { "name": "research-market", "category": "planning" },
-    { "name": "review-quality", "category": "engineering" },
-    { "name": "run-task", "category": "engineering" },
-    { "name": "setup-project", "category": "utility" },
-    { "name": "tier1-test", "category": "utility" },
-    { "name": "wizard-guide", "category": "utility" },
-    { "name": "write-spec", "category": "engineering" },
-    { "name": "write-stories", "category": "planning" }
-  ]
+  "version": "1.5.0"
 }
