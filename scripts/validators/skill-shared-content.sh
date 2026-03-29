@@ -29,6 +29,7 @@ ENGINEERING_SKILLS=(
     build-product
     refine-code
     unearth-specification
+    review-pr
 )
 
 NON_ENGINEERING_SKILLS=(
@@ -136,6 +137,8 @@ normalize_skeptic_names() {
         -e 's/Refine Skeptic/SKEPTIC_NAME/g' \
         -e 's/convention-warden/SKEPTIC_NAME/g' \
         -e 's/Convention Warden/SKEPTIC_NAME/g' \
+        -e 's/scrutineer/SKEPTIC_NAME/g' \
+        -e 's/Scrutineer/SKEPTIC_NAME/g' \
         -e 's/{skill-skeptic}/SKEPTIC_NAME/g' \
         -e 's/{Skill Skeptic}/SKEPTIC_NAME/g'
 }

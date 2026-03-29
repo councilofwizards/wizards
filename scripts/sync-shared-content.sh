@@ -56,6 +56,7 @@ ENGINEERING_SKILLS=(
     build-product
     refine-code
     unearth-specification
+    review-pr
 )
 
 NON_ENGINEERING_SKILLS=(
