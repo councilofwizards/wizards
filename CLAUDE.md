@@ -2,7 +2,7 @@
 
 ## What This Is
 
-A Claude Code plugin marketplace (`wizards`) containing the `conclave` plugin — 20 skills that spawn coordinated AI
+A Claude Code plugin marketplace (`wizards`) containing the `conclave` plugin — 23 skills that spawn coordinated AI
 agent teams for planning, building, and operating SaaS products.
 
 ## Tech Stack
@@ -32,6 +32,7 @@ wizards/
       run-task/SKILL.md              # Ad-hoc tasks (Dynamic Hub-and-Spoke)
       refine-code/SKILL.md           # Code cleanup & refactoring (Hub-and-Spoke, dedicated skeptic)
       craft-laravel/SKILL.md         # Laravel engineering (Hub-and-Spoke, dedicated skeptic, fork-join)
+      unearth-specification/SKILL.md # Code archaeology & spec extraction (Hub-and-Spoke, dedicated skeptic, fork-join)
       # Pipeline skills (multi-stage with own Agent Teams)
       plan-product/SKILL.md          # Planning pipeline: research → ideation → roadmap → stories → spec
       build-product/SKILL.md         # Implementation pipeline: planning → build → quality review
@@ -72,7 +73,7 @@ wizards/
 
 | Category           | Skills                                                                                                                                          | Pattern                                                                       |
 |--------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------|
-| Granular           | research-market, ideate-product, manage-roadmap, write-stories, write-spec, plan-implementation, build-implementation, review-quality, run-task, squash-bugs, create-conclave-team, harden-security, refine-code, craft-laravel | Agent Teams (TeamCreate + Agent with team_name) with skeptic gates            |
+| Granular           | research-market, ideate-product, manage-roadmap, write-stories, write-spec, plan-implementation, build-implementation, review-quality, run-task, squash-bugs, create-conclave-team, harden-security, refine-code, craft-laravel, unearth-specification | Agent Teams (TeamCreate + Agent with team_name) with skeptic gates            |
 | Pipeline           | plan-product, build-product                                                                                                                     | Agent Teams with multi-stage orchestration; artifact detection skips stages   |
 | Utility            | setup-project, wizard-guide                                                                                                                     | Single-agent, no teams                                                        |
 | Business           | draft-investor-update, plan-sales, plan-hiring                                                                                                  | Agent Teams (TeamCreate + Agent with team_name) with skeptic gates            |
@@ -103,7 +104,7 @@ block. Single-agent skills are skipped entirely.
 
 | Classification | Skills |
 |----------------|--------|
-| Engineering | craft-laravel, create-conclave-team, harden-security, squash-bugs, write-spec, plan-implementation, build-implementation, review-quality, run-task, plan-product, build-product, refine-code |
+| Engineering | craft-laravel, create-conclave-team, harden-security, squash-bugs, write-spec, plan-implementation, build-implementation, review-quality, run-task, plan-product, build-product, refine-code, unearth-specification |
 | Non-engineering | research-market, ideate-product, manage-roadmap, write-stories, plan-sales, plan-hiring, draft-investor-update |
 | Single-agent (skipped) | setup-project, wizard-guide |
 
@@ -118,7 +119,7 @@ Skills are also classified by domain category for discovery and taxonomy purpose
 
 | Category | Skills |
 |----------|--------|
-| `engineering` | craft-laravel, create-conclave-team, harden-security, squash-bugs, write-spec, plan-implementation, build-implementation, review-quality, run-task, plan-product, build-product, refine-code |
+| `engineering` | craft-laravel, create-conclave-team, harden-security, squash-bugs, write-spec, plan-implementation, build-implementation, review-quality, run-task, plan-product, build-product, refine-code, unearth-specification |
 | `planning` | research-market, ideate-product, manage-roadmap, write-stories |
 | `business` | plan-sales, plan-hiring, draft-investor-update |
 | `utility` | setup-project, wizard-guide, tier1-test |
@@ -202,4 +203,4 @@ SCAFFOLD comments are documentation for skill maintainers, not end-user-visible.
 - **P2**: 7/8 complete. P2-07 (shared content extraction) done. P2-08 (plugin organization) remaining.
 - **P3**: 4/19 complete. 15 items not started across engineering, business, and documentation categories.
 - P2-02 (Skill Composability) is parked, superseded by ADR-004 (now also superseded).
-- **Architecture**: All skills use Agent Teams directly. 22 skills, 12/12 validators pass.
+- **Architecture**: All skills use Agent Teams directly. 23 skills, 12/12 validators pass.

@@ -28,6 +28,7 @@ ENGINEERING_SKILLS=(
     plan-product
     build-product
     refine-code
+    unearth-specification
 )
 
 NON_ENGINEERING_SKILLS=(
