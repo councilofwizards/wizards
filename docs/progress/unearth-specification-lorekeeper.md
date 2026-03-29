@@ -12,20 +12,18 @@ date: 2026-03-28
 
 ## THEME DESIGN: The Stratum Company
 
-The metaphor is archaeological excavation. A codebase is a buried site — layers
-of sediment, hidden veins of logic, artifacts scattered across the dig. The team
-is a company of field specialists who descend into the earth together, work
-their angles in parallel, and surface with a complete chronicle of everything
-they found. The fantasy is about _uncovering what is already there_ — not
-building, not guessing, but recovering lost knowledge with discipline and rigor.
+The metaphor is archaeological excavation. A codebase is a buried site — layers of sediment, hidden veins of logic,
+artifacts scattered across the dig. The team is a company of field specialists who descend into the earth together, work
+their angles in parallel, and surface with a complete chronicle of everything they found. The fantasy is about
+_uncovering what is already there_ — not building, not guessing, but recovering lost knowledge with discipline and
+rigor.
 
 ---
 
 **Skill Name:** `unearth-specification`
 
-Rationale: The user's suggestion is strong. Verb-noun, kebab-case, immediately
-legible — "unearth a specification from an existing codebase." No change needed.
-Alternatives considered and rejected:
+Rationale: The user's suggestion is strong. Verb-noun, kebab-case, immediately legible — "unearth a specification from
+an existing codebase." No change needed. Alternatives considered and rejected:
 
 | Candidate               | Verdict                                      |
 | ----------------------- | -------------------------------------------- |
@@ -41,11 +39,9 @@ Alternatives considered and rejected:
 
 **Team Name:** The Stratum Company
 
-_Stratum_ is the geological term for a distinct layer of deposited material —
-the exact structure of an archaeological site, and an exact metaphor for layered
-software architecture (domain, infrastructure, API, data). "Company" connotes a
-small crew of field specialists — not a committee, not a court, but a team that
-works together in the dirt.
+_Stratum_ is the geological term for a distinct layer of deposited material — the exact structure of an archaeological
+site, and an exact metaphor for layered software architecture (domain, infrastructure, API, data). "Company" connotes a
+small crew of field specialists — not a committee, not a court, but a team that works together in the dirt.
 
 **Team Name Slug:** `the-stratum-company`
 
@@ -67,8 +63,7 @@ works together in the dirt.
 
 ## Name Collision Check
 
-All six persona names verified against the full conclave roster (67 existing
-names across 20 skills):
+All six persona names verified against the full conclave roster (67 existing names across 20 skills):
 
 | Name            | Existing Use                                               | Status  |
 | --------------- | ---------------------------------------------------------- | ------- |
@@ -79,9 +74,8 @@ names across 20 skills):
 | Pell Dustquill  | None                                                       | ✓ Clear |
 | Esk Truthsieve  | None                                                       | ✓ Clear |
 
-The title "The Assayer" is reused from craft-laravel and harden-security — this
-is intentional. The Assayer is an established conclave skeptic archetype. The
-persona name (Esk Truthsieve) is unique.
+The title "The Assayer" is reused from craft-laravel and harden-security — this is intentional. The Assayer is an
+established conclave skeptic archetype. The persona name (Esk Truthsieve) is unique.
 
 ---
 
@@ -102,27 +96,22 @@ persona name (Esk Truthsieve) is unique.
 
 ## Narrative Arc
 
-**Opening — The Site Survey** "The codebase is unmapped. Before the first trowel
-breaks earth, Drev Waystone walks the terrain — cataloguing layers, marking
-entry points, identifying the shape of what lies beneath. Without a survey,
+**Opening — The Site Survey** "The codebase is unmapped. Before the first trowel breaks earth, Drev Waystone walks the
+terrain — cataloguing layers, marking entry points, identifying the shape of what lies beneath. Without a survey,
 digging is guesswork."
 
-**Rising Action — The Parallel Digs** "Three excavations open simultaneously.
-Mott Loreseam descends into the logic veins — tracing decision flows, surfacing
-business rules buried under years of accretion. Zell Deepstrata reads the schema
-sediment — naming every model, relation, and migration layer. Breck Edgemark
-walks the perimeter — probing integration edges, testing every boundary for what
-crosses in and what crosses out. Field notes accumulate."
+**Rising Action — The Parallel Digs** "Three excavations open simultaneously. Mott Loreseam descends into the logic
+veins — tracing decision flows, surfacing business rules buried under years of accretion. Zell Deepstrata reads the
+schema sediment — naming every model, relation, and migration layer. Breck Edgemark walks the perimeter — probing
+integration edges, testing every boundary for what crosses in and what crosses out. Field notes accumulate."
 
-**Climax — The Chronicle Assembly** "Pell Dustquill receives all field notes.
-The chronicle takes shape — artifacts cross-referenced, gaps named, structure
-imposed on raw discovery. This is the hardest work: making what was found
+**Climax — The Chronicle Assembly** "Pell Dustquill receives all field notes. The chronicle takes shape — artifacts
+cross-referenced, gaps named, structure imposed on raw discovery. This is the hardest work: making what was found
 _legible_ to those who were not there."
 
-**Resolution — The Assayer's Seal** "Esk Truthsieve reviews the chronicle
-against the site. Every claim is sieved. Every artifact must show its
-provenance. Nothing is declared complete until no stratum is left uncharted and
-no gap is left unnamed. When the Assayer seals the record, the dig is done."
+**Resolution — The Assayer's Seal** "Esk Truthsieve reviews the chronicle against the site. Every claim is sieved. Every
+artifact must show its provenance. Nothing is declared complete until no stratum is left uncharted and no gap is left
+unnamed. When the Assayer seals the record, the dig is done."
 
 ---
 

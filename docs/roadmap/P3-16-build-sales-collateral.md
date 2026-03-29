@@ -14,6 +14,5 @@ updated: "2026-02-19"
 
 ## Problem
 
-Sales teams need consistent, on-brand collateral (pitch decks, one-pagers, case
-studies) but producing these materials is time-consuming and often results in
-inconsistent messaging across assets.
+Sales teams need consistent, on-brand collateral (pitch decks, one-pagers, case studies) but producing these materials
+is time-consuming and often results in inconsistent messaging across assets.

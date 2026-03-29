@@ -12,17 +12,14 @@ updated: "2026-03-27"
 
 ## Summary
 
-Create a new multi-agent business skill (`/plan-analytics`) that assesses
-current analytics state, defines a KPI framework aligned to business functions,
-and produces a structured analytics plan with instrumentation priorities.
-Hub-and-Spoke pattern with analytics strategist, measurement architect, and
-metrics skeptic.
+Create a new multi-agent business skill (`/plan-analytics`) that assesses current analytics state, defines a KPI
+framework aligned to business functions, and produces a structured analytics plan with instrumentation priorities.
+Hub-and-Spoke pattern with analytics strategist, measurement architect, and metrics skeptic.
 
 ## Problem
 
-Startups collect data across multiple tools but lack a coherent measurement
-framework. This leads to vanity metrics, unmeasured funnels, and data-uninformed
-decision-making. Teams instrument what's easy to track rather than what matters
+Startups collect data across multiple tools but lack a coherent measurement framework. This leads to vanity metrics,
+unmeasured funnels, and data-uninformed decision-making. Teams instrument what's easy to track rather than what matters
 for business outcomes.
 
 ## Solution
@@ -45,19 +42,16 @@ New SKILL.md at `plugins/conclave/skills/plan-analytics/SKILL.md`.
 
 ### Pipeline Flow
 
-1. **Setup**: Read project docs + `docs/analytics/_user-data.md`. Create
-   template if absent.
-2. **Phase 1 (Assessment)**: Strategist produces current-state summary and
-   business function inventory.
-3. **Phase 2 (Framework Design)**: Architect produces KPI table, instrumentation
-   checklist, reporting cadence.
+1. **Setup**: Read project docs + `docs/analytics/_user-data.md`. Create template if absent.
+2. **Phase 1 (Assessment)**: Strategist produces current-state summary and business function inventory.
+3. **Phase 2 (Framework Design)**: Architect produces KPI table, instrumentation checklist, reporting cadence.
 4. **Phase 3 (Review)**: Metrics Skeptic reviews. Max iterations: 3.
 5. **Output**: `docs/analytics/analytics-plan-{timestamp}.md`
 
 ### User Data Template (`docs/analytics/_user-data.md`)
 
-Fields: current analytics tools, business stage, key funnels, existing KPIs and
-owners, known measurement gaps, data warehouse/BI tool.
+Fields: current analytics tools, business stage, key funnels, existing KPIs and owners, known measurement gaps, data
+warehouse/BI tool.
 
 ### Persona
 

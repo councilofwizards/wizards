@@ -32,8 +32,7 @@ Standard (not lightweight)
 
 ## Notes
 
-- Quality-skeptic agent became unresponsive during post-implementation review;
-  team lead re-spawned once, then performed the review directly
+- Quality-skeptic agent became unresponsive during post-implementation review; team lead re-spawned once, then performed
+  the review directly
 - All 10 validation checks pass on current repo
-- 6 new files created, 1 existing file modified (project-bootstrap/spec.md
-  frontmatter added)
+- 6 new files created, 1 existing file modified (project-bootstrap/spec.md frontmatter added)

@@ -1,9 +1,8 @@
 ---
 name: setup-project
 description: >
-  Bootstrap a project for use with the conclave plugin. Detects tech stack,
-  scaffolds the docs/ directory structure, generates CLAUDE.md, creates a
-  starter roadmap, and guides the user to next steps.
+  Bootstrap a project for use with the conclave plugin. Detects tech stack, scaffolds the docs/ directory structure,
+  generates CLAUDE.md, creates a starter roadmap, and guides the user to next steps.
 argument-hint: "[--force | --dry-run]"
 type: single-agent
 category: utility
@@ -12,21 +11,19 @@ tags: [bootstrap, scaffolding, onboarding]
 
 # Setup Project
 
-You are a single agent running a deterministic setup pipeline. There is no team
-to spawn, no skeptic gate, and no checkpoint protocol. Execute the 6 steps below
-in order and complete the setup in one pass.
+You are a single agent running a deterministic setup pipeline. There is no team to spawn, no skeptic gate, and no
+checkpoint protocol. Execute the 6 steps below in order and complete the setup in one pass.
 
 ## Setup
 
 Read the project root to understand current state before doing anything else:
 
 1. Check whether `CLAUDE.md` exists in the project root.
-2. Check whether `docs/` exists and which subdirectories are present
-   (`roadmap/`, `specs/`, `progress/`, `architecture/`, `stack-hints/`,
-   `research/`, `ideas/`, `templates/artifacts/`).
+2. Check whether `docs/` exists and which subdirectories are present (`roadmap/`, `specs/`, `progress/`,
+   `architecture/`, `stack-hints/`, `research/`, `ideas/`, `templates/artifacts/`).
 3. Check whether `docs/roadmap/_index.md` exists.
-4. Check whether the template files exist: `docs/specs/_template.md`,
-   `docs/progress/_template.md`, `docs/architecture/_template.md`.
+4. Check whether the template files exist: `docs/specs/_template.md`, `docs/progress/_template.md`,
+   `docs/architecture/_template.md`.
 5. List any files already in `docs/stack-hints/`.
 
 Build an internal state map from what you find:
@@ -44,52 +41,43 @@ gitignore_exists: bool
 gitignore_covers_conclave: bool
 ```
 
-This state map drives all conditional logic in the pipeline. Every write
-operation checks it before proceeding.
+This state map drives all conditional logic in the pipeline. Every write operation checks it before proceeding.
 
 ## Determine Mode
 
 Based on `$ARGUMENTS`:
 
-- **Empty/no args**: Full setup with auto-detection. Respect all idempotency
-  rules — never overwrite existing files (except CLAUDE.md which always
-  prompts).
-- **`--force`**: Overwrite existing scaffolding files (directories, `.gitkeep`,
-  template files, `docs/roadmap/_index.md`). CLAUDE.md still requires explicit
-  user confirmation even with `--force` — never silently overwrite it.
-- **`--dry-run`**: Show what would be created without writing any files. Output
-  a list of all files and directories that would be created, prefixed with
-  `[would create]`. Do not write anything to disk.
+- **Empty/no args**: Full setup with auto-detection. Respect all idempotency rules — never overwrite existing files
+  (except CLAUDE.md which always prompts).
+- **`--force`**: Overwrite existing scaffolding files (directories, `.gitkeep`, template files,
+  `docs/roadmap/_index.md`). CLAUDE.md still requires explicit user confirmation even with `--force` — never silently
+  overwrite it.
+- **`--dry-run`**: Show what would be created without writing any files. Output a list of all files and directories that
+  would be created, prefixed with `[would create]`. Do not write anything to disk.
 
 ## Execution Pipeline
 
 ### Step 1: Detect Existing State
 
-You already did this in the Setup section. Confirm your state map is complete
-before proceeding to Step 2. If any reads failed due to permission errors,
-report the error and stop — do not proceed with partial state.
+You already did this in the Setup section. Confirm your state map is complete before proceeding to Step 2. If any reads
+failed due to permission errors, report the error and stop — do not proceed with partial state.
 
 ### Step 2: Detect Tech Stack
 
-Scan the project root for dependency manifests. Use the Stack Detection Table
-below to identify the tech stack.
+Scan the project root for dependency manifests. Use the Stack Detection Table below to identify the tech stack.
 
-**Framework-level detection is required.** Detect the framework, not just the
-language. "Laravel" not "PHP". "Next.js" not "Node.js". The detected stack
-identifier drives stack hint lookup and CLAUDE.md content.
+**Framework-level detection is required.** Detect the framework, not just the language. "Laravel" not "PHP". "Next.js"
+not "Node.js". The detected stack identifier drives stack hint lookup and CLAUDE.md content.
 
-**If no manifest found:** Inform the user that no dependency manifest was
-detected. Proceed with stack identifier `unknown` and use the Default categories
-from the Roadmap Categories Table. Ask the user to specify their stack so you
+**If no manifest found:** Inform the user that no dependency manifest was detected. Proceed with stack identifier
+`unknown` and use the Default categories from the Roadmap Categories Table. Ask the user to specify their stack so you
 can include accurate information in CLAUDE.md.
 
-**If multiple manifests found:** Detect all, list them to the user, and ask
-which is the primary stack. Use the user's answer for all subsequent steps. Keep
-this to a single inline question — do not turn it into a multi-turn
-conversation.
+**If multiple manifests found:** Detect all, list them to the user, and ask which is the primary stack. Use the user's
+answer for all subsequent steps. Keep this to a single inline question — do not turn it into a multi-turn conversation.
 
-**Output of this step:** A stack identifier string (e.g., `laravel`, `nextjs`,
-`rails`, `django`, `go`, `rust`) used in Steps 3, 4, and 5.
+**Output of this step:** A stack identifier string (e.g., `laravel`, `nextjs`, `rails`, `django`, `go`, `rust`) used in
+Steps 3, 4, and 5.
 
 ### Step 3: Scaffold docs/ Directory Structure
 
@@ -109,43 +97,36 @@ docs/ideas/
 docs/templates/artifacts/
 ```
 
-For each directory that is newly created and empty, add a `.gitkeep` file so git
-tracks it. Do not add `.gitkeep` retroactively to directories that already exist
-and contain files.
+For each directory that is newly created and empty, add a `.gitkeep` file so git tracks it. Do not add `.gitkeep`
+retroactively to directories that already exist and contain files.
 
 **Template files to create (if missing, or if `--force`):**
 
-Create `docs/specs/_template.md` with the content from the Embedded Templates
-section below. Create `docs/progress/_template.md` with the content from the
-Embedded Templates section below. Create `docs/architecture/_template.md` with
-the content from the Embedded Templates section below.
+Create `docs/specs/_template.md` with the content from the Embedded Templates section below. Create
+`docs/progress/_template.md` with the content from the Embedded Templates section below. Create
+`docs/architecture/_template.md` with the content from the Embedded Templates section below.
 
 **Stack hints:**
 
-Check whether a bundled hint file exists for the detected stack. Currently, only
-`laravel.md` is bundled. If the detected stack matches a bundled hint and
-`docs/stack-hints/{stack}.md` does not already exist, copy the bundled hint
+Check whether a bundled hint file exists for the detected stack. Currently, only `laravel.md` is bundled. If the
+detected stack matches a bundled hint and `docs/stack-hints/{stack}.md` does not already exist, copy the bundled hint
 content to `docs/stack-hints/{stack}.md`.
 
 If no bundled hint exists for the detected stack, inform the user:
 
-> No bundled stack hint exists for `{stack}`. You can create one at
-> `docs/stack-hints/{stack}.md`. Stack hint files contain framework-specific
-> conventions that are injected into agent prompts by `plan-product`,
-> `build-product`, and `review-quality`. See an existing hint file for the
-> format.
+> No bundled stack hint exists for `{stack}`. You can create one at `docs/stack-hints/{stack}.md`. Stack hint files
+> contain framework-specific conventions that are injected into agent prompts by `plan-product`, `build-product`, and
+> `review-quality`. See an existing hint file for the format.
 
-**Idempotency:** In normal mode, only create what does not already exist. In
-`--force` mode, overwrite scaffolding files and templates (but not CLAUDE.md —
-see Step 4). In `--dry-run` mode, print `[would create]` for each item without
+**Idempotency:** In normal mode, only create what does not already exist. In `--force` mode, overwrite scaffolding files
+and templates (but not CLAUDE.md — see Step 4). In `--dry-run` mode, print `[would create]` for each item without
 writing.
 
 Report what was created vs. skipped in the Step 6 summary.
 
 ### Step 3.5: Scaffold .claude/conclave/ Configuration Directory
 
-Create the user-writable configuration directory used by conclave skills for
-project-specific overrides.
+Create the user-writable configuration directory used by conclave skills for project-specific overrides.
 
 **Directories to create (if missing, or if `--force`):**
 
@@ -158,31 +139,26 @@ project-specific overrides.
 
 **README.md files to create (if missing, or if `--force`):**
 
-Create a `README.md` in each subdirectory using the content from the Embedded
-Configuration READMEs section below.
+Create a `README.md` in each subdirectory using the content from the Embedded Configuration READMEs section below.
 
-**Idempotency:** In normal mode, only create directories and README.md files
-that do not already exist. In `--force` mode, overwrite README.md files but
-never delete user-created files. In `--dry-run` mode, print `[would create]` for
+**Idempotency:** In normal mode, only create directories and README.md files that do not already exist. In `--force`
+mode, overwrite README.md files but never delete user-created files. In `--dry-run` mode, print `[would create]` for
 each item without writing.
 
 **Error handling:**
 
-- If `.claude/` exists as a file (not a directory): log a clear error and skip
-  this step entirely. Do not overwrite the file.
-- If `.claude/` or `.claude/conclave/` cannot be created due to permissions: log
-  a clear error and continue with the rest of setup. Do not fail the entire
-  pipeline.
+- If `.claude/` exists as a file (not a directory): log a clear error and skip this step entirely. Do not overwrite the
+  file.
+- If `.claude/` or `.claude/conclave/` cannot be created due to permissions: log a clear error and continue with the
+  rest of setup. Do not fail the entire pipeline.
 
 **`.gitignore` entry:**
 
 After scaffolding, check the project's `.gitignore` file:
 
-1. If no `.gitignore` exists and a `.git/` directory exists: create `.gitignore`
-   with the entry below.
-2. If `.gitignore` exists: check whether it already contains `.claude/conclave/`
-   or a broader pattern that covers it (e.g., `.claude/`, `**/.claude/`). If not
-   already covered, append the entry below.
+1. If no `.gitignore` exists and a `.git/` directory exists: create `.gitignore` with the entry below.
+2. If `.gitignore` exists: check whether it already contains `.claude/conclave/` or a broader pattern that covers it
+   (e.g., `.claude/`, `**/.claude/`). If not already covered, append the entry below.
 3. If no `.git/` directory exists: skip `.gitignore` handling with a note.
 
 Entry to add:
@@ -192,8 +168,8 @@ Entry to add:
 .claude/conclave/
 ```
 
-This append is idempotent — it checks before adding. In `--dry-run` mode, print
-`[would add to .gitignore]` without modifying.
+This append is idempotent — it checks before adding. In `--dry-run` mode, print `[would add to .gitignore]` without
+modifying.
 
 Report what was created vs. skipped in the Step 6 summary.
 
@@ -204,52 +180,44 @@ Write a project-specific `CLAUDE.md` to the project root.
 **If `CLAUDE.md` already exists (in any mode including `--force`):**
 
 1. Read the existing content.
-2. Inform the user that `CLAUDE.md` already exists and show a preview of what
-   you would generate.
+2. Inform the user that `CLAUDE.md` already exists and show a preview of what you would generate.
 3. Output a bulleted list of recommended additions based on the detected stack.
-4. Ask the user explicitly: "Would you like me to append these suggestions to
-   your existing CLAUDE.md? (yes/no)"
+4. Ask the user explicitly: "Would you like me to append these suggestions to your existing CLAUDE.md? (yes/no)"
 5. Only modify the file if the user answers yes.
 
-**If `CLAUDE.md` does not exist:** Write it using the CLAUDE.md Template section
-below, substituting `{stack}` with the detected stack identifier and
-incorporating any relevant content from `docs/stack-hints/{stack}.md` if it
-exists.
+**If `CLAUDE.md` does not exist:** Write it using the CLAUDE.md Template section below, substituting `{stack}` with the
+detected stack identifier and incorporating any relevant content from `docs/stack-hints/{stack}.md` if it exists.
 
-Do not duplicate the full stack hint file — extract the most important
-conventions and summarize them in the Development Guidelines section.
+Do not duplicate the full stack hint file — extract the most important conventions and summarize them in the Development
+Guidelines section.
 
 ### Step 5: Generate docs/roadmap/\_index.md
 
 Create a starter roadmap index tailored to the detected project type.
 
-**If `docs/roadmap/_index.md` already exists:** Skip this step entirely. Do not
-modify existing roadmaps, even with `--force`.
+**If `docs/roadmap/_index.md` already exists:** Skip this step entirely. Do not modify existing roadmaps, even with
+`--force`.
 
-**If it does not exist:** Generate it using the categories from the Roadmap
-Categories Table below, matched to the project type inferred from the detected
-stack:
+**If it does not exist:** Generate it using the categories from the Roadmap Categories Table below, matched to the
+project type inferred from the detected stack:
 
-- `laravel`, `rails`, `django`, `fastapi`, `flask`, `express`, `nestjs`,
-  `phoenix` → Web app (SaaS) categories
+- `laravel`, `rails`, `django`, `fastapi`, `flask`, `express`, `nestjs`, `phoenix` → Web app (SaaS) categories
 - `fastify` → API service categories (lean API framework)
-- `nextjs`, `react`, `vue`, `angular`, `svelte` → Web app (SaaS) categories
-  (frontend frameworks typically build SaaS apps)
+- `nextjs`, `react`, `vue`, `angular`, `svelte` → Web app (SaaS) categories (frontend frameworks typically build SaaS
+  apps)
 - `flutter`, `swift` → Mobile app categories
-- `go`, `rust`, `java`, `kotlin` → API service categories (compiled languages
-  commonly used for services)
+- `go`, `rust`, `java`, `kotlin` → API service categories (compiled languages commonly used for services)
 - `unknown` or ambiguous → Default categories
 
-If the project type is ambiguous, use the Default categories and note this in
-the summary.
+If the project type is ambiguous, use the Default categories and note this in the summary.
 
 **Generated content structure:**
 
 ```markdown
 # Roadmap
 
-This index tracks all roadmap items. Individual item files in this directory are
-the source of truth — this index is a navigational aid only.
+This index tracks all roadmap items. Individual item files in this directory are the source of truth — this index is a
+navigational aid only.
 
 ## Categories
 
@@ -309,9 +277,8 @@ Output a clear summary of everything that was done:
 4. (Optional) Add or refine the stack hint at docs/stack-hints/{stack}.md for deeper framework guidance
 ```
 
-For `--dry-run` mode, prefix the header with
-`## Dry Run — No files were written` and list all items as `[would create]` or
-`[would skip]`.
+For `--dry-run` mode, prefix the header with `## Dry Run — No files were written` and list all items as `[would create]`
+or `[would skip]`.
 
 ## Stack Detection Table
 
@@ -350,8 +317,8 @@ When generating CLAUDE.md, use this structure:
 
 ## Development Guidelines
 
-- {Stack-specific conventions from stack hints, if available — summarize key
-  points, do not duplicate the full hint file}
+- {Stack-specific conventions from stack hints, if available — summarize key points, do not duplicate the full hint
+  file}
 - Follow framework conventions over custom solutions
 - Write tests for all new features
 
@@ -370,8 +337,7 @@ When generating CLAUDE.md, use this structure:
 
 - Use `/plan-product` to plan features and create specs
 - Use `/build-product` to implement features from approved specs
-- Use `/review-quality` for security audits, performance analysis, and
-  deployment readiness
+- Use `/review-quality` for security audits, performance analysis, and deployment readiness
 ```
 
 ## Embedded Templates
@@ -513,19 +479,16 @@ Use these verbatim when creating README.md files in Step 3.5.
 
 Custom artifact template overrides for conclave skills.
 
-Files placed here override the built-in artifact templates used by skills. For
-example, a `sprint-contract.md` here would override the default sprint contract
-template.
+Files placed here override the built-in artifact templates used by skills. For example, a `sprint-contract.md` here
+would override the default sprint contract template.
 
 ## Format
 
-Each file should be a Markdown file matching the name of the template it
-overrides.
+Each file should be a Markdown file matching the name of the template it overrides.
 
 ## More Information
 
-Run `/wizard-guide` and ask about "Project Configuration" for full
-documentation.
+Run `/wizard-guide` and ask about "Project Configuration" for full documentation.
 ```
 
 ### .claude/conclave/eval-examples/README.md
@@ -535,19 +498,16 @@ documentation.
 
 Per-skill skeptic calibration examples.
 
-Files placed here provide few-shot examples that calibrate how the skeptic
-evaluates outputs for a specific skill. Name files after the skill they
-calibrate (e.g., `build-implementation.md`, `write-spec.md`).
+Files placed here provide few-shot examples that calibrate how the skeptic evaluates outputs for a specific skill. Name
+files after the skill they calibrate (e.g., `build-implementation.md`, `write-spec.md`).
 
 ## Status
 
-This directory is reserved for a future feature (P3-29: Evaluator Tuning). No
-skills currently read from this directory.
+This directory is reserved for a future feature (P3-29: Evaluator Tuning). No skills currently read from this directory.
 
 ## More Information
 
-Run `/wizard-guide` and ask about "Project Configuration" for full
-documentation.
+Run `/wizard-guide` and ask about "Project Configuration" for full documentation.
 ```
 
 ### .claude/conclave/guidance/README.md
@@ -557,9 +517,8 @@ documentation.
 
 Project-specific agent guidance files.
 
-Files placed here are read by conclave skills and incorporated as context during
-execution. Use this to document your project's conventions, tech stack
-preferences, and patterns that agents should follow.
+Files placed here are read by conclave skills and incorporated as context during execution. Use this to document your
+project's conventions, tech stack preferences, and patterns that agents should follow.
 
 ## Example
 
@@ -577,32 +536,28 @@ Create `stack-preferences.md` with content like:
 
 ## More Information
 
-Run `/wizard-guide` and ask about "Project Configuration" for full
-documentation.
+Run `/wizard-guide` and ask about "Project Configuration" for full documentation.
 ````
 
 ## Constraints
 
-These constraints are non-negotiable. Violating any of them is a bug, not a
-design choice.
+These constraints are non-negotiable. Violating any of them is a bug, not a design choice.
 
-1. **Single-agent only.** Do not spawn subagents, teams, or parallel tasks. This
-   skill runs as one agent completing one sequential pipeline.
-2. **Never overwrite existing files.** In normal mode, file-existence-based
-   idempotency is absolute. Only create what does not already exist.
-3. **CLAUDE.md is never silently overwritten.** Even with `--force`, the user
-   must explicitly confirm before CLAUDE.md is modified. No exceptions.
-4. **No code generation.** Create documentation and scaffolding only. Do not
-   write application code, configuration files, or scripts.
-5. **No git operations.** Do not run `git add`, `git commit`, `git push`, or any
-   other git command.
-6. **No dependency installation.** Do not run `npm install`, `composer install`,
-   `bundle install`, or any package manager.
-7. **No modification of existing roadmap items.** The roadmap index may be
-   created if missing, but existing roadmap files must not be touched.
-8. **Templates are embedded.** All template content comes from the Embedded
-   Templates section above. Do not read templates from disk during execution —
-   they may not exist yet.
+1. **Single-agent only.** Do not spawn subagents, teams, or parallel tasks. This skill runs as one agent completing one
+   sequential pipeline.
+2. **Never overwrite existing files.** In normal mode, file-existence-based idempotency is absolute. Only create what
+   does not already exist.
+3. **CLAUDE.md is never silently overwritten.** Even with `--force`, the user must explicitly confirm before CLAUDE.md
+   is modified. No exceptions.
+4. **No code generation.** Create documentation and scaffolding only. Do not write application code, configuration
+   files, or scripts.
+5. **No git operations.** Do not run `git add`, `git commit`, `git push`, or any other git command.
+6. **No dependency installation.** Do not run `npm install`, `composer install`, `bundle install`, or any package
+   manager.
+7. **No modification of existing roadmap items.** The roadmap index may be created if missing, but existing roadmap
+   files must not be touched.
+8. **Templates are embedded.** All template content comes from the Embedded Templates section above. Do not read
+   templates from disk during execution — they may not exist yet.
 
 ## Error Handling
 

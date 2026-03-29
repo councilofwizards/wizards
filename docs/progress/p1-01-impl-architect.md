@@ -9,18 +9,16 @@ created: "2026-02-14"
 
 ## Summary
 
-This plan adds file-per-concern partitioning to all 3 SKILL.md files so parallel
-agents never write to the same file. Changes include:
+This plan adds file-per-concern partitioning to all 3 SKILL.md files so parallel agents never write to the same file.
+Changes include:
 
-1. New **Write Safety** section in each SKILL.md (between Setup and Determine
-   Mode)
+1. New **Write Safety** section in each SKILL.md (between Setup and Determine Mode)
 2. Updated **Orchestration Flow** steps to enforce lead-only aggregation
 3. Updated **Failure Recovery** context exhaustion to use role-scoped filenames
-4. New **WRITE SAFETY** blocks in spawn prompts for all agents that run in
-   parallel
+4. New **WRITE SAFETY** blocks in spawn prompts for all agents that run in parallel
 
-**Total edits: 17** across 3 files. No new files created. No behavioral changes
-to agent logic — only file-write targeting is affected.
+**Total edits: 17** across 3 files. No new files created. No behavioral changes to agent logic — only file-write
+targeting is affected.
 
 ---
 
@@ -125,14 +123,12 @@ WRITE SAFETY:
 **new_string:**
 ```
 
-- Message the Researcher if you need more information about existing code or
-  constraints
+- Message the Researcher if you need more information about existing code or constraints
 - Respond to questions from other agents promptly
 
 WRITE SAFETY:
 
-- Write architecture docs to files scoped to your concern (e.g.,
-  docs/architecture/{feature}-system-design.md)
+- Write architecture docs to files scoped to your concern (e.g., docs/architecture/{feature}-system-design.md)
 - Write progress notes ONLY to docs/progress/{feature}-architect.md
 - NEVER write to shared files — only the Team Lead writes to shared/index files
 
@@ -162,8 +158,7 @@ WRITE SAFETY:
 
 WRITE SAFETY:
 
-- Write data model docs to files scoped to your concern (e.g.,
-  docs/architecture/{feature}-data-model.md)
+- Write data model docs to files scoped to your concern (e.g., docs/architecture/{feature}-data-model.md)
 - Write progress notes ONLY to docs/progress/{feature}-dba.md
 - NEVER write to shared files — only the Team Lead writes to shared/index files
 
@@ -359,8 +354,7 @@ Agents working in parallel MUST NOT write to the same file. Follow these convent
 WRITE SAFETY:
 
 - Write your findings ONLY to docs/progress/{feature}-test-eng.md
-- NEVER write to shared files — only the QA Lead writes to shared/aggregated
-  files
+- NEVER write to shared files — only the QA Lead writes to shared/aggregated files
 
 ```
 
@@ -384,14 +378,12 @@ WRITE SAFETY:
 ```
 
 - Coordinate with the Security Auditor on infrastructure security concerns
-- If you need access or information about production environments, message
-  qa-lead — don't assume
+- If you need access or information about production environments, message qa-lead — don't assume
 
 WRITE SAFETY:
 
 - Write your findings ONLY to docs/progress/{feature}-devops-eng.md
-- NEVER write to shared files — only the QA Lead writes to shared/aggregated
-  files
+- NEVER write to shared files — only the QA Lead writes to shared/aggregated files
 
 ```
 
@@ -414,16 +406,13 @@ WRITE SAFETY:
 **new_string:**
 ```
 
-- If you need clarification on authentication or authorization logic, message
-  qa-lead
-- Be thorough and precise. False positives waste time; missed vulnerabilities
-  cost trust.
+- If you need clarification on authentication or authorization logic, message qa-lead
+- Be thorough and precise. False positives waste time; missed vulnerabilities cost trust.
 
 WRITE SAFETY:
 
 - Write your findings ONLY to docs/progress/{feature}-security-auditor.md
-- NEVER write to shared files — only the QA Lead writes to shared/aggregated
-  files
+- NEVER write to shared files — only the QA Lead writes to shared/aggregated files
 
 ```
 
@@ -434,27 +423,21 @@ WRITE SAFETY:
 
 ## Design Decisions
 
-1. **No external locking**: File partitioning eliminates the problem entirely —
-   no mutexes, no lock files, no retry loops.
-2. **Convention over enforcement**: Agents are instructed (not forced) to follow
-   the convention. This is appropriate because agents follow their prompt
-   instructions reliably.
-3. **Skeptic prompts excluded**: The Skeptic roles (Product Skeptic, Quality
-   Skeptic, Ops Skeptic) communicate entirely via messages and don't write to
-   progress files, so they don't need WRITE SAFETY blocks.
-4. **Contract negotiation exception**: In build-product, the API contract file
-   (`api-contract.md`) is co-authored by backend-eng and frontend-eng, but
-   during sequential negotiation (propose/accept/revise), not concurrent writes.
-   This is documented as an explicit exception.
-5. **Lead-only aggregation**: Only team leads write to shared files
-   (`_index.md`, `spec.md`, `roadmap/` entries, aggregated summaries). This
-   happens AFTER parallel work completes, eliminating race conditions.
+1. **No external locking**: File partitioning eliminates the problem entirely — no mutexes, no lock files, no retry
+   loops.
+2. **Convention over enforcement**: Agents are instructed (not forced) to follow the convention. This is appropriate
+   because agents follow their prompt instructions reliably.
+3. **Skeptic prompts excluded**: The Skeptic roles (Product Skeptic, Quality Skeptic, Ops Skeptic) communicate entirely
+   via messages and don't write to progress files, so they don't need WRITE SAFETY blocks.
+4. **Contract negotiation exception**: In build-product, the API contract file (`api-contract.md`) is co-authored by
+   backend-eng and frontend-eng, but during sequential negotiation (propose/accept/revise), not concurrent writes. This
+   is documented as an explicit exception.
+5. **Lead-only aggregation**: Only team leads write to shared files (`_index.md`, `spec.md`, `roadmap/` entries,
+   aggregated summaries). This happens AFTER parallel work completes, eliminating race conditions.
 
 ## Interaction with P1-03
 
-This plan and P1-03 (Stack Generalization) both modify the 3 SKILL.md files but
-touch different sections. P1-01 edits the Write Safety area, Orchestration Flow,
-Failure Recovery, and spawn prompt WRITE SAFETY blocks. P1-03 edits Setup steps,
-Shared Principle #4, and framework-specific text in spawn prompts. They can be
-implemented in either order — the implementing engineer should re-read files
-before applying edits.
+This plan and P1-03 (Stack Generalization) both modify the 3 SKILL.md files but touch different sections. P1-01 edits
+the Write Safety area, Orchestration Flow, Failure Recovery, and spawn prompt WRITE SAFETY blocks. P1-03 edits Setup
+steps, Shared Principle #4, and framework-specific text in spawn prompts. They can be implemented in either order — the
+implementing engineer should re-read files before applying edits.

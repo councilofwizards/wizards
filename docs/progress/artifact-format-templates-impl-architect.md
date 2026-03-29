@@ -12,8 +12,8 @@ updated: "2026-02-14T00:00:00Z"
 
 ## Overview
 
-This is a pure documentation feature. Create 3 template files and add 1 new
-Setup step to each of the 3 SKILL.md files. No code, no APIs, no tests.
+This is a pure documentation feature. Create 3 template files and add 1 new Setup step to each of the 3 SKILL.md files.
+No code, no APIs, no tests.
 
 **Source spec**: `docs/specs/artifact-format-templates/spec.md`
 
@@ -155,9 +155,8 @@ superseded_by: "" # ADR number, if applicable
 
 ## Part 2: Files to Modify
 
-Each SKILL.md gets one new step inserted as Step 2 in its Setup section, after
-the existing Step 1 (directory creation) and before the existing Step 2 (detect
-stack). All subsequent steps are renumbered.
+Each SKILL.md gets one new step inserted as Step 2 in its Setup section, after the existing Step 1 (directory creation)
+and before the existing Step 2 (detect stack). All subsequent steps are renumbered.
 
 ### 2A. `plugins/conclave/skills/plan-product/SKILL.md`
 
@@ -182,9 +181,8 @@ stack). All subsequent steps are renumbered.
 6. Read `docs/specs/` for existing specs
 ```
 
-**Exact edit**: Replace the text starting at "2. **Detect project stack.**"
-through "5. Read `docs/specs/` for existing specs" with the new 5-line block
-above.
+**Exact edit**: Replace the text starting at "2. **Detect project stack.**" through "5. Read `docs/specs/` for existing
+specs" with the new 5-line block above.
 
 ---
 
@@ -213,9 +211,8 @@ above.
 7. Read `docs/architecture/` for relevant ADRs
 ```
 
-**Exact edit**: Replace the text starting at "2. **Detect project stack.**"
-through "6. Read `docs/architecture/` for relevant ADRs" with the new 6-line
-block above.
+**Exact edit**: Replace the text starting at "2. **Detect project stack.**" through "6. Read `docs/architecture/` for
+relevant ADRs" with the new 6-line block above.
 
 ---
 
@@ -244,9 +241,8 @@ block above.
 7. Read `docs/architecture/` for relevant ADRs and system design
 ```
 
-**Exact edit**: Replace the text starting at "2. **Detect project stack.**"
-through "6. Read `docs/architecture/` for relevant ADRs and system design" with
-the new 6-line block above.
+**Exact edit**: Replace the text starting at "2. **Detect project stack.**" through "6. Read `docs/architecture/` for
+relevant ADRs and system design" with the new 6-line block above.
 
 ---
 
@@ -270,6 +266,5 @@ After implementation, verify:
 1. All 3 template files exist at their specified paths
 2. Each SKILL.md Setup section has the new Step 2 with "if they exist" guard
 3. Each SKILL.md has correct step renumbering (no duplicate or skipped numbers)
-4. Template content matches spec Sections 1-3 exactly (no additions, no
-   omissions)
+4. Template content matches spec Sections 1-3 exactly (no additions, no omissions)
 5. No other sections of the SKILL.md files were changed

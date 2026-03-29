@@ -11,40 +11,33 @@ expires: "2026-04-26"
 
 ## Executive Summary
 
-The conclave plugin currently houses 17 skills in a single plugin. Research into
-splitting options reveals that **the shared content architecture creates strong
-cross-skill coupling** that makes domain-based splitting non-trivial and
-high-risk. At current scale (3 business skills, 14 engineering/utility), a split
-is premature — the primary user segment (technical founders using both domains)
-would experience increased friction with no corresponding benefit. **Internal
-reorganization via category metadata** is the dominant strategy: low cost, zero
-infrastructure risk, and it creates the taxonomy needed for a clean split when
-business skills reach critical mass (7-10 skills, projected at P3 completion).
+The conclave plugin currently houses 17 skills in a single plugin. Research into splitting options reveals that **the
+shared content architecture creates strong cross-skill coupling** that makes domain-based splitting non-trivial and
+high-risk. At current scale (3 business skills, 14 engineering/utility), a split is premature — the primary user segment
+(technical founders using both domains) would experience increased friction with no corresponding benefit. **Internal
+reorganization via category metadata** is the dominant strategy: low cost, zero infrastructure risk, and it creates the
+taxonomy needed for a clean split when business skills reach critical mass (7-10 skills, projected at P3 completion).
 
 ## Market Analysis
 
 ### Market Size
 
-Not applicable — this is an internal architecture decision for the conclave
-plugin. The "market" is the plugin's user base within the Claude Code ecosystem.
+Not applicable — this is an internal architecture decision for the conclave plugin. The "market" is the plugin's user
+base within the Claude Code ecosystem.
 
 ### Industry Trends
 
-- **Plugin ecosystem maturity** (confidence: MEDIUM): Claude Code plugins are
-  nascent. The marketplace already supports multi-plugin installs (conclave +
-  php-tomes coexist). Adding plugins is structurally trivial (3 lines in
+- **Plugin ecosystem maturity** (confidence: MEDIUM): Claude Code plugins are nascent. The marketplace already supports
+  multi-plugin installs (conclave + php-tomes coexist). Adding plugins is structurally trivial (3 lines in
   marketplace.json).
-- **Monorepo vs. multi-package**: Industry trend favors monorepo with internal
-  boundaries over premature package splits. Category metadata follows this
-  pattern.
+- **Monorepo vs. multi-package**: Industry trend favors monorepo with internal boundaries over premature package splits.
+  Category metadata follows this pattern.
 
 ## Competitive Landscape
 
-- **php-tomes**: 10 skills in a single plugin, organized by topic (laravel,
-  testing, security, etc.). No domain split despite covering distinct concerns.
-  Validates single-plugin-with-taxonomy approach.
-- **No other Claude Code plugins** with comparable multi-agent orchestration
-  exist for comparison.
+- **php-tomes**: 10 skills in a single plugin, organized by topic (laravel, testing, security, etc.). No domain split
+  despite covering distinct concerns. Validates single-plugin-with-taxonomy approach.
+- **No other Claude Code plugins** with comparable multi-agent orchestration exist for comparison.
 
 ## Technical Analysis
 
@@ -58,15 +51,13 @@ Three infrastructure layers hardcode `plugins/conclave/shared/` paths:
 | B-series validator | `scripts/validators/skill-shared-content.sh` | `SHARED_DIR` variable                                                 |
 | SKILL.md files     | All 14 multi-agent skills                    | `<!-- Authoritative source: plugins/conclave/shared/... -->` comments |
 
-All three break simultaneously if skills move to a new plugin directory.
-B-series validators are conclave-specific; A, C, D, E, F series are already
-multi-plugin safe.
+All three break simultaneously if skills move to a new plugin directory. B-series validators are conclave-specific; A,
+C, D, E, F series are already multi-plugin safe.
 
 ### Persona Coupling
 
-40+ shared persona files in `plugins/conclave/shared/personas/` serve both
-engineering and business skills. Key cross-domain personas: research-director,
-product-strategist, roadmap-analyst. A domain split requires either persona
+40+ shared persona files in `plugins/conclave/shared/personas/` serve both engineering and business skills. Key
+cross-domain personas: research-director, product-strategist, roadmap-analyst. A domain split requires either persona
 duplication (drift risk) or a new shared abstraction layer.
 
 ### Option Analysis
@@ -77,9 +68,8 @@ duplication (drift risk) or a new shared abstraction layer.
 | 2. Pattern split  | By collaboration pattern                     | High   | High (same infra cost)                      | Low (patterns are implementation details) |
 | 3. Internal reorg | Category metadata + taxonomy documentation   | Low    | Zero                                        | Clean taxonomy, enables future split      |
 
-**Option 1 boundary problem**: Planning skills (research-market, ideate-product,
-manage-roadmap, write-stories) serve engineering pipelines but aren't
-engineering themselves. A naive engineering/business split orphans them.
+**Option 1 boundary problem**: Planning skills (research-market, ideate-product, manage-roadmap, write-stories) serve
+engineering pipelines but aren't engineering themselves. A naive engineering/business split orphans them.
 
 ## Customer Segments
 
@@ -103,8 +93,7 @@ engineering themselves. A naive engineering/business split orphans them.
 
 ### Pain Points (ranked by severity)
 
-1. **MEDIUM (future)**: When P3 completes, 14+ business skills buried in a 27+
-   skill list
+1. **MEDIUM (future)**: When P3 completes, 14+ business skills buried in a 27+ skill list
 2. **LOW (today)**: 3 business skills are barely noticeable noise
 3. **LOW**: Version coupling forces joint version bumps
 4. **NEGLIGIBLE**: wizard-guide already provides domain separation
@@ -118,10 +107,8 @@ engineering themselves. A naive engineering/business split orphans them.
 - `scripts/sync-shared-content.sh` — sync infrastructure
 - `scripts/validators/` — all 6 validators
 - `docs/roadmap/_index.md` — P3 item inventory
-- Existing business skill SKILL.md files (plan-sales, plan-hiring,
-  draft-investor-update)
-- Existing engineering skill SKILL.md files (build-implementation,
-  review-quality)
+- Existing business skill SKILL.md files (plan-sales, plan-hiring, draft-investor-update)
+- Existing engineering skill SKILL.md files (build-implementation, review-quality)
 
 ## Data Gaps
 

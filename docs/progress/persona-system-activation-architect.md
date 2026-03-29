@@ -4,24 +4,22 @@ team: "write-spec"
 agent: "software-architect"
 phase: "design"
 status: "awaiting_review"
-last_action:
-  "Completed full technical specification for P2-09 persona system activation"
+last_action: "Completed full technical specification for P2-09 persona system activation"
 updated: "2026-03-10"
 ---
 
 # Architect Design: P2-09 Persona System Activation
 
-**Author**: Kael Stoneheart, Master Builder of the Keep (Software Architect)
-**Input**: `docs/specs/persona-system-activation/stories.md` (5 approved
-stories) **For review by**: Spec Skeptic (Wren Cinderglass)
+**Author**: Kael Stoneheart, Master Builder of the Keep (Software Architect) **Input**:
+`docs/specs/persona-system-activation/stories.md` (5 approved stories) **For review by**: Spec Skeptic (Wren
+Cinderglass)
 
 ---
 
 ## Summary
 
-This document specifies the exact file changes, content patterns, and execution
-order required to activate the persona system across all 12 multi-agent SKILL.md
-files. Every decision is load-bearing. Nothing here is decorative.
+This document specifies the exact file changes, content patterns, and execution order required to activate the persona
+system across all 12 multi-agent SKILL.md files. Every decision is load-bearing. Nothing here is decorative.
 
 ---
 
@@ -67,21 +65,17 @@ When communicating with the user, introduce yourself by your name and title.
 
 ### 1.3 Rules
 
-- The identity line replaces `You are the {Role Name} on the {Team Name}.` in
-  full.
-- The self-introduction instruction is added on the immediately following line
-  (no blank line separator).
-- The `First, read ... persona ...` line and blank line before the identity line
-  are untouched.
+- The identity line replaces `You are the {Role Name} on the {Team Name}.` in full.
+- The self-introduction instruction is added on the immediately following line (no blank line separator).
+- The `First, read ... persona ...` line and blank line before the identity line are untouched.
 - No other content in the spawn prompt block is modified.
-- Fictional names and titles are sourced ONLY from the `fictional_name` and
-  `title` YAML fields in the corresponding persona file. No invention.
+- Fictional names and titles are sourced ONLY from the `fictional_name` and `title` YAML fields in the corresponding
+  persona file. No invention.
 
 ### 1.4 Persona-to-Prompt Mapping: All 12 SKILL.md Files
 
-The following table maps every spawn prompt requiring modification. Lead
-personas are injected in Setup (not spawn prompts) and are **not** in scope for
-Stories 1+2.
+The following table maps every spawn prompt requiring modification. Lead personas are injected in Setup (not spawn
+prompts) and are **not** in scope for Stories 1+2.
 
 #### research-market/SKILL.md (2 prompts)
 
@@ -110,9 +104,8 @@ Stories 1+2.
 | Story Writer | story-writer.md  | Fenn Brightquill | Journeyman Bard            | Story Writer | Story Writing Team |
 | Skeptic      | story-skeptic.md | Grimm Holloway   | Keeper of the INVEST Creed | Skeptic      | Story Writing Team |
 
-Note: the current prompt reads "You are the Skeptic on the Story Writing Team."
-The new line must use the role name "Skeptic" (not "Story Skeptic") to match the
-existing text exactly.
+Note: the current prompt reads "You are the Skeptic on the Story Writing Team." The new line must use the role name
+"Skeptic" (not "Story Skeptic") to match the existing text exactly.
 
 #### write-spec/SKILL.md (3 prompts)
 
@@ -122,9 +115,8 @@ existing text exactly.
 | Database Architect | dba.md                | Nix Deepvault    | Keeper of the Vaults       | Database Architect (DBA) | Spec Writing Team |
 | Skeptic            | spec-skeptic.md       | Wren Cinderglass | Siege Inspector            | Skeptic                  | Spec Writing Team |
 
-Note: "Database Architect (DBA)" — preserve the parenthetical exactly as it
-appears in the current prompt. "You are the Database Architect (DBA) on the Spec
-Writing Team." → role portion is "Database Architect (DBA)".
+Note: "Database Architect (DBA)" — preserve the parenthetical exactly as it appears in the current prompt. "You are the
+Database Architect (DBA) on the Spec Writing Team." → role portion is "Database Architect (DBA)".
 
 #### plan-implementation/SKILL.md (2 prompts)
 
@@ -185,10 +177,9 @@ tier1-test has `type: single-agent` — no spawn prompts. **No changes needed.**
 
 #### run-task/SKILL.md (1 skeptic prompt — but OUT OF SCOPE)
 
-run-task has a Task Skeptic prompt but uses generic archetypes with no persona
-file assignments. Per stories.md Out of Scope: "run-task persona grounding
-requires a separate design." The task-skeptic prompt at line 274 is **excluded**
-from this feature.
+run-task has a Task Skeptic prompt but uses generic archetypes with no persona file assignments. Per stories.md Out of
+Scope: "run-task persona grounding requires a separate design." The task-skeptic prompt at line 274 is **excluded** from
+this feature.
 
 ### 1.5 Total Prompt Count
 
@@ -207,12 +198,10 @@ from this feature.
 | plan-hiring           | 5                 |
 | **Total**             | **33**            |
 
-Note: Lead personas (research-director, ideation-director, roadmap-manager,
-strategist variants, planning-lead, tech-lead, qa-lead, investor-update-lead,
-sales-lead, hiring-lead) are loaded in Setup steps via
-`Read plugins/conclave/shared/personas/{id}.md` — they are the Team Lead and
-their identity is already established by that read. No spawn prompt change
-needed for leads.
+Note: Lead personas (research-director, ideation-director, roadmap-manager, strategist variants, planning-lead,
+tech-lead, qa-lead, investor-update-lead, sales-lead, hiring-lead) are loaded in Setup steps via
+`Read plugins/conclave/shared/personas/{id}.md` — they are the Team Lead and their identity is already established by
+that read. No spawn prompt change needed for leads.
 
 ---
 
@@ -227,42 +216,38 @@ needed for leads.
 ```markdown
 ### Message Format
 
-Keep messages structured so they can be parsed quickly by context-constrained
-agents:
+Keep messages structured so they can be parsed quickly by context-constrained agents:
 ```
 
-[TYPE]: [BRIEF_SUBJECT] Details: [1-3 sentences max] Action needed: [yes/no, and
-what] Blocking: [task number if applicable]
-
-```
+[TYPE]: [BRIEF_SUBJECT] Details: [1-3 sentences max] Action needed: [yes/no, and what] Blocking: [task number if
+applicable]
 
 ```
 
-**Required change**: Add the sign-off convention as a prose sentence **before**
-the fenced code block (per Edge Case: the instruction is prose guidance, not
-inside the fenced block).
+```
+
+**Required change**: Add the sign-off convention as a prose sentence **before** the fenced code block (per Edge Case:
+the instruction is prose guidance, not inside the fenced block).
 
 **After**:
 
 ```markdown
 ### Message Format
 
-Keep messages structured so they can be parsed quickly by context-constrained
-agents:
+Keep messages structured so they can be parsed quickly by context-constrained agents:
 
 When addressing the user, sign messages with your persona name and title.
 ```
 
-[TYPE]: [BRIEF_SUBJECT] Details: [1-3 sentences max] Action needed: [yes/no, and
-what] Blocking: [task number if applicable]
+[TYPE]: [BRIEF_SUBJECT] Details: [1-3 sentences max] Action needed: [yes/no, and what] Blocking: [task number if
+applicable]
 
 ```
 
 ```
 
-**Exact insertion**: One blank line after the introductory sentence ("Keep
-messages structured..."), then the new instruction sentence, then one blank
-line, then the fenced code block — maintaining the existing paragraph rhythm.
+**Exact insertion**: One blank line after the introductory sentence ("Keep messages structured..."), then the new
+instruction sentence, then one blank line, then the fenced code block — maintaining the existing paragraph rhythm.
 
 ---
 
@@ -270,8 +255,7 @@ line, then the fenced code block — maintaining the existing paragraph rhythm.
 
 ### 3.1 Sync Script Substitution Analysis
 
-The sync script's substitution logic (lines 173–213 of
-`sync-shared-content.sh`):
+The sync script's substitution logic (lines 173–213 of `sync-shared-content.sh`):
 
 ```bash
 AUTH_SKEPTIC_SLUG="product-skeptic"    # line 173
@@ -283,19 +267,15 @@ target_slug="$(extract_skeptic_names)"
 target_protocol="$(printf '%s' "$target_protocol" | sed "s/$AUTH_SKEPTIC_SLUG/$target_slug/g")"
 ```
 
-The substitution uses `AUTH_SKEPTIC_SLUG` ("product-skeptic") as the **search
-pattern** in sed. It reads the authoritative source file (`$auth_protocol`) and
-replaces every occurrence of "product-skeptic" with the target skill's skeptic
-slug.
+The substitution uses `AUTH_SKEPTIC_SLUG` ("product-skeptic") as the **search pattern** in sed. It reads the
+authoritative source file (`$auth_protocol`) and replaces every occurrence of "product-skeptic" with the target skill's
+skeptic slug.
 
-**Implication**: If the source file is changed from "product-skeptic" to
-"{skill-skeptic}", the sed substitution on line 209 will search for
-"product-skeptic" and find nothing — substitution silently breaks. All 12
-SKILL.md files would receive "{skill-skeptic}" literally in their Protocol
-block, causing B2 drift.
+**Implication**: If the source file is changed from "product-skeptic" to "{skill-skeptic}", the sed substitution on line
+209 will search for "product-skeptic" and find nothing — substitution silently breaks. All 12 SKILL.md files would
+receive "{skill-skeptic}" literally in their Protocol block, causing B2 drift.
 
-**Required**: The sync script must be updated **in the same change** as the
-source file edit.
+**Required**: The sync script must be updated **in the same change** as the source file edit.
 
 ### 3.2 Required Changes
 
@@ -313,9 +293,8 @@ To:
 | Plan ready for review | `write({skill-skeptic}, "PLAN REVIEW REQUEST: [details or file path]")`     | {Skill Skeptic}     |<!-- substituted by sync-shared-content.sh per skill -->
 ```
 
-Note: Both the slug in `write(...)` AND the display name in the Target column
-must use the generic placeholder, since the sync script substitutes both
-independently (lines 209 and 212).
+Note: Both the slug in `write(...)` AND the display name in the Target column must use the generic placeholder, since
+the sync script substitutes both independently (lines 209 and 212).
 
 **File 2**: `scripts/sync-shared-content.sh`
 
@@ -333,31 +312,24 @@ AUTH_SKEPTIC_SLUG="{skill-skeptic}"
 AUTH_SKEPTIC_DISPLAY="{Skill Skeptic}"
 ```
 
-Also update line 97 (the default fallback in `extract_skeptic_names`) and line
-107 (the default `${slug:-...}` fallback) which currently default to
-"product-skeptic" / "Product Skeptic":
+Also update line 97 (the default fallback in `extract_skeptic_names`) and line 107 (the default `${slug:-...}` fallback)
+which currently default to "product-skeptic" / "Product Skeptic":
 
-Line 97 change: `echo "product-skeptic"` → `echo "{skill-skeptic}"` Line 98
-change: `echo "Product Skeptic"` → `echo "{Skill Skeptic}"` Line 107 change:
-`echo "${slug:-product-skeptic}"` → `echo "${slug:-{skill-skeptic}}"` Line 108
-change: `echo "${display:-Product Skeptic}"` →
-`echo "${display:-{Skill Skeptic}}"`
+Line 97 change: `echo "product-skeptic"` → `echo "{skill-skeptic}"` Line 98 change: `echo "Product Skeptic"` →
+`echo "{Skill Skeptic}"` Line 107 change: `echo "${slug:-product-skeptic}"` → `echo "${slug:-{skill-skeptic}}"` Line 108
+change: `echo "${display:-Product Skeptic}"` → `echo "${display:-{Skill Skeptic}}"`
 
-**Important**: The B2 normalizer in `skill-shared-content.sh` does NOT need
-changes. It normalizes all known skeptic slug variants to SKEPTIC_NAME for
-structural comparison. It does not match "{skill-skeptic}" — but that's correct:
-the source file uses the placeholder and SKILL.md files carry the substituted
-per-skill values. The B2 check compares SKILL.md blocks (which have the real
-slug) against the source (which has the placeholder). This would cause B2 drift
+**Important**: The B2 normalizer in `skill-shared-content.sh` does NOT need changes. It normalizes all known skeptic
+slug variants to SKEPTIC_NAME for structural comparison. It does not match "{skill-skeptic}" — but that's correct: the
+source file uses the placeholder and SKILL.md files carry the substituted per-skill values. The B2 check compares
+SKILL.md blocks (which have the real slug) against the source (which has the placeholder). This would cause B2 drift
 unless the normalizer is updated.
 
 **Additional required change**: `scripts/validators/skill-shared-content.sh`
 
-The B2 normalizer (`normalize_skeptic_names`) compares the source block against
-each SKILL.md block after normalizing both. After the change, the source
-contains `{skill-skeptic}` / `{Skill Skeptic}` and SKILL.md files contain the
-real per-skill slugs. The normalizer must also replace `{skill-skeptic}` and
-`{Skill Skeptic}` with SKEPTIC_NAME.
+The B2 normalizer (`normalize_skeptic_names`) compares the source block against each SKILL.md block after normalizing
+both. After the change, the source contains `{skill-skeptic}` / `{Skill Skeptic}` and SKILL.md files contain the real
+per-skill slugs. The normalizer must also replace `{skill-skeptic}` and `{Skill Skeptic}` with SKEPTIC_NAME.
 
 Add these two lines to `normalize_skeptic_names` in `skill-shared-content.sh`:
 
@@ -420,35 +392,26 @@ Step 6: bash scripts/validate.sh
 | `plugins/conclave/skills/plan-sales/SKILL.md`            | 5 spawn prompt identity lines + intro instructions                                                                                                  | 1, 2    |
 | `plugins/conclave/skills/plan-hiring/SKILL.md`           | 5 spawn prompt identity lines + intro instructions                                                                                                  | 1, 2    |
 
-**Note**: After `bash scripts/sync-shared-content.sh` (Step 5), all 12 SKILL.md
-files receive the updated Communication Protocol block. The sync overwrites the
-shared content sections only. Spawn prompt changes (Steps 1+2 edits to the 11
+**Note**: After `bash scripts/sync-shared-content.sh` (Step 5), all 12 SKILL.md files receive the updated Communication
+Protocol block. The sync overwrites the shared content sections only. Spawn prompt changes (Steps 1+2 edits to the 11
 SKILL.md files) are outside shared content markers and are not touched by sync.
 
 ---
 
 ## 6. Constraints — What Must NOT Change
 
-- **Shared content markers** (`<!-- BEGIN SHARED: principles -->`,
-  `<!-- END SHARED: principles -->`,
-  `<!-- BEGIN SHARED: communication-protocol -->`,
-  `<!-- END SHARED: communication-protocol -->`) must not be modified, moved, or
-  have content inserted between marker and authoritative source comment.
-- **Skill-specific sections** (`<!-- BEGIN SKILL-SPECIFIC: ... -->` /
-  `<!-- END SKILL-SPECIFIC: ... -->`) are untouched.
+- **Shared content markers** (`<!-- BEGIN SHARED: principles -->`, `<!-- END SHARED: principles -->`,
+  `<!-- BEGIN SHARED: communication-protocol -->`, `<!-- END SHARED: communication-protocol -->`) must not be modified,
+  moved, or have content inserted between marker and authoritative source comment.
+- **Skill-specific sections** (`<!-- BEGIN SKILL-SPECIFIC: ... -->` / `<!-- END SKILL-SPECIFIC: ... -->`) are untouched.
 - **YAML frontmatter** in any SKILL.md is untouched.
-- **Lead orchestration instructions** (Setup, Determine Mode, Spawn the Team,
-  Orchestration Flow, etc.) are untouched — only the content inside spawn prompt
-  fenced code blocks is modified.
-- **The `First, read ... persona ...` line** at the start of each spawn prompt
-  is untouched.
-- **The blank line** between the persona read line and the identity line is
-  untouched.
-- **B2 normalizer patterns** for existing skeptic names are untouched — only
-  additions, no removals.
+- **Lead orchestration instructions** (Setup, Determine Mode, Spawn the Team, Orchestration Flow, etc.) are untouched —
+  only the content inside spawn prompt fenced code blocks is modified.
+- **The `First, read ... persona ...` line** at the start of each spawn prompt is untouched.
+- **The blank line** between the persona read line and the identity line is untouched.
+- **B2 normalizer patterns** for existing skeptic names are untouched — only additions, no removals.
 - **run-task SKILL.md** is not touched (out of scope per stories.md).
-- **tier1-test, tier2-test, setup-project, wizard-guide, plan-product,
-  build-product** — no changes.
+- **tier1-test, tier2-test, setup-project, wizard-guide, plan-product, build-product** — no changes.
 
 ---
 
@@ -456,17 +419,15 @@ SKILL.md files) are outside shared content markers and are not touched by sync.
 
 After completing all steps:
 
-**V1**: Grep for the introduction instruction in all 12 multi-agent SKILL.md
-files:
+**V1**: Grep for the introduction instruction in all 12 multi-agent SKILL.md files:
 
 ```bash
 grep -l "When communicating with the user, introduce yourself by your name and title." \
   plugins/conclave/skills/*/SKILL.md
 ```
 
-Expected: 11 files (all Tier 1 multi-agent skills — not run-task, not
-tier1-test, not tier2-test, not setup-project, not wizard-guide, not
-plan-product, not build-product).
+Expected: 11 files (all Tier 1 multi-agent skills — not run-task, not tier1-test, not tier2-test, not setup-project, not
+wizard-guide, not plan-product, not build-product).
 
 **V2**: Verify no spawn prompt retains the old bare role line pattern:
 
@@ -474,8 +435,7 @@ plan-product, not build-product).
 grep -rn "^You are the .* on the .* Team\.$" plugins/conclave/skills/*/SKILL.md
 ```
 
-Expected: only `run-task/SKILL.md` (the out-of-scope task-skeptic prompt). Zero
-results from the 11 modified skills.
+Expected: only `run-task/SKILL.md` (the out-of-scope task-skeptic prompt). Zero results from the 11 modified skills.
 
 **V3**: Verify the sign-off convention is present in the authoritative source:
 
@@ -522,11 +482,10 @@ Expected: `quality-skeptic` (not `product-skeptic`, not `{skill-skeptic}`).
 
 ## 8. Open Questions / Pre-implementation Blockers
 
-None identified. All persona files have non-empty `fictional_name` and `title`
-fields (verified by reading all 44 persona files). The sync script substitution
-logic is fully understood. The validator impact is bounded and accounted for.
+None identified. All persona files have non-empty `fictional_name` and `title` fields (verified by reading all 44
+persona files). The sync script substitution logic is fully understood. The validator impact is bounded and accounted
+for.
 
-The only risk: the `{` and `}` characters in `{skill-skeptic}` are not special
-in sed but could theoretically collide with existing content. A grep confirms no
-existing SKILL.md content uses curly-brace placeholders in the Communication
+The only risk: the `{` and `}` characters in `{skill-skeptic}` are not special in sed but could theoretically collide
+with existing content. A grep confirms no existing SKILL.md content uses curly-brace placeholders in the Communication
 Protocol block, so there is no collision risk.

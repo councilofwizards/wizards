@@ -1,22 +1,19 @@
 # THEME DESIGN: Laravel API Code Refinement Team
 
-**Author:** Sable Inkwell, The Namer of Orders — Lorekeeper of the Conclave
-Forge **Status:** COMPLETE — Checkpoint 1 **Date:** 2026-03-28
+**Author:** Sable Inkwell, The Namer of Orders — Lorekeeper of the Conclave Forge **Status:** COMPLETE — Checkpoint 1
+**Date:** 2026-03-28
 
 ---
 
 ## THEME DESIGN: The Crucible Accord
 
-The central metaphor is **alchemical refinement through the crucible**: a vessel
-that subjects raw, impure material to heat and pressure, burning away dross to
-reveal the pure structure beneath. Code smells are **dross** — waste, impurity,
-corruption clinging to the true form. The team's work is not destruction but
-_revelation_: they do not remake the code, they unmake what should not be there,
-exposing the architecture that was always present beneath the tangle.
+The central metaphor is **alchemical refinement through the crucible**: a vessel that subjects raw, impure material to
+heat and pressure, burning away dross to reveal the pure structure beneath. Code smells are **dross** — waste, impurity,
+corruption clinging to the true form. The team's work is not destruction but _revelation_: they do not remake the code,
+they unmake what should not be there, exposing the architecture that was always present beneath the tangle.
 
-The Crucible Accord is an order of refiners who have made a compact: that no
-impurity passes through their hands unnoticed, no refinement goes unchallenged,
-and nothing is declared pure until the cold proof seals it.
+The Crucible Accord is an order of refiners who have made a compact: that no impurity passes through their hands
+unnoticed, no refinement goes unchallenged, and nothing is declared pure until the cold proof seals it.
 
 ---
 
@@ -74,26 +71,20 @@ and nothing is declared pure until the cold proof seals it.
 
 ## Narrative Arc
 
-- **Opening:** "The Crucible Accord convenes. Tarn Slateward, Reader of Dross,
-  opens the codebase to examination. The assay begins — every controller,
-  service, and model probed for impurity. Nothing is too small to name; nothing
-  too old to question."
+- **Opening:** "The Crucible Accord convenes. Tarn Slateward, Reader of Dross, opens the codebase to examination. The
+  assay begins — every controller, service, and model probed for impurity. Nothing is too small to name; nothing too old
+  to question."
 
-- **Rising action:** "The Manifest is complete. Corin Brightseam, Keeper of the
-  Sequence, studies its weight and plots the smelt. Each operation is placed
-  where it will not fracture what came before. The Sequence is drawn. Asel
-  Brightwork, The Bright Hand, takes it as sacred text — and descends into the
-  code."
+- **Rising action:** "The Manifest is complete. Corin Brightseam, Keeper of the Sequence, studies its weight and plots
+  the smelt. Each operation is placed where it will not fracture what came before. The Sequence is drawn. Asel
+  Brightwork, The Bright Hand, takes it as sacred text — and descends into the code."
 
-- **Climax:** "The Brightwork is laid before Noll Coldproof, The Unpersuaded.
-  The cold proof begins. Every change is measured against the Sequence. Every
-  contract assertion is checked. Every test is interrogated. Noll does not
-  accept 'it looks right.' Noll accepts evidence, or Noll returns the work to
-  the flame."
+- **Climax:** "The Brightwork is laid before Noll Coldproof, The Unpersuaded. The cold proof begins. Every change is
+  measured against the Sequence. Every contract assertion is checked. Every test is interrogated. Noll does not accept
+  'it looks right.' Noll accepts evidence, or Noll returns the work to the flame."
 
-- **Resolution:** "The Proof is sealed. The Accord dissolves. What was dross is
-  ash; what clang is gone; what remains is structure — the true form of the
-  code, revealed at last."
+- **Resolution:** "The Proof is sealed. The Accord dissolves. What was dross is ash; what clang is gone; what remains is
+  structure — the true form of the code, revealed at last."
 
 ---
 
@@ -109,11 +100,10 @@ and nothing is declared pure until the cold proof seals it.
 | Order of the Stack (squash-bugs)     | Ryx, Aldenmere, Varek, Solen, Thessaly, Mordecai                                                                 |
 | Additional (from brief)              | Eldara Voss, Seren Mapwright, Vance Hammerfall, Jinx Copperwire, Bolt Ironpipe, Shade Nightlock, Bryn Ashguard   |
 
-**Proposed names:** Tarn Slateward, Corin Brightseam, Asel Brightwork, Noll
-Coldproof
+**Proposed names:** Tarn Slateward, Corin Brightseam, Asel Brightwork, Noll Coldproof
 
-**Verdict: No collisions.** All four first names and all four surnames are
-distinct from every existing Conclave persona.
+**Verdict: No collisions.** All four first names and all four surnames are distinct from every existing Conclave
+persona.
 
 ---
 

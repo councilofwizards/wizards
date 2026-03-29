@@ -4,9 +4,7 @@ team: "plan-product"
 agent: "architect"
 phase: "complete"
 status: "complete"
-last_action:
-  "Completed deep technical architecture assessment for review cycle 5 with
-  validator testing"
+last_action: "Completed deep technical architecture assessment for review cycle 5 with validator testing"
 updated: "2026-02-19"
 ---
 
@@ -24,17 +22,14 @@ updated: "2026-02-19"
 
 ### Architectural Debt Items
 
-1. **ADR-001 status never formalized.** Body says "Proposed" but it is the de
-   facto standard. Should be "Accepted" with frontmatter matching ADR-002/003
-   format.
+1. **ADR-001 status never formalized.** Body says "Proposed" but it is the de facto standard. Should be "Accepted" with
+   frontmatter matching ADR-002/003 format.
 
-2. **ADR-002 8-skill trigger approaching.** Currently 5 skills. With plan-sales
-   = 6. Two more additions hit 8 and trigger shared content extraction. Pre-plan
-   the extraction strategy at 7 to avoid reactive architecture.
+2. **ADR-002 8-skill trigger approaching.** Currently 5 skills. With plan-sales = 6. Two more additions hit 8 and
+   trigger shared content extraction. Pre-plan the extraction strategy at 7 to avoid reactive architecture.
 
-3. **Roadmap data integrity debt persists.** `_index.md` lists 31 items; only 17
-   have individual `.md` files. The roadmap validator covers only ~55% of items.
-   RC4 flagged this; still unresolved.
+3. **Roadmap data integrity debt persists.** `_index.md` lists 31 items; only 17 have individual `.md` files. The
+   roadmap validator covers only ~55% of items. RC4 flagged this; still unresolved.
 
 ### Architecture Documents — All 9 are healthy. No revisions needed.
 
@@ -52,23 +47,18 @@ updated: "2026-02-19"
 
 ### FLAKY VALIDATOR — skill-structure.sh (HIGHEST PRIORITY)
 
-**Root cause identified**: The A2 section check loads entire file content into a
-shell variable via `file_content="$(cat "$filepath")"`, then searches via
-`printf '%s\n' "$file_content" | grep -qF "$section"`. For files exceeding ~30KB
-(draft-investor-update is 35KB), `printf` intermittently truncates the shell
-variable argument.
+**Root cause identified**: The A2 section check loads entire file content into a shell variable via
+`file_content="$(cat "$filepath")"`, then searches via `printf '%s\n' "$file_content" | grep -qF "$section"`. For files
+exceeding ~30KB (draft-investor-update is 35KB), `printf` intermittently truncates the shell variable argument.
 
-**Evidence**: Ran the validator 3 times consecutively. Run 1: PASS. Run 2: FAIL
-(draft-investor-update missing "## Orchestration Flow" — confirmed present in
-file). Run 3: PASS.
+**Evidence**: Ran the validator 3 times consecutively. Run 1: PASS. Run 2: FAIL (draft-investor-update missing "##
+Orchestration Flow" — confirmed present in file). Run 3: PASS.
 
-**Fix**: Replace `printf '%s\n' "$file_content" | grep -qF "$section"` with
-`grep -qF "$section" "$filepath"` — grep directly on the file, eliminating the
-shell variable intermediary. This is a 1-line change per occurrence in the loop.
+**Fix**: Replace `printf '%s\n' "$file_content" | grep -qF "$section"` with `grep -qF "$section" "$filepath"` — grep
+directly on the file, eliminating the shell variable intermediary. This is a 1-line change per occurrence in the loop.
 
-**Severity**: HIGH. Flaky CI erodes trust and blocks builds unpredictably. As
-SKILL.md files grow (business skills tend to be larger due to output templates),
-this will become more frequent.
+**Severity**: HIGH. Flaky CI erodes trust and blocks builds unpredictably. As SKILL.md files grow (business skills tend
+to be larger due to output templates), this will become more frequent.
 
 ### FAILING — roadmap-frontmatter.sh (4 errors)
 
@@ -77,31 +67,25 @@ Files with wrong effort values:
 - `P2-07-universal-principles.md`: `effort: "Medium"` (should be `"medium"`)
 - `P2-08-plugin-organization.md`: `effort: "Medium"` (should be `"medium"`)
 - `P3-10-plan-sales.md`: `effort: "Medium"` (should be `"medium"`)
-- `P3-22-draft-investor-update.md`: `effort: "Small-Medium"` (not a valid enum;
-  should be `"medium"`)
+- `P3-22-draft-investor-update.md`: `effort: "Small-Medium"` (not a valid enum; should be `"medium"`)
 
-These files were all created during RC4. The validator correctly enforces
-lowercase per ADR-001; the data is wrong.
+These files were all created during RC4. The validator correctly enforces lowercase per ADR-001; the data is wrong.
 
 ### FAILING — progress-checkpoint.sh (1 error)
 
-`investor-update-backend-eng.md` has `team: "draft-investor-update"` but the
-validator's `VALID_TEAMS` enum only contains
-`plan-product | build-product | review-quality`. The enum was not updated when
-the investor-update skill was added.
+`investor-update-backend-eng.md` has `team: "draft-investor-update"` but the validator's `VALID_TEAMS` enum only
+contains `plan-product | build-product | review-quality`. The enum was not updated when the investor-update skill was
+added.
 
-**Structural issue**: The hard-coded team enum must be updated every time a new
-skill is added. This should be dynamically derived from the skill directory
-listing, or the enum should accept any non-empty string and validate that a
+**Structural issue**: The hard-coded team enum must be updated every time a new skill is added. This should be
+dynamically derived from the skill directory listing, or the enum should accept any non-empty string and validate that a
 matching skill directory exists.
 
 ### Validator Gaps
 
-1. **No validator for architecture documents.** 9 documents and growing. No
-   structural checks.
-2. **skill-shared-content.sh normalize function** needs `strategy-skeptic` /
-   `Strategy Skeptic` before plan-sales implementation (already documented in
-   plan-sales system design).
+1. **No validator for architecture documents.** 9 documents and growing. No structural checks.
+2. **skill-shared-content.sh normalize function** needs `strategy-skeptic` / `Strategy Skeptic` before plan-sales
+   implementation (already documented in plan-sales system design).
 
 ## 3. Technical Dependencies
 
@@ -113,37 +97,29 @@ P3-10 (plan-sales) ─── unblocks ──→ P2-08 (Plugin Organization: 2nd 
                    ─── validates ─→ Collaborative Analysis (3rd consensus pattern)
 ```
 
-P2-02 (Skill Composability) remains indefinitely blocked by platform
-limitations.
+P2-02 (Skill Composability) remains indefinitely blocked by platform limitations.
 
 ### What Unlocks Most Value
 
-1. **P3-10 (plan-sales)**: Unblocks P2-08, validates Collaborative Analysis,
-   advances P2-07 to 6/8.
-2. **P3-03 (Contribution Guide)**: Small effort, no blockers, useful for
-   onboarding.
-3. **P3-16 (build-sales-collateral)**: Natural follow-up to P3-10 (uses its
-   output).
+1. **P3-10 (plan-sales)**: Unblocks P2-08, validates Collaborative Analysis, advances P2-07 to 6/8.
+2. **P3-03 (Contribution Guide)**: Small effort, no blockers, useful for onboarding.
+3. **P3-16 (build-sales-collateral)**: Natural follow-up to P3-10 (uses its output).
 
 ## 4. Framework Evolution
 
-At 5 skills (+ plan-sales incoming), the marker-based shared content system
-(ADR-002) is working well. No premature extraction needed.
+At 5 skills (+ plan-sales incoming), the marker-based shared content system (ADR-002) is working well. No premature
+extraction needed.
 
-**Mature patterns** (stable across 4+ skills): Shared Principles, Communication
-Protocol, Checkpoint Protocol, Write Safety, Failure Recovery. All managed by
-existing markers/validators.
+**Mature patterns** (stable across 4+ skills): Shared Principles, Communication Protocol, Checkpoint Protocol, Write
+Safety, Failure Recovery. All managed by existing markers/validators.
 
-**Emerging patterns** (1-2 implementations): Dual-skeptic gate, Pipeline,
-Business quality sections. Too early to extract.
+**Emerging patterns** (1-2 implementations): Dual-skeptic gate, Pipeline, Business quality sections. Too early to
+extract.
 
-**Not yet validated**: Collaborative Analysis (plan-sales will be first).
-Structured Debate (no implementations yet).
+**Not yet validated**: Collaborative Analysis (plan-sales will be first). Structured Debate (no implementations yet).
 
-**Emerging concern**: Skill-specific output directories
-(`docs/investor-updates/`, `docs/sales-plans/`, etc.) will proliferate as
-business skills are added. Consider standardizing a naming convention when 3+
-custom directories exist.
+**Emerging concern**: Skill-specific output directories (`docs/investor-updates/`, `docs/sales-plans/`, etc.) will
+proliferate as business skills are added. Consider standardizing a naming convention when 3+ custom directories exist.
 
 ## 5. Next Spec Candidate (Post plan-sales)
 
@@ -153,9 +129,8 @@ custom directories exist.
 | P3-14 plan-hiring                | Structured Debate (new)        | Medium | 7/8   | Validates final unvalidated pattern                |
 | P3-11 plan-marketing             | Collaborative Analysis (reuse) | Low    | 7/8   | Confirms CA pattern                                |
 
-**Technical recommendation**: P3-16 (build-sales-collateral) — best ratio of
-new-value to new-risk. Reuses proven Pipeline pattern, takes P3-10 output as
-input (validates skill output chaining), and counts toward P2-07 threshold.
+**Technical recommendation**: P3-16 (build-sales-collateral) — best ratio of new-value to new-risk. Reuses proven
+Pipeline pattern, takes P3-10 output as input (validates skill output chaining), and counts toward P2-07 threshold.
 P3-14 is the stronger pattern-validation choice but carries higher risk.
 
 ## Summary of Recommendations

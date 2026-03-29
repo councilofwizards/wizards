@@ -1,8 +1,8 @@
 ---
 name: tier1-test
 description: >
-  Phase 0 PoC: Minimal Tier 1 skill that produces a test artifact. Used to
-  validate Tier 2 -> Tier 1 invocation via the Skill tool.
+  Phase 0 PoC: Minimal Tier 1 skill that produces a test artifact. Used to validate Tier 2 -> Tier 1 invocation via the
+  Skill tool.
 argument-hint: "[text to pass through]"
 tier: 1
 type: single-agent
@@ -25,8 +25,7 @@ Always run in default mode. Ignore any mode flags.
 ## Instructions
 
 1. Note the current timestamp.
-2. Write a test artifact to `docs/research/poc-tier1-output.md` with the
-   following content:
+2. Write a test artifact to `docs/research/poc-tier1-output.md` with the following content:
 
 ```markdown
 ---

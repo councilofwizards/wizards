@@ -14,17 +14,14 @@ author: sable-inkwell
 
 ## Central Metaphor
 
-A PR arrives as a case brought before a judicial tribunal. The Lead is the
-presiding judge who assembles the evidence dossier and delivers the final
-ruling. Nine specialist examiners convene in parallel — each an expert witness
-in their domain — presenting independent testimonies. The Scrutineer is the
-court's most rigorous law clerk, cross-examining every testimony for false
-evidence and surfacing the cross-cutting concerns no single examiner could see
-alone. The verdict: APPROVE, REVISE, or REJECT.
+A PR arrives as a case brought before a judicial tribunal. The Lead is the presiding judge who assembles the evidence
+dossier and delivers the final ruling. Nine specialist examiners convene in parallel — each an expert witness in their
+domain — presenting independent testimonies. The Scrutineer is the court's most rigorous law clerk, cross-examining
+every testimony for false evidence and surfacing the cross-cutting concerns no single examiner could see alone. The
+verdict: APPROVE, REVISE, or REJECT.
 
-The PR is not "under attack." It is "under examination." The metaphor is
-adversarial in the productive sense — a fair hearing where every angle is tested
-by a named specialist who must produce evidence, not opinion.
+The PR is not "under attack." It is "under examination." The metaphor is adversarial in the productive sense — a fair
+hearing where every angle is tested by a named specialist who must produce evidence, not opinion.
 
 ---
 
@@ -34,22 +31,16 @@ by a named specialist who must produce evidence, not opinion.
 
 Candidates considered:
 
-1. `review-pr` — verb-noun, perfectly clear, follows existing patterns. The
-   Architect's working name.
+1. `review-pr` — verb-noun, perfectly clear, follows existing patterns. The Architect's working name.
 2. `examine-pr` — more evocative of scrutiny, but less immediately obvious.
-3. `adjudicate-pr` — rich judicial flavor, but too long and obscures the input
-   type.
-4. `audit-pr` — strong, but "audit" has security connotations from
-   `harden-security`.
-5. `judge-pr` — evocative but sounds harsh; implies rejection before review
-   begins.
+3. `adjudicate-pr` — rich judicial flavor, but too long and obscures the input type.
+4. `audit-pr` — strong, but "audit" has security connotations from `harden-security`.
+5. `judge-pr` — evocative but sounds harsh; implies rejection before review begins.
 6. `vet-pr` — clear and casual, but too informal for a 10-agent tribunal.
-7. `inquest-pr` — interesting, but "inquest" implies something went wrong (a
-   death inquiry).
+7. `inquest-pr` — interesting, but "inquest" implies something went wrong (a death inquiry).
 
-**Rationale:** `review-pr` wins on the clarity principle. Someone who has never
-used Conclave knows exactly what this skill does. Fantasy lives in the team name
-and persona layer.
+**Rationale:** `review-pr` wins on the clarity principle. Someone who has never used Conclave knows exactly what this
+skill does. Fantasy lives in the team name and persona layer.
 
 ---
 
@@ -57,12 +48,10 @@ and persona layer.
 
 **Display Name:** The Tribunal **Slug:** `the-tribunal`
 
-**Rationale:** The Architect proposed "The Tribunal" and it earns its keep. A
-tribunal is a body of examiners empowered to hear evidence and issue binding
-judgments. The word carries institutional weight without obscuring the team's
-function. "The Bench of Nine" was considered but masks the Lead and Scrutineer
-from the count. "The Order of Verdicts" was considered but feels generic. The
-Tribunal is specific — it names both the structure (a seated body of judges) and
+**Rationale:** The Architect proposed "The Tribunal" and it earns its keep. A tribunal is a body of examiners empowered
+to hear evidence and issue binding judgments. The word carries institutional weight without obscuring the team's
+function. "The Bench of Nine" was considered but masks the Lead and Scrutineer from the count. "The Order of Verdicts"
+was considered but feels generic. The Tribunal is specific — it names both the structure (a seated body of judges) and
 the act (deliberation toward judgment).
 
 ---
@@ -83,9 +72,8 @@ the act (deliberation toward judgment).
 | Illuminator (readability)    | Lyra Clearpen   | The Illuminator     | Reads the code as a future maintainer would, flagging every name that misleads and every function that demands a second read                |
 | Scrutineer (skeptic)         | Gaveth Redseal  | The Scrutineer      | Cross-examines all nine testimonies for false evidence, severity inflation, and the cross-cutting issues that fell between the specialists  |
 
-**Lead naming note:** The Lead is the skill orchestrator (no spawn entry) but
-receives a persona name and title so the Scribe can write them as a character in
-the narrative arc.
+**Lead naming note:** The Lead is the skill orchestrator (no spawn entry) but receives a persona name and title so the
+Scribe can write them as a character in the narrative arc.
 
 ---
 
@@ -113,28 +101,24 @@ the narrative arc.
 
 **Opening (Intake — Phase 1):**
 
-> "The case is called. [PR identifier] stands before the Tribunal. Maren Gavell,
-> The Presiding Judge, assembles the Brief — gathering the diff, the changed
-> files, the linked specs and stories — and calls the Tribunal to order."
+> "The case is called. [PR identifier] stands before the Tribunal. Maren Gavell, The Presiding Judge, assembles the
+> Brief — gathering the diff, the changed files, the linked specs and stories — and calls the Tribunal to order."
 
 **Rising Action (Dossier Gate + Review — Phases 1.5 and 2):**
 
-> "Gaveth Redseal certifies the Brief. The evidence is sufficient. The nine
-> examiners convene in parallel — each takes their station and examines the same
-> Brief through their singular lens. Testimonies accumulate."
+> "Gaveth Redseal certifies the Brief. The evidence is sufficient. The nine examiners convene in parallel — each takes
+> their station and examines the same Brief through their singular lens. Testimonies accumulate."
 
 **Climax (Adjudication — Phase 3):**
 
-> "All nine Testimonies arrive. The Scrutineer rises. Each Article is weighed —
-> evidence demanded, severity calibrated. Articles lacking proof are struck from
-> the record. Cross-cutting concerns that fell between the specialists are named
+> "All nine Testimonies arrive. The Scrutineer rises. Each Article is weighed — evidence demanded, severity calibrated.
+> Articles lacking proof are struck from the record. Cross-cutting concerns that fell between the specialists are named
 > and elevated."
 
 **Resolution (Synthesis — Phase 4):**
 
-> "The Tribunal's ruling is issued. Maren Gavell reads the Adjudication Report
-> and delivers the verdict: [APPROVE / REVISE / REJECT]. The executive summary
-> is read, the findings are catalogued by weight, and the case is closed — or
+> "The Tribunal's ruling is issued. Maren Gavell reads the Adjudication Report and delivers the verdict: [APPROVE / >
+> REVISE / REJECT]. The executive summary is read, the findings are catalogued by weight, and the case is closed — or
 > sent back for revision."
 
 ---
@@ -143,41 +127,32 @@ the narrative arc.
 
 Checked against all existing Conclave persona names:
 
-**squash-bugs (Order of the Stack):** Scout, Sage, Inquisitor, Artificer,
-Warden, First (Skeptic) **review-quality:** QA Lead, Test Engineer, DevOps
-Engineer, Security Auditor, Ops Skeptic **refine-code (The Crucible Accord):**
-Crucible Lead, Surveyor, Strategist, Artisan, Refine Skeptic **harden-security
-(The Wardbound):** Castellan (Vael Rampart), Threat Modeler, Vuln Hunter,
-Remediation Engineer, Assayer **craft-laravel (The Atelier):** Atelier Lead,
-Analyst, Architect, Implementer, Tester, Convention Warden
-**unearth-specification (The Stratum Company):** Cartographer, Logic Excavator,
-Schema Excavator, Boundary Excavator, Chronicler, Assayer
+**squash-bugs (Order of the Stack):** Scout, Sage, Inquisitor, Artificer, Warden, First (Skeptic) **review-quality:** QA
+Lead, Test Engineer, DevOps Engineer, Security Auditor, Ops Skeptic **refine-code (The Crucible Accord):** Crucible
+Lead, Surveyor, Strategist, Artisan, Refine Skeptic **harden-security (The Wardbound):** Castellan (Vael Rampart),
+Threat Modeler, Vuln Hunter, Remediation Engineer, Assayer **craft-laravel (The Atelier):** Atelier Lead, Analyst,
+Architect, Implementer, Tester, Convention Warden **unearth-specification (The Stratum Company):** Cartographer, Logic
+Excavator, Schema Excavator, Boundary Excavator, Chronicler, Assayer
 
-**Tribunal personas:** Maren Gavell, Vex Thornwall, Nim Codex, Oryn Truecast,
-Keld Framestone, Zara Cuttack, Tev Ironmark, Brix Deepvault, Pip Bindstone, Lyra
-Clearpen, Gaveth Redseal
+**Tribunal personas:** Maren Gavell, Vex Thornwall, Nim Codex, Oryn Truecast, Keld Framestone, Zara Cuttack, Tev
+Ironmark, Brix Deepvault, Pip Bindstone, Lyra Clearpen, Gaveth Redseal
 
-**Result: No collisions.** None of the Tribunal's persona names (first name,
-surname, or title) duplicate any existing Conclave persona. The titles
-(Sentinel, Lexicant, Arbiter, Structuralist, Swiftblade, Prover, Delver,
-Chandler, Illuminator, Scrutineer) are the Architect's working names — carried
-forward and confirmed as unique to this team.
+**Result: No collisions.** None of the Tribunal's persona names (first name, surname, or title) duplicate any existing
+Conclave persona. The titles (Sentinel, Lexicant, Arbiter, Structuralist, Swiftblade, Prover, Delver, Chandler,
+Illuminator, Scrutineer) are the Architect's working names — carried forward and confirmed as unique to this team.
 
 ---
 
 ## Implementation Notes for the Scribe
 
-**Skeptic ID for B2 normalizer:** The Scrutineer's communication protocol line
-reads: `write(scrutineer, "PLAN REVIEW REQUEST: ...")` → Scrutineer / The
-Scrutineer
+**Skeptic ID for B2 normalizer:** The Scrutineer's communication protocol line reads:
+`write(scrutineer, "PLAN REVIEW REQUEST: ...")` → Scrutineer / The Scrutineer
 
-This pair must be added to the B2 normalizer's 18-entry table in
-`scripts/validators/skill-shared-content.sh` and to the substitution map in
-`scripts/sync-shared-content.sh` when the SKILL.md is created.
+This pair must be added to the B2 normalizer's 18-entry table in `scripts/validators/skill-shared-content.sh` and to the
+substitution map in `scripts/sync-shared-content.sh` when the SKILL.md is created.
 
 **team_name parameter:** `the-tribunal`
 
-**Persona file paths (if created):**
-`plugins/conclave/shared/personas/presiding-judge.md`, `sentinel.md`,
-`lexicant.md`, `arbiter.md`, `structuralist.md`, `swiftblade.md`, `prover.md`,
-`delver.md`, `chandler.md`, `illuminator.md`, `scrutineer.md`
+**Persona file paths (if created):** `plugins/conclave/shared/personas/presiding-judge.md`, `sentinel.md`,
+`lexicant.md`, `arbiter.md`, `structuralist.md`, `swiftblade.md`, `prover.md`, `delver.md`, `chandler.md`,
+`illuminator.md`, `scrutineer.md`

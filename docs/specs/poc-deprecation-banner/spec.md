@@ -12,17 +12,15 @@ updated: "2026-03-27"
 
 ## Summary
 
-Add a `status: internal` frontmatter field and a visible deprecation banner to
-`tier1-test/SKILL.md` so the PoC test skill is immediately identifiable as
-non-production internal scaffolding. Two-line edit to one file. `tier2-test` was
+Add a `status: internal` frontmatter field and a visible deprecation banner to `tier1-test/SKILL.md` so the PoC test
+skill is immediately identifiable as non-production internal scaffolding. Two-line edit to one file. `tier2-test` was
 removed and is not in scope.
 
 ## Problem
 
-`tier1-test` is a Phase 0 PoC skill that appears alongside production skills in
-skill discovery. Its description mentions "PoC" and "test artifact" but gives no
-explicit warning that it's internal scaffolding. A user browsing available
-skills might invoke it expecting useful output.
+`tier1-test` is a Phase 0 PoC skill that appears alongside production skills in skill discovery. Its description
+mentions "PoC" and "test artifact" but gives no explicit warning that it's internal scaffolding. A user browsing
+available skills might invoke it expecting useful output.
 
 ## Solution
 
@@ -34,28 +32,25 @@ Add to `plugins/conclave/skills/tier1-test/SKILL.md` frontmatter:
 status: internal
 ```
 
-This field is not currently required or validated by A1. It serves as a
-machine-readable signal for future discovery filtering and as documentation for
-contributors.
+This field is not currently required or validated by A1. It serves as a machine-readable signal for future discovery
+filtering and as documentation for contributors.
 
 ### Banner Addition
 
-Add immediately after the frontmatter closing `---`, before any existing
-content:
+Add immediately after the frontmatter closing `---`, before any existing content:
 
 ```markdown
-> **INTERNAL SKILL**: This is internal test scaffolding used for PoC validation.
-> It is not intended for end-user invocation and produces no meaningful output.
+> **INTERNAL SKILL**: This is internal test scaffolding used for PoC validation. It is not intended for end-user
+> invocation and produces no meaningful output.
 ```
 
 ### Validator Compatibility
 
-- A1 checks required fields (`name`, `description`, `argument-hint`, `category`)
-  and validates specific field values (`tier`, `category`). It does not validate
-  `status` as a field. Adding `status: internal` will not trigger any failure.
-- If a future validator adds `status` value enforcement, `internal` should be
-  included as an allowed value. The implementer should check for pending
-  validator work that might conflict.
+- A1 checks required fields (`name`, `description`, `argument-hint`, `category`) and validates specific field values
+  (`tier`, `category`). It does not validate `status` as a field. Adding `status: internal` will not trigger any
+  failure.
+- If a future validator adds `status` value enforcement, `internal` should be included as an allowed value. The
+  implementer should check for pending validator work that might conflict.
 
 ## Constraints
 

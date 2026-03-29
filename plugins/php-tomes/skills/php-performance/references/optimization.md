@@ -76,8 +76,7 @@ opcache.preload=/var/www/html/preload.php
 opcache.preload_user=www-data
 ```
 
-Laravel: `php artisan optimize` generates a preload file. Run during container
-builds.
+Laravel: `php artisan optimize` generates a preload file. Run during container builds.
 
 ## Database Optimization Patterns
 
@@ -94,8 +93,7 @@ builds.
 
 - Leftmost prefix rule: `(a, b, c)` supports `(a)`, `(a, b)`, `(a, b, c)`
 - Place equality columns first, range/sort columns last
-- Covering indexes include all SELECT columns, eliminating row lookups (30-70%
-  faster)
+- Covering indexes include all SELECT columns, eliminating row lookups (30-70% faster)
 
 ### Eager Loading Patterns
 
@@ -199,8 +197,7 @@ zend.gc_threshold=10000         ; Higher = less frequent GC, higher peak memory
 max_children = floor(available_memory / avg_worker_memory)
 ```
 
-Typical Laravel worker: 30-60 MB. Measure with:
-`ps -o rss= -p $(pgrep -d, php-fpm)`
+Typical Laravel worker: 30-60 MB. Measure with: `ps -o rss= -p $(pgrep -d, php-fpm)`
 
 ### Key Settings
 

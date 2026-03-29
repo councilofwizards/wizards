@@ -10,8 +10,7 @@ updated: "2026-03-27"
 
 ## Progress Notes
 
-- Wrote spec for P3-01 Custom Agent Roles →
-  docs/specs/custom-agent-roles/spec.md
+- Wrote spec for P3-01 Custom Agent Roles → docs/specs/custom-agent-roles/spec.md
 - Wrote spec for P3-04 Incident Triage → docs/specs/triage-incident/spec.md
 - Wrote spec for P3-05 Tech Debt Review → docs/specs/review-debt/spec.md
 - Wrote spec for P3-06 API Design → docs/specs/design-api/spec.md
@@ -30,10 +29,7 @@ updated: "2026-03-27"
 ## Cross-Cutting Patterns
 
 - All 4 new skills: engineering classification in both sync + validation scripts
-- All 4 new skills: new skeptic name pairs in B2 normalizer (8 new sed entries
-  total)
+- All 4 new skills: new skeptic name pairs in B2 normalizer (8 new sed entries total)
 - All 4 new skills: new persona files for each agent
-- Only plan-migration requires a new artifact template (registered in F-series
-  validator)
-- Only custom-agent-roles modifies existing SKILL.md files (all 14 multi-agent
-  skills)
+- Only plan-migration requires a new artifact template (registered in F-series validator)
+- Only custom-agent-roles modifies existing SKILL.md files (all 14 multi-agent skills)

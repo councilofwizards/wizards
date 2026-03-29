@@ -14,59 +14,47 @@ updated: "2026-03-27"
 
 ## Problem
 
-All skills currently live in a single `conclave` plugin. As the skill count
-grows (17 today, 27+ at P3 completion) and diversifies across engineering and
-business domains, users need better taxonomy and discovery. Research confirms a
-domain split is premature at current scale (3 business skills) but will become
-necessary when business skills reach 7-10. The right move now is internal
-reorganization that enables a clean split later.
+All skills currently live in a single `conclave` plugin. As the skill count grows (17 today, 27+ at P3 completion) and
+diversifies across engineering and business domains, users need better taxonomy and discovery. Research confirms a
+domain split is premature at current scale (3 business skills) but will become necessary when business skills reach
+7-10. The right move now is internal reorganization that enables a clean split later.
 
 ## Research Findings
 
-- **Primary user segment** (technical founders) uses both domains — a split
-  increases their friction
-- **Shared content coupling** (sync scripts, validators, personas) makes
-  splitting expensive today
-- **Business domain too small** (3 skills) to justify split overhead; threshold
-  estimated at 7-10
-- **Option 3 (internal reorg) dominates** at current scale: zero infrastructure
-  risk, enables clean split later
+- **Primary user segment** (technical founders) uses both domains — a split increases their friction
+- **Shared content coupling** (sync scripts, validators, personas) makes splitting expensive today
+- **Business domain too small** (3 skills) to justify split overhead; threshold estimated at 7-10
+- **Option 3 (internal reorg) dominates** at current scale: zero infrastructure risk, enables clean split later
 
-See: `docs/research/plugin-organization-research.md`,
-`docs/ideas/plugin-organization-ideas.md`
+See: `docs/research/plugin-organization-research.md`, `docs/ideas/plugin-organization-ideas.md`
 
 ## Solution — 4 Sub-tasks
 
 ### Sub-task 1: Category Metadata + Skill Discovery Tags (batch with wizard-guide updates)
 
-Add `category` and `tags` fields to SKILL.md frontmatter and plugin.json
-manifest. Update wizard-guide with progressive disclosure (role-gated opening
-prompt for Technical Founder / Engineering Team / Founder-Operator).
+Add `category` and `tags` fields to SKILL.md frontmatter and plugin.json manifest. Update wizard-guide with progressive
+disclosure (role-gated opening prompt for Technical Founder / Engineering Team / Founder-Operator).
 
 ### Sub-task 2: Split Readiness ADR (ADR-005) + Automated Gate
 
-Write ADR-005 documenting the 7-10 business skill threshold, prerequisites for a
-domain split (parameterized infra + persona extraction), and trigger conditions.
-Add bash validator that emits WARN when threshold is crossed.
+Write ADR-005 documenting the 7-10 business skill threshold, prerequisites for a domain split (parameterized infra +
+persona extraction), and trigger conditions. Add bash validator that emits WARN when threshold is crossed.
 
 ### Sub-task 3: Parameterized Shared Content Infrastructure
 
-Refactor `SHARED_DIR` hardcodes in `scripts/sync-shared-content.sh` and
-`scripts/validators/skill-shared-content.sh` to accept env var or CLI argument.
-~20 lines of bash. Removes primary technical blocker.
+Refactor `SHARED_DIR` hardcodes in `scripts/sync-shared-content.sh` and `scripts/validators/skill-shared-content.sh` to
+accept env var or CLI argument. ~20 lines of bash. Removes primary technical blocker.
 
 ### Sub-task 4: Progressive Disclosure in wizard-guide
 
-Batch with Sub-task 1's wizard-guide edits. Role-gated skill presentation for
-different user segments.
+Batch with Sub-task 1's wizard-guide edits. Role-gated skill presentation for different user segments.
 
 ## Implementation Sequence
 
-Sub-task 1 → Sub-task 2 (needs taxonomy vocabulary) → Sub-task 3 (ADR defines
-infra contract) → Sub-task 4 (batch with Sub-task 1)
+Sub-task 1 → Sub-task 2 (needs taxonomy vocabulary) → Sub-task 3 (ADR defines infra contract) → Sub-task 4 (batch with
+Sub-task 1)
 
-Deferred: Persona Extraction (Idea 5) → P3-gated, captured in ADR-005 as trigger
-prerequisite.
+Deferred: Persona Extraction (Idea 5) → P3-gated, captured in ADR-005 as trigger prerequisite.
 
 ## Success Criteria
 

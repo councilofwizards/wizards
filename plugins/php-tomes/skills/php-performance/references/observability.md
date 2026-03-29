@@ -36,9 +36,8 @@
 }
 ```
 
-Rules: dot-namespaced events, IDs not objects, flat context, include
-`duration_ms` for slow ops. Never log passwords/tokens/PII. In containers, write
-to `stdout`/`stderr` only.
+Rules: dot-namespaced events, IDs not objects, flat context, include `duration_ms` for slow ops. Never log
+passwords/tokens/PII. In containers, write to `stdout`/`stderr` only.
 
 ## Correlation IDs
 
@@ -124,13 +123,12 @@ $duration = (hrtime(true) - $start) / 1e9;
 $metrics->recordRequest($request->method(), $route, $response->getStatusCode(), $duration);
 ```
 
-Storage: Redis for FPM (shared across workers), APC for long-running, InMemory
-for tests.
+Storage: Redis for FPM (shared across workers), APC for long-running, InMemory for tests.
 
 ### Label Rules
 
-Good (bounded): `method`, `route`, `status_code`, `queue_name`, `job_class` Bad
-(unbounded): `user_id`, `order_id`, `ip_address` — cardinality explosion.
+Good (bounded): `method`, `route`, `status_code`, `queue_name`, `job_class` Bad (unbounded): `user_id`, `order_id`,
+`ip_address` — cardinality explosion.
 
 ### PHP-Specific Metrics
 
@@ -177,8 +175,7 @@ try {
 }
 ```
 
-Name spans after operations (`order.place`), not implementations. Use W3C
-TraceContext (`traceparent` header).
+Name spans after operations (`order.place`), not implementations. Use W3C TraceContext (`traceparent` header).
 
 ### Sampling
 
@@ -208,5 +205,5 @@ Route::get('/health/ready', function (HealthCheckService $h) {
 });
 ```
 
-Response: `200` = healthy, `503` = unhealthy. Keep `/health/live` trivially fast
-(no I/O). Exclude non-critical deps from readiness.
+Response: `200` = healthy, `503` = unhealthy. Keep `/health/live` trivially fast (no I/O). Exclude non-critical deps
+from readiness.

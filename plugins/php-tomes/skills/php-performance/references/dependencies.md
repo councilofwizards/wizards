@@ -143,8 +143,7 @@ Use for legacy code not following PSR-4 naming.
 { "autoload": { "files": ["src/helpers.php"] } }
 ```
 
-Included on every request. Keep list short. Guard functions with
-`function_exists()`.
+Included on every request. Keep list short. Guard functions with `function_exists()`.
 
 ## Production Optimization
 
@@ -167,8 +166,7 @@ php artisan event:cache       # Cache event/listener mappings
 composer dump-autoload --optimize
 ```
 
-After `config:cache`, `.env` is not read at runtime. All `env()` calls outside
-`config/*.php` return `null`.
+After `config:cache`, `.env` is not read at runtime. All `env()` calls outside `config/*.php` return `null`.
 
 ## Private Repositories
 
@@ -184,10 +182,7 @@ After `config:cache`, `.env` is not read at runtime. All `env()` calls outside
 
 ```json
 {
-  "repositories": [
-    { "type": "composer", "url": "https://repo.packagist.com/your-org/" },
-    { "packagist.org": false }
-  ]
+  "repositories": [{ "type": "composer", "url": "https://repo.packagist.com/your-org/" }, { "packagist.org": false }]
 }
 ```
 
@@ -238,8 +233,7 @@ composer audit --no-dev              # Check for known CVEs
 composer audit --format=json         # Machine-readable output
 ```
 
-Use `roave/security-advisories` as a dev dependency to block installing packages
-with known vulnerabilities:
+Use `roave/security-advisories` as a dev dependency to block installing packages with known vulnerabilities:
 
 ```bash
 composer require --dev roave/security-advisories:dev-latest

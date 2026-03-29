@@ -12,10 +12,8 @@ updated: "2026-02-19T00:00:00Z"
 
 ## Overview
 
-Two deliverables: (1) create
-`plugins/conclave/skills/draft-investor-update/SKILL.md` and (2) extend
-`scripts/validators/skill-shared-content.sh`. This plan is section-by-section
-with exact sourcing for each block.
+Two deliverables: (1) create `plugins/conclave/skills/draft-investor-update/SKILL.md` and (2) extend
+`scripts/validators/skill-shared-content.sh`. This plan is section-by-section with exact sourcing for each block.
 
 ---
 
@@ -27,19 +25,16 @@ with exact sourcing for each block.
 ---
 name: draft-investor-update
 description: >
-  Draft an investor update from project data. Gathers metrics and milestones
-  from the roadmap, progress files, and specs, then drafts, reviews, and refines
-  a structured investor update through dual-skeptic validation.
+  Draft an investor update from project data. Gathers metrics and milestones from the roadmap, progress files, and
+  specs, then drafts, reviews, and refines a structured investor update through dual-skeptic validation.
 argument-hint: "[--light] [status | <period> | (empty for current period)]"
 ---
 ```
 
-**Source**: New content. Matches the frontmatter format of all 4 existing
-skills. Fields: `name`, `description`, `argument-hint` (all 3 required by
-`skill-structure.sh` A1). No `type: single-agent` field (this is multi-agent).
+**Source**: New content. Matches the frontmatter format of all 4 existing skills. Fields: `name`, `description`,
+`argument-hint` (all 3 required by `skill-structure.sh` A1). No `type: single-agent` field (this is multi-agent).
 
-**Validator check**: A1 checks name matches parent directory
-`draft-investor-update`. Confirmed.
+**Validator check**: A1 checks name matches parent directory `draft-investor-update`. Confirmed.
 
 ---
 
@@ -48,13 +43,12 @@ skills. Fields: `name`, `description`, `argument-hint` (all 3 required by
 ```markdown
 # Investor Update Team Orchestration
 
-You are orchestrating the Investor Update Team. Your role is TEAM LEAD. Enable
-delegate mode -- you coordinate, you do NOT write content yourself.
+You are orchestrating the Investor Update Team. Your role is TEAM LEAD. Enable delegate mode -- you coordinate, you do
+NOT write content yourself.
 ```
 
-**Source**: Adapted from plan-product line 10-13. Changed "Product Team" to
-"Investor Update Team", role from "Product Owner" to "TEAM LEAD", and "write
-specs" to "write content".
+**Source**: Adapted from plan-product line 10-13. Changed "Product Team" to "Investor Update Team", role from "Product
+Owner" to "TEAM LEAD", and "write specs" to "write content".
 
 ---
 
@@ -64,13 +58,11 @@ specs" to "write content".
 
 - Add `docs/investor-updates/` to directory list (new output directory)
 - Add reading `docs/investor-updates/_user-data.md` and prior updates
-- Keep standard reads: `docs/roadmap/`, `docs/progress/`, `docs/specs/`,
-  `docs/architecture/`
-- Keep template reading: `docs/specs/_template.md`,
-  `docs/progress/_template.md`, `docs/architecture/_template.md`
+- Keep standard reads: `docs/roadmap/`, `docs/progress/`, `docs/specs/`, `docs/architecture/`
+- Keep template reading: `docs/specs/_template.md`, `docs/progress/_template.md`, `docs/architecture/_template.md`
 - Keep stack detection (unchanged)
-- Add: Create `docs/investor-updates/_user-data.md` template if directory exists
-  but file does not (first-run convenience, per spec S.C. 9)
+- Add: Create `docs/investor-updates/_user-data.md` template if directory exists but file does not (first-run
+  convenience, per spec S.C. 9)
 
 **Validator check**: A2 requires `## Setup` heading. Confirmed.
 
@@ -78,11 +70,9 @@ specs" to "write content".
 
 ### A4. Write Safety (ADAPTED from plan-product)
 
-**Source**: Adapted from plan-product lines 29-35. Same pattern, different role
-names:
+**Source**: Adapted from plan-product lines 29-35. Same pattern, different role names:
 
-- `docs/progress/investor-update-{role}.md` (e.g.,
-  `investor-update-researcher.md`)
+- `docs/progress/investor-update-{role}.md` (e.g., `investor-update-researcher.md`)
 - Only Team Lead writes to `docs/investor-updates/` output files
 - Only Team Lead writes to shared/aggregated progress summaries
 
@@ -95,8 +85,7 @@ names:
 **Source**: Adapted from plan-product lines 37-69. Changes:
 
 - `team: "draft-investor-update"` (was `"plan-product"`)
-- Phase enum: `research | draft | review | revision | complete` (was
-  `research | design | review | complete`)
+- Phase enum: `research | draft | review | revision | complete` (was `research | design | review | complete`)
 - Same checkpoint file format and "When to Checkpoint" triggers
 
 **Validator check**: A2 requires `## Checkpoint Protocol` heading. Confirmed.
@@ -107,15 +96,12 @@ names:
 
 **Source**: Adapted from plan-product lines 72-78. Key changes per spec:
 
-- **"status"**: Same pattern -- read checkpoint files with
-  `team: "draft-investor-update"`, report status, no agents spawned (S.C. 7)
-- **Empty/no args**: Same resume-from-checkpoint pattern. If no incomplete
-  checkpoints, infer current period from latest progress file timestamps and run
-  full pipeline (S.C. 1)
-- **"<period>"**: NEW -- research a specific period (e.g., "2026-02" or
-  "2026-01-15 to 2026-02-15") (S.C. 8)
-- **No "new" or "review" or "reprioritize"** modes (those are
-  plan-product-specific)
+- **"status"**: Same pattern -- read checkpoint files with `team: "draft-investor-update"`, report status, no agents
+  spawned (S.C. 7)
+- **Empty/no args**: Same resume-from-checkpoint pattern. If no incomplete checkpoints, infer current period from latest
+  progress file timestamps and run full pipeline (S.C. 1)
+- **"<period>"**: NEW -- research a specific period (e.g., "2026-02" or "2026-01-15 to 2026-02-15") (S.C. 8)
+- **No "new" or "review" or "reprioritize"** modes (those are plan-product-specific)
 
 **Validator check**: A2 requires `## Determine Mode` heading. Confirmed.
 
@@ -137,52 +123,47 @@ names:
 
 ### A8. Spawn the Team (NEW content, standard format)
 
-**Source**: New content following the build-product format (lines 100-131). Four
-agents:
+**Source**: New content following the build-product format (lines 100-131). Four agents:
 
 #### Researcher
 
 - **Name**: `researcher`
 - **Model**: opus
 - **Subagent type**: general-purpose
-- **Tasks**: Investigate project artifacts. Gather metrics, milestones,
-  blockers. Produce Research Dossier.
+- **Tasks**: Investigate project artifacts. Gather metrics, milestones, blockers. Produce Research Dossier.
 
 #### Drafter
 
 - **Name**: `drafter`
 - **Model**: sonnet
 - **Subagent type**: general-purpose
-- **Tasks**: Compose investor update from Research Dossier. Revise based on
-  skeptic feedback.
+- **Tasks**: Compose investor update from Research Dossier. Revise based on skeptic feedback.
 
 #### Accuracy Skeptic
 
 - **Name**: `accuracy-skeptic`
 - **Model**: opus
 - **Subagent type**: general-purpose
-- **Tasks**: Verify all factual claims against evidence. Check numbers,
-  milestones, timelines. Business quality checklist.
+- **Tasks**: Verify all factual claims against evidence. Check numbers, milestones, timelines. Business quality
+  checklist.
 
 #### Narrative Skeptic
 
 - **Name**: `narrative-skeptic`
 - **Model**: opus
 - **Subagent type**: general-purpose
-- **Tasks**: Detect spin, omissions, prior-update inconsistency. Check balanced
-  framing and audience appropriateness. Business quality checklist.
+- **Tasks**: Detect spin, omissions, prior-update inconsistency. Check balanced framing and audience appropriateness.
+  Business quality checklist.
 
-**Validator check**: A2 requires `## Spawn the Team` heading. A3 checks each H3
-entry has `**Name**:` (backtick-quoted), `**Model**:` (opus or sonnet),
-`**Subagent type**:`. All 4 entries comply.
+**Validator check**: A2 requires `## Spawn the Team` heading. A3 checks each H3 entry has `**Name**:` (backtick-quoted),
+`**Model**:` (opus or sonnet), `**Subagent type**:`. All 4 entries comply.
 
 ---
 
 ### A9. Orchestration Flow (NEW -- Pipeline pattern)
 
-**Source**: New content. This is the key differentiator from existing skills.
-Based on spec "Pipeline Stages" and system design "Pipeline Architecture"
-sections.
+**Source**: New content. This is the key differentiator from existing skills. Based on spec "Pipeline Stages" and system
+design "Pipeline Architecture" sections.
 
 ```
 1. **Stage 1: Research** -- Researcher gathers data, produces Research Dossier
@@ -206,17 +187,15 @@ sections.
 ```markdown
 ## Quality Gate
 
-NO investor update is finalized without BOTH Accuracy Skeptic AND Narrative
-Skeptic approval. If either skeptic has concerns, the Drafter revises. This is
-non-negotiable. Maximum 3 revision cycles before escalation to the human
+NO investor update is finalized without BOTH Accuracy Skeptic AND Narrative Skeptic approval. If either skeptic has
+concerns, the Drafter revises. This is non-negotiable. Maximum 3 revision cycles before escalation to the human
 operator.
 ```
 
-**Source**: New content. Adapted from plan-product's single-skeptic gate (line
-135-136) to dual-skeptic per spec constraint 3.
+**Source**: New content. Adapted from plan-product's single-skeptic gate (line 135-136) to dual-skeptic per spec
+constraint 3.
 
-**Validator check**: A2 requires one of `## Critical Rules` or
-`## Quality Gate`. Using `## Quality Gate`. Confirmed.
+**Validator check**: A2 requires one of `## Critical Rules` or `## Quality Gate`. Using `## Quality Gate`. Confirmed.
 
 ---
 
@@ -225,8 +204,8 @@ operator.
 **Source**: Nearly identical to plan-product lines 138-141. Same three patterns:
 
 1. **Unresponsive agent**: Re-spawn role, re-assign tasks
-2. **Skeptic deadlock**: 3 rejections -> escalate. Adapted to: "If EITHER
-   skeptic rejects the same deliverable 3 times..."
+2. **Skeptic deadlock**: 3 rejections -> escalate. Adapted to: "If EITHER skeptic rejects the same deliverable 3
+   times..."
 3. **Context exhaustion**: Read checkpoint, re-spawn with context
 
 **Validator check**: A2 requires `## Failure Recovery` heading. Confirmed.
@@ -238,8 +217,7 @@ operator.
 **Source**: plan-product lines 145-174. BYTE-IDENTICAL copy including:
 
 - `<!-- BEGIN SHARED: principles -->` marker
-- `<!-- Authoritative source: plan-product/SKILL.md. Keep in sync across all skills. -->`
-  comment
+- `<!-- Authoritative source: plan-product/SKILL.md. Keep in sync across all skills. -->` comment
 - Full content (12 principles across 4 tiers)
 - `<!-- END SHARED: principles -->` marker
 
@@ -247,10 +225,8 @@ operator.
 
 - A2 requires `## Shared Principles` heading. Confirmed.
 - A4 requires matched BEGIN/END markers for "principles". Confirmed.
-- B1 requires byte-identical content to authoritative source. Confirmed
-  (verbatim copy).
-- B3 requires authoritative source comment on line after BEGIN marker.
-  Confirmed.
+- B1 requires byte-identical content to authoritative source. Confirmed (verbatim copy).
+- B3 requires authoritative source comment on line after BEGIN marker. Confirmed.
 
 ---
 
@@ -258,51 +234,42 @@ operator.
 
 **Source**: plan-product lines 178-213. Copied with ONE change:
 
-- Line 196: `write(product-skeptic, ...)` -> `write(accuracy-skeptic, ...)` and
-  `Product Skeptic` -> `Accuracy Skeptic`
+- Line 196: `write(product-skeptic, ...)` -> `write(accuracy-skeptic, ...)` and `Product Skeptic` -> `Accuracy Skeptic`
 
-The B2 validator normalizes all skeptic name variants to `SKEPTIC_NAME` before
-comparison, so this adaptation is allowed and expected.
+The B2 validator normalizes all skeptic name variants to `SKEPTIC_NAME` before comparison, so this adaptation is allowed
+and expected.
 
-**Content between markers is structurally identical** -- only skeptic names
-differ.
+**Content between markers is structurally identical** -- only skeptic names differ.
 
 **Validator checks**:
 
 - A2 requires `## Communication Protocol` heading. Confirmed.
 - A4 requires matched BEGIN/END markers for "communication-protocol". Confirmed.
-- B2 requires structural equivalence after skeptic name normalization. Confirmed
-  (only skeptic names change).
-- B3 requires authoritative source comment on line after BEGIN marker.
-  Confirmed.
+- B2 requires structural equivalence after skeptic name normalization. Confirmed (only skeptic names change).
+- B3 requires authoritative source comment on line after BEGIN marker. Confirmed.
 
-**Important**: The "Plan ready for review" row references `accuracy-skeptic` /
-`Accuracy Skeptic` as the target. This is correct since the Accuracy Skeptic is
-the natural first target for plan reviews in a data-accuracy-focused pipeline.
-Both skeptics will receive review requests through the orchestration flow
-regardless.
+**Important**: The "Plan ready for review" row references `accuracy-skeptic` / `Accuracy Skeptic` as the target. This is
+correct since the Accuracy Skeptic is the natural first target for plan reviews in a data-accuracy-focused pipeline.
+Both skeptics will receive review requests through the orchestration flow regardless.
 
 ---
 
 ### A14. Contract Negotiation Pattern comment (OMIT)
 
-**Source**: Following the pattern of plan-product (line 215) and review-quality
-(line 223), include the comment:
+**Source**: Following the pattern of plan-product (line 215) and review-quality (line 223), include the comment:
 
 ```markdown
 <!-- Contract Negotiation Pattern omitted -- not relevant to draft-investor-update. See build-product/SKILL.md. -->
 ```
 
-This maintains consistency with other skills that omit the
-build-product-specific section.
+This maintains consistency with other skills that omit the build-product-specific section.
 
 ---
 
 ### A15. Teammate Spawn Prompts (NEW content, standard structure)
 
-**Source**: New content following the pattern of plan-product (lines 217-389)
-and build-product (lines 291-472). The section header follows the pattern: one
-of `## Teammate Spawn Prompts` or `## Teammates to Spawn` (per A2 validator).
+**Source**: New content following the pattern of plan-product (lines 217-389) and build-product (lines 291-472). The
+section header follows the pattern: one of `## Teammate Spawn Prompts` or `## Teammates to Spawn` (per A2 validator).
 
 **Sub-sections (each H3 with Model and code-fenced prompt)**:
 
@@ -311,8 +278,7 @@ of `## Teammate Spawn Prompts` or `## Teammates to Spawn` (per A2 validator).
 Adapted from plan-product Researcher (lines 224-263) with significant changes:
 
 - Role is research-for-investor-update, not research-for-spec-writing
-- Reads: roadmap, progress, specs, architecture, investor-updates,
-  \_user-data.md
+- Reads: roadmap, progress, specs, architecture, investor-updates, \_user-data.md
 - Output: Research Dossier (structured format from system design)
 - Temporal scoping from period argument or inferred timestamps
 - Write safety: `docs/progress/investor-update-researcher.md`
@@ -325,19 +291,16 @@ Adapted from plan-product Researcher (lines 224-263) with significant changes:
 New role (no analog in existing skills):
 
 - Receives Research Dossier + embedded template + prior updates
-- Instructions: write from facts only, no fabrication, calibrate language to
-  confidence, include ALL sections with "[Requires user input]" placeholders
-  where needed
+- Instructions: write from facts only, no fabrication, calibrate language to confidence, include ALL sections with
+  "[Requires user input]" placeholders where needed
 - Must include mandatory business quality sections
 - Append Drafter Notes with assumptions, framing choices, questions
 - Write safety: `docs/progress/investor-update-drafter.md`
-- Model upgrade note: if revision cycles consistently fail, Team Lead may
-  upgrade to Opus
+- Model upgrade note: if revision cycles consistently fail, Team Lead may upgrade to Opus
 
 #### Accuracy Skeptic (Model: Opus)
 
-New role. Adapted from the spec's Accuracy Skeptic Checklist (spec lines
-106-113):
+New role. Adapted from the spec's Accuracy Skeptic Checklist (spec lines 106-113):
 
 - 6-item checklist as detailed in spec/system design
 - Review format: `ACCURACY REVIEW: ...` with Verdict
@@ -347,42 +310,38 @@ New role. Adapted from the spec's Accuracy Skeptic Checklist (spec lines
 
 #### Narrative Skeptic (Model: Opus)
 
-New role. Adapted from the spec's Narrative Skeptic Checklist (spec lines
-115-121):
+New role. Adapted from the spec's Narrative Skeptic Checklist (spec lines 115-121):
 
 - 6-item checklist as detailed in spec/system design
-- First-run behavior: skip prior-update consistency checks when no prior updates
-  exist (S.C. 13)
+- First-run behavior: skip prior-update consistency checks when no prior updates exist (S.C. 13)
 - Review format: `NARRATIVE REVIEW: ...` with Verdict
 - Must receive both draft AND research dossier
 - Communicates with accuracy-skeptic and team lead
 - Write safety: `docs/progress/investor-update-narrative-skeptic.md`
 
-**Validator check**: A2 requires one of `## Teammate Spawn Prompts` or
-`## Teammates to Spawn`. Using `## Teammate Spawn Prompts`. Confirmed.
+**Validator check**: A2 requires one of `## Teammate Spawn Prompts` or `## Teammates to Spawn`. Using
+`## Teammate Spawn Prompts`. Confirmed.
 
 ---
 
 ### A16. Embedded Content: Output Artifact Template
 
-Within the Drafter's spawn prompt (or as a standalone section referenced by the
-Drafter), include the full investor update output template from the spec (spec
-lines 191-260). This is the template the Drafter writes to.
+Within the Drafter's spawn prompt (or as a standalone section referenced by the Drafter), include the full investor
+update output template from the spec (spec lines 191-260). This is the template the Drafter writes to.
 
 ---
 
 ### A17. Embedded Content: User Data Template
 
-Include the `_user-data.md` template (from spec lines 152-181) so the skill can
-create it on first run (S.C. 9). This is embedded in the Setup section
-instructions.
+Include the `_user-data.md` template (from spec lines 152-181) so the skill can create it on first run (S.C. 9). This is
+embedded in the Setup section instructions.
 
 ---
 
 ### A18. Embedded Content: Research Dossier Format
 
-Include the Research Dossier format (from system design lines 107-134) in the
-Researcher's spawn prompt so the output structure is well-defined.
+Include the Research Dossier format (from system design lines 107-134) in the Researcher's spawn prompt so the output
+structure is well-defined.
 
 ---
 
@@ -390,17 +349,14 @@ Researcher's spawn prompt so the output structure is well-defined.
 
 ### B1: Shared Principles Block
 
-Copy lines 145-174 of `plugins/conclave/skills/plan-product/SKILL.md` VERBATIM.
-This is 30 lines starting with `<!-- BEGIN SHARED: principles -->` and ending
-with `<!-- END SHARED: principles -->`.
+Copy lines 145-174 of `plugins/conclave/skills/plan-product/SKILL.md` VERBATIM. This is 30 lines starting with
+`<!-- BEGIN SHARED: principles -->` and ending with `<!-- END SHARED: principles -->`.
 
-The block MUST be preceded by a `---` horizontal rule (following the pattern of
-all existing skills).
+The block MUST be preceded by a `---` horizontal rule (following the pattern of all existing skills).
 
 ### B2: Communication Protocol Block
 
-Copy lines 178-213 of `plugins/conclave/skills/plan-product/SKILL.md`. Make ONLY
-the following substitutions:
+Copy lines 178-213 of `plugins/conclave/skills/plan-product/SKILL.md`. Make ONLY the following substitutions:
 
 | Line (in plan-product) | Original                                            | Replacement                                          |
 | ---------------------- | --------------------------------------------------- | ---------------------------------------------------- |
@@ -415,23 +371,19 @@ No other changes. The block MUST be preceded by a `---` horizontal rule.
 
 ### C1. Pipeline Orchestration
 
-The orchestration flow in Section A9 is the primary new pattern. Key
-implementation details:
+The orchestration flow in Section A9 is the primary new pattern. Key implementation details:
 
-1. **Sequential gating**: The Team Lead must explicitly verify Gate 1 (dossier
-   completeness) before spawning the Drafter. This is unlike existing skills
-   where agents work in parallel.
+1. **Sequential gating**: The Team Lead must explicitly verify Gate 1 (dossier completeness) before spawning the
+   Drafter. This is unlike existing skills where agents work in parallel.
 
-2. **Dual-skeptic parallel review**: After the draft is ready, BOTH skeptics are
-   tasked simultaneously. The Team Lead waits for both verdicts before
-   proceeding.
+2. **Dual-skeptic parallel review**: After the draft is ready, BOTH skeptics are tasked simultaneously. The Team Lead
+   waits for both verdicts before proceeding.
 
-3. **Revision loop**: If either skeptic rejects, the Drafter is re-tasked with
-   the rejection feedback. Both skeptics re-review the revision (even if only
-   one rejected). Maximum 3 cycles.
+3. **Revision loop**: If either skeptic rejects, the Drafter is re-tasked with the rejection feedback. Both skeptics
+   re-review the revision (even if only one rejected). Maximum 3 cycles.
 
-4. **The orchestration flow section should include the pipeline diagram** from
-   the system design (lines 51-86) adapted to markdown/ASCII art.
+4. **The orchestration flow section should include the pipeline diagram** from the system design (lines 51-86) adapted
+   to markdown/ASCII art.
 
 ### C2. Dual-Skeptic Gate
 
@@ -456,9 +408,8 @@ Implemented through:
 
 Implemented through:
 
-- Output template includes all 4 mandatory sections (Assumptions & Limitations,
-  Confidence Assessment, Falsification Triggers, External Validation
-  Checkpoints)
+- Output template includes all 4 mandatory sections (Assumptions & Limitations, Confidence Assessment, Falsification
+  Triggers, External Validation Checkpoints)
 - Both skeptics have checklist item 6 verifying business quality
 - Drafter instructions mandate inclusion of these sections
 
@@ -502,12 +453,10 @@ normalize_skeptic_names() {
 }
 ```
 
-**Lines added**: 4 new `-e` entries (2 slug forms + 2 display forms) for
-accuracy-skeptic and narrative-skeptic.
+**Lines added**: 4 new `-e` entries (2 slug forms + 2 display forms) for accuracy-skeptic and narrative-skeptic.
 
-**Placement**: The new slug entries go after `ops-skeptic` and the new display
-entries go after `Ops Skeptic`, maintaining the grouping pattern (slugs first,
-then display names).
+**Placement**: The new slug entries go after `ops-skeptic` and the new display entries go after `Ops Skeptic`,
+maintaining the grouping pattern (slugs first, then display names).
 
 ---
 
@@ -539,15 +488,12 @@ then display names).
 2. Write `SKILL.md` with all sections A1-A17 as specified above
 3. Verify by running both validators locally:
    - `bash scripts/validators/skill-structure.sh .` (all A-checks pass)
-   - `bash scripts/validators/skill-shared-content.sh .` (all B-checks pass --
-     requires Part D completed first)
+   - `bash scripts/validators/skill-shared-content.sh .` (all B-checks pass -- requires Part D completed first)
 
 ### What the frontend-eng (validator modifier) does:
 
-1. Modify `scripts/validators/skill-shared-content.sh` line 51-59 as specified
-   in Part D
-2. Verify by running: `bash scripts/validators/skill-shared-content.sh .` on the
-   repo (existing skills must still pass)
+1. Modify `scripts/validators/skill-shared-content.sh` line 51-59 as specified in Part D
+2. Verify by running: `bash scripts/validators/skill-shared-content.sh .` on the repo (existing skills must still pass)
 
 ### Dependency graph:
 
@@ -562,13 +508,10 @@ Part A (SKILL.md creation) ───────── can happen independently 
                                                against new SKILL.md)
 ```
 
-**Both tasks are independent** and can proceed in parallel. The final validation
-step requires both to be complete.
+**Both tasks are independent** and can proceed in parallel. The final validation step requires both to be complete.
 
-**Recommended ordering**: Start the validator modification first (it is small
-and fast), then the SKILL.md creation (it is large and complex). This way, the
-SKILL.md writer can validate against the updated validator as soon as they
-finish.
+**Recommended ordering**: Start the validator modification first (it is small and fast), then the SKILL.md creation (it
+is large and complex). This way, the SKILL.md writer can validate against the updated validator as soon as they finish.
 
 ---
 

@@ -23,10 +23,8 @@
 
 ### Subsequent Updates
 
-`boot()` → `hydrate()` → `hydrate{Prop}()` → `updating($name, $val)` →
-`updating{Prop}($val)` → `updated($name, $val)` → `updated{Prop}($val)` →
-`rendering()` → `render()` → `rendered($view)` → `dehydrate()` →
-`dehydrate{Prop}()`
+`boot()` → `hydrate()` → `hydrate{Prop}()` → `updating($name, $val)` → `updating{Prop}($val)` → `updated($name, $val)` →
+`updated{Prop}($val)` → `rendering()` → `render()` → `rendered($view)` → `dehydrate()` → `dehydrate{Prop}()`
 
 | Hook                   | When                  | Use Case                         |
 | ---------------------- | --------------------- | -------------------------------- |
@@ -250,5 +248,4 @@ Access in Blade: `$this->posts` (not `$posts`). Not serialized into snapshot.
 - Public properties are visible in snapshots — never store passwords/tokens
 - `#[Locked]` prevents browser modification of a property
 - Action arguments can be tampered — validate and authorize inside every action
-- Livewire performs implicit model binding on action params — authorization
-  still required
+- Livewire performs implicit model binding on action params — authorization still required

@@ -65,8 +65,8 @@ $gateway = $this->app->make(PaymentGateway::class);
 $gateway = $this->app->makeWith(StripeGateway::class, ['apiKey' => 'override']);
 ```
 
-Auto-wiring resolves concrete classes via reflection — no binding needed if all
-constructor params are type-hinted or have defaults.
+Auto-wiring resolves concrete classes via reflection — no binding needed if all constructor params are type-hinted or
+have defaults.
 
 ---
 
@@ -154,9 +154,8 @@ Run `php artisan optimize:clear` after adding/removing deferred providers.
 
 ## Facade Mechanics
 
-Facades extend `Illuminate\Support\Facades\Facade`, implement
-`getFacadeAccessor()` returning a container key. `__callStatic` resolves the
-instance and forwards the call.
+Facades extend `Illuminate\Support\Facades\Facade`, implement `getFacadeAccessor()` returning a container key.
+`__callStatic` resolves the instance and forwards the call.
 
 ```php
 // These are equivalent:
@@ -210,8 +209,7 @@ Cache::shouldReceive('get')->once()->with('key')->andReturn('value');
 
 ### env() Rule
 
-`env()` is valid ONLY inside `config/*.php`. After `config:cache`, `env()`
-returns `null` elsewhere.
+`env()` is valid ONLY inside `config/*.php`. After `config:cache`, `env()` returns `null` elsewhere.
 
 ```php
 // config/services.php

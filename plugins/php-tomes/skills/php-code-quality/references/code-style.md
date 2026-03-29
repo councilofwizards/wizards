@@ -26,9 +26,8 @@
 | PSR-12     | 2019 | Active — extended style for PHP 7+   |
 | PER-CS 2.0 | 2023 | Active — living standard for PHP 8.x |
 
-PER-CS 2.0 is the current recommendation. Laravel Pint defaults to PER-CS.
-Symfony tracks it. Do not mix PSR-12 and PER-CS rulesets in the same fixer
-config — some rules conflict.
+PER-CS 2.0 is the current recommendation. Laravel Pint defaults to PER-CS. Symfony tracks it. Do not mix PSR-12 and
+PER-CS rulesets in the same fixer config — some rules conflict.
 
 ## PSR-1 Baseline
 
@@ -306,13 +305,11 @@ insert_final_newline = true
 
 ## CI Integration
 
-Run style checks on every PR. Do not auto-fix in CI — fail the build and require
-local fixes.
+Run style checks on every PR. Do not auto-fix in CI — fail the build and require local fixes.
 
 ```yaml
 - name: Check code style
   run: vendor/bin/php-cs-fixer fix --dry-run --diff
 ```
 
-Auto-fixing on CI can cause divergence between the branch and remote if the fix
-is committed back.
+Auto-fixing on CI can cause divergence between the branch and remote if the fix is committed back.

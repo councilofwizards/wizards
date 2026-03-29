@@ -82,8 +82,7 @@ Select::make('subcategory_id')
 | `Tabs`     | `Tabs::make('Label')->tabs([Tab::make('Name')->schema([...])])`         |
 | `Wizard`   | `Wizard::make([Step::make('Name')->schema([...])])->submitAction(...)`  |
 
-Default columns inside Section: 2. Override with `->columns(1)` or
-`->columns(['md' => 2, 'lg' => 3])`.
+Default columns inside Section: 2. Override with `->columns(1)` or `->columns(['md' => 2, 'lg' => 3])`.
 
 ## File Uploads
 

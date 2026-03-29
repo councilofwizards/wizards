@@ -12,8 +12,7 @@ updated: "2026-03-10"
 
 ## Review Summary
 
-REVIEW: Stories 1-5 for P2-09 Persona System Activation Verdict: APPROVED
-Stories reviewed: 5/5
+REVIEW: Stories 1-5 for P2-09 Persona System Activation Verdict: APPROVED Stories reviewed: 5/5
 
 ---
 
@@ -32,20 +31,15 @@ Stories reviewed: 5/5
 
 **SMART AC Review:**
 
-- AC1: Specific (names exact format), Measurable (grep for pattern), Achievable,
-  Relevant. PASS.
-- AC2: Measurable only if "first addresses the user" is observable. This is an
-  LLM behavioral outcome, not a structural check. Acceptable for a markdown
-  plugin — there is no automated test for agent runtime behavior. PASS with
-  note.
-- AC3: "Every spawn prompt (estimated 40+)" — the word "estimated" is
-  acceptable; the exact count depends on auditing all files. PASS.
-- AC4: Explicit skeptic coverage. Good — prevents the most common oversight.
-  PASS.
+- AC1: Specific (names exact format), Measurable (grep for pattern), Achievable, Relevant. PASS.
+- AC2: Measurable only if "first addresses the user" is observable. This is an LLM behavioral outcome, not a structural
+  check. Acceptable for a markdown plugin — there is no automated test for agent runtime behavior. PASS with note.
+- AC3: "Every spawn prompt (estimated 40+)" — the word "estimated" is acceptable; the exact count depends on auditing
+  all files. PASS.
+- AC4: Explicit skeptic coverage. Good — prevents the most common oversight. PASS.
 
-**Edge cases:** Business skill persona file naming convention called out.
-run-task exclusion explicit. Missing frontmatter fields treated as blockers. All
-three are correct and well-scoped.
+**Edge cases:** Business skill persona file naming convention called out. run-task exclusion explicit. Missing
+frontmatter fields treated as blockers. All three are correct and well-scoped.
 
 ---
 
@@ -66,9 +60,8 @@ three are correct and well-scoped.
 - AC2: Same LLM behavioral outcome caveat as Story 1 AC2. Acceptable. PASS.
 - AC3: "100% contain" is unambiguous. PASS.
 
-**Edge cases:** Agent-to-agent-only agents still get the instruction for
-consistency — correct architectural choice. Conflict resolution rule (spawn
-prompt takes precedence) is clear. PASS.
+**Edge cases:** Agent-to-agent-only agents still get the instruction for consistency — correct architectural choice.
+Conflict resolution rule (spawn prompt takes precedence) is clear. PASS.
 
 ---
 
@@ -90,9 +83,8 @@ prompt takes precedence) is clear. PASS.
 - AC3: Marker content match — binary check. PASS.
 - AC4: "B1, B2, and B3 all pass (0 drift errors)" — concrete threshold. PASS.
 
-**Edge cases:** Prose vs. code block placement distinction is correct and
-prevents a real implementation mistake. Single-agent/tier-2 exclusion reminder
-is good defensive documentation. PASS.
+**Edge cases:** Prose vs. code block placement distinction is correct and prevents a real implementation mistake.
+Single-agent/tier-2 exclusion reminder is good defensive documentation. PASS.
 
 ---
 
@@ -111,23 +103,18 @@ is good defensive documentation. PASS.
 
 - AC1: Exact placeholder value specified. PASS.
 - AC2: Inline comment presence. PASS.
-- AC3: "Per-skill skeptic names are still correctly substituted" — measurable
-  via diff or grep. PASS.
+- AC3: "Per-skill skeptic names are still correctly substituted" — measurable via diff or grep. PASS.
 - AC4: "12/12 validators pass" — binary. PASS.
 
-**Edge cases:** This is where I applied the most scrutiny. The story correctly
-identifies the critical risk: the sync script at lines 173-174 and 207-213 of
-`sync-shared-content.sh` uses `product-skeptic` and `Product Skeptic` as literal
-sed substitution anchors (`AUTH_SKEPTIC_SLUG="product-skeptic"` and
-`AUTH_SKEPTIC_DISPLAY="Product Skeptic"`). Changing the source to
-`{skill-skeptic}` means the sync script variables must also change to
-`{skill-skeptic}` as the substitution source pattern, OR the sync script must be
-updated to substitute the new placeholder. The edge case callout ("verify the
-sync script's substitution input before editing") correctly flags this. The
-implementer must update the sync script's `AUTH_SKEPTIC_SLUG` and
-`AUTH_SKEPTIC_DISPLAY` constants to match whatever the new placeholder values
-are. This is not called out as an explicit AC, but it is covered by AC3 ("sync
-behavior is not broken") and the edge case note. Acceptable.
+**Edge cases:** This is where I applied the most scrutiny. The story correctly identifies the critical risk: the sync
+script at lines 173-174 and 207-213 of `sync-shared-content.sh` uses `product-skeptic` and `Product Skeptic` as literal
+sed substitution anchors (`AUTH_SKEPTIC_SLUG="product-skeptic"` and `AUTH_SKEPTIC_DISPLAY="Product Skeptic"`). Changing
+the source to `{skill-skeptic}` means the sync script variables must also change to `{skill-skeptic}` as the
+substitution source pattern, OR the sync script must be updated to substitute the new placeholder. The edge case callout
+("verify the sync script's substitution input before editing") correctly flags this. The implementer must update the
+sync script's `AUTH_SKEPTIC_SLUG` and `AUTH_SKEPTIC_DISPLAY` constants to match whatever the new placeholder values are.
+This is not called out as an explicit AC, but it is covered by AC3 ("sync behavior is not broken") and the edge case
+note. Acceptable.
 
 ---
 
@@ -144,15 +131,12 @@ behavior is not broken") and the edge case note. Acceptable.
 
 **SMART AC Review:**
 
-- AC1: "12/12 checks passing with no errors or warnings" — specific, measurable.
-  PASS.
+- AC1: "12/12 checks passing with no errors or warnings" — specific, measurable. PASS.
 - AC2: A-series non-violation is a structural claim. PASS.
 - AC3: B1, B2, B3 enumerated. PASS.
-- AC4: Per-skill skeptic name substitution check — ensures Story 4 doesn't break
-  sync. PASS.
+- AC4: Per-skill skeptic name substitution check — ensures Story 4 doesn't break sync. PASS.
 
-**Edge cases:** Marker corruption and sync breakage scenarios are both real
-risks for this type of work. PASS.
+**Edge cases:** Marker corruption and sync breakage scenarios are both real risks for this type of work. PASS.
 
 ---
 
@@ -169,33 +153,28 @@ The 5 stories fully cover the 3 bundled changes in the roadmap item:
 
 All 5 success criteria from the roadmap item are addressed:
 
-- "Every spawn prompt contains the agent's fictional name and title" — Story 1
-  AC1, AC3
-- "Every spawn prompt instructs the agent to introduce themselves" — Story 2
-  AC1, AC3
+- "Every spawn prompt contains the agent's fictional name and title" — Story 1 AC1, AC3
+- "Every spawn prompt instructs the agent to introduce themselves" — Story 2 AC1, AC3
 - "Communication protocol includes sign-off convention" — Story 3 AC1
 - "Protocol placeholder uses generic {skill-skeptic} pattern" — Story 4 AC1
 - "All 12/12 validators pass" — Story 5 AC1
 
 ### Out of Scope
 
-Correctly excludes run-task, new persona file creation, protocol structural
-changes, new validator rules, Tier 2 composites, and single-agent utilities. All
-exclusions are justified and traceable to the roadmap scope.
+Correctly excludes run-task, new persona file creation, protocol structural changes, new validator rules, Tier 2
+composites, and single-agent utilities. All exclusions are justified and traceable to the roadmap scope.
 
 ### Non-Functional Requirements
 
-Consistency, maintainability, no-runtime-impact, validator compliance, and sync
-atomicity are all correctly stated. The sync atomicity note (Stories 3+4 before
-single sync run) prevents a real intermediate-state bug.
+Consistency, maintainability, no-runtime-impact, validator compliance, and sync atomicity are all correctly stated. The
+sync atomicity note (Stories 3+4 before single sync run) prevents a real intermediate-state bug.
 
 ---
 
 ## Verdict: APPROVED
 
-All 5 stories pass INVEST criteria. All acceptance criteria pass SMART review.
-Edge cases are thorough and grounded in actual codebase analysis (sync script
-substitution logic, validator behavior, marker integrity). The story set is
+All 5 stories pass INVEST criteria. All acceptance criteria pass SMART review. Edge cases are thorough and grounded in
+actual codebase analysis (sync script substitution logic, validator behavior, marker integrity). The story set is
 complete against the roadmap item's scope and success criteria.
 
 No issues found. Stories are ready for implementation.

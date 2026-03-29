@@ -14,6 +14,5 @@ updated: "2026-02-19"
 
 ## Problem
 
-Startups need consistent content production (blog posts, documentation, thought
-leadership) for marketing and SEO but lack the bandwidth to maintain a regular
-publishing cadence with quality standards.
+Startups need consistent content production (blog posts, documentation, thought leadership) for marketing and SEO but
+lack the bandwidth to maintain a regular publishing cadence with quality standards.

@@ -14,6 +14,5 @@ updated: "2026-02-19"
 
 ## Problem
 
-As startups scale, operational processes (vendor management, internal workflows,
-resource allocation) become bottlenecks without structured planning and
-documentation.
+As startups scale, operational processes (vendor management, internal workflows, resource allocation) become bottlenecks
+without structured planning and documentation.

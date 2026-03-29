@@ -10,8 +10,7 @@
 
 ## Property Hooks
 
-RFC: [Property Hooks](https://wiki.php.net/rfc/property-hooks). Embed
-`get`/`set` logic on property declarations.
+RFC: [Property Hooks](https://wiki.php.net/rfc/property-hooks). Embed `get`/`set` logic on property declarations.
 
 ### Basic Syntax
 
@@ -91,8 +90,7 @@ class Order
 
 ### Performance
 
-~5-15ns overhead per access vs plain properties. Cache computed values in hot
-paths:
+~5-15ns overhead per access vs plain properties. Cache computed values in hot paths:
 
 ```php
 class HeavyComputation
@@ -125,8 +123,7 @@ class Product
 
 ## Asymmetric Visibility
 
-RFC:
-[Asymmetric Visibility v2](https://wiki.php.net/rfc/asymmetric-visibility-v2).
+RFC: [Asymmetric Visibility v2](https://wiki.php.net/rfc/asymmetric-visibility-v2).
 
 ```php
 class EventStore
@@ -144,21 +141,18 @@ class EventStore
 | `public protected(set)`  | public    | protected |
 | `protected private(set)` | protected | private   |
 
-**vs readonly:** readonly = write-once. `private(set)` = internally writable
-many times.
+**vs readonly:** readonly = write-once. `private(set)` = internally writable many times.
 
 ## Deprecated Attribute
 
-RFC: [Deprecated Attribute](https://wiki.php.net/rfc/deprecated_attribute).
-Triggers `E_USER_DEPRECATED`.
+RFC: [Deprecated Attribute](https://wiki.php.net/rfc/deprecated_attribute). Triggers `E_USER_DEPRECATED`.
 
 ```php
 #[\Deprecated(message: 'Use formatIso8601() instead.', since: '2.4')]
 public function formatDate(\DateTime $dt): string { return $dt->format('Y-m-d'); }
 ```
 
-Applies to: functions, methods, class constants, enum cases. NOT classes or
-properties.
+Applies to: functions, methods, class constants, enum cases. NOT classes or properties.
 
 ## Array Functions
 
@@ -171,8 +165,7 @@ $any   = array_any($users, fn($u) => $u['active']);         // bool
 $all   = array_all($users, fn($u) => $u['active']);         // bool
 ```
 
-Migration: `current(array_filter($arr, $fn)) ?: null` becomes
-`array_find($arr, $fn)`.
+Migration: `current(array_filter($arr, $fn)) ?: null` becomes `array_find($arr, $fn)`.
 
 ## Other Additions
 
@@ -201,6 +194,5 @@ register_shutdown_function(exit(...));
 
 ### JIT Improvements
 
-5-15% improvement on framework benchmarks vs 8.3 JIT. Up to 40% on numerical
-workloads. Tracing JIT ( `opcache.jit=tracing`) profiles and compiles hot paths.
-Function JIT (`opcache.jit=function`) compiles whole functions.
+5-15% improvement on framework benchmarks vs 8.3 JIT. Up to 40% on numerical workloads. Tracing JIT (
+`opcache.jit=tracing`) profiles and compiles hot paths. Function JIT (`opcache.jit=function`) compiles whole functions.

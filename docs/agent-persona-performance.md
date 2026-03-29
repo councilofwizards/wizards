@@ -1,8 +1,7 @@
 # Agent Persona & Team Composition Guide
 
-Distilled from research on multi-agent debate (Du et al. 2023), persona effects
-(Liang et al. 2023), Reflexion (Shinn et al. 2023), cognitive bias literature,
-and Hegelian dialectics. Use as inspiration, not fixed rules.
+Distilled from research on multi-agent debate (Du et al. 2023), persona effects (Liang et al. 2023), Reflexion (Shinn et
+al. 2023), cognitive bias literature, and Hegelian dialectics. Use as inspiration, not fixed rules.
 
 ---
 
@@ -16,36 +15,29 @@ and Hegelian dialectics. Use as inspiration, not fixed rules.
 | **Verifier**          | Empirical, behavioral, evidence-based              | Test from the spec, not the code. Report evidence, not verdicts. Cross-reference Skeptic findings.                                | Sonnet — systematic test execution                  |
 | **Scout**             | Divergent, comparative, exploratory                | Research unknowns. Present options with trade-offs, recommendations, confidence levels, and disconfirming evidence.               | Sonnet or Haiku — depending on research complexity  |
 
-Not every team needs all five. Match archetypes to the skill's needs. A
-lightweight skill might have the Lead double as Skeptic. A heavy skill might
-have multiple Builders.
+Not every team needs all five. Match archetypes to the skill's needs. A lightweight skill might have the Lead double as
+Skeptic. A heavy skill might have multiple Builders.
 
 ---
 
 ## Principles That Matter
 
-**Dialectical loops, not linear pipelines.** Work cycles through thesis →
-antithesis → synthesis. The Strategist proposes, the Skeptic attacks, the
-Strategist revises. This loop repeats until convergence. No single pass.
+**Dialectical loops, not linear pipelines.** Work cycles through thesis → antithesis → synthesis. The Strategist
+proposes, the Skeptic attacks, the Strategist revises. This loop repeats until convergence. No single pass.
 
-**Behavioral prompts, not aspirational labels.** "You are a careful reviewer" is
-weak. "Your default stance is doubt. You apply this framework on every
-review..." is strong. Specific behavioral instructions produce measurably
-different outputs.
+**Behavioral prompts, not aspirational labels.** "You are a careful reviewer" is weak. "Your default stance is doubt.
+You apply this framework on every review..." is strong. Specific behavioral instructions produce measurably different
+outputs.
 
-**The Skeptic needs the strongest engineering.** LLMs default to agreement
-(sycophancy). The Skeptic's prompt must contain explicit anti-sycophancy
-directives, structured critique frameworks, and severity classification
-(blocking / structural / advisory). "Looks good" is never acceptable output.
+**The Skeptic needs the strongest engineering.** LLMs default to agreement (sycophancy). The Skeptic's prompt must
+contain explicit anti-sycophancy directives, structured critique frameworks, and severity classification (blocking /
+structural / advisory). "Looks good" is never acceptable output.
 
-**Structured handoffs.** Agents communicate artifacts with context, action
-required, and success criteria — not free-form messages. This prevents drift and
-makes orchestration reliable.
+**Structured handoffs.** Agents communicate artifacts with context, action required, and success criteria — not
+free-form messages. This prevents drift and makes orchestration reliable.
 
-**Confidence calibration.** All agents state confidence levels and flag
-uncertainty explicitly. "I'm 70% sure this decomposition is right" beats false
-certainty. Scouts must present disconfirming evidence for their own
-recommendations.
+**Confidence calibration.** All agents state confidence levels and flag uncertainty explicitly. "I'm 70% sure this
+decomposition is right" beats false certainty. Scouts must present disconfirming evidence for their own recommendations.
 
 ---
 
@@ -67,15 +59,13 @@ recommendations.
 
 When designing a skill's agent team:
 
-1. **Always include the critical voice.** Every team has a Skeptic presence —
-   dedicated agent for high-stakes work, Lead-as-Skeptic for lightweight tasks.
-2. **Scope agents tightly.** Each agent gets one archetype, one mandate, one
-   deliverable. Mixed mandates produce mediocre output.
-3. **Match model to cognitive demand.** Opus for planning, architecture,
-   critique. Sonnet for well-specified execution. Haiku for fast validation,
-   formatting, simple analysis.
-4. **Design for disagreement.** The team's value comes from structured conflict,
-   not consensus. If everyone agrees easily, the Skeptic is too weak.
-5. **Minimize context per agent.** Agents perform best with narrow, relevant
-   context scoped to their task — not the full project state. Only the Lead
-   holds the big picture.
+1. **Always include the critical voice.** Every team has a Skeptic presence — dedicated agent for high-stakes work,
+   Lead-as-Skeptic for lightweight tasks.
+2. **Scope agents tightly.** Each agent gets one archetype, one mandate, one deliverable. Mixed mandates produce
+   mediocre output.
+3. **Match model to cognitive demand.** Opus for planning, architecture, critique. Sonnet for well-specified execution.
+   Haiku for fast validation, formatting, simple analysis.
+4. **Design for disagreement.** The team's value comes from structured conflict, not consensus. If everyone agrees
+   easily, the Skeptic is too weak.
+5. **Minimize context per agent.** Agents perform best with narrow, relevant context scoped to their task — not the full
+   project state. Only the Lead holds the big picture.

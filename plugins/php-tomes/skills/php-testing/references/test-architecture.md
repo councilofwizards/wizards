@@ -32,8 +32,7 @@
 
 ### Unit: < 1ms, no I/O, run on file save
 
-Test: pure functions, value objects, domain logic, service classes (mocked
-deps), complex conditionals.
+Test: pure functions, value objects, domain logic, service classes (mocked deps), complex conditionals.
 
 Skip: getters/setters, framework infra, config, DB schema.
 
@@ -202,8 +201,7 @@ Laravel: `RefreshDatabase`, `DatabaseTransactions`, `LazilyRefreshDatabase`.
 ```yaml
 - run: vendor/bin/phpunit --testsuite=unit # every push
 - run: vendor/bin/phpunit --testsuite=integration # every PR
-- run: vendor/bin/infection --git-diff-filter=AM --git-diff-base=origin/${{
-    github.base_ref }} --threads=max # PR
+- run: vendor/bin/infection --git-diff-filter=AM --git-diff-base=origin/${{ github.base_ref }} --threads=max # PR
 - run: vendor/bin/phpunit --testsuite=feature # merge to main
 ```
 

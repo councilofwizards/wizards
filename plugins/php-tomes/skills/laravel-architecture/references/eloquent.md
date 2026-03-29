@@ -322,8 +322,8 @@ final class CompleteOrder
 
 ### Repository Pattern
 
-Worth it when: multiple persistence stores, complex shared queries, unit tests
-without DB. Over-engineering for: simple CRUD, single Eloquent driver.
+Worth it when: multiple persistence stores, complex shared queries, unit tests without DB. Over-engineering for: simple
+CRUD, single Eloquent driver.
 
 ### Practical Middle Ground
 

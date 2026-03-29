@@ -37,8 +37,7 @@ Does the method have native type declarations for all params and return?
 ## When PHPDoc Adds Value
 
 1. **Generics** — `@template`, `@extends`, `@implements` (no native syntax)
-2. **Array shapes** — `array{id: int, name: string}` (native `array` loses
-   structure)
+2. **Array shapes** — `array{id: int, name: string}` (native `array` loses structure)
 3. **`@throws`** — PHP has no checked exceptions
 4. **Callable shapes** — `callable(User, int): bool`
 5. **`@deprecated`** — signal migration path with version
@@ -153,12 +152,10 @@ public function filter(mixed $value, callable $predicate): mixed {}
 
 ## PHPDoc Anti-Patterns
 
-- **Outdated `@param` descriptions** that describe a different type than the
-  actual parameter
+- **Outdated `@param` descriptions** that describe a different type than the actual parameter
 - **`@return void`** when the method already has `: void` native type
 - **Copious `{@inheritDoc}`** — prefer explicit docs over inheritance chasing
-- **`@param` as substitute for native types** — add the type hint, not a
-  docblock
+- **`@param` as substitute for native types** — add the type hint, not a docblock
 
 ## PHPDoc Enforcement via PHPStan
 
@@ -257,13 +254,11 @@ use OpenApi\Attributes as OA;
 public function show(User $user): UserResource {}
 ```
 
-Use Scribe for Laravel projects (less boilerplate). Use swagger-php for
-framework-agnostic needs.
+Use Scribe for Laravel projects (less boilerplate). Use swagger-php for framework-agnostic needs.
 
 ## Architecture Decision Records
 
-ADRs capture significant architectural decisions: what was decided, why, and
-what consequences follow.
+ADRs capture significant architectural decisions: what was decided, why, and what consequences follow.
 
 ### When to Write an ADR
 
@@ -280,8 +275,7 @@ Do NOT write ADRs for routine implementation choices or easily reversed changes.
 ```markdown
 # ADR-{number}: {Title}
 
-**Date:** YYYY-MM-DD **Status:** Proposed | Accepted | Deprecated | Superseded
-by ADR-NNN
+**Date:** YYYY-MM-DD **Status:** Proposed | Accepted | Deprecated | Superseded by ADR-NNN
 
 ## Context
 

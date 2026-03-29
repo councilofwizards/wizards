@@ -29,8 +29,7 @@ General review cycle + opportunity analysis
 - P2-07/P2-08 readiness assessment
 - P2-07 extraction mechanism design evaluation (3 options)
 - P3 backlog triage (15 not-started items)
-- New features/scripts/utilities opportunity analysis (8 proposals + 3 skeptic
-  additions)
+- New features/scripts/utilities opportunity analysis (8 proposals + 3 skeptic additions)
 - Net-new skill concepts (4 proposed)
 - Skeptic review with 5 corrections and 2 conditions
 - 2 roadmap file corrections applied

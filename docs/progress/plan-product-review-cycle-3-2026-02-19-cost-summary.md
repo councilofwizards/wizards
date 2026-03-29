@@ -26,8 +26,7 @@ date: "2026-02-19"
 
 ## Notes
 
-- All 4 agents used Opus (no lightweight mode). This was appropriate for a spec
-  cycle requiring deep reasoning.
+- All 4 agents used Opus (no lightweight mode). This was appropriate for a spec cycle requiring deep reasoning.
 - No DBA agent was needed (no data model for this feature).
 - Researcher and Architect worked in parallel, reducing wall-clock time.
 - Skeptic reviewed both deliverables in a single pass, reducing review overhead.

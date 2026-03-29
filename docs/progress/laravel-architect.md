@@ -12,22 +12,19 @@ updated: "2026-03-28"
 
 ## Mission
 
-**Deliver** **Laravel work** — accept any engineering work request (feature, bug
-fix, refactor, security remediation) and produce idiomatic, production-quality
-Laravel code that exemplifies framework best practices.
+**Deliver** **Laravel work** — accept any engineering work request (feature, bug fix, refactor, security remediation)
+and produce idiomatic, production-quality Laravel code that exemplifies framework best practices.
 
 ### Singularity Test
 
-Can this be split into independent skills? Feature work, bug fixing,
-refactoring, and security remediation share the same lifecycle: understand →
-design → build → verify. The differentiator is the _Laravel expertise lens_
-applied uniformly across all work types. The Analyst classifies the work type in
-Phase 1 and adapts the approach — one skill, one mission.
+Can this be split into independent skills? Feature work, bug fixing, refactoring, and security remediation share the
+same lifecycle: understand → design → build → verify. The differentiator is the _Laravel expertise lens_ applied
+uniformly across all work types. The Analyst classifies the work type in Phase 1 and adapts the approach — one skill,
+one mission.
 
 ### Classification
 
-**Engineering** — all agents write, review, or generate application code, tests,
-or technical artifacts.
+**Engineering** — all agents write, review, or generate application code, tests, or technical artifacts.
 
 ### Category
 
@@ -44,9 +41,8 @@ or technical artifacts.
 | 3     | Construction   | Implementer + Tester (parallel) | Verified Implementation | Solution Blueprint             | Code changes + passing test suite                                                                                   |
 | 4     | — (gate only)  | Skeptic                         | Quality Verdict         | Verified Implementation        | APPROVED delivery or rejection with specific remediation                                                            |
 
-**Note on Phase 4**: This is the final skeptic gate, not a separate work phase.
-The Skeptic gates every phase (1→2→3→delivery), but the Phase 3 gate is the most
-intensive — a full Laravel quality audit.
+**Note on Phase 4**: This is the final skeptic gate, not a separate work phase. The Skeptic gates every phase
+(1→2→3→delivery), but the Phase 3 gate is the most intensive — a full Laravel quality audit.
 
 ---
 
@@ -60,12 +56,10 @@ intensive — a full Laravel quality audit.
 | **Tester**      | Owns test coverage: writes Pest/PHPUnit tests from the blueprint independently of production code, then verifies implementation against them                  | Sonnet | Test writing from well-defined interfaces; execution-focused                                                               |
 | **Skeptic**     | Owns quality judgment: challenges every phase's output for Laravel convention violations, architectural drift, missing edge cases, and pattern misapplication | Opus   | Adversarial review is reasoning-intensive; the skeptic must understand Laravel deeply enough to catch subtle anti-patterns |
 
-**Agent count justification**: 5 agents, each owning exactly one concern. The
-Analyst/Architect split is necessary because _understanding what exists_ and
-_deciding what should exist_ are distinct reasoning tasks that benefit from
-separate attention. The Implementer/Tester split enables Phase 3 parallelism and
-enforces independence between production code and test code. The Skeptic is
-non-negotiable.
+**Agent count justification**: 5 agents, each owning exactly one concern. The Analyst/Architect split is necessary
+because _understanding what exists_ and _deciding what should exist_ are distinct reasoning tasks that benefit from
+separate attention. The Implementer/Tester split enables Phase 3 parallelism and enforces independence between
+production code and test code. The Skeptic is non-negotiable.
 
 ---
 
@@ -98,50 +92,38 @@ non-negotiable.
 **Phase 1 — Reconnaissance**
 
 - INPUT: User's work request (feature/bug/refactor/security description)
-- TRANSFORM: Analyst reads codebase, classifies work type, identifies affected
-  files, audits which Laravel patterns are already in use (service providers,
-  repositories, form requests, policies, events, etc.), maps dependencies,
-  identifies risks
-- OUTPUT: Work Assessment — work type, affected scope, existing patterns
-  inventory, risk factors, constraints
-- GATE: Skeptic validates completeness ("Did the Analyst miss an affected area?
-  Are the pattern observations accurate? Is the work type classification
-  correct?")
+- TRANSFORM: Analyst reads codebase, classifies work type, identifies affected files, audits which Laravel patterns are
+  already in use (service providers, repositories, form requests, policies, events, etc.), maps dependencies, identifies
+  risks
+- OUTPUT: Work Assessment — work type, affected scope, existing patterns inventory, risk factors, constraints
+- GATE: Skeptic validates completeness ("Did the Analyst miss an affected area? Are the pattern observations accurate?
+  Is the work type classification correct?")
 
 **Phase 2 — Architecture**
 
 - INPUT: Work Assessment
-- TRANSFORM: Architect designs the solution using Laravel-idiomatic patterns.
-  For each change: specifies which pattern to use and WHY (e.g., "use a Form
-  Request here instead of inline validation because..."), defines file-level
-  changes, migration plan if needed, interface contracts between components.
-  Produces priority-ranked action items for the Implementer.
-- OUTPUT: Solution Blueprint — pattern selections with rationale, file change
-  plan, migration plan, interface definitions, priority-ranked implementation
-  order, test strategy outline
-- GATE: Skeptic challenges pattern choices ("Why a Repository here instead of
-  direct Eloquent? Is this Event/Listener overkill for this case? Should this be
-  a Job instead of synchronous?")
+- TRANSFORM: Architect designs the solution using Laravel-idiomatic patterns. For each change: specifies which pattern
+  to use and WHY (e.g., "use a Form Request here instead of inline validation because..."), defines file-level changes,
+  migration plan if needed, interface contracts between components. Produces priority-ranked action items for the
+  Implementer.
+- OUTPUT: Solution Blueprint — pattern selections with rationale, file change plan, migration plan, interface
+  definitions, priority-ranked implementation order, test strategy outline
+- GATE: Skeptic challenges pattern choices ("Why a Repository here instead of direct Eloquent? Is this Event/Listener
+  overkill for this case? Should this be a Job instead of synchronous?")
 
 **Phase 3 — Construction (parallel agents)**
 
 - INPUT: Solution Blueprint
 - TRANSFORM:
-  - Implementer: writes production code following the blueprint's pattern
-    selections and priority order. Uses artisan generators where appropriate.
-    Runs existing test suite after changes.
-  - Tester: writes Pest/PHPUnit tests from the blueprint's interface contracts
-    and test strategy. Feature tests for HTTP endpoints, unit tests for
-    services/repositories, integration tests for event/listener chains.
-- OUTPUT: Verified Implementation — all production code + all test code + test
-  run results
+  - Implementer: writes production code following the blueprint's pattern selections and priority order. Uses artisan
+    generators where appropriate. Runs existing test suite after changes.
+  - Tester: writes Pest/PHPUnit tests from the blueprint's interface contracts and test strategy. Feature tests for HTTP
+    endpoints, unit tests for services/repositories, integration tests for event/listener chains.
+- OUTPUT: Verified Implementation — all production code + all test code + test run results
 - GATE: Skeptic performs full Laravel quality audit:
-  - Convention compliance (controllers thin? validation in Form Requests?
-    authorization in Policies?)
-  - Pattern fidelity (does the code actually use the patterns the Architect
-    specified?)
-  - Test adequacy (are edge cases covered? are the tests testing behavior, not
-    implementation?)
+  - Convention compliance (controllers thin? validation in Form Requests? authorization in Policies?)
+  - Pattern fidelity (does the code actually use the patterns the Architect specified?)
+  - Test adequacy (are edge cases covered? are the tests testing behavior, not implementation?)
   - Security (SQL injection? mass assignment? XSS? CSRF?)
   - Performance (N+1 queries? missing eager loading? unnecessary queries?)
 
@@ -151,20 +133,17 @@ non-negotiable.
 
 ### Within-phase parallelism
 
-- **Phase 3**: Implementer and Tester can run in parallel. Both consume the
-  Solution Blueprint independently. The Tester writes tests from interface
-  contracts (not from production code), so there is no dependency on the
-  Implementer's output. After both complete, the Skeptic reviews the combined
-  output.
+- **Phase 3**: Implementer and Tester can run in parallel. Both consume the Solution Blueprint independently. The Tester
+  writes tests from interface contracts (not from production code), so there is no dependency on the Implementer's
+  output. After both complete, the Skeptic reviews the combined output.
 
 ### Cross-phase sequentiality
 
-- **Phase 1 → Phase 2**: Strictly sequential. The Architect cannot design a
-  solution without knowing what exists (the Assessment).
-- **Phase 2 → Phase 3**: Strictly sequential. The Implementer and Tester cannot
-  begin without a blueprint specifying patterns and interfaces.
-- **Skeptic gates**: Block advancement to the next phase. Parallelism is within
-  a phase, never across gates.
+- **Phase 1 → Phase 2**: Strictly sequential. The Architect cannot design a solution without knowing what exists (the
+  Assessment).
+- **Phase 2 → Phase 3**: Strictly sequential. The Implementer and Tester cannot begin without a blueprint specifying
+  patterns and interfaces.
+- **Skeptic gates**: Block advancement to the next phase. Parallelism is within a phase, never across gates.
 
 ### Parallelism summary
 
@@ -178,18 +157,15 @@ non-negotiable.
 
 Per the Downstream Guidance Rule:
 
-- The **Analyst's** Work Assessment includes a risk-ranked list of affected
-  areas (highest risk first) so the Architect prioritizes accordingly.
-- The **Architect's** Solution Blueprint includes a priority-ranked
-  implementation order (most critical changes first) so the Implementer works
-  top-down by impact.
+- The **Analyst's** Work Assessment includes a risk-ranked list of affected areas (highest risk first) so the Architect
+  prioritizes accordingly.
+- The **Architect's** Solution Blueprint includes a priority-ranked implementation order (most critical changes first)
+  so the Implementer works top-down by impact.
 
 Per the Implementation Phase Rule:
 
-- The **Implementer** MUST run the project's existing test suite after
-  completing changes and document results.
-- The **Tester** runs the full suite (existing + new tests) and documents
-  coverage delta.
+- The **Implementer** MUST run the project's existing test suite after completing changes and document results.
+- The **Tester** runs the full suite (existing + new tests) and documents coverage delta.
 
 ---
 
@@ -197,50 +173,38 @@ Per the Implementation Phase Rule:
 
 ### Why 3 phases (not 2, not 4)?
 
-- **2 phases** (design + build) collapses reconnaissance into architecture.
-  Understanding what exists and deciding what should exist are distinct
-  cognitive tasks — combining them risks anchoring the design on incomplete
-  understanding.
-- **4 phases** (adding a separate verification phase) duplicates the Skeptic's
-  Phase 3 gate. The Skeptic already performs a comprehensive quality audit at
-  the end of Construction. A separate phase adds latency without new value.
-- **3 phases** gives clean separation: understand → design → execute, with
-  skeptic gates between each.
+- **2 phases** (design + build) collapses reconnaissance into architecture. Understanding what exists and deciding what
+  should exist are distinct cognitive tasks — combining them risks anchoring the design on incomplete understanding.
+- **4 phases** (adding a separate verification phase) duplicates the Skeptic's Phase 3 gate. The Skeptic already
+  performs a comprehensive quality audit at the end of Construction. A separate phase adds latency without new value.
+- **3 phases** gives clean separation: understand → design → execute, with skeptic gates between each.
 
 ### Why 5 agents (not 3, not 7)?
 
-- **3 agents** (builder + tester + skeptic) loses the Analyst/Architect
-  distinction and eliminates Phase 3 parallelism.
-- **7 agents** might split the Implementer (frontend/backend) or add a DBA. But
-  this is a generic team — the work type varies. Splitting the Implementer
-  assumes every task has frontend AND backend work, which is false for bug fixes
-  and refactors. Additional specialists don't earn their seat for a generic
-  team.
-- **5 agents** covers every concern without overlap: reconnaissance, design,
-  production code, test code, adversarial review.
+- **3 agents** (builder + tester + skeptic) loses the Analyst/Architect distinction and eliminates Phase 3 parallelism.
+- **7 agents** might split the Implementer (frontend/backend) or add a DBA. But this is a generic team — the work type
+  varies. Splitting the Implementer assumes every task has frontend AND backend work, which is false for bug fixes and
+  refactors. Additional specialists don't earn their seat for a generic team.
+- **5 agents** covers every concern without overlap: reconnaissance, design, production code, test code, adversarial
+  review.
 
 ### Alternatives considered
 
-1. **Separate DBA agent**: Rejected. Laravel migrations and Eloquent model
-   changes are part of the Implementer's scope. A DBA agent only earns its seat
-   in a database-heavy skill, not a generic engineering team.
-2. **Separate security agent**: Rejected. Security is a concern of the Skeptic's
-   quality audit, not a phase. The Analyst also flags security risks in
-   reconnaissance. A dedicated security agent would overlap both.
-3. **Frontend/backend split**: Rejected. This is a Laravel-specific team — most
-   work is backend. When frontend work exists (Blade, Livewire, Inertia), the
-   Implementer handles it. Splitting creates an agent that sits idle on
+1. **Separate DBA agent**: Rejected. Laravel migrations and Eloquent model changes are part of the Implementer's scope.
+   A DBA agent only earns its seat in a database-heavy skill, not a generic engineering team.
+2. **Separate security agent**: Rejected. Security is a concern of the Skeptic's quality audit, not a phase. The Analyst
+   also flags security risks in reconnaissance. A dedicated security agent would overlap both.
+3. **Frontend/backend split**: Rejected. This is a Laravel-specific team — most work is backend. When frontend work
+   exists (Blade, Livewire, Inertia), the Implementer handles it. Splitting creates an agent that sits idle on
    pure-backend tasks.
-4. **Separate code review agent (non-skeptic)**: Rejected. The Skeptic's Phase 3
-   gate IS the code review. Adding a "friendly reviewer" alongside the
-   adversarial Skeptic dilutes accountability for quality judgment.
+4. **Separate code review agent (non-skeptic)**: Rejected. The Skeptic's Phase 3 gate IS the code review. Adding a
+   "friendly reviewer" alongside the adversarial Skeptic dilutes accountability for quality judgment.
 
 ---
 
 ## Laravel-Specific Depth Notes
 
-The team's differentiator is extreme Laravel expertise. Each agent should be
-armed with methodology that emphasizes:
+The team's differentiator is extreme Laravel expertise. Each agent should be armed with methodology that emphasizes:
 
 - **Service container & dependency injection** over facades in business logic
 - **Form Requests** for validation, never in controllers
@@ -249,15 +213,11 @@ armed with methodology that emphasizes:
 - **Events/Listeners/Observers** for decoupling side effects
 - **Jobs & Queues** for async processing
 - **Middleware** for cross-cutting concerns
-- **Eloquent best practices**: relationships, scopes, accessors/mutators, eager
-  loading, avoiding N+1
-- **Testing**: Pest preferred, feature tests for HTTP, unit tests for services,
-  `RefreshDatabase`, factories, fakes
+- **Eloquent best practices**: relationships, scopes, accessors/mutators, eager loading, avoiding N+1
+- **Testing**: Pest preferred, feature tests for HTTP, unit tests for services, `RefreshDatabase`, factories, fakes
 - **Artisan generators**: use `make:*` commands for scaffolding
-- **Directory conventions**: default Laravel structure unless a compelling
-  reason exists
-- **Lightweight controllers**: thin controllers, business logic in services,
-  queries in repositories
+- **Directory conventions**: default Laravel structure unless a compelling reason exists
+- **Lightweight controllers**: thin controllers, business logic in services, queries in repositories
 
-The Armorer should source deep Laravel-specific methodologies for each agent
-from the `php-tomes` skill set and the existing `docs/stack-hints/laravel.md`.
+The Armorer should source deep Laravel-specific methodologies for each agent from the `php-tomes` skill set and the
+existing `docs/stack-hints/laravel.md`.

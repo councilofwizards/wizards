@@ -14,6 +14,5 @@ updated: "2026-02-19"
 
 ## Problem
 
-Technical debt accumulates silently across codebases, and teams lack a
-systematic way to identify, categorize, and prioritize debt items against
-feature work.
+Technical debt accumulates silently across codebases, and teams lack a systematic way to identify, categorize, and
+prioritize debt items against feature work.

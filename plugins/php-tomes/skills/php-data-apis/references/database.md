@@ -96,8 +96,7 @@ final class ConnectionPool {
 }
 ```
 
-PHP-FPM: use external pools — ProxySQL/RDS Proxy (MySQL), PgBouncer
-transaction-mode (PostgreSQL).
+PHP-FPM: use external pools — ProxySQL/RDS Proxy (MySQL), PgBouncer transaction-mode (PostgreSQL).
 
 ### Read Replicas
 
@@ -146,9 +145,8 @@ class MigrationRunner {
 
 ### Zero-Downtime DDL
 
-MySQL 8.0+: instant DDL for ADD COLUMN DEFAULT. Older: `pt-online-schema-change`
-or `gh-ost`. PostgreSQL 11+: ADD COLUMN DEFAULT instant. Pre-11: add nullable ->
-backfill -> set NOT NULL.
+MySQL 8.0+: instant DDL for ADD COLUMN DEFAULT. Older: `pt-online-schema-change` or `gh-ost`. PostgreSQL 11+: ADD COLUMN
+DEFAULT instant. Pre-11: add nullable -> backfill -> set NOT NULL.
 
 ```sql
 -- MySQL index

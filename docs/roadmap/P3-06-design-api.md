@@ -14,5 +14,5 @@ updated: "2026-02-19"
 
 ## Problem
 
-API design decisions made without structured review lead to inconsistent
-interfaces, breaking changes, and poor developer experience for API consumers.
+API design decisions made without structured review lead to inconsistent interfaces, breaking changes, and poor
+developer experience for API consumers.

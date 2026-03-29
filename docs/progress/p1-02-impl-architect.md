@@ -9,21 +9,16 @@ created: "2026-02-14"
 
 ## Summary
 
-This plan adds structured checkpoints and a resume protocol to all 3 SKILL.md
-files, building on P1-01's role-scoped file naming. The existing
-`docs/progress/{feature}-{role}.md` files become structured checkpoint files
-with YAML frontmatter. Changes include:
+This plan adds structured checkpoints and a resume protocol to all 3 SKILL.md files, building on P1-01's role-scoped
+file naming. The existing `docs/progress/{feature}-{role}.md` files become structured checkpoint files with YAML
+frontmatter. Changes include:
 
-1. New **Checkpoint Protocol** section in each SKILL.md (after Write Safety,
-   before Determine Mode) — defines the checkpoint file format and general rules
-2. Updated **Determine Mode** sections with a resume protocol — scan for
-   incomplete checkpoints before starting fresh
-3. Updated **Failure Recovery** context exhaustion — leverage existing
-   checkpoints instead of manual summarization
-4. **Checkpoint trigger lines** added to spawn prompt WRITE SAFETY blocks for
-   all working agents
-5. New **CHECKPOINTS** block for impl-architect (which lacks a WRITE SAFETY
-   block)
+1. New **Checkpoint Protocol** section in each SKILL.md (after Write Safety, before Determine Mode) — defines the
+   checkpoint file format and general rules
+2. Updated **Determine Mode** sections with a resume protocol — scan for incomplete checkpoints before starting fresh
+3. Updated **Failure Recovery** context exhaustion — leverage existing checkpoints instead of manual summarization
+4. **Checkpoint trigger lines** added to spawn prompt WRITE SAFETY blocks for all working agents
+5. New **CHECKPOINTS** block for impl-architect (which lacks a WRITE SAFETY block)
 
 **Total edits: 18** across 3 files. No new files created.
 
@@ -31,32 +26,26 @@ with YAML frontmatter. Changes include:
 
 ## Design Decisions
 
-1. **Checkpoint files ARE the role-scoped progress files.** P1-01 established
-   `docs/progress/{feature}-{role}.md` as each agent's file. P1-02 simply
-   defines a structured format (YAML frontmatter + progress notes) for those
-   same files. No new file paths needed.
+1. **Checkpoint files ARE the role-scoped progress files.** P1-01 established `docs/progress/{feature}-{role}.md` as
+   each agent's file. P1-02 simply defines a structured format (YAML frontmatter + progress notes) for those same files.
+   No new file paths needed.
 
-2. **Minimal per-prompt additions.** Instead of duplicating the full checkpoint
-   format in every spawn prompt, the Checkpoint Protocol section defines the
-   format once per SKILL.md. Each spawn prompt gets only a single "Checkpoint
+2. **Minimal per-prompt additions.** Instead of duplicating the full checkpoint format in every spawn prompt, the
+   Checkpoint Protocol section defines the format once per SKILL.md. Each spawn prompt gets only a single "Checkpoint
    after:" trigger line listing role-specific events.
 
-3. **Skeptic roles excluded from checkpoint triggers.** Skeptics communicate via
-   messages and their work is reactive (review when asked). If their context is
-   lost, the team lead re-requests the review. Adding checkpoints to skeptics
+3. **Skeptic roles excluded from checkpoint triggers.** Skeptics communicate via messages and their work is reactive
+   (review when asked). If their context is lost, the team lead re-requests the review. Adding checkpoints to skeptics
    adds cost for marginal value.
 
-4. **Context exhaustion now leverages checkpoints.** Previously, the lead had to
-   manually summarize state. Now the checkpoint file already contains the state
-   — the lead just reads it and passes it to the re-spawned agent.
+4. **Context exhaustion now leverages checkpoints.** Previously, the lead had to manually summarize state. Now the
+   checkpoint file already contains the state — the lead just reads it and passes it to the re-spawned agent.
 
-5. **Resume is opportunistic, not mandatory.** The resume protocol checks for
-   incomplete checkpoints. If none exist, the skill proceeds normally. This
-   means checkpoints enhance resilience without changing the happy path.
+5. **Resume is opportunistic, not mandatory.** The resume protocol checks for incomplete checkpoints. If none exist, the
+   skill proceeds normally. This means checkpoints enhance resilience without changing the happy path.
 
-6. **Team-scoped checkpoint scanning.** Each skill scans for checkpoints
-   matching its own `team` field (`plan-product`, `build-product`, or
-   `review-quality`). This prevents cross-skill checkpoint interference.
+6. **Team-scoped checkpoint scanning.** Each skill scans for checkpoints matching its own `team` field (`plan-product`,
+   `build-product`, or `review-quality`). This prevents cross-skill checkpoint interference.
 
 ---
 
@@ -123,8 +112,7 @@ The Team Lead reads checkpoint files to understand team state during recovery.
 
 Based on $ARGUMENTS:
 
-- **Empty/no args**: General review cycle. Assess roadmap health, identify gaps,
-  reprioritize.
+- **Empty/no args**: General review cycle. Assess roadmap health, identify gaps, reprioritize.
 - **"new [idea]"**: Research and spec a new feature.
 
 ```
@@ -134,12 +122,10 @@ Based on $ARGUMENTS:
 
 Based on $ARGUMENTS:
 
-- **Empty/no args**: First, scan `docs/progress/` for checkpoint files with
-  `team: "plan-product"` and `status` of `in_progress`, `blocked`, or
-  `awaiting_review`. If found, **resume from the last checkpoint** — re-spawn
-  the relevant agents with their checkpoint content as context. If no incomplete
-  checkpoints exist, proceed with a general review cycle. Assess roadmap health,
-  identify gaps, reprioritize.
+- **Empty/no args**: First, scan `docs/progress/` for checkpoint files with `team: "plan-product"` and `status` of
+  `in_progress`, `blocked`, or `awaiting_review`. If found, **resume from the last checkpoint** — re-spawn the relevant
+  agents with their checkpoint content as context. If no incomplete checkpoints exist, proceed with a general review
+  cycle. Assess roadmap health, identify gaps, reprioritize.
 - **"new [idea]"**: Research and spec a new feature.
 
 ```
@@ -149,20 +135,18 @@ Based on $ARGUMENTS:
 **old_string:**
 ```
 
-- **Context exhaustion**: If any agent's responses become degraded (repetitive,
-  losing context), the Team Lead should summarize the current state to
-  `docs/progress/{feature}-{role}.md` (using the agent's role name) and re-spawn
-  the agent with the summary as context.
+- **Context exhaustion**: If any agent's responses become degraded (repetitive, losing context), the Team Lead should
+  summarize the current state to `docs/progress/{feature}-{role}.md` (using the agent's role name) and re-spawn the
+  agent with the summary as context.
 
 ```
 
 **new_string:**
 ```
 
-- **Context exhaustion**: If any agent's responses become degraded (repetitive,
-  losing context), the Team Lead should read the agent's checkpoint file at
-  `docs/progress/{feature}-{role}.md`, then re-spawn the agent with the
-  checkpoint content as context to resume from the last known state.
+- **Context exhaustion**: If any agent's responses become degraded (repetitive, losing context), the Team Lead should
+  read the agent's checkpoint file at `docs/progress/{feature}-{role}.md`, then re-spawn the agent with the checkpoint
+  content as context to resume from the last known state.
 
 ```
 
@@ -201,8 +185,7 @@ WRITE SAFETY:
 
 WRITE SAFETY:
 
-- Write architecture docs to files scoped to your concern (e.g.,
-  docs/architecture/{feature}-system-design.md)
+- Write architecture docs to files scoped to your concern (e.g., docs/architecture/{feature}-system-design.md)
 - Write progress notes ONLY to docs/progress/{feature}-architect.md
 - NEVER write to shared files — only the Team Lead writes to shared/index files
 
@@ -232,8 +215,7 @@ WRITE SAFETY:
 
 WRITE SAFETY:
 
-- Write data model docs to files scoped to your concern (e.g.,
-  docs/architecture/{feature}-data-model.md)
+- Write data model docs to files scoped to your concern (e.g., docs/architecture/{feature}-data-model.md)
 - Write progress notes ONLY to docs/progress/{feature}-dba.md
 - NEVER write to shared files — only the Team Lead writes to shared/index files
 
@@ -265,10 +247,9 @@ WRITE SAFETY:
 **old_string:**
 ```
 
-- **Spec/contract files**: Only the Team Lead writes to `docs/specs/{feature}/`
-  files. Exception: backend-eng and frontend-eng may co-author
-  `docs/specs/{feature}/api-contract.md` during sequential contract negotiation
-  (not concurrent writes).
+- **Spec/contract files**: Only the Team Lead writes to `docs/specs/{feature}/` files. Exception: backend-eng and
+  frontend-eng may co-author `docs/specs/{feature}/api-contract.md` during sequential contract negotiation (not
+  concurrent writes).
 
 ## Determine Mode
 
@@ -277,16 +258,14 @@ WRITE SAFETY:
 **new_string:**
 ```
 
-- **Spec/contract files**: Only the Team Lead writes to `docs/specs/{feature}/`
-  files. Exception: backend-eng and frontend-eng may co-author
-  `docs/specs/{feature}/api-contract.md` during sequential contract negotiation
-  (not concurrent writes).
+- **Spec/contract files**: Only the Team Lead writes to `docs/specs/{feature}/` files. Exception: backend-eng and
+  frontend-eng may co-author `docs/specs/{feature}/api-contract.md` during sequential contract negotiation (not
+  concurrent writes).
 
 ## Checkpoint Protocol
 
-Agents MUST write a checkpoint to their role-scoped progress file
-(`docs/progress/{feature}-{role}.md`) after each significant state change. This
-enables session recovery if context is lost.
+Agents MUST write a checkpoint to their role-scoped progress file (`docs/progress/{feature}-{role}.md`) after each
+significant state change. This enables session recovery if context is lost.
 
 ### Checkpoint File Format
 
@@ -330,8 +309,7 @@ The Team Lead reads checkpoint files to understand team state during recovery.
 
 Based on $ARGUMENTS:
 
-- **Empty/no args**: Check for in-progress work first. If none, pick next ready
-  roadmap item.
+- **Empty/no args**: Check for in-progress work first. If none, pick next ready roadmap item.
 - **"[spec-name]"**: Implement the named spec.
 
 ```
@@ -341,12 +319,10 @@ Based on $ARGUMENTS:
 
 Based on $ARGUMENTS:
 
-- **Empty/no args**: Scan `docs/progress/` for checkpoint files with
-  `team: "build-product"` and `status` of `in_progress`, `blocked`, or
-  `awaiting_review`. If found, **resume from the last checkpoint** — re-spawn
-  the relevant agents with their checkpoint content as context and pick up where
-  they left off. If no incomplete checkpoints exist, pick next ready roadmap
-  item.
+- **Empty/no args**: Scan `docs/progress/` for checkpoint files with `team: "build-product"` and `status` of
+  `in_progress`, `blocked`, or `awaiting_review`. If found, **resume from the last checkpoint** — re-spawn the relevant
+  agents with their checkpoint content as context and pick up where they left off. If no incomplete checkpoints exist,
+  pick next ready roadmap item.
 - **"[spec-name]"**: Implement the named spec.
 
 ```
@@ -356,20 +332,18 @@ Based on $ARGUMENTS:
 **old_string:**
 ```
 
-- **Context exhaustion**: If any agent's responses become degraded (repetitive,
-  losing context), the Team Lead should summarize the current state to
-  `docs/progress/{feature}-{role}.md` (using the agent's role name) and re-spawn
-  the agent with the summary as context.
+- **Context exhaustion**: If any agent's responses become degraded (repetitive, losing context), the Team Lead should
+  summarize the current state to `docs/progress/{feature}-{role}.md` (using the agent's role name) and re-spawn the
+  agent with the summary as context.
 
 ```
 
 **new_string:**
 ```
 
-- **Context exhaustion**: If any agent's responses become degraded (repetitive,
-  losing context), the Team Lead should read the agent's checkpoint file at
-  `docs/progress/{feature}-{role}.md`, then re-spawn the agent with the
-  checkpoint content as context to resume from the last known state.
+- **Context exhaustion**: If any agent's responses become degraded (repetitive, losing context), the Team Lead should
+  read the agent's checkpoint file at `docs/progress/{feature}-{role}.md`, then re-spawn the agent with the checkpoint
+  content as context to resume from the last known state.
 
 ```
 
@@ -411,8 +385,7 @@ WRITE SAFETY:
 
 - Write your progress notes ONLY to docs/progress/{feature}-backend-eng.md
 - NEVER write to files owned by other agents or shared index files
-- Only the Team Lead writes to shared files like roadmap entries or aggregated
-  summaries
+- Only the Team Lead writes to shared files like roadmap entries or aggregated summaries
 
 TEST STRATEGY:
 
@@ -425,10 +398,9 @@ WRITE SAFETY:
 
 - Write your progress notes ONLY to docs/progress/{feature}-backend-eng.md
 - NEVER write to files owned by other agents or shared index files
-- Only the Team Lead writes to shared files like roadmap entries or aggregated
-  summaries
-- Checkpoint after: task claimed, contract proposed, contract agreed,
-  implementation started, endpoint ready, tests passing
+- Only the Team Lead writes to shared files like roadmap entries or aggregated summaries
+- Checkpoint after: task claimed, contract proposed, contract agreed, implementation started, endpoint ready, tests
+  passing
 
 TEST STRATEGY:
 
@@ -443,8 +415,7 @@ WRITE SAFETY:
 
 - Write your progress notes ONLY to docs/progress/{feature}-frontend-eng.md
 - NEVER write to files owned by other agents or shared index files
-- Only the Team Lead writes to shared files like roadmap entries or aggregated
-  summaries
+- Only the Team Lead writes to shared files like roadmap entries or aggregated summaries
 
 TEST STRATEGY:
 
@@ -457,10 +428,8 @@ WRITE SAFETY:
 
 - Write your progress notes ONLY to docs/progress/{feature}-frontend-eng.md
 - NEVER write to files owned by other agents or shared index files
-- Only the Team Lead writes to shared files like roadmap entries or aggregated
-  summaries
-- Checkpoint after: task claimed, contract reviewed, implementation started,
-  component ready, tests passing
+- Only the Team Lead writes to shared files like roadmap entries or aggregated summaries
+- Checkpoint after: task claimed, contract reviewed, implementation started, component ready, tests passing
 
 TEST STRATEGY:
 
@@ -475,8 +444,8 @@ TEST STRATEGY:
 **old_string:**
 ```
 
-- **Shared files**: Only the QA Lead writes to shared/aggregated files. The QA
-  Lead synthesizes agent outputs AFTER parallel work completes.
+- **Shared files**: Only the QA Lead writes to shared/aggregated files. The QA Lead synthesizes agent outputs AFTER
+  parallel work completes.
 
 ## Determine Mode
 
@@ -485,14 +454,13 @@ TEST STRATEGY:
 **new_string:**
 ```
 
-- **Shared files**: Only the QA Lead writes to shared/aggregated files. The QA
-  Lead synthesizes agent outputs AFTER parallel work completes.
+- **Shared files**: Only the QA Lead writes to shared/aggregated files. The QA Lead synthesizes agent outputs AFTER
+  parallel work completes.
 
 ## Checkpoint Protocol
 
-Agents MUST write a checkpoint to their role-scoped progress file
-(`docs/progress/{feature}-{role}.md`) after each significant state change. This
-enables session recovery if context is lost.
+Agents MUST write a checkpoint to their role-scoped progress file (`docs/progress/{feature}-{role}.md`) after each
+significant state change. This enables session recovery if context is lost.
 
 ### Checkpoint File Format
 
@@ -536,9 +504,8 @@ The QA Lead reads checkpoint files to understand team state during recovery.
 
 Based on $ARGUMENTS:
 
-- **Empty/no args**: Perform a general quality assessment of the most recently
-  implemented feature. Spawn test-eng + ops-skeptic. Check `docs/progress/` for
-  the latest completed implementation.
+- **Empty/no args**: Perform a general quality assessment of the most recently implemented feature. Spawn test-eng +
+  ops-skeptic. Check `docs/progress/` for the latest completed implementation.
 
 ```
 
@@ -547,13 +514,11 @@ Based on $ARGUMENTS:
 
 Based on $ARGUMENTS:
 
-- **Empty/no args**: First, scan `docs/progress/` for checkpoint files with
-  `team: "review-quality"` and `status` of `in_progress`, `blocked`, or
-  `awaiting_review`. If found, **resume from the last checkpoint** — re-spawn
-  the relevant agents with their checkpoint content as context. If no incomplete
-  checkpoints exist, perform a general quality assessment of the most recently
-  implemented feature. Spawn test-eng + ops-skeptic. Check `docs/progress/` for
-  the latest completed implementation.
+- **Empty/no args**: First, scan `docs/progress/` for checkpoint files with `team: "review-quality"` and `status` of
+  `in_progress`, `blocked`, or `awaiting_review`. If found, **resume from the last checkpoint** — re-spawn the relevant
+  agents with their checkpoint content as context. If no incomplete checkpoints exist, perform a general quality
+  assessment of the most recently implemented feature. Spawn test-eng + ops-skeptic. Check `docs/progress/` for the
+  latest completed implementation.
 
 ```
 
@@ -562,20 +527,18 @@ Based on $ARGUMENTS:
 **old_string:**
 ```
 
-- **Context exhaustion**: If any agent's responses become degraded (repetitive,
-  losing context), the Team Lead should summarize the current state to
-  `docs/progress/{feature}-{role}.md` (using the agent's role name) and re-spawn
-  the agent with the summary as context.
+- **Context exhaustion**: If any agent's responses become degraded (repetitive, losing context), the Team Lead should
+  summarize the current state to `docs/progress/{feature}-{role}.md` (using the agent's role name) and re-spawn the
+  agent with the summary as context.
 
 ```
 
 **new_string:**
 ```
 
-- **Context exhaustion**: If any agent's responses become degraded (repetitive,
-  losing context), the Team Lead should read the agent's checkpoint file at
-  `docs/progress/{feature}-{role}.md`, then re-spawn the agent with the
-  checkpoint content as context to resume from the last known state.
+- **Context exhaustion**: If any agent's responses become degraded (repetitive, losing context), the Team Lead should
+  read the agent's checkpoint file at `docs/progress/{feature}-{role}.md`, then re-spawn the agent with the checkpoint
+  content as context to resume from the last known state.
 
 ```
 
@@ -587,8 +550,7 @@ Based on $ARGUMENTS:
 WRITE SAFETY:
 
 - Write your findings ONLY to docs/progress/{feature}-test-eng.md
-- NEVER write to shared files — only the QA Lead writes to shared/aggregated
-  files
+- NEVER write to shared files — only the QA Lead writes to shared/aggregated files
 
 ```
 
@@ -616,8 +578,7 @@ WRITE SAFETY:
 WRITE SAFETY:
 
 - Write your findings ONLY to docs/progress/{feature}-devops-eng.md
-- NEVER write to shared files — only the QA Lead writes to shared/aggregated
-  files
+- NEVER write to shared files — only the QA Lead writes to shared/aggregated files
 
 ```
 
@@ -645,8 +606,7 @@ WRITE SAFETY:
 WRITE SAFETY:
 
 - Write your findings ONLY to docs/progress/{feature}-security-auditor.md
-- NEVER write to shared files — only the QA Lead writes to shared/aggregated
-  files
+- NEVER write to shared files — only the QA Lead writes to shared/aggregated files
 
 ```
 

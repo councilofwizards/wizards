@@ -37,5 +37,4 @@ status: "complete"
 
 ### Outcome
 
-P3-10 (`/plan-sales`) approved as next feature. Collaborative Analysis pattern
-selected for validation.
+P3-10 (`/plan-sales`) approved as next feature. Collaborative Analysis pattern selected for validation.

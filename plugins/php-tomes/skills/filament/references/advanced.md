@@ -30,13 +30,11 @@
 
 ### Standalone Action Class
 
-Extend `Action`, override `getDefaultName()` and `setUp()`. Use as
-`PublishAction::make()`.
+Extend `Action`, override `getDefaultName()` and `setUp()`. Use as `PublishAction::make()`.
 
 ### Form Actions
 
-Use `Filament\Forms\Components\Actions` with `FormAction` entries. Closures
-receive `Get $get`, `Set $set`.
+Use `Filament\Forms\Components\Actions` with `FormAction` entries. Closures receive `Get $get`, `Set $set`.
 
 ### Page Header Actions
 
@@ -44,10 +42,8 @@ Override `getHeaderActions(): array` on any page class.
 
 ## Modal Configuration
 
-Key methods: `->requiresConfirmation()`, `->modalHeading()`,
-`->modalDescription()`, `->modalSubmitActionLabel()`, `->modalWidth('lg')`
-(sm/md/lg/xl/2xl/3xl/screen), `->closeModalByClickingAway(false)`,
-`->slideOver()` (side panel).
+Key methods: `->requiresConfirmation()`, `->modalHeading()`, `->modalDescription()`, `->modalSubmitActionLabel()`,
+`->modalWidth('lg')` (sm/md/lg/xl/2xl/3xl/screen), `->closeModalByClickingAway(false)`, `->slideOver()` (side panel).
 
 ## Notifications
 
@@ -67,8 +63,7 @@ Notification::make()->title('Order')->success()->broadcast($user);            //
 Notification::make()->title('Failed')->danger()->sendToDatabase($user)->broadcast($user); // both
 ```
 
-Enable database notifications:
-`$panel->databaseNotifications()->databaseNotificationsPolling('30s')`. Run
+Enable database notifications: `$panel->databaseNotifications()->databaseNotificationsPolling('30s')`. Run
 `php artisan notifications:table && php artisan migrate`. Add actions:
 `->actions([\Filament\Notifications\Actions\Action::make('view')->button()->url($url)])`.
 
@@ -76,20 +71,17 @@ Enable database notifications:
 
 ### StatsOverviewWidget
 
-Override `getStats()` returning `Stat::make(label, value)` with
-`->description()`, `->descriptionIcon()`, `->color()`, `->chart([...])`,
-`->url()`.
+Override `getStats()` returning `Stat::make(label, value)` with `->description()`, `->descriptionIcon()`, `->color()`,
+`->chart([...])`, `->url()`.
 
 ### ChartWidget
 
-Override `getData()` (Chart.js format: `datasets` + `labels`), `getType()`
-(`line`, `bar`, `pie`, `doughnut`, `polarArea`, `radar`). Optional: `$filter`
-property + `getFilters()` for dropdown.
+Override `getData()` (Chart.js format: `datasets` + `labels`), `getType()` (`line`, `bar`, `pie`, `doughnut`,
+`polarArea`, `radar`). Optional: `$filter` property + `getFilters()` for dropdown.
 
 ### Custom Widget
 
-Set `protected static string $view`, override `getViewData()`, gate with
-`canView()`.
+Set `protected static string $view`, override `getViewData()`, gate with `canView()`.
 
 ### Widget Properties
 
@@ -99,8 +91,7 @@ Set `protected static string $view`, override `getViewData()`, gate with
 | `$isLazy`          | `true` to defer loading past page render |
 | `$columnSpan`      | `'full'`, int, or responsive array       |
 
-Register: `->widgets([...])` in PanelProvider. Replace dashboard:
-`->dashboard(CustomDashboard::class)`.
+Register: `->widgets([...])` in PanelProvider. Replace dashboard: `->dashboard(CustomDashboard::class)`.
 
 ## Custom Pages
 
@@ -122,19 +113,17 @@ class Settings extends Page
 
 ### Form-Backed Page
 
-Implement `HasForms`, use `InteractsWithForms`. Bind with `->statePath('data')`.
-Fill in `mount()`, persist in action method. Blade:
+Implement `HasForms`, use `InteractsWithForms`. Bind with `->statePath('data')`. Fill in `mount()`, persist in action
+method. Blade:
 `<x-filament-panels::page><form wire:submit="save">{{ $this->form }}<x-filament::button type="submit">Save</x-filament::button></form></x-filament-panels::page>`.
 
 ### Layout
 
-`hasTopbar(): bool` (remove top bar), `getMaxContentWidth(): MaxWidth` (e.g.,
-`MaxWidth::Full`).
+`hasTopbar(): bool` (remove top bar), `getMaxContentWidth(): MaxWidth` (e.g., `MaxWidth::Full`).
 
 ### Embedding Livewire
 
-Wrap with
-`<x-filament-panels::page><livewire:component-name /></x-filament-panels::page>`.
+Wrap with `<x-filament-panels::page><livewire:component-name /></x-filament-panels::page>`.
 
 ## Plugin Development
 
@@ -164,24 +153,21 @@ Expose fluent setters on the plugin class. Retrieve with `MyPlugin::get()`.
 
 ### Package Structure
 
-`src/` (Plugin, ServiceProvider, Resources, Pages, Widgets), `config/`,
-`database/migrations/`, `resources/views/`, `tests/`.
+`src/` (Plugin, ServiceProvider, Resources, Pages, Widgets), `config/`, `database/migrations/`, `resources/views/`,
+`tests/`.
 
 ### Assets
 
-Register via
-`FilamentAsset::register([Css::make(...), Js::make(...)], 'vendor/name')`.
+Register via `FilamentAsset::register([Css::make(...), Js::make(...)], 'vendor/name')`.
 
 ### Testing
 
-Use `orchestra/testbench`. Register a test panel with
-`app(PanelRegistry::class)->register($panel)`. Assert with
+Use `orchestra/testbench`. Register a test panel with `app(PanelRegistry::class)->register($panel)`. Assert with
 `livewire(ListRecords::class)->assertCanSeeTableRecords($records)`.
 
 ### Composer
 
-Require `"filament/filament": "^3.0"`,
-`"illuminate/contracts": "^10.0 || ^11.0"`, `"php": "^8.2"`.
+Require `"filament/filament": "^3.0"`, `"illuminate/contracts": "^10.0 || ^11.0"`, `"php": "^8.2"`.
 
 ## Theming
 

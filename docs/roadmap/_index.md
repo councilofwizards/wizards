@@ -1,7 +1,7 @@
 # Product Roadmap
 
-> **Source of truth**: Individual item files in this directory. This index is a
-> convenience summary. **Last updated**: 2026-03-27
+> **Source of truth**: Individual item files in this directory. This index is a convenience summary. **Last updated**:
+> 2026-03-27
 
 ## Categories
 
@@ -20,11 +20,9 @@ Items are prioritized using two dimensions:
 
 **Priority tiers**:
 
-- **P1 (Critical)**: Blocks adoption or causes incorrect behavior. Must be
-  addressed first.
+- **P1 (Critical)**: Blocks adoption or causes incorrect behavior. Must be addressed first.
 - **P2 (Important)**: Significantly improves the product. Address after P1s.
-- **P3 (Nice-to-have)**: Polish, convenience, or future-facing. Address when
-  capacity allows.
+- **P3 (Nice-to-have)**: Polish, convenience, or future-facing. Address when capacity allows.
 
 **Scoring criteria** (used to assign priority):
 
@@ -66,29 +64,20 @@ Items are prioritized using two dimensions:
 | 9   | [Content Deduplication](P2-05-content-deduplication.md)   | core-framework       | ✅        | Medium |
 | 10  | [Artifact Format Templates](P2-06-format-templates.md)    | core-framework       | ✅        | Medium |
 
-| 11 | [Role-Based Principles Split](P2-07-universal-principles.md) |
-core-framework | ✅ | Medium | | 12 |
-[Plugin Organization — Internal Taxonomy & Infrastructure](P2-08-plugin-organization.md)
-| core-framework | ✅ | Small | | 13 |
-[Persona System Activation](P2-09-persona-system-activation.md) | core-framework
-| ✅ | Small-Medium | | 14 |
-[Skill Discoverability Improvements](P2-10-skill-discoverability.md) |
-developer-experience | ✅ | Small | | 15 |
-[Sprint Contracts / Definition of Done](P2-11-sprint-contracts.md) |
-core-framework | ✅ | Medium | | 16 |
-[QA Agent for Live Testing](P2-12-qa-agent-live-testing.md) |
-quality-reliability | ✅ | Large | | 17 |
-[User-Writable Configuration Convention](P2-13-user-writable-config.md) |
-core-framework | ✅ | Small |
+| 11 | [Role-Based Principles Split](P2-07-universal-principles.md) | core-framework | ✅ | Medium | | 12 |
+[Plugin Organization — Internal Taxonomy & Infrastructure](P2-08-plugin-organization.md) | core-framework | ✅ | Small |
+| 13 | [Persona System Activation](P2-09-persona-system-activation.md) | core-framework | ✅ | Small-Medium | | 14 |
+[Skill Discoverability Improvements](P2-10-skill-discoverability.md) | developer-experience | ✅ | Small | | 15 |
+[Sprint Contracts / Definition of Done](P2-11-sprint-contracts.md) | core-framework | ✅ | Medium | | 16 |
+[QA Agent for Live Testing](P2-12-qa-agent-live-testing.md) | quality-reliability | ✅ | Large | | 17 |
+[User-Writable Configuration Convention](P2-13-user-writable-config.md) | core-framework | ✅ | Small |
 
-> **P2-08 prerequisite**: Defer plugin organization until 2+ business skills are
-> built and validated. Real-world skill structure should inform plugin
-> boundaries. **P2-09 + P2-10**: Highest-ROI items from
-> conclave-plugin-improvements research. Wave 1 implementation recommended.
-> **P2-13**: Establishes `.claude/conclave/` user-writable config convention.
-> Small effort, high impact — unblocks P2-11 and P3-29. **P2-11 + P2-12**:
-> Harness design paper improvements. P2-11 (Sprint Contracts) depends on P2-13.
-> P2-12 (QA Agent) soft-depends on P2-11. Wave 2-3 implementation recommended.
+> **P2-08 prerequisite**: Defer plugin organization until 2+ business skills are built and validated. Real-world skill
+> structure should inform plugin boundaries. **P2-09 + P2-10**: Highest-ROI items from conclave-plugin-improvements
+> research. Wave 1 implementation recommended. **P2-13**: Establishes `.claude/conclave/` user-writable config
+> convention. Small effort, high impact — unblocks P2-11 and P3-29. **P2-11 + P2-12**: Harness design paper
+> improvements. P2-11 (Sprint Contracts) depends on P2-13. P2-12 (QA Agent) soft-depends on P2-11. Wave 2-3
+> implementation recommended.
 
 ### P3 — Nice-to-Have (Engineering)
 
@@ -104,16 +93,14 @@ core-framework | ✅ | Small |
 | 25  | [Persona Reference Validator](P3-08-persona-reference-validator.md) | quality-reliability  | 🟢     | Medium |
 | 26  | [Artifact Continuity Badges](P3-09-artifact-continuity-badges.md)   | core-framework       | 🟢     | Small  |
 
-> **P3-08 dependency**: Must be implemented AFTER P2-09 (Persona System
-> Activation). Validator checks for fictional names in spawn prompts — will fail
-> if P2-09 is not done first.
+> **P3-08 dependency**: Must be implemented AFTER P2-09 (Persona System Activation). Validator checks for fictional
+> names in spawn prompts — will fail if P2-09 is not done first.
 
 ### P3 — Nice-to-Have (Business)
 
-> **Strategy note**: Strategic planning (`/plan-strategy`) is scoped within the
-> existing `/plan-product` skill rather than a standalone skill. The
-> plan-product team already covers roadmap assessment, prioritization, and
-> competitive analysis.
+> **Strategy note**: Strategic planning (`/plan-strategy`) is scoped within the existing `/plan-product` skill rather
+> than a standalone skill. The plan-product team already covers roadmap assessment, prioritization, and competitive
+> analysis.
 
 | #   | Item                                                      | Category        | Status | Effort       |
 | --- | --------------------------------------------------------- | --------------- | ------ | ------------ |
@@ -143,14 +130,13 @@ core-framework | ✅ | Small |
 | 40  | [run-task Persona Archetypes](P3-24-run-task-persona-archetypes.md) | core-framework       | 🟢     | Medium |
 | 41  | [PoC Skills Deprecation Banner](P3-25-poc-deprecation-banner.md)    | developer-experience | 🟢     | Small  |
 
-> **P3-23, P3-24 dependency**: Both depend on P2-09 (Persona System Activation).
-> ADR documents the completed system; run-task archetypes follow the injection
-> pattern established by P2-09.
+> **P3-23, P3-24 dependency**: Both depend on P2-09 (Persona System Activation). ADR documents the completed system;
+> run-task archetypes follow the injection pattern established by P2-09.
 
 ### P3 — Nice-to-Have (Harness Design Improvements)
 
-> **Source**: Anthropic harness design paper analysis (2026-03-27). Improvements
-> to evaluation quality, pipeline flexibility, and agent calibration.
+> **Source**: Anthropic harness design paper analysis (2026-03-27). Improvements to evaluation quality, pipeline
+> flexibility, and agent calibration.
 
 | #   | Item                                                                            | Category             | Status | Effort |
 | --- | ------------------------------------------------------------------------------- | -------------------- | ------ | ------ |
@@ -161,8 +147,6 @@ core-framework | ✅ | Small |
 | 46  | [Checkpoint Frequency Configurability](P3-30-checkpoint-configurability.md)     | developer-experience | ✅     | Small  |
 | 47  | [Design Assumptions Documentation](P3-31-design-assumptions-docs.md)            | documentation        | ✅     | Small  |
 
-> **P3-27 + P3-28 batching**: Both modify plan-product SKILL.md — implement
-> together. **P3-29 dependencies**: Requires P2-11, P2-12, P2-13, and P3-28
-> producing evaluation data before calibration is meaningful. **P3-31**: Inline
-> SCAFFOLD comments documenting model-capability assumptions. Soft-sequences
-> after P3-03 (Contribution Guide).
+> **P3-27 + P3-28 batching**: Both modify plan-product SKILL.md — implement together. **P3-29 dependencies**: Requires
+> P2-11, P2-12, P2-13, and P3-28 producing evaluation data before calibration is meaningful. **P3-31**: Inline SCAFFOLD
+> comments documenting model-capability assumptions. Soft-sequences after P3-03 (Contribution Guide).

@@ -9,23 +9,19 @@ updated: "2026-02-19"
 
 ## Overview
 
-A single-agent skill that bootstraps a project for use with the conclave plugin.
-It detects the project's tech stack, scaffolds the `docs/` directory structure,
-generates a project-specific `CLAUDE.md`, creates a starter roadmap, and guides
-the user to the next steps. Designed to take a new user from plugin install to
-their first `/plan-product` invocation in under 5 minutes.
+A single-agent skill that bootstraps a project for use with the conclave plugin. It detects the project's tech stack,
+scaffolds the `docs/` directory structure, generates a project-specific `CLAUDE.md`, creates a starter roadmap, and
+guides the user to the next steps. Designed to take a new user from plugin install to their first `/plan-product`
+invocation in under 5 minutes.
 
 ## Architecture Classification
 
-This is a **single-agent utility skill** — the simplest architecture in the
-conclave framework. Unlike `plan-product`, `build-product`, and
-`review-quality`, which spawn multi-agent teams with skeptic gates,
-`/setup-project` runs as a single agent executing a deterministic pipeline.
-There is no team orchestration, no skeptic review, and no checkpoint protocol.
-The skill runs to completion in one pass.
+This is a **single-agent utility skill** — the simplest architecture in the conclave framework. Unlike `plan-product`,
+`build-product`, and `review-quality`, which spawn multi-agent teams with skeptic gates, `/setup-project` runs as a
+single agent executing a deterministic pipeline. There is no team orchestration, no skeptic review, and no checkpoint
+protocol. The skill runs to completion in one pass.
 
-Rationale: See ADR-003 for the full decision record on single-agent vs.
-multi-agent.
+Rationale: See ADR-003 for the full decision record on single-agent vs. multi-agent.
 
 ## Component Structure
 
@@ -48,15 +44,14 @@ multi-agent.
   Output artifacts (files on disk)
 ```
 
-There are no external service dependencies, no database, no network calls. The
-skill reads the filesystem and writes to the filesystem.
+There are no external service dependencies, no database, no network calls. The skill reads the filesystem and writes to
+the filesystem.
 
 ## Step-by-Step Execution
 
 ### Step 1: Detect Existing State
 
-Before any writes, inventory what already exists. This is the foundation of
-idempotency.
+Before any writes, inventory what already exists. This is the foundation of idempotency.
 
 **Reads:**
 
@@ -64,8 +59,7 @@ idempotency.
 - `docs/` directory — exists? which subdirectories exist?
 - `docs/roadmap/_index.md` — exists?
 - `docs/stack-hints/` — any existing hint files?
-- `docs/specs/_template.md`, `docs/progress/_template.md`,
-  `docs/architecture/_template.md` — exist?
+- `docs/specs/_template.md`, `docs/progress/_template.md`, `docs/architecture/_template.md` — exist?
 
 **Output:** An internal state map:
 
@@ -80,13 +74,12 @@ idempotency.
 }
 ```
 
-This state map drives conditional logic in all subsequent steps. Every write
-operation checks this map before proceeding.
+This state map drives conditional logic in all subsequent steps. Every write operation checks this map before
+proceeding.
 
 ### Step 2: Detect Tech Stack
 
-Scan the project root for dependency manifests to identify the primary tech
-stack.
+Scan the project root for dependency manifests to identify the primary tech stack.
 
 **Detection table:**
 
@@ -103,22 +96,17 @@ stack.
 | `pubspec.yaml`                                       | Dart/Flutter                                                                                                           |
 | `Package.swift`                                      | Swift                                                                                                                  |
 
-**Priority:** If multiple manifests exist, the skill should detect all of them
-and identify the primary stack (the one with the most configuration/code).
-Report findings to the user and ask for confirmation if ambiguous. This
-confirmation should be a brief inline question (e.g., "Detected both Node.js and
-Python. Which is primary?"), not a multi-turn conversation — keep the pipeline
-deterministic.
+**Priority:** If multiple manifests exist, the skill should detect all of them and identify the primary stack (the one
+with the most configuration/code). Report findings to the user and ask for confirmation if ambiguous. This confirmation
+should be a brief inline question (e.g., "Detected both Node.js and Python. Which is primary?"), not a multi-turn
+conversation — keep the pipeline deterministic.
 
-**Framework-level detection:** Beyond just the language, detect the framework
-(e.g., "Laravel" not just "PHP", "Next.js" not just "Node.js"). This matters
-because stack hints are framework-specific.
+**Framework-level detection:** Beyond just the language, detect the framework (e.g., "Laravel" not just "PHP", "Next.js"
+not just "Node.js"). This matters because stack hints are framework-specific.
 
-**Output:** A stack identifier (e.g., `laravel`, `nextjs`, `rails`, `django`)
-used to:
+**Output:** A stack identifier (e.g., `laravel`, `nextjs`, `rails`, `django`) used to:
 
-1. Look up matching `docs/stack-hints/{stack}.md` from the plugin's bundled
-   hints
+1. Look up matching `docs/stack-hints/{stack}.md` from the plugin's bundled hints
 2. Tailor the generated `CLAUDE.md` content
 3. Set categories in the roadmap index
 
@@ -144,30 +132,25 @@ docs/stack-hints/
 - `docs/progress/_template.md` — standard progress/checkpoint template
 - `docs/architecture/_template.md` — standard ADR template
 
-**Idempotency rule:** Only create directories and files that do not already
-exist. Never overwrite existing files. If a directory already exists with
-content, skip it silently. Report what was created vs. what was skipped in the
-summary output.
+**Idempotency rule:** Only create directories and files that do not already exist. Never overwrite existing files. If a
+directory already exists with content, skip it silently. Report what was created vs. what was skipped in the summary
+output.
 
-**Template content source:** Templates should be embedded directly in the
-SKILL.md as fenced code blocks. This keeps the skill self-contained (consistent
-with the self-containment property established in ADR-002) and avoids
-dependencies on plugin file layout. The templates are small (each under 50
-lines), so the SKILL.md size impact is acceptable.
+**Template content source:** Templates should be embedded directly in the SKILL.md as fenced code blocks. This keeps the
+skill self-contained (consistent with the self-containment property established in ADR-002) and avoids dependencies on
+plugin file layout. The templates are small (each under 50 lines), so the SKILL.md size impact is acceptable.
 
 ### Step 4: Generate `CLAUDE.md`
 
-Write a project-specific `CLAUDE.md` to the project root. This is the most
-complex generation step because the content must be tailored to the detected
-stack.
+Write a project-specific `CLAUDE.md` to the project root. This is the most complex generation step because the content
+must be tailored to the detected stack.
 
-**Idempotency rule:** If `CLAUDE.md` already exists, DO NOT overwrite it.
-Instead:
+**Idempotency rule:** If `CLAUDE.md` already exists, DO NOT overwrite it. Instead:
 
 1. Read the existing content
 2. Inform the user that `CLAUDE.md` already exists
-3. Suggest additions by outputting them to the console (as a bulleted list of
-   recommended additions), not by writing a diff file
+3. Suggest additions by outputting them to the console (as a bulleted list of recommended additions), not by writing a
+   diff file
 4. Ask the user if they want to append the suggested content
 
 **Generated content structure:**
@@ -196,33 +179,28 @@ Instead:
 
 - Use `/plan-product` to plan features and create specs
 - Use `/build-product` to implement features from approved specs
-- Use `/review-quality` for security audits, performance analysis, and
-  deployment readiness
+- Use `/review-quality` for security audits, performance analysis, and deployment readiness
 ```
 
-**Stack-specific sections:** If a matching stack hint file exists (either
-bundled with the plugin or already in `docs/stack-hints/`), incorporate its key
-guidelines into the CLAUDE.md. Do not duplicate the full hint file — extract the
-most important conventions.
+**Stack-specific sections:** If a matching stack hint file exists (either bundled with the plugin or already in
+`docs/stack-hints/`), incorporate its key guidelines into the CLAUDE.md. Do not duplicate the full hint file — extract
+the most important conventions.
 
 ### Step 5: Generate `docs/roadmap/_index.md`
 
 Create a starter roadmap index tailored to the project.
 
-**Idempotency rule:** If `docs/roadmap/_index.md` already exists, skip this step
-entirely. The existing roadmap should not be touched.
+**Idempotency rule:** If `docs/roadmap/_index.md` already exists, skip this step entirely. The existing roadmap should
+not be touched.
 
-**Generated content:** Based on the roadmap index format established in ADR-001,
-generate an `_index.md` with:
+**Generated content:** Based on the roadmap index format established in ADR-001, generate an `_index.md` with:
 
-1. The standard header explaining that individual item files are the source of
-   truth
-2. A categories table tailored to the project type (e.g., a SaaS project gets
-   different categories than a CLI tool or library)
+1. The standard header explaining that individual item files are the source of truth
+2. A categories table tailored to the project type (e.g., a SaaS project gets different categories than a CLI tool or
+   library)
 3. The standard prioritization framework
 4. The status legend
-5. An empty "Current Backlog" section ready for the user's first `/plan-product`
-   run
+5. An empty "Current Backlog" section ready for the user's first `/plan-product` run
 
 **Category tailoring by project type:**
 
@@ -235,13 +213,12 @@ generate an `_index.md` with:
 | Mobile app      | `screens`, `navigation`, `data-sync`, `platform-specific`, `documentation`                    |
 | Default         | `core-features`, `quality-reliability`, `developer-experience`, `documentation`               |
 
-The project type is inferred from the tech stack detection. If ambiguous, use
-the default categories and note this in the output.
+The project type is inferred from the tech stack detection. If ambiguous, use the default categories and note this in
+the output.
 
 ### Step 6: Print Summary and Next Steps
 
-Output a clear summary of everything that was done and guide the user to their
-next action.
+Output a clear summary of everything that was done and guide the user to their next action.
 
 **Summary format:**
 
@@ -279,8 +256,7 @@ The skill accepts optional arguments via `$ARGUMENTS`:
 
 The skill produces:
 
-1. **Files on disk** — the scaffolded directory structure, CLAUDE.md, roadmap
-   index, templates
+1. **Files on disk** — the scaffolded directory structure, CLAUDE.md, roadmap index, templates
 2. **Console output** — the summary and next steps (Step 6)
 
 ### Output Artifacts
@@ -299,18 +275,14 @@ The skill produces:
 
 ### With Existing Skills
 
-`/setup-project` creates the exact directory structure and artifacts that
-`plan-product`, `build-product`, and `review-quality` expect in their Setup
-phases. Specifically:
+`/setup-project` creates the exact directory structure and artifacts that `plan-product`, `build-product`, and
+`review-quality` expect in their Setup phases. Specifically:
 
-- **plan-product Setup (lines 17-27):** Expects `docs/roadmap/`, `docs/specs/`,
-  `docs/progress/`, `docs/architecture/`, `docs/stack-hints/`, and template
-  files. `/setup-project` creates all of these.
-- **build-product Setup (lines 17-28):** Same directory expectations plus reads
-  `docs/specs/_template.md` and `docs/progress/_template.md`. `/setup-project`
-  creates these templates.
-- **review-quality Setup (lines 16-27):** Same directory expectations.
-  `/setup-project` creates them.
+- **plan-product Setup (lines 17-27):** Expects `docs/roadmap/`, `docs/specs/`, `docs/progress/`, `docs/architecture/`,
+  `docs/stack-hints/`, and template files. `/setup-project` creates all of these.
+- **build-product Setup (lines 17-28):** Same directory expectations plus reads `docs/specs/_template.md` and
+  `docs/progress/_template.md`. `/setup-project` creates these templates.
+- **review-quality Setup (lines 16-27):** Same directory expectations. `/setup-project` creates them.
 
 ### With Plugin System
 
@@ -320,16 +292,13 @@ phases. Specifically:
 
 ### With Stack Hints
 
-- `/setup-project` reads stack hint files from the plugin's bundled hints (if
-  any)
-- It may also copy/suggest stack-specific hints into the project's
-  `docs/stack-hints/` directory
+- `/setup-project` reads stack hint files from the plugin's bundled hints (if any)
+- It may also copy/suggest stack-specific hints into the project's `docs/stack-hints/` directory
 - Other skills then pick up these hints during their Setup phases
 
 ## Idempotency Strategy
 
-The skill uses **file-existence-based idempotency**. Before every write, it
-checks if the target already exists:
+The skill uses **file-existence-based idempotency**. Before every write, it checks if the target already exists:
 
 | Target                   | If Exists                                            | If Missing |
 | ------------------------ | ---------------------------------------------------- | ---------- |
@@ -339,14 +308,11 @@ checks if the target already exists:
 | `CLAUDE.md`              | Inform user, suggest additions, ask before modifying | Create     |
 | `docs/roadmap/_index.md` | Skip entirely                                        | Create     |
 
-This approach is chosen over alternatives like a "setup complete" marker file
-because:
+This approach is chosen over alternatives like a "setup complete" marker file because:
 
 1. It requires no additional state tracking
-2. It is self-healing — if a user deletes a single artifact, re-running the
-   skill recreates just that artifact
-3. It is transparent — the user can see exactly what exists and what will be
-   created
+2. It is self-healing — if a user deletes a single artifact, re-running the skill recreates just that artifact
+3. It is transparent — the user can see exactly what exists and what will be created
 
 See ADR-003 for the full decision record.
 
@@ -366,10 +332,8 @@ These are explicitly out of scope for this skill:
 1. **No team spawning.** This is a single-agent skill.
 2. **No skeptic review.** Setup output is deterministic and low-risk.
 3. **No checkpoint protocol.** The skill completes in one pass.
-4. **No code generation.** The skill creates documentation and scaffolding, not
-   application code.
-5. **No dependency installation.** The skill does not run `npm install`,
-   `composer install`, etc.
+4. **No code generation.** The skill creates documentation and scaffolding, not application code.
+5. **No dependency installation.** The skill does not run `npm install`, `composer install`, etc.
 6. **No git operations.** The skill does not commit, push, or create branches.
-7. **No modification of existing roadmap items.** It creates the index structure
-   but does not add or modify roadmap item files.
+7. **No modification of existing roadmap items.** It creates the index structure but does not add or modify roadmap item
+   files.

@@ -30,8 +30,7 @@ status: "complete"
 
 - Full roadmap delta analysis since Review Cycle 4
 - P2 blocker assessment (3 items — all unchanged)
-- Next feature candidate evaluation with researcher/architect disagreement
-  resolution
+- Next feature candidate evaluation with researcher/architect disagreement resolution
 - CI validator health audit (5 validators tested, 3 bugs found)
 - Architecture debt assessment (3 ADRs + 9 architecture documents)
 - Quality gate review with sequencing conditions
@@ -39,8 +38,7 @@ status: "complete"
 
 ### Outcome
 
-- P3-14 (`/plan-hiring`) approved as next spec candidate after P3-10
-  implementation
+- P3-14 (`/plan-hiring`) approved as next spec candidate after P3-10 implementation
 - 3 CI validator bugs identified for fix
 - Roadmap stub creation approved as cleanup task
 - P2-02 reporting discontinued

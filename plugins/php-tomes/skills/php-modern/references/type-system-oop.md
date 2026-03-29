@@ -25,15 +25,13 @@
 | `string` | Byte string; no encoding enforcement            |
 | `bool`   | `true` or `false`                               |
 
-**Best practice:** Use `declare(strict_types=1)` in all new files.
-`strict_types` only affects userland calls in the declaring file; built-in
-functions always use coercive mode.
+**Best practice:** Use `declare(strict_types=1)` in all new files. `strict_types` only affects userland calls in the
+declaring file; built-in functions always use coercive mode.
 
 ## Compound Types
 
 - **`array`**: Both list and associative forms
-- **`callable`**: String, array, Closure. NOT valid as property type — use
-  `\Closure` instead
+- **`callable`**: String, array, Closure. NOT valid as property type — use `\Closure` instead
 - **`object`**: Any object
 - **`iterable`**: `array|Traversable`
 
@@ -57,13 +55,11 @@ PHP 8.0+. `int|string`, `int|null` (equivalent to `?int`).
 
 ## Intersection Types
 
-PHP 8.1+. `Countable&Serializable` — value must satisfy ALL types.
-Objects/interfaces only.
+PHP 8.1+. `Countable&Serializable` — value must satisfy ALL types. Objects/interfaces only.
 
 ## DNF Types
 
-PHP 8.2+. Disjunctive Normal Form: `(A&B)|C`. Each intersection group must be
-parenthesized.
+PHP 8.2+. Disjunctive Normal Form: `(A&B)|C`. Each intersection group must be parenthesized.
 
 ```php
 function output((Stringable&JsonSerializable)|null $data): string { /* ... */ }
@@ -71,8 +67,7 @@ function output((Stringable&JsonSerializable)|null $data): string { /* ... */ }
 
 ## Type Covariance/Contravariance
 
-PHP enforces LSP: return types can narrow (covariant), parameter types can widen
-(contravariant).
+PHP enforces LSP: return types can narrow (covariant), parameter types can widen (contravariant).
 
 ```php
 interface Factory { public function create(): Animal; }
@@ -90,8 +85,7 @@ var_dump('1' == '01');   // true — numeric string comparison
 var_dump(100 == '1e2');  // true — scientific notation
 ```
 
-Always use `===`. Use `is_nan()` to check NAN (NAN !== NAN). Integer overflow
-silently becomes float.
+Always use `===`. Use `is_nan()` to check NAN (NAN !== NAN). Integer overflow silently becomes float.
 
 ## Enums
 
@@ -140,8 +134,8 @@ class Point
 
 ### Readonly Classes (8.2+)
 
-All declared properties implicitly readonly. Cannot extend non-readonly class.
-Cannot have untyped properties. Static properties not affected.
+All declared properties implicitly readonly. Cannot extend non-readonly class. Cannot have untyped properties. Static
+properties not affected.
 
 ```php
 readonly class Money
@@ -168,8 +162,7 @@ class Product
 
 ### Traits
 
-Horizontal code reuse. Conflict resolution with `insteadof`/`as`. Can declare
-abstract methods.
+Horizontal code reuse. Conflict resolution with `insteadof`/`as`. Can declare abstract methods.
 
 ```php
 trait Sluggable
@@ -216,8 +209,7 @@ $trimmed = array_map(StringHelper::trim(...), $words);
 
 ## Generators
 
-Lazy iteration without materializing full sequence. Implement `Generator`
-(extends `Iterator`).
+Lazy iteration without materializing full sequence. Implement `Generator` (extends `Iterator`).
 
 ```php
 function fibonacci(): Generator
@@ -269,5 +261,4 @@ Memory: generator processing 1M integers uses ~1KB vs ~32MB for array.
 | Filterable iteration     | `FilterIterator`                   |
 | Tree/directory traversal | `RecursiveIteratorIterator`        |
 
-> `SplPriorityQueue` is destructive — iteration removes elements. Clone before
-> iterating to preserve.
+> `SplPriorityQueue` is destructive — iteration removes elements. Clone before iterating to preserve.

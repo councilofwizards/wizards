@@ -4,8 +4,7 @@ team: "plan-product"
 agent: "researcher"
 phase: "research"
 status: "complete"
-last_action:
-  "Completed research on P3-22 (Investor Update Skill) as next feature candidate"
+last_action: "Completed research on P3-22 (Investor Update Skill) as next feature candidate"
 updated: "2026-02-19"
 ---
 
@@ -13,12 +12,10 @@ updated: "2026-02-19"
 
 ## Summary
 
-P3-22 remains the correct next feature. The recommendation from Review Cycle 2
-is still valid -- no new items were added, no blockers resolved for the deferred
-P2 items, and P3-22's strategic rationale (simplest business skill pathfinder)
-is unchanged. This document provides the deep research needed to spec P3-22: the
-problem space, data sources, skill architecture, framework pattern analysis,
-risks, and open questions.
+P3-22 remains the correct next feature. The recommendation from Review Cycle 2 is still valid -- no new items were
+added, no blockers resolved for the deferred P2 items, and P3-22's strategic rationale (simplest business skill
+pathfinder) is unchanged. This document provides the deep research needed to spec P3-22: the problem space, data
+sources, skill architecture, framework pattern analysis, risks, and open questions.
 
 ---
 
@@ -35,36 +32,28 @@ risks, and open questions.
 | P3-22 (Investor Update)             | Selected as business pathfinder   | Not started                          | No                                     |
 | New roadmap items                   | N/A                               | None added                           | No                                     |
 
-**Assessment (Confidence: HIGH)**: Nothing has changed that would alter the
-P3-22 recommendation. The only change is P3-02's completion, which was the
-prerequisite for starting P3-22. The skill count increased from 3 to 4, but this
-does not change P2-07's prematurity (8-skill threshold per ADR-002) or P2-08's
-deferral (0 business skills still). P3-22 is unblocked and remains the highest
-strategic value item.
+**Assessment (Confidence: HIGH)**: Nothing has changed that would alter the P3-22 recommendation. The only change is
+P3-02's completion, which was the prerequisite for starting P3-22. The skill count increased from 3 to 4, but this does
+not change P2-07's prematurity (8-skill threshold per ADR-002) or P2-08's deferral (0 business skills still). P3-22 is
+unblocked and remains the highest strategic value item.
 
 ### Why P3-22 Over Other Candidates
 
-The Cycle 2 debate was P3-10 (`/plan-sales`, Collaborative Analysis pattern) vs.
-P3-22 (`/draft-investor-update`, Pipeline pattern). The architect recommended
-P3-22, the researcher recommended P3-10. The skeptic noted the architect's
+The Cycle 2 debate was P3-10 (`/plan-sales`, Collaborative Analysis pattern) vs. P3-22 (`/draft-investor-update`,
+Pipeline pattern). The architect recommended P3-22, the researcher recommended P3-10. The skeptic noted the architect's
 argument was stronger on output verifiability.
 
-**I now concur with the P3-22 recommendation.** After deeper analysis of both
-candidates:
+**I now concur with the P3-22 recommendation.** After deeper analysis of both candidates:
 
-1. **P3-22's output is more constrained and verifiable.** An investor update has
-   a well-known structure. A sales plan is fuzzier -- there's no "standard sales
-   plan format" the way there is a standard investor update structure.
-2. **P3-22 primarily reads existing project data.** It synthesizes from
-   `docs/roadmap/`, `docs/progress/`, `docs/specs/`, and `docs/architecture/`. A
-   sales plan requires external market data, competitive intelligence, and
+1. **P3-22's output is more constrained and verifiable.** An investor update has a well-known structure. A sales plan is
+   fuzzier -- there's no "standard sales plan format" the way there is a standard investor update structure.
+2. **P3-22 primarily reads existing project data.** It synthesizes from `docs/roadmap/`, `docs/progress/`,
+   `docs/specs/`, and `docs/architecture/`. A sales plan requires external market data, competitive intelligence, and
    pricing strategy that may not exist in the project.
-3. **Pipeline is the simplest new consensus pattern to implement.** It's closest
-   to the existing plan-product workflow (linear with quality gates), whereas
-   Collaborative Analysis is a genuinely new pattern (parallel work with
+3. **Pipeline is the simplest new consensus pattern to implement.** It's closest to the existing plan-product workflow
+   (linear with quality gates), whereas Collaborative Analysis is a genuinely new pattern (parallel work with
    cross-referencing).
-4. **Self-dogfooding opportunity.** We can immediately test
-   `/draft-investor-update` on this project.
+4. **Self-dogfooding opportunity.** We can immediately test `/draft-investor-update` on this project.
 
 ---
 
@@ -72,8 +61,8 @@ candidates:
 
 ### Standard Investor Update Structure
 
-A startup investor update is a periodic communication (typically monthly or
-quarterly) from founders to investors. It follows a well-established format:
+A startup investor update is a periodic communication (typically monthly or quarterly) from founders to investors. It
+follows a well-established format:
 
 | Section                       | Purpose                               | Data Source in Conclave Project                                                                          |
 | ----------------------------- | ------------------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -91,31 +80,23 @@ quarterly) from founders to investors. It follows a well-established format:
 
 **Rich, structured data (can be read automatically):**
 
-1. **`docs/roadmap/_index.md`** -- Complete backlog with priorities, statuses,
-   effort estimates. Shows what moved from not_started to complete, what's
-   blocked, what's upcoming. This is the primary data source for product
-   progress.
+1. **`docs/roadmap/_index.md`** -- Complete backlog with priorities, statuses, effort estimates. Shows what moved from
+   not_started to complete, what's blocked, what's upcoming. This is the primary data source for product progress.
 
-2. **`docs/roadmap/P*-*.md`** -- Individual roadmap item files with problem
-   statements, solutions, success criteria. Where they exist, these provide
-   detail on what was built and why.
+2. **`docs/roadmap/P*-*.md`** -- Individual roadmap item files with problem statements, solutions, success criteria.
+   Where they exist, these provide detail on what was built and why.
 
-3. **`docs/progress/*-summary.md`** -- End-of-session summaries for each
-   feature. Contain what was accomplished, what remains, blockers, and
-   completion status. There are currently 10+ summary files spanning the
-   project's history.
+3. **`docs/progress/*-summary.md`** -- End-of-session summaries for each feature. Contain what was accomplished, what
+   remains, blockers, and completion status. There are currently 10+ summary files spanning the project's history.
 
-4. **`docs/specs/*/spec.md`** -- Feature specifications. Show what was designed
-   and the scope of each feature.
+4. **`docs/specs/*/spec.md`** -- Feature specifications. Show what was designed and the scope of each feature.
 
-5. **`docs/architecture/*.md`** -- ADRs and design documents. Show architectural
-   decisions and their rationale.
+5. **`docs/architecture/*.md`** -- ADRs and design documents. Show architectural decisions and their rationale.
 
-6. **`docs/progress/*-cost-summary.md`** -- Cost summaries for each skill
-   invocation. Provide data on resource consumption (agent costs).
+6. **`docs/progress/*-cost-summary.md`** -- Cost summaries for each skill invocation. Provide data on resource
+   consumption (agent costs).
 
-7. **`CLAUDE.md`** -- Project conventions. Context for understanding the
-   project.
+7. **`CLAUDE.md`** -- Project conventions. Context for understanding the project.
 
 **Data that requires user input (no automatic source):**
 
@@ -128,35 +109,28 @@ quarterly) from founders to investors. It follows a well-established format:
 
 ### Key Challenges for AI-Generated Investor Updates
 
-1. **Accuracy risk is the highest priority concern.** An investor update must
-   contain accurate numbers and claims. AI hallucination of metrics or milestone
-   completion would be severely damaging to founder credibility. The Accuracy
+1. **Accuracy risk is the highest priority concern.** An investor update must contain accurate numbers and claims. AI
+   hallucination of metrics or milestone completion would be severely damaging to founder credibility. The Accuracy
    Skeptic role is critical.
 
-2. **Spin detection / narrative honesty.** AI models tend toward positive
-   framing. Investor updates must be honest about challenges. The Narrative
-   Skeptic must specifically check that lowlights are not minimized, that
-   metrics are not cherry-picked, and that the overall narrative is consistent
-   with the data.
+2. **Spin detection / narrative honesty.** AI models tend toward positive framing. Investor updates must be honest about
+   challenges. The Narrative Skeptic must specifically check that lowlights are not minimized, that metrics are not
+   cherry-picked, and that the overall narrative is consistent with the data.
 
-3. **Completeness vs. brevity.** Investors want concise updates (1-2 pages). The
-   skill must synthesize, not dump. Reading all progress files and producing a
-   10-page update would be counterproductive.
+3. **Completeness vs. brevity.** Investors want concise updates (1-2 pages). The skill must synthesize, not dump.
+   Reading all progress files and producing a 10-page update would be counterproductive.
 
-4. **User-provided data integration.** The skill cannot generate financial
-   metrics or team updates from project data alone. It must accept user-provided
-   data (via arguments or interactive prompts) and integrate it with
+4. **User-provided data integration.** The skill cannot generate financial metrics or team updates from project data
+   alone. It must accept user-provided data (via arguments or interactive prompts) and integrate it with
    automatically-gathered project data.
 
-5. **Consistency with prior updates.** The Narrative Skeptic's mandate includes
-   "consistency with prior updates." This implies the skill should read previous
-   investor updates (if they exist) to ensure narrative continuity. This is a
+5. **Consistency with prior updates.** The Narrative Skeptic's mandate includes "consistency with prior updates." This
+   implies the skill should read previous investor updates (if they exist) to ensure narrative continuity. This is a
    design decision: where are prior updates stored?
 
-6. **Temporal scoping.** The skill must know what period the update covers. It
-   needs to distinguish "what happened this month" from "what existed before."
-   This means reading roadmap item `updated` timestamps, progress file dates,
-   and git history (or timestamps in YAML frontmatter).
+6. **Temporal scoping.** The skill must know what period the update covers. It needs to distinguish "what happened this
+   month" from "what existed before." This means reading roadmap item `updated` timestamps, progress file dates, and git
+   history (or timestamps in YAML frontmatter).
 
 ---
 
@@ -196,8 +170,8 @@ I read all 4 existing SKILL.md files. Here is what's reusable vs. new:
 
 ### Pipeline Pattern Design for `/draft-investor-update`
 
-Per the business-skill design guidelines, the Pipeline pattern is: Research ->
-Draft -> Review -> Revise -> Final validation.
+Per the business-skill design guidelines, the Pipeline pattern is: Research -> Draft -> Review -> Revise -> Final
+validation.
 
 **Proposed P3-22 Pipeline Stages:**
 
@@ -240,10 +214,8 @@ Stage 5: FINAL VALIDATION (Both Skeptics)
 | **Accuracy Skeptic**           | Opus               | Verify numbers, claims, milestone completeness                   |
 | **Narrative Skeptic**          | Opus               | Check spin, omissions, narrative consistency                     |
 
-**Cost note**: 3 Opus agents + 1 Sonnet agent. This is comparable to existing
-skills. The `--light` flag could downgrade the Data Gatherer to Sonnet while
-keeping both Skeptics at Opus (skeptics are never downgraded per existing
-precedent).
+**Cost note**: 3 Opus agents + 1 Sonnet agent. This is comparable to existing skills. The `--light` flag could downgrade
+the Data Gatherer to Sonnet while keeping both Skeptics at Opus (skeptics are never downgraded per existing precedent).
 
 ---
 
@@ -264,12 +236,10 @@ precedent).
 
 ### Open Questions for the Spec
 
-1. **User data input mechanism**: How does the user provide financial/team data?
-   Options:
+1. **User data input mechanism**: How does the user provide financial/team data? Options:
    - (a) Via `$ARGUMENTS` (e.g., `--mrr 50000 --runway 14`)
    - (b) Via an interactive prompt at the start of the skill
-   - (c) Via a pre-populated template file the user fills in before running the
-     skill (e.g., `docs/updates/_data.md`)
+   - (c) Via a pre-populated template file the user fills in before running the skill (e.g., `docs/updates/_data.md`)
    - (d) Via a combination: auto-detect what exists, prompt for what's missing
 
 2. **Output location**: Where does the final investor update get saved?
@@ -277,44 +247,35 @@ precedent).
    - (b) `docs/progress/investor-update-{date}.md` (reuse existing directory)
    - (c) Console output only (user copies where they want)
 
-3. **Period specification**: How does the user specify what time period the
-   update covers?
-   - (a) Explicit argument: `--period 2026-02` or
-     `--from 2026-01-15 --to 2026-02-15`
+3. **Period specification**: How does the user specify what time period the update covers?
+   - (a) Explicit argument: `--period 2026-02` or `--from 2026-01-15 --to 2026-02-15`
    - (b) Auto-detect: "since last investor update" or "since last month"
    - (c) Required argument: skill refuses to run without a period
 
-4. **Prior update consistency checking**: Should the skill read prior updates to
-   check narrative consistency?
+4. **Prior update consistency checking**: Should the skill read prior updates to check narrative consistency?
    - (a) Yes -- read all files in `docs/updates/` and feed to Narrative Skeptic
    - (b) Only if prior updates exist -- graceful degradation on first run
    - (c) No -- too complex for v1; add in a future iteration
 
-5. **Mandatory vs. optional sections**: Should the skill produce ALL sections
-   (TL;DR, metrics, highlights, lowlights, product, team, financial, asks,
-   outlook) or only the ones where data is available?
-   - The recommendation is to produce all sections, marking user-data-dependent
-     sections as "[Requires input]" when data is not provided, so the user can
-     see what's missing and fill it in.
+5. **Mandatory vs. optional sections**: Should the skill produce ALL sections (TL;DR, metrics, highlights, lowlights,
+   product, team, financial, asks, outlook) or only the ones where data is available?
+   - The recommendation is to produce all sections, marking user-data-dependent sections as "[Requires input]" when data
+     is not provided, so the user can see what's missing and fill it in.
 
-6. **Multi-Skeptic review flow**: Do the two skeptics review sequentially or in
-   parallel?
-   - Recommendation: Parallel review. Both skeptics receive the draft
-     simultaneously, review from their own scope, and return independent
-     verdicts. The Writer then addresses all feedback. This is more
-     time-efficient.
+6. **Multi-Skeptic review flow**: Do the two skeptics review sequentially or in parallel?
+   - Recommendation: Parallel review. Both skeptics receive the draft simultaneously, review from their own scope, and
+     return independent verdicts. The Writer then addresses all feedback. This is more time-efficient.
 
-7. **What shared content needs to be synchronized?** P3-22 will include the same
-   Shared Principles and Communication Protocol blocks as the other skills (per
-   P2-05's shared marker system). The CI drift validator will need to validate
+7. **What shared content needs to be synchronized?** P3-22 will include the same Shared Principles and Communication
+   Protocol blocks as the other skills (per P2-05's shared marker system). The CI drift validator will need to validate
    this new skill.
 
 ---
 
 ## 5. Relationship to Business-Skill Design Guidelines
 
-The guidelines at `docs/architecture/business-skill-design-guidelines.md` define
-several requirements. Here is P3-22's compliance mapping:
+The guidelines at `docs/architecture/business-skill-design-guidelines.md` define several requirements. Here is P3-22's
+compliance mapping:
 
 | Guideline Requirement                               | P3-22 Implementation                                                   |
 | --------------------------------------------------- | ---------------------------------------------------------------------- |
@@ -326,30 +287,23 @@ several requirements. Here is P3-22's compliance mapping:
 | Mandatory output: External validation checkpoints   | Included -- e.g., "Have your accountant verify financial figures"      |
 | Skeptic enforcement checklist                       | Both skeptics use the 6-item checklist from the guidelines             |
 
-**P3-22 is the first skill to implement ALL of these requirements.** This makes
-it the definitive test of the business-skill design guidelines. Lessons learned
-from P3-22 will directly inform whether the guidelines need revision before more
-business skills are built.
+**P3-22 is the first skill to implement ALL of these requirements.** This makes it the definitive test of the
+business-skill design guidelines. Lessons learned from P3-22 will directly inform whether the guidelines need revision
+before more business skills are built.
 
 ---
 
 ## 6. Conclusion
 
-P3-22 (`/draft-investor-update`) is validated as the correct next feature. It
-is:
+P3-22 (`/draft-investor-update`) is validated as the correct next feature. It is:
 
-- **Strategically valuable**: First business skill, validates the entire
-  business-skill design framework, creates progress toward P2-07 (skill count
-  -> 5) and P2-08 (business skill count -> 1).
-- **Technically feasible**: Pipeline pattern is closest to existing
-  architecture. All reusable patterns are well-established. New patterns
-  (multi-skeptic, business output requirements) are well-defined in the
-  guidelines.
-- **Appropriately scoped**: Small-Medium effort. Constrained output format.
-  Primary data comes from existing project structure. User input supplements but
-  doesn't dominate.
-- **Self-dogfoodable**: We can test it on this project immediately after
-  building it.
+- **Strategically valuable**: First business skill, validates the entire business-skill design framework, creates
+  progress toward P2-07 (skill count -> 5) and P2-08 (business skill count -> 1).
+- **Technically feasible**: Pipeline pattern is closest to existing architecture. All reusable patterns are
+  well-established. New patterns (multi-skeptic, business output requirements) are well-defined in the guidelines.
+- **Appropriately scoped**: Small-Medium effort. Constrained output format. Primary data comes from existing project
+  structure. User input supplements but doesn't dominate.
+- **Self-dogfoodable**: We can test it on this project immediately after building it.
 
-The spec should resolve the 7 open questions above and define the SKILL.md
-structure, agent roles, pipeline stages, output format, and argument parsing.
+The spec should resolve the 7 open questions above and define the SKILL.md structure, agent roles, pipeline stages,
+output format, and argument parsing.

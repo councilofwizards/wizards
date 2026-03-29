@@ -237,8 +237,7 @@ Carbon::setTestNow(Carbon::parse('2024-01-01'));
 Carbon::setTestNow();  // reset
 ```
 
-Methods: `->seconds()`, `->minutes()`, `->hours()`, `->days()`, `->weeks()`,
-`->years()`.
+Methods: `->seconds()`, `->minutes()`, `->hours()`, `->days()`, `->weeks()`, `->years()`.
 
 Laravel auto-resets `Carbon::setTestNow()` after each test.
 
@@ -250,8 +249,7 @@ Laravel auto-resets `Carbon::setTestNow()` after each test.
 | `DatabaseTransactions` | Fastest | Transaction only (no migration)    |
 | `DatabaseMigrations`   | Slowest | Migrate + rollback per class       |
 
-Seed with RefreshDatabase: `protected bool $seed = true;` or
-`protected string $seeder = RolesSeeder::class;`.
+Seed with RefreshDatabase: `protected bool $seed = true;` or `protected string $seeder = RolesSeeder::class;`.
 
 ## Model Factories
 

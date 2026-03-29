@@ -71,8 +71,7 @@ function parseId(string|int $id): int
 }
 ```
 
-Prefer exceptions over `T|false` returns for new code. Reserve `T|false` for
-wrapping built-in functions.
+Prefer exceptions over `T|false` returns for new code. Reserve `T|false` for wrapping built-in functions.
 
 ## Intersection Types
 
@@ -105,8 +104,7 @@ Each intersection group must be wrapped in parentheses.
 | `true`  | Standalone true literal type (PHP 8.2+)  |
 | `false` | Standalone false literal type (PHP 8.0+) |
 
-`never` enables dead-code detection — statements after a `never` call are
-unreachable.
+`never` enables dead-code detection — statements after a `never` call are unreachable.
 
 ## Property Types
 
@@ -252,8 +250,7 @@ Psalm levels run opposite to PHPStan — level 1 is strictest:
 /** @psalm-type UserId = positive-int */
 ```
 
-Psalm offers `non-empty-string`, `positive-int`, `non-empty-list<T>` for finer
-granularity.
+Psalm offers `non-empty-string`, `positive-int`, `non-empty-list<T>` for finer granularity.
 
 ## PHPStan vs Psalm
 
@@ -264,8 +261,7 @@ granularity.
 | Generics             | Good via @template   | Better: more literal types |
 | Community extensions | Very large           | Smaller but growing        |
 
-**Recommendation:** PHPStan level 9 with Larastan for Laravel. Add Psalm for
-heavy generics.
+**Recommendation:** PHPStan level 9 with Larastan for Laravel. Add Psalm for heavy generics.
 
 ## Generics with @template
 
@@ -329,8 +325,7 @@ class UserRepository extends Repository
 }
 ```
 
-Use `@template-covariant` when the type parameter only appears in output
-positions.
+Use `@template-covariant` when the type parameter only appears in output positions.
 
 ## Custom PHPStan Rules
 

@@ -84,21 +84,18 @@ Protect `/horizon` with `Horizon::auth()` in production.
 
 ## Telescope
 
-Debug assistant recording requests, jobs, queries, mail. Install as dev
-dependency.
+Debug assistant recording requests, jobs, queries, mail. Install as dev dependency.
 
 ```bash
 composer require laravel/telescope --dev
 php artisan telescope:install && php artisan migrate
 ```
 
-Restrict production:
-`Telescope::auth(fn ($r) => in_array($r->user()?->email, config('telescope.allowed_emails')));`
+Restrict production: `Telescope::auth(fn ($r) => in_array($r->user()?->email, config('telescope.allowed_emails')));`
 
 ## Scout
 
-Driver-based full-text search. Drivers: Algolia, Meilisearch, Typesense,
-database.
+Driver-based full-text search. Drivers: Algolia, Meilisearch, Typesense, database.
 
 ```php
 class Article extends Model
@@ -131,8 +128,7 @@ Same philosophy, Paddle manages tax/VAT compliance.
 
 ## Socialite
 
-OAuth2 social login. Drivers: GitHub, Google, Facebook, Twitter, LinkedIn,
-GitLab, Bitbucket + 100+ community drivers.
+OAuth2 social login. Drivers: GitHub, Google, Facebook, Twitter, LinkedIn, GitLab, Bitbucket + 100+ community drivers.
 
 ```php
 Route::get('/auth/github', fn () => Socialite::driver('github')->redirect());
@@ -171,8 +167,7 @@ if (Feature::active('new-checkout')) { /* ... */ }
 
 ## Reverb
 
-First-party WebSocket server using Pusher protocol. Config-only switch between
-Reverb and Pusher.
+First-party WebSocket server using Pusher protocol. Config-only switch between Reverb and Pusher.
 
 ```bash
 composer require laravel/reverb
@@ -182,8 +177,7 @@ php artisan reverb:start --host=0.0.0.0 --port=8080
 
 ## Pulse
 
-Performance monitoring dashboard. Tracks slow requests, queries, jobs, cache
-rates, exceptions.
+Performance monitoring dashboard. Tracks slow requests, queries, jobs, cache rates, exceptions.
 
 ```bash
 composer require laravel/pulse

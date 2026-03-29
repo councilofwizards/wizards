@@ -59,33 +59,26 @@ updated: "2026-03-27"
 
 ### Testability Assessment
 
-- **Story 1**: All ACs verify documented content — inspectable in the convention
-  doc/SKILL.md. AC4's framing pattern is concrete and grep-verifiable.
-- **Story 2**: All ACs verified by running `/setup-project` and inspecting
-  filesystem output. Idempotency tested by double-run.
+- **Story 1**: All ACs verify documented content — inspectable in the convention doc/SKILL.md. AC4's framing pattern is
+  concrete and grep-verifiable.
+- **Story 2**: All ACs verified by running `/setup-project` and inspecting filesystem output. Idempotency tested by
+  double-run.
 - **Story 3**: All ACs verified by reading wizard-guide SKILL.md content.
-- **Story 4**: ACs 1-2 (absence cases), AC3 (framing pattern in SKILL.md), AC4
-  (per-file headings), AC5 (error handling) — all verifiable by reading the
-  modified SKILL.md.
-- **Story 4 AC6**: Weakest AC — "output reflects preference" is an LLM
-  behavioral assertion, not deterministically testable. However, it serves as a
-  PoC validation criterion. The mechanical guarantee (guidance is injected per
-  AC3) is testable; AC6 validates the end-to-end intent. Acceptable for a PoC
-  story.
-- **Story 5**: All ACs verified by running `/setup-project` and inspecting
-  `.gitignore`.
+- **Story 4**: ACs 1-2 (absence cases), AC3 (framing pattern in SKILL.md), AC4 (per-file headings), AC5 (error handling)
+  — all verifiable by reading the modified SKILL.md.
+- **Story 4 AC6**: Weakest AC — "output reflects preference" is an LLM behavioral assertion, not deterministically
+  testable. However, it serves as a PoC validation criterion. The mechanical guarantee (guidance is injected per AC3) is
+  testable; AC6 validates the end-to-end intent. Acceptable for a PoC story.
+- **Story 5**: All ACs verified by running `/setup-project` and inspecting `.gitignore`.
 
 ### Notes
 
-- Out of Scope is now internally consistent with the stories — correctly scopes
-  out P2-11/P3-29 consumption while acknowledging Story 4 as the PoC consumer.
-- Non-functional requirements correctly reference the concrete framing pattern
-  from Story 1 AC4 / Story 4 AC3.
-- The cross-story dependency chain (Story 1 → Story 4) is explicitly documented
-  in both stories' Notes. Good.
-- Story 4 AC6 is the only AC I'd flag as soft — it tests LLM behavior rather
-  than SKILL.md content. But for a PoC story establishing the pattern, this is a
-  reasonable acceptance bar. Future consumers (P2-11, P3-29) should define their
+- Out of Scope is now internally consistent with the stories — correctly scopes out P2-11/P3-29 consumption while
+  acknowledging Story 4 as the PoC consumer.
+- Non-functional requirements correctly reference the concrete framing pattern from Story 1 AC4 / Story 4 AC3.
+- The cross-story dependency chain (Story 1 → Story 4) is explicitly documented in both stories' Notes. Good.
+- Story 4 AC6 is the only AC I'd flag as soft — it tests LLM behavior rather than SKILL.md content. But for a PoC story
+  establishing the pattern, this is a reasonable acceptance bar. Future consumers (P2-11, P3-29) should define their
   own, tighter ACs.
 
 ---
@@ -108,67 +101,51 @@ updated: "2026-03-27"
 
 ### Consistency Check
 
-- **Injection framing**: Story 1 AC4 defines the mandatory pattern. Section 6
-  specifies it with 6 concrete rules. Section 4 implements it in
-  build-implementation. All three are consistent — same heading, same advisory
-  text, same per-file sub-heading format.
-- **Defensive reading**: Story 4 ACs 1-5 define the behavioral contract. Section
-  5 codifies it as a reusable table. Section 4 implements it. The table adds two
-  cases beyond the stories (malformed/binary content, README.md-only directory)
-  — both are reasonable refinements, not contradictions.
-- **Idempotency**: Stories 2 and 5 require it. Section 2a specifies
-  normal/force/dry-run modes. Section 2b specifies check-before-append.
-  Consistent.
-- **README.md vs .gitkeep**: Spec correctly uses README.md per revised stories.
-  Section 2c provides full embedded content. Architectural note explains
-  README.md exclusion from content reading. No contradiction with Story 5's
+- **Injection framing**: Story 1 AC4 defines the mandatory pattern. Section 6 specifies it with 6 concrete rules.
+  Section 4 implements it in build-implementation. All three are consistent — same heading, same advisory text, same
+  per-file sub-heading format.
+- **Defensive reading**: Story 4 ACs 1-5 define the behavioral contract. Section 5 codifies it as a reusable table.
+  Section 4 implements it. The table adds two cases beyond the stories (malformed/binary content, README.md-only
+  directory) — both are reasonable refinements, not contradictions.
+- **Idempotency**: Stories 2 and 5 require it. Section 2a specifies normal/force/dry-run modes. Section 2b specifies
+  check-before-append. Consistent.
+- **README.md vs .gitkeep**: Spec correctly uses README.md per revised stories. Section 2c provides full embedded
+  content. Architectural note explains README.md exclusion from content reading. No contradiction with Story 5's
   .gitignore.
 
 ### Feasibility Assessment
 
-- **3 SKILL.md edits, zero new files**: Correct scope for a Small-effort item.
-  No validators to update, no shared content to sync.
-- **Step 3.5 insertion**: Clean extension point in setup-project — follows
-  existing scaffold pattern (Step 3).
-- **Step 10 in build-implementation**: Appends naturally after existing Step 9.
-  No renumbering chaos.
-- **Spawn prompt prepend**: Sound architecture. Placing guidance before role
-  instructions means role rules (TDD, skeptic gates) take precedence over user
-  guidance. Defense-in-depth is correct.
-- **`.md`-only file discovery**: Prevents accidental inclusion of `.DS_Store`,
-  binary files, etc. Clean contract.
-- **README.md exclusion by filename match**: Simple, predictable, no content
-  inspection needed.
+- **3 SKILL.md edits, zero new files**: Correct scope for a Small-effort item. No validators to update, no shared
+  content to sync.
+- **Step 3.5 insertion**: Clean extension point in setup-project — follows existing scaffold pattern (Step 3).
+- **Step 10 in build-implementation**: Appends naturally after existing Step 9. No renumbering chaos.
+- **Spawn prompt prepend**: Sound architecture. Placing guidance before role instructions means role rules (TDD, skeptic
+  gates) take precedence over user guidance. Defense-in-depth is correct.
+- **`.md`-only file discovery**: Prevents accidental inclusion of `.DS_Store`, binary files, etc. Clean contract.
+- **README.md exclusion by filename match**: Simple, predictable, no content inspection needed.
 
 ### Design Decisions Validated
 
-1. **Prepend guidance, not append**: Correct. Role-critical rules appearing
-   after guidance means they override in case of conflict. The architectural
-   note explains this well.
-2. **No new validator**: Correct for an opt-in convention. Nothing to validate —
-   absent is valid, present is valid.
-3. **No shared content changes**: Correct. build-implementation's guidance
-   reading is skill-specific, not shared across all multi-agent skills.
+1. **Prepend guidance, not append**: Correct. Role-critical rules appearing after guidance means they override in case
+   of conflict. The architectural note explains this well.
+2. **No new validator**: Correct for an opt-in convention. Nothing to validate — absent is valid, present is valid.
+3. **No shared content changes**: Correct. build-implementation's guidance reading is skill-specific, not shared across
+   all multi-agent skills.
 4. **Glob for `*.md` only**: Clean contract. Prevents file-type ambiguity.
 
 ### Notes (non-blocking)
 
-1. The guidance/README.md template in Section 2c contains a nested code fence
-   (triple backticks inside quad backticks). The implementer will need to handle
-   fence escaping when embedding this in setup-project's SKILL.md. Not a spec
-   issue — implementation detail.
-2. The spec refines beyond the stories in two places: (a) restricting discovery
-   to `.md` files only, and (b) adding README.md exclusion from content reading.
-   Both are sound design decisions that make the stories more implementable
+1. The guidance/README.md template in Section 2c contains a nested code fence (triple backticks inside quad backticks).
+   The implementer will need to handle fence escaping when embedding this in setup-project's SKILL.md. Not a spec issue
+   — implementation detail.
+2. The spec refines beyond the stories in two places: (a) restricting discovery to `.md` files only, and (b) adding
+   README.md exclusion from content reading. Both are sound design decisions that make the stories more implementable
    without contradicting them.
-3. The 10-item success criteria list in Section 7 is comprehensive and each
-   criterion is mechanically verifiable (grep for heading text, run validators,
-   check file existence). Strong.
+3. The 10-item success criteria list in Section 7 is comprehensive and each criterion is mechanically verifiable (grep
+   for heading text, run validators, check file existence). Strong.
 
 ### Summary
 
-The spec is clean, well-structured, and consistent with the approved stories.
-Three SKILL.md edits, no new files, no validator changes, no shared content
-drift. The injection framing is concrete and testable. The defensive reading
-contract is thorough. The architectural notes explain every non-obvious design
-decision. Ready for implementation.
+The spec is clean, well-structured, and consistent with the approved stories. Three SKILL.md edits, no new files, no
+validator changes, no shared content drift. The injection framing is concrete and testable. The defensive reading
+contract is thorough. The architectural notes explain every non-obvious design decision. Ready for implementation.

@@ -12,24 +12,20 @@ updated: "2026-03-28T23:25:00Z"
 
 ## Mission
 
-**Unearth Specification** — systematically excavate an existing codebase to
-produce a complete, structured, LLM-readable specification of all business
-logic, data models, decision flows, architectural layers, and integration
-boundaries.
+**Unearth Specification** — systematically excavate an existing codebase to produce a complete, structured, LLM-readable
+specification of all business logic, data models, decision flows, architectural layers, and integration boundaries.
 
 **Mission verb-noun**: Unearth specification.
 
 ## Classification
 
-**Engineering** — The output is a set of technical specifications describing
-system behavior, data models, and architectural decisions. Per classification
-rules: agents produce "technical specifications" → engineering. Agents read and
-analyze code at depth, requiring engineering context in shared principles.
+**Engineering** — The output is a set of technical specifications describing system behavior, data models, and
+architectural decisions. Per classification rules: agents produce "technical specifications" → engineering. Agents read
+and analyze code at depth, requiring engineering context in shared principles.
 
 ## Category
 
-`engineering` — The skill analyzes code and produces technical specification
-artifacts.
+`engineering` — The skill analyzes code and produces technical specification artifacts.
 
 ## Phase Decomposition
 
@@ -53,12 +49,10 @@ artifacts.
 | The Chronicler         | Synthesis and templating — consolidates raw excavation reports into a unified, cross-referenced, LLM-readable specification collection using consistent templates.    | Sonnet | Execution-oriented: applies templates to well-defined inputs. The hard reasoning (extraction and analysis) is already done by the excavators.                                             |
 | The Assayer            | Completeness verification — adversarially validates that every module in the Structural Map is covered, every concern is documented, and no specification gap exists. | Opus   | Skeptic is always Opus. Must cross-reference the Structural Map against all excavation reports to find gaps, and must challenge the Chronicler's synthesis for accuracy.                  |
 
-**Agent count justification**: 6 agents. The Cartographer earns its seat by
-owning the structural survey that no excavator can do (they need the map before
-they can dig). The three Excavators each own a non-overlapping analytical lens
-(logic, data, boundaries) and run in parallel — merging any two would eliminate
-parallelism and conflate distinct expertise. The Chronicler owns synthesis — a
-concern no excavator holds (they produce raw reports, not templated
+**Agent count justification**: 6 agents. The Cartographer earns its seat by owning the structural survey that no
+excavator can do (they need the map before they can dig). The three Excavators each own a non-overlapping analytical
+lens (logic, data, boundaries) and run in parallel — merging any two would eliminate parallelism and conflate distinct
+expertise. The Chronicler owns synthesis — a concern no excavator holds (they produce raw reports, not templated
 specifications). The Assayer is non-negotiable.
 
 ## Mandate Boundary Tests
@@ -103,36 +97,30 @@ specifications). The Assayer is non-negotiable.
 
 ### Phase 2 is a fork-join
 
-The three Excavators run **fully in parallel**. Their mandates are orthogonal
-concerns (logic, data, boundaries) applied across the same codebase. They share
-the same input (Structural Map + codebase access) but produce independent
-outputs. No excavator depends on another excavator's findings.
+The three Excavators run **fully in parallel**. Their mandates are orthogonal concerns (logic, data, boundaries) applied
+across the same codebase. They share the same input (Structural Map + codebase access) but produce independent outputs.
+No excavator depends on another excavator's findings.
 
-**Fork point**: After Assayer approves the Structural Map (end of Phase 1).
-**Join point**: Before Assayer reviews excavation coverage (start of Phase 2
-gate).
+**Fork point**: After Assayer approves the Structural Map (end of Phase 1). **Join point**: Before Assayer reviews
+excavation coverage (start of Phase 2 gate).
 
 ### Sequential dependencies
 
-- Phase 1 → Phase 2: Excavators need the approved Structural Map to know what to
-  excavate and to follow the partition priority ranking.
-- Phase 2 → Phase 3: The Chronicler needs all three excavation reports to
-  produce cross-referenced templates.
-- Phase 3 → Final Gate: The Assayer needs the completed Specification
-  Collection.
+- Phase 1 → Phase 2: Excavators need the approved Structural Map to know what to excavate and to follow the partition
+  priority ranking.
+- Phase 2 → Phase 3: The Chronicler needs all three excavation reports to produce cross-referenced templates.
+- Phase 3 → Final Gate: The Assayer needs the completed Specification Collection.
 
 ### No partial-start opportunities
 
-Phase 2 agents cannot start before Phase 1 completes because the Structural Map
-defines their work scope and priority order. Phase 3 cannot start before all
-Phase 2 agents complete because the Chronicler must cross-reference all three
-concern lenses to produce coherent templates (e.g., a feature's business rules
-reference its data model and its integration points).
+Phase 2 agents cannot start before Phase 1 completes because the Structural Map defines their work scope and priority
+order. Phase 3 cannot start before all Phase 2 agents complete because the Chronicler must cross-reference all three
+concern lenses to produce coherent templates (e.g., a feature's business rules reference its data model and its
+integration points).
 
 ## Output Artifact Structure
 
-The Specification Collection is a **directory of documents**, not a monolithic
-file. Structure:
+The Specification Collection is a **directory of documents**, not a monolithic file. Structure:
 
 ```
 docs/specifications/{project-name}/
@@ -155,8 +143,7 @@ docs/specifications/{project-name}/
 
 ### Document Templates
 
-Each document type follows a consistent template with YAML frontmatter for LLM
-parseability:
+Each document type follows a consistent template with YAML frontmatter for LLM parseability:
 
 **Module Business Rules Template:**
 
@@ -194,8 +181,7 @@ external_dependencies: ["list", "of", "services"]
 
 ## Downstream Guidance Compliance
 
-The Cartographer's Structural Map (Phase 1 output) MUST include a
-**priority-ranked partition table**:
+The Cartographer's Structural Map (Phase 1 output) MUST include a **priority-ranked partition table**:
 
 ```markdown
 ## Partition Assignments
@@ -208,96 +194,76 @@ The Cartographer's Structural Map (Phase 1 output) MUST include a
 | ...      | ...          | ...        | ...                                            |
 ```
 
-Each Excavator starts with Priority 1 items in their concern area and works
-downward. This ensures the most critical modules are documented first, enabling
-useful partial output even if a session is interrupted.
+Each Excavator starts with Priority 1 items in their concern area and works downward. This ensures the most critical
+modules are documented first, enabling useful partial output even if a session is interrupted.
 
 ## Completeness Verification Methodology
 
 The Assayer enforces completeness through a **coverage matrix**:
 
-1. **Phase 1 Gate**: Every file in the codebase appears in the Structural Map.
-   No orphan files. Module boundaries are justified (not arbitrary).
-2. **Phase 2 Gate**: Every module in the Structural Map has at least one finding
-   in each of the three excavation reports (logic, schema, boundary). Modules
-   with zero findings in a concern must be explicitly marked "N/A — [reason]"
-   (e.g., a pure utility module may have no business rules).
-3. **Phase 3 Gate**: Every module has a directory in the Specification
-   Collection. The cross-cutting section covers patterns that span 3+ modules.
-   The data dictionary includes every entity mentioned in any module's data
-   model. The integration map includes every external dependency mentioned in
-   any module's integration report.
+1. **Phase 1 Gate**: Every file in the codebase appears in the Structural Map. No orphan files. Module boundaries are
+   justified (not arbitrary).
+2. **Phase 2 Gate**: Every module in the Structural Map has at least one finding in each of the three excavation reports
+   (logic, schema, boundary). Modules with zero findings in a concern must be explicitly marked "N/A — [reason]" (e.g.,
+   a pure utility module may have no business rules).
+3. **Phase 3 Gate**: Every module has a directory in the Specification Collection. The cross-cutting section covers
+   patterns that span 3+ modules. The data dictionary includes every entity mentioned in any module's data model. The
+   integration map includes every external dependency mentioned in any module's integration report.
 
-The Assayer maintains a **coverage checklist** derived from the Structural Map
-and checks off each module × concern cell.
+The Assayer maintains a **coverage checklist** derived from the Structural Map and checks off each module × concern
+cell.
 
 ## Design Rationale
 
 ### Why 3 phases (not 2 or 4)?
 
-- **2 phases** (survey + document) would force a single agent to handle all
-  three analytical lenses sequentially, eliminating the parallelism that makes
-  this feasible on large codebases. A 500-file codebase with one documenter is
+- **2 phases** (survey + document) would force a single agent to handle all three analytical lenses sequentially,
+  eliminating the parallelism that makes this feasible on large codebases. A 500-file codebase with one documenter is
   impractical.
-- **4+ phases** would add unnecessary sequentiality. Separating "read code" from
-  "document findings" within an excavator creates artificial handoffs — the
-  excavator reads and documents in one pass.
-- **3 phases** gives us: structural understanding (Phase 1), deep parallel
-  analysis (Phase 2), and coherent synthesis (Phase 3). Each phase has a
-  distinct transformation: codebase → map, map → raw findings, raw findings →
-  specification.
+- **4+ phases** would add unnecessary sequentiality. Separating "read code" from "document findings" within an excavator
+  creates artificial handoffs — the excavator reads and documents in one pass.
+- **3 phases** gives us: structural understanding (Phase 1), deep parallel analysis (Phase 2), and coherent synthesis
+  (Phase 3). Each phase has a distinct transformation: codebase → map, map → raw findings, raw findings → specification.
 
 ### Why 3 excavators (not 2 or 4)?
 
-- **2 excavators** would require merging two of {logic, data, boundaries}.
-  Logic+data merge loses the distinction between "what decisions are made" and
-  "what structures support them." Data+boundaries merge loses the distinction
-  between internal schemas and external contracts. Logic+boundaries merge forces
-  the hardest analytical task (business rules) to share context with integration
-  mapping.
-- **4 excavators** would require splitting a concern further — e.g., separating
-  "business rules" from "workflows" or "entities" from "relationships." These
-  sub-concerns are too intertwined to parallelize safely.
-- **3 excavators** map to the three fundamental questions about any system: What
-  does it decide? (logic), What does it store? (data), What does it talk to?
-  (boundaries). These are orthogonal lenses on the same code.
+- **2 excavators** would require merging two of {logic, data, boundaries}. Logic+data merge loses the distinction
+  between "what decisions are made" and "what structures support them." Data+boundaries merge loses the distinction
+  between internal schemas and external contracts. Logic+boundaries merge forces the hardest analytical task (business
+  rules) to share context with integration mapping.
+- **4 excavators** would require splitting a concern further — e.g., separating "business rules" from "workflows" or
+  "entities" from "relationships." These sub-concerns are too intertwined to parallelize safely.
+- **3 excavators** map to the three fundamental questions about any system: What does it decide? (logic), What does it
+  store? (data), What does it talk to? (boundaries). These are orthogonal lenses on the same code.
 
 ### Why a separate Chronicler?
 
-The Chronicler could theoretically be eliminated if each excavator produced
-templated output directly. But:
+The Chronicler could theoretically be eliminated if each excavator produced templated output directly. But:
 
-- Cross-referencing requires seeing all three lenses simultaneously (a feature's
-  business rules reference its data model).
-- Template consistency requires a single owner — three excavators would drift on
-  formatting.
-- The Chronicler also produces the cross-cutting documents that span modules,
-  which no single excavator owns.
+- Cross-referencing requires seeing all three lenses simultaneously (a feature's business rules reference its data
+  model).
+- Template consistency requires a single owner — three excavators would drift on formatting.
+- The Chronicler also produces the cross-cutting documents that span modules, which no single excavator owns.
 
 ### Alternatives considered and rejected
 
-1. **Module-partitioned excavators** (each excavator gets 1/3 of the modules,
-   documents all concerns): Rejected because it eliminates concern
-   specialization. An agent documenting business rules benefits from seeing
-   business rule patterns across the entire codebase, not just one partition.
-2. **Two-phase pipeline** (map, then document everything in one parallel burst):
-   Rejected because it produces raw findings without synthesis. The Chronicler
-   phase is essential for cross-referencing and template consistency.
-3. **Single mega-agent approach**: Rejected for obvious reasons — no
-   parallelism, context window limitations on large codebases, no adversarial
-   review.
+1. **Module-partitioned excavators** (each excavator gets 1/3 of the modules, documents all concerns): Rejected because
+   it eliminates concern specialization. An agent documenting business rules benefits from seeing business rule patterns
+   across the entire codebase, not just one partition.
+2. **Two-phase pipeline** (map, then document everything in one parallel burst): Rejected because it produces raw
+   findings without synthesis. The Chronicler phase is essential for cross-referencing and template consistency.
+3. **Single mega-agent approach**: Rejected for obvious reasons — no parallelism, context window limitations on large
+   codebases, no adversarial review.
 
 ## Handling Scale
 
 For codebases with 500+ files:
 
-- The Cartographer groups files into logical modules (not individual file
-  documentation). A 500-file codebase might have 20-40 modules, each of which
-  becomes a unit of work for the excavators.
-- Each Excavator processes modules in priority order, writing per-module
-  findings to their progress file. If context limits are reached, the agent
-  checkpoints and the Lead can re-spawn to continue.
-- The fork-join structure means 3 agents work in parallel, effectively tripling
-  throughput during the most time-intensive phase.
-- The Chronicler processes one module at a time, producing one output document
-  per module per concern, keeping individual file sizes manageable.
+- The Cartographer groups files into logical modules (not individual file documentation). A 500-file codebase might have
+  20-40 modules, each of which becomes a unit of work for the excavators.
+- Each Excavator processes modules in priority order, writing per-module findings to their progress file. If context
+  limits are reached, the agent checkpoints and the Lead can re-spawn to continue.
+- The fork-join structure means 3 agents work in parallel, effectively tripling throughput during the most
+  time-intensive phase.
+- The Chronicler processes one module at a time, producing one output document per module per concern, keeping
+  individual file sizes manageable.

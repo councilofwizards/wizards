@@ -14,6 +14,5 @@ updated: "2026-02-19"
 
 ## Problem
 
-Early-stage startups need structured marketing strategies but often lack
-dedicated marketing leadership, leading to scattered efforts across channels
-without clear positioning or measurable goals.
+Early-stage startups need structured marketing strategies but often lack dedicated marketing leadership, leading to
+scattered efforts across channels without clear positioning or measurable goals.

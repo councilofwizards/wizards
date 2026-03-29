@@ -16,8 +16,7 @@
 
 ## Fibers
 
-PHP 8.1+ stackful coroutines. Cooperative, single-threaded — interleave I/O, not
-CPU work.
+PHP 8.1+ stackful coroutines. Cooperative, single-threaded — interleave I/O, not CPU work.
 
 ```php
 $fiber = new Fiber(function (): void {
@@ -58,8 +57,7 @@ $user = Async\await($browser->get('https://api.example.com/users/1'));
 
 ## Swoole Coroutines
 
-C-level coroutines with transparent I/O suspension. More powerful than PHP
-Fibers for Swoole apps.
+C-level coroutines with transparent I/O suspension. More powerful than PHP Fibers for Swoole apps.
 
 ```php
 Runtime::enableCoroutine(SWOOLE_HOOK_ALL);
@@ -125,13 +123,11 @@ function parallelMap(array $items, callable $fn, int $workers = 4): array
 }
 ```
 
-> `pcntl_fork()` is NOT safe inside Swoole coroutines. Use `Swoole\Process` or
-> Task Workers instead.
+> `pcntl_fork()` is NOT safe inside Swoole coroutines. Use `Swoole\Process` or Task Workers instead.
 
 ## parallel Extension
 
-PECL extension for true parallel PHP execution with separate threads. Requires
-ZTS build.
+PECL extension for true parallel PHP execution with separate threads. Requires ZTS build.
 
 ```php
 $runtime = new parallel\Runtime(__DIR__ . '/vendor/autoload.php');
@@ -139,16 +135,14 @@ $future = $runtime->run(fn(int $n): int => fibonacci($n), [40]);
 $result = $future->value(); // Block until complete
 ```
 
-Only scalar values, arrays, and closures without captured objects can cross
-threads. Swoole coroutines preferred for most scenarios.
+Only scalar values, arrays, and closures without captured objects can cross threads. Swoole coroutines preferred for
+most scenarios.
 
 ## Shared-Nothing vs Shared-State
 
-**Shared-nothing (default):** Workers communicate via Redis/DB/queue. No race
-conditions, easy horizontal scaling.
+**Shared-nothing (default):** Workers communicate via Redis/DB/queue. No race conditions, easy horizontal scaling.
 
-**Shared state (Swoole Table):** For read-heavy, rarely-changing data where
-Redis latency is too high.
+**Shared state (Swoole Table):** For read-heavy, rarely-changing data where Redis latency is too high.
 
 ```php
 $rateLimitTable = new Swoole\Table(10000);
@@ -232,8 +226,7 @@ class RequestScopeResetter {
 
 ### Superglobals
 
-Never write to `$_SERVER`, `$_GET`, `$_POST`. Use the request object
-exclusively.
+Never write to `$_SERVER`, `$_GET`, `$_POST`. Use the request object exclusively.
 
 ## Database Connection Management
 
@@ -264,8 +257,7 @@ try {
 
 ### Pool Sizing
 
-`pool_size = max_db_connections / worker_count * 0.8` (80% headroom for admin
-connections).
+`pool_size = max_db_connections / worker_count * 0.8` (80% headroom for admin connections).
 
 ## Graceful Restart
 
@@ -285,13 +277,11 @@ while ($request = \frankenphp_handle_request()) {
 
 ### Max Request Limits
 
-Swoole: `$server->set(['max_request' => 10000])`. Safety valve for undetected
-memory leaks.
+Swoole: `$server->set(['max_request' => 10000])`. Safety valve for undetected memory leaks.
 
 ## Exception Handling
 
-Wrap request handlers in `try/catch(\Throwable)`. Uncaught exceptions can kill
-the worker.
+Wrap request handlers in `try/catch(\Throwable)`. Uncaught exceptions can kill the worker.
 
 ```php
 $server->on('request', function ($request, $response) {
@@ -308,8 +298,7 @@ $server->on('request', function ($request, $response) {
 
 ### File Descriptor Leaks
 
-Always close resources in `finally` blocks. Missing `fclose()` hits fd limits
-after ~1000 requests.
+Always close resources in `finally` blocks. Missing `fclose()` hits fd limits after ~1000 requests.
 
 ## Migration Checklist
 

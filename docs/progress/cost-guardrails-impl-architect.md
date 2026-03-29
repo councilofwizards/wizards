@@ -12,19 +12,15 @@ updated: "2026-02-14T18:00:00Z"
 
 ## Overview
 
-4 files to modify. 10 total edits. No new files created (cost summary files are
-runtime artifacts).
+4 files to modify. 10 total edits. No new files created (cost summary files are runtime artifacts).
 
 ---
 
 ## Edit Order
 
-1. plan-product/SKILL.md (3 edits: argument-hint, lightweight mode section, cost
-   summary step)
-2. build-product/SKILL.md (3 edits: argument-hint, lightweight mode section,
-   cost summary step)
-3. review-quality/SKILL.md (3 edits: argument-hint, lightweight mode section,
-   cost summary step)
+1. plan-product/SKILL.md (3 edits: argument-hint, lightweight mode section, cost summary step)
+2. build-product/SKILL.md (3 edits: argument-hint, lightweight mode section, cost summary step)
+3. review-quality/SKILL.md (3 edits: argument-hint, lightweight mode section, cost summary step)
 4. README.md (1 edit: lightweight mode subsection)
 
 ---
@@ -48,8 +44,8 @@ argument-hint: "[--light] [new <idea> | review <spec-name> | reprioritize | (emp
 ### Edit 1B — Add Lightweight Mode section after "Determine Mode"
 
 Insert AFTER the end of the "Determine Mode" section (after line 76:
-`- **"reprioritize"**: Full roadmap reassessment with evidence.`) and BEFORE the
-"Spawn the Team" section (line 78: `## Spawn the Team`).
+`- **"reprioritize"**: Full roadmap reassessment with evidence.`) and BEFORE the "Spawn the Team" section (line 78:
+`## Spawn the Team`).
 
 **Old text (surrounding context):**
 
@@ -79,8 +75,7 @@ If `$ARGUMENTS` begins with `--light`, strip the flag and enable lightweight mod
 
 ### Edit 1C — Add cost summary step to Orchestration Flow
 
-Insert after step 6 (line 118:
-`6. **Team Lead only**: Update `docs/roadmap/` with new/changed items`) in the
+Insert after step 6 (line 118: `6. **Team Lead only**: Update `docs/roadmap/` with new/changed items`) in the
 Orchestration Flow section.
 
 **Old text:**
@@ -121,8 +116,8 @@ argument-hint: "[--light] [<spec-name> | review | (empty for next item)]"
 ### Edit 2B — Add Lightweight Mode section after "Determine Mode"
 
 Insert AFTER the end of the "Determine Mode" section (after line 87:
-`- **"review"**: Review current implementation status and identify blockers.`)
-and BEFORE the "Spawn the Team" section (line 89: `## Spawn the Team`).
+`- **"review"**: Review current implementation status and identify blockers.`) and BEFORE the "Spawn the Team" section
+(line 89: `## Spawn the Team`).
 
 **Old text (surrounding context):**
 
@@ -152,8 +147,8 @@ If `$ARGUMENTS` begins with `--light`, strip the flag and enable lightweight mod
 ### Edit 2C — Add cost summary step to Orchestration Flow
 
 Insert after step 7 (line 129:
-`7. **Team Lead only**: Update roadmap status and write aggregated summary to `docs/progress/{feature}-summary.md``)
-in the Orchestration Flow section.
+`7. **Team Lead only**: Update roadmap status and write aggregated summary to `docs/progress/{feature}-summary.md``) in
+the Orchestration Flow section.
 
 **Old text:**
 
@@ -193,8 +188,8 @@ argument-hint: "[--light] [security <scope> | performance <scope> | deploy <feat
 ### Edit 3B — Add Lightweight Mode section after "Determine Mode"
 
 Insert AFTER the end of the "Determine Mode" section (after line 76:
-`- **"regression"**: Full regression test sweep. Spawn test-eng + ops-skeptic.`)
-and BEFORE the "Spawn the Team" section (line 78: `## Spawn the Team`).
+`- **"regression"**: Full regression test sweep. Spawn test-eng + ops-skeptic.`) and BEFORE the "Spawn the Team" section
+(line 78: `## Spawn the Team`).
 
 **Old text (surrounding context):**
 
@@ -221,8 +216,8 @@ If `$ARGUMENTS` begins with `--light`, strip the flag but make no changes to age
 ### Edit 3C — Add cost summary step to Orchestration Flow
 
 Insert after step 7 (line 124:
-`7. **QA Lead only**: Synthesize all approved findings into `docs/progress/{feature}-quality.md``)
-in the Orchestration Flow section.
+`7. **QA Lead only**: Synthesize all approved findings into `docs/progress/{feature}-quality.md``) in the Orchestration
+Flow section.
 
 **Old text:**
 
@@ -296,12 +291,10 @@ Use lightweight mode for exploratory/draft work. Use standard mode for productio
 After all edits, verify:
 
 - [ ] Each SKILL.md frontmatter `argument-hint` starts with `[--light]`
-- [ ] Each SKILL.md has a "Lightweight Mode" section between "Determine Mode"
-      and "Spawn the Team"
+- [ ] Each SKILL.md has a "Lightweight Mode" section between "Determine Mode" and "Spawn the Team"
 - [ ] Each SKILL.md's Orchestration Flow has a final cost summary step
 - [ ] README.md has a "Lightweight Mode" subsection inside "Cost Considerations"
-- [ ] plan-product lightweight mode: Researcher->Sonnet, Architect->Sonnet,
-      DBA->removed, Skeptic->unchanged
+- [ ] plan-product lightweight mode: Researcher->Sonnet, Architect->Sonnet, DBA->removed, Skeptic->unchanged
 - [ ] build-product lightweight mode: Impl Architect->Sonnet, others->unchanged
 - [ ] review-quality lightweight mode: no changes, informational message only
 - [ ] No existing text is altered beyond the targeted insertion points

@@ -74,8 +74,7 @@ public function render(): string
 ])
 ```
 
-Declared props are extracted from `$attributes`. Undeclared values remain in
-`$attributes`.
+Declared props are extracted from `$attributes`. Undeclared values remain in `$attributes`.
 
 ### $attributes Methods
 
@@ -191,8 +190,7 @@ Named slots expose `->isNotEmpty()` and `->attributes`.
 <x-dynamic-component :component="$componentName" :data="$data" />
 ```
 
-> **Security:** Never pass unsanitized user input as the component name.
-> Whitelist allowed values.
+> **Security:** Never pass unsanitized user input as the component name. Whitelist allowed values.
 
 ## Security Directives
 

@@ -1,14 +1,12 @@
 # plan-sales: Frontend Engineer Checkpoint
 
-**Role:** Frontend Engineer **Date:** 2026-02-19 **Task:** Modify validator for
-strategy-skeptic normalization
+**Role:** Frontend Engineer **Date:** 2026-02-19 **Task:** Modify validator for strategy-skeptic normalization
 
 ## Work Completed
 
 ### Modified: `scripts/validators/skill-shared-content.sh`
 
-Added 2 new sed expressions to the `normalize_skeptic_names()` function (lines
-62-63):
+Added 2 new sed expressions to the `normalize_skeptic_names()` function (lines 62-63):
 
 ```bash
         -e 's/strategy-skeptic/SKEPTIC_NAME/g' \
@@ -30,5 +28,5 @@ Ran `bash -n scripts/validators/skill-shared-content.sh` — syntax check passed
 
 ## Status
 
-Complete. No blockers. The plan-sales SKILL.md does not yet exist (backend-eng
-writing in parallel), but the validator is ready to handle it once it lands.
+Complete. No blockers. The plan-sales SKILL.md does not yet exist (backend-eng writing in parallel), but the validator
+is ready to handle it once it lands.

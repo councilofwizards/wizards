@@ -5,8 +5,8 @@ agent: "researcher"
 phase: "research"
 status: "complete"
 last_action:
-  "Completed full research brief covering all 7 skills, artifact catalog, shared
-  content, orchestration patterns, and redesign requirements"
+  "Completed full research brief covering all 7 skills, artifact catalog, shared content, orchestration patterns, and
+  redesign requirements"
 updated: "2026-02-21T12:00:00Z"
 ---
 
@@ -24,8 +24,7 @@ updated: "2026-02-21T12:00:00Z"
 | DBA                | dba             | opus     | Designs data model, schemas, migrations                                |
 | Product Skeptic    | product-skeptic | opus     | Reviews ALL outputs, challenges assumptions, approves/rejects          |
 
-**Lightweight mode**: Researcher and Architect downgraded to sonnet; DBA not
-spawned; Skeptic always opus.
+**Lightweight mode**: Researcher and Architect downgraded to sonnet; DBA not spawned; Skeptic always opus.
 
 ### build-product (Hub-and-Spoke)
 
@@ -37,8 +36,7 @@ spawned; Skeptic always opus.
 | Frontend Engineer        | frontend-eng    | sonnet   | Client-side code, TDD, component development                    |
 | Quality Skeptic          | quality-skeptic | opus     | Pre-impl gate (plan+contracts) and post-impl gate (code review) |
 
-**Lightweight mode**: Impl Architect downgraded to sonnet; engineers unchanged;
-Skeptic always opus.
+**Lightweight mode**: Impl Architect downgraded to sonnet; engineers unchanged; Skeptic always opus.
 
 ### review-quality (Hub-and-Spoke)
 
@@ -50,9 +48,8 @@ Skeptic always opus.
 | Security Auditor | security-auditor | opus     | OWASP Top 10 audit, vulnerability assessment     |
 | Ops Skeptic      | ops-skeptic      | opus     | Challenges all findings, demands evidence        |
 
-**Note**: Agents spawned conditionally per mode (security, performance, deploy,
-regression). Ops Skeptic always spawned. **Lightweight mode**: No changes --
-already minimal.
+**Note**: Agents spawned conditionally per mode (security, performance, deploy, regression). Ops Skeptic always spawned.
+**Lightweight mode**: No changes -- already minimal.
 
 ### setup-project (Single-Agent)
 
@@ -60,8 +57,7 @@ already minimal.
 | ------------ | -------- | -------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | Single Agent | (caller) | (caller) | Deterministic 6-step pipeline: detect state, detect stack, scaffold dirs, generate CLAUDE.md, generate roadmap, print summary |
 
-**No team, no skeptic, no checkpoint protocol.** Type: `single-agent` in
-frontmatter.
+**No team, no skeptic, no checkpoint protocol.** Type: `single-agent` in frontmatter.
 
 ### draft-investor-update (Pipeline)
 
@@ -73,9 +69,8 @@ frontmatter.
 | Accuracy Skeptic  | accuracy-skeptic  | opus     | Verifies all factual claims against evidence      |
 | Narrative Skeptic | narrative-skeptic | opus     | Detects spin, omissions, inconsistency            |
 
-**Dual-skeptic model.** Both must approve. Max 3 revision cycles. **Lightweight
-mode**: Researcher downgraded to sonnet; Drafter unchanged; both Skeptics always
-opus.
+**Dual-skeptic model.** Both must approve. Max 3 revision cycles. **Lightweight mode**: Researcher downgraded to sonnet;
+Drafter unchanged; both Skeptics always opus.
 
 ### plan-sales (Collaborative Analysis)
 
@@ -88,9 +83,8 @@ opus.
 | Accuracy Skeptic   | accuracy-skeptic   | opus     | Verifies claims against evidence                                              |
 | Strategy Skeptic   | strategy-skeptic   | opus     | Challenges strategic assumptions, evaluates alternatives                      |
 
-**5 agents + lead.** Dual-skeptic model. Lead writes synthesis directly.
-**Lightweight mode**: 3 analysts downgraded to sonnet; both Skeptics always
-opus.
+**5 agents + lead.** Dual-skeptic model. Lead writes synthesis directly. **Lightweight mode**: 3 analysts downgraded to
+sonnet; both Skeptics always opus.
 
 ### plan-hiring (Structured Debate)
 
@@ -103,9 +97,8 @@ opus.
 | Bias Skeptic       | bias-skeptic       | opus     | Fairness, inclusive language, legal compliance                                |
 | Fit Skeptic        | fit-skeptic        | opus     | Role necessity, budget alignment, strategic fit                               |
 
-**5 agents + lead.** Dual-skeptic, 3-message cross-examination rounds.
-**Lightweight mode**: Debate agents (Growth Advocate, Resource Optimizer)
-downgraded to sonnet; Researcher and both Skeptics always opus.
+**5 agents + lead.** Dual-skeptic, 3-message cross-examination rounds. **Lightweight mode**: Debate agents (Growth
+Advocate, Resource Optimizer) downgraded to sonnet; Researcher and both Skeptics always opus.
 
 ## 2. Artifact Catalog
 
@@ -152,25 +145,19 @@ downgraded to sonnet; Researcher and both Skeptics always opus.
 
 ### Current Mechanism
 
-Two blocks of shared content are duplicated in every multi-agent SKILL.md (6 of
-7 skills; setup-project excluded):
+Two blocks of shared content are duplicated in every multi-agent SKILL.md (6 of 7 skills; setup-project excluded):
 
 **Shared Principles** (~30 lines):
 
-- 12 numbered principles in 4 tiers: CRITICAL (3), IMPORTANT (4), ESSENTIAL (3),
-  NICE-TO-HAVE (2)
-- Wrapped in `<!-- BEGIN SHARED: principles -->` /
-  `<!-- END SHARED: principles -->`
+- 12 numbered principles in 4 tiers: CRITICAL (3), IMPORTANT (4), ESSENTIAL (3), NICE-TO-HAVE (2)
+- Wrapped in `<!-- BEGIN SHARED: principles -->` / `<!-- END SHARED: principles -->`
 - **Byte-identical** across all 6 skills (B1 check)
 
 **Communication Protocol** (~30 lines):
 
-- Tool mapping note, "When to Message" table (11 rows), "Message Format"
-  template
-- Wrapped in `<!-- BEGIN SHARED: communication-protocol -->` /
-  `<!-- END SHARED: communication-protocol -->`
-- **Structurally equivalent** with normalization: skeptic name varies per skill
-  (B2 check)
+- Tool mapping note, "When to Message" table (11 rows), "Message Format" template
+- Wrapped in `<!-- BEGIN SHARED: communication-protocol -->` / `<!-- END SHARED: communication-protocol -->`
+- **Structurally equivalent** with normalization: skeptic name varies per skill (B2 check)
   - plan-product: `product-skeptic` / `Product Skeptic`
   - build-product: `quality-skeptic` / `Quality Skeptic`
   - review-quality: `ops-skeptic` / `Ops Skeptic`
@@ -178,50 +165,42 @@ Two blocks of shared content are duplicated in every multi-agent SKILL.md (6 of
   - plan-sales: `accuracy-skeptic` / `Accuracy Skeptic`
   - plan-hiring: `bias-skeptic` / `Bias Skeptic`
 
-**Authoritative Source**: `plan-product/SKILL.md` (B3 check -- every
-`BEGIN SHARED` marker must be followed by the authoritative source comment).
+**Authoritative Source**: `plan-product/SKILL.md` (B3 check -- every `BEGIN SHARED` marker must be followed by the
+authoritative source comment).
 
 ### Validators
 
-- **B1/principles-drift**: Extracts principles block from all skills, compares
-  byte-for-byte to plan-product's block
-- **B2/protocol-drift**: Extracts protocol block, normalizes 16 skeptic name
-  variants to `SKEPTIC_NAME`, compares
-- **B3/authoritative-source**: Checks that every `<!-- BEGIN SHARED: ... -->`
-  line is followed immediately by
+- **B1/principles-drift**: Extracts principles block from all skills, compares byte-for-byte to plan-product's block
+- **B2/protocol-drift**: Extracts protocol block, normalizes 16 skeptic name variants to `SKEPTIC_NAME`, compares
+- **B3/authoritative-source**: Checks that every `<!-- BEGIN SHARED: ... -->` line is followed immediately by
   `<!-- Authoritative source: plan-product/SKILL.md. Keep in sync across all skills. -->`
 
 ### Skill-Specific Extensions
 
 - build-product has `<!-- BEGIN SKILL-SPECIFIC: communication-extras -->` /
-  `<!-- END SKILL-SPECIFIC: communication-extras -->` wrapping the Contract
-  Negotiation Pattern (unique to build-product)
-- All other skills have a comment noting the omission:
-  `<!-- Contract Negotiation Pattern omitted ... -->`
+  `<!-- END SKILL-SPECIFIC: communication-extras -->` wrapping the Contract Negotiation Pattern (unique to
+  build-product)
+- All other skills have a comment noting the omission: `<!-- Contract Negotiation Pattern omitted ... -->`
 
 ### ADR-002 (Content Deduplication Strategy)
 
-- Decision: **Validated duplication** with HTML markers; keep content in each
-  SKILL.md for self-containment
-- Extraction trigger: **When skill count exceeds 8** -- revisit to extract to
-  plugin-scoped shared file
-- Currently at 7 skills (6 multi-agent). Already approaching the 8-skill
-  trigger.
+- Decision: **Validated duplication** with HTML markers; keep content in each SKILL.md for self-containment
+- Extraction trigger: **When skill count exceeds 8** -- revisit to extract to plugin-scoped shared file
+- Currently at 7 skills (6 multi-agent). Already approaching the 8-skill trigger.
 
 ## 4. Orchestration Patterns
 
 ### Hub-and-Spoke (plan-product, build-product, review-quality)
 
-**Structure**: Team Lead creates tasks, agents work in parallel on separate
-concerns, all outputs routed through Skeptic gate.
+**Structure**: Team Lead creates tasks, agents work in parallel on separate concerns, all outputs routed through Skeptic
+gate.
 
-**Flow**: Setup -> Determine Mode -> Spawn -> Parallel work -> Skeptic review ->
-Iterate -> Lead aggregates -> Final output
+**Flow**: Setup -> Determine Mode -> Spawn -> Parallel work -> Skeptic review -> Iterate -> Lead aggregates -> Final
+output
 
 **Key traits**:
 
-- Agents work independently on different aspects (researcher on research,
-  architect on design, etc.)
+- Agents work independently on different aspects (researcher on research, architect on design, etc.)
 - Single skeptic gate (one Skeptic approves/rejects)
 - Lead is always in delegate mode
 - Lightweight mode available (downgrade reasoning agents to sonnet, skip DBA)
@@ -234,15 +213,13 @@ Iterate -> Lead aggregates -> Final output
 - Checkpoint Protocol (YAML frontmatter + progress notes)
 - Determine Mode (status, empty/resume, specific args)
 - Lightweight Mode
-- Failure Recovery (unresponsive agent, skeptic deadlock at 3 rejections,
-  context exhaustion)
+- Failure Recovery (unresponsive agent, skeptic deadlock at 3 rejections, context exhaustion)
 
 ### Pipeline (draft-investor-update)
 
 **Structure**: Sequential stages with quality gates between them.
 
-**Flow**: Research -> Gate 1 (completeness) -> Draft -> Gate 2 (dual-skeptic) ->
-Revise loop -> Finalize
+**Flow**: Research -> Gate 1 (completeness) -> Draft -> Gate 2 (dual-skeptic) -> Revise loop -> Finalize
 
 **Key traits**:
 
@@ -254,42 +231,32 @@ Revise loop -> Finalize
 
 ### Collaborative Analysis (plan-sales)
 
-**Structure**: Parallel research, cross-referencing, lead synthesis,
-dual-skeptic.
+**Structure**: Parallel research, cross-referencing, lead synthesis, dual-skeptic.
 
-**Flow**: Phase 1 (parallel independent research) -> Gate 1 -> Phase 2
-(cross-referencing peers' briefs) -> Gate 2 -> Phase 3 (Lead writes synthesis
-directly) -> Gate 3 (dual-skeptic) -> Revise -> Finalize
+**Flow**: Phase 1 (parallel independent research) -> Gate 1 -> Phase 2 (cross-referencing peers' briefs) -> Gate 2 ->
+Phase 3 (Lead writes synthesis directly) -> Gate 3 (dual-skeptic) -> Revise -> Finalize
 
 **Key traits**:
 
 - 3 analysts produce 3 Domain Briefs independently (Phase 1)
-- Analysts cross-reference each other's briefs (Phase 2) -- 3 Cross-Reference
-  Reports
-- **Lead breaks delegate mode** to write synthesis in Phase 3 (uniquely
-  positioned with all 6 artifacts)
+- Analysts cross-reference each other's briefs (Phase 2) -- 3 Cross-Reference Reports
+- **Lead breaks delegate mode** to write synthesis in Phase 3 (uniquely positioned with all 6 artifacts)
 - Dual-skeptic (Accuracy + Strategy)
 - Disagreements preserved through cross-referencing, resolved in synthesis
-- Anti-empty-cross-reference check: "no contradictions" report is automatically
-  suspect
+- Anti-empty-cross-reference check: "no contradictions" report is automatically suspect
 
 ### Structured Debate (plan-hiring)
 
-**Structure**: Neutral research, independent case building, cross-examination
-rounds, lead synthesis, dual-skeptic.
+**Structure**: Neutral research, independent case building, cross-examination rounds, lead synthesis, dual-skeptic.
 
-**Flow**: Phase 1 (neutral research) -> Gate 1 -> Phase 2 (parallel case
-building) -> Gate 2 -> Phase 3 (3-message cross-examination rounds) -> Gate 3 ->
-Phase 4 (Lead writes synthesis) -> Gate 4 (dual-skeptic) -> Revise -> Finalize
+**Flow**: Phase 1 (neutral research) -> Gate 1 -> Phase 2 (parallel case building) -> Gate 2 -> Phase 3 (3-message
+cross-examination rounds) -> Gate 3 -> Phase 4 (Lead writes synthesis) -> Gate 4 (dual-skeptic) -> Revise -> Finalize
 
 **Key traits**:
 
-- Neutral Researcher establishes shared evidence base (prevents
-  evidence-shopping)
-- Two debate agents assigned opposing perspectives (Growth Advocate vs. Resource
-  Optimizer)
-- **3-message cross-examination rounds**: Challenge -> Response -> Rebuttal
-  (challenger gets last word)
+- Neutral Researcher establishes shared evidence base (prevents evidence-shopping)
+- Two debate agents assigned opposing perspectives (Growth Advocate vs. Resource Optimizer)
+- **3-message cross-examination rounds**: Challenge -> Response -> Rebuttal (challenger gets last word)
 - Anti-premature-agreement rules enforced by Lead
 - Position tracking: MAINTAINED / MODIFIED / CONCEDED
 - **Lead breaks delegate mode** for synthesis (Phase 4)
@@ -300,8 +267,7 @@ Phase 4 (Lead writes synthesis) -> Gate 4 (dual-skeptic) -> Revise -> Finalize
 
 **Structure**: One agent, deterministic pipeline, no team.
 
-**Flow**: Detect state -> Detect stack -> Scaffold dirs -> Generate CLAUDE.md ->
-Generate roadmap -> Print summary
+**Flow**: Detect state -> Detect stack -> Scaffold dirs -> Generate CLAUDE.md -> Generate roadmap -> Print summary
 
 **Key traits**:
 
@@ -317,39 +283,32 @@ The user specified these requirements for the redesign:
 
 ### Two-Tier Architecture
 
-- **Tier 1**: Granular skills (e.g., `/research-market`, `/ideate-product`,
-  `/manage-roadmap`, `/write-stories`, `/write-spec`, `/build-product`)
-- **Tier 2**: Composite meta-skills that invoke Tier 1 skills in sequence (e.g.,
-  `/plan-product` invokes research-market -> ideate-product -> manage-roadmap ->
-  write-stories -> write-spec)
+- **Tier 1**: Granular skills (e.g., `/research-market`, `/ideate-product`, `/manage-roadmap`, `/write-stories`,
+  `/write-spec`, `/build-product`)
+- **Tier 2**: Composite meta-skills that invoke Tier 1 skills in sequence (e.g., `/plan-product` invokes research-market
+  -> ideate-product -> manage-roadmap -> write-stories -> write-spec)
 
 ### Pipeline Order
 
-`research-market` -> `ideate-product` -> `manage-roadmap` -> `write-stories` ->
-`write-spec` -> `build-product`
+`research-market` -> `ideate-product` -> `manage-roadmap` -> `write-stories` -> `write-spec` -> `build-product`
 
-**Key insight**: Stories come BEFORE specs. Stories define the need
-(user-facing); specs define the solution (technical). This is a departure from
-the current architecture where plan-product produces specs directly.
+**Key insight**: Stories come BEFORE specs. Stories define the need (user-facing); specs define the solution
+(technical). This is a departure from the current architecture where plan-product produces specs directly.
 
 ### Consumer-Owns-Template Pattern
 
-The consuming skill owns the artifact template/schema, not the producing skill.
-This means the consumer defines what it needs, and the producer fills it.
-Prevents producer-centric artifacts that don't serve downstream consumers.
+The consuming skill owns the artifact template/schema, not the producing skill. This means the consumer defines what it
+needs, and the producer fills it. Prevents producer-centric artifacts that don't serve downstream consumers.
 
 ### Smart Skeptic Placement
 
-- **Lead-as-Skeptic** for lightweight Tier 1 skills (where a dedicated Skeptic
-  agent would be overkill)
+- **Lead-as-Skeptic** for lightweight Tier 1 skills (where a dedicated Skeptic agent would be overkill)
 - **Dedicated Skeptic agent** for heavy Tier 1 skills and all Tier 2 meta-skills
-- Aligns with agent-persona-performance.md guidance: "A lightweight skill might
-  have the Lead double as Skeptic."
+- Aligns with agent-persona-performance.md guidance: "A lightweight skill might have the Lead double as Skeptic."
 
 ### Tier 2 Invocation
 
-- Tier 2 skills invoke Tier 1 via `/skill-name` (each Tier 1 skill is
-  independently invocable)
+- Tier 2 skills invoke Tier 1 via `/skill-name` (each Tier 1 skill is independently invocable)
 - `/run-task` for generic ad-hoc work
 - `/wizard-guide` for help/orientation
 
@@ -359,8 +318,8 @@ Prevents producer-centric artifacts that don't serve downstream consumers.
 
 ### Agent Persona Guidance
 
-`docs/agent-persona-performance.md` provides 5 archetypes (Strategist, Builder,
-Skeptic, Verifier, Scout) with model guidance. Key principles:
+`docs/agent-persona-performance.md` provides 5 archetypes (Strategist, Builder, Skeptic, Verifier, Scout) with model
+guidance. Key principles:
 
 - Dialectical loops, not linear pipelines
 - Behavioral prompts, not aspirational labels
@@ -378,94 +337,72 @@ Should use INVEST criteria, SMART planning, and other modern techniques.
 
 **High risk -- shared content markers will change fundamentally:**
 
-- B1/B2/B3 validators assume shared content is duplicated in each SKILL.md. If
-  the redesign extracts shared content to a common file (now justified since
-  we'll exceed 8 skills), the B-series validators need complete rewrite.
+- B1/B2/B3 validators assume shared content is duplicated in each SKILL.md. If the redesign extracts shared content to a
+  common file (now justified since we'll exceed 8 skills), the B-series validators need complete rewrite.
 - A4 (shared content markers) would also need updating or removal.
-- A2 (required sections) hardcodes section names. New skill patterns may have
-  different required sections.
-- A3 (spawn definitions) may need updating if some Tier 1 skills are
-  single-agent or lead-as-skeptic.
+- A2 (required sections) hardcodes section names. New skill patterns may have different required sections.
+- A3 (spawn definitions) may need updating if some Tier 1 skills are single-agent or lead-as-skeptic.
 
 **Medium risk -- frontmatter schema changes:**
 
-- C-series (roadmap frontmatter) and D-series (spec frontmatter) may need new
-  fields if artifact schemas change.
-- E-series (checkpoint files) reference `team:` field that maps to skill names
-  -- these will change with new skill names.
+- C-series (roadmap frontmatter) and D-series (spec frontmatter) may need new fields if artifact schemas change.
+- E-series (checkpoint files) reference `team:` field that maps to skill names -- these will change with new skill
+  names.
 
 ### Shared Content Sync Changes
 
-Currently 6 multi-agent skills share ~60 lines of content. The redesign will
-produce many more skills (6+ Tier 1 + 2+ Tier 2 = 8+ skills easily). Per
-ADR-002's trigger at >8 skills, extraction to a shared file becomes justified.
+Currently 6 multi-agent skills share ~60 lines of content. The redesign will produce many more skills (6+ Tier 1 + 2+
+Tier 2 = 8+ skills easily). Per ADR-002's trigger at >8 skills, extraction to a shared file becomes justified.
 
-**Risk**: Moving from validated duplication to a shared file changes the
-self-containment property that was the original design decision. Each SKILL.md
-would need to reference the shared file, adding a dependency.
+**Risk**: Moving from validated duplication to a shared file changes the self-containment property that was the original
+design decision. Each SKILL.md would need to reference the shared file, adding a dependency.
 
-**Mitigation**: The markers were designed to make extraction straightforward.
-The shared content between markers moves to the shared file.
+**Mitigation**: The markers were designed to make extraction straightforward. The shared content between markers moves
+to the shared file.
 
 ### Artifact Contract Changes
 
-**Risk -- backward compatibility**: Existing projects have `docs/specs/`,
-`docs/roadmap/`, `docs/progress/` structures. If the redesign changes artifact
-locations or schemas, existing projects break.
+**Risk -- backward compatibility**: Existing projects have `docs/specs/`, `docs/roadmap/`, `docs/progress/` structures.
+If the redesign changes artifact locations or schemas, existing projects break.
 
-**Risk -- new artifact types**: User stories are a new artifact type not
-currently in the system. Need new directory (`docs/stories/`?) and new validator
-category.
+**Risk -- new artifact types**: User stories are a new artifact type not currently in the system. Need new directory
+(`docs/stories/`?) and new validator category.
 
-**Risk -- consumer-owns-template**: This is an inversion of the current pattern
-where the producer defines the artifact format. Changing who owns templates
-requires coordinating across all producer/consumer pairs.
+**Risk -- consumer-owns-template**: This is an inversion of the current pattern where the producer defines the artifact
+format. Changing who owns templates requires coordinating across all producer/consumer pairs.
 
 ### Tier 2 Invocation Mechanism
 
-**Risk**: The current system has no mechanism for one skill to invoke another.
-Tier 2 meta-skills calling Tier 1 via `/skill-name` is a new capability that may
-require changes to the plugin manifest, marketplace.json, or Claude Code's skill
-invocation mechanism.
+**Risk**: The current system has no mechanism for one skill to invoke another. Tier 2 meta-skills calling Tier 1 via
+`/skill-name` is a new capability that may require changes to the plugin manifest, marketplace.json, or Claude Code's
+skill invocation mechanism.
 
-**Confidence**: LOW. This is the biggest unknown. How does a SKILL.md tell the
-caller agent to invoke another skill? Does Claude Code support this natively? Or
-would the meta-skill need to explicitly instruct the Lead to "run
-/research-market" which the Lead would then need to understand as invoking a
-skill?
+**Confidence**: LOW. This is the biggest unknown. How does a SKILL.md tell the caller agent to invoke another skill?
+Does Claude Code support this natively? Or would the meta-skill need to explicitly instruct the Lead to "run
+/research-market" which the Lead would then need to understand as invoking a skill?
 
 ### Scale Concerns
 
-**Risk**: Going from 7 skills to potentially 12+ skills (6 Tier 1 + 2 Tier 2 +
-existing business skills) significantly increases maintenance surface. Each new
-SKILL.md is a large file (434-1560 lines currently).
+**Risk**: Going from 7 skills to potentially 12+ skills (6 Tier 1 + 2 Tier 2 + existing business skills) significantly
+increases maintenance surface. Each new SKILL.md is a large file (434-1560 lines currently).
 
-**Risk**: Shared content maintenance at scale -- even with extraction, changes
-to shared principles affect all skills.
+**Risk**: Shared content maintenance at scale -- even with extraction, changes to shared principles affect all skills.
 
 ### What Might Break
 
-1. **setup-project** -- must be updated to scaffold new directory structures
-   (e.g., `docs/stories/`)
-2. **All validators** -- need updating for new skill names, structures, and
-   shared content strategy
+1. **setup-project** -- must be updated to scaffold new directory structures (e.g., `docs/stories/`)
+2. **All validators** -- need updating for new skill names, structures, and shared content strategy
 3. **Existing checkpoint files** -- `team:` field references old skill names
-4. **CLAUDE.md template** -- references current skill names in the Workflow
-   section
+4. **CLAUDE.md template** -- references current skill names in the Workflow section
 5. **Plugin manifest** -- needs to register new skills
-6. **Roadmap** -- existing roadmap items reference current skill architecture
-   (P2-02 Skill Composability, P2-07 Universal Principles, P2-08 Plugin
-   Organization)
+6. **Roadmap** -- existing roadmap items reference current skill architecture (P2-02 Skill Composability, P2-07
+   Universal Principles, P2-08 Plugin Organization)
 
 ### Open Questions
 
-1. How does Tier 2 invoke Tier 1? Is this a Claude Code native capability or
-   does the SKILL.md need to instruct the agent to use a specific tool?
-2. Should business skills (plan-sales, plan-hiring, draft-investor-update) be
-   part of this redesign or remain as-is?
-3. Where do user stories live? New `docs/stories/` directory? Inside
-   `docs/specs/{feature}/stories.md`?
-4. Does the consumer-owns-template pattern apply to all artifacts or just
-   cross-skill handoffs?
-5. What happens to existing projects using the current skill structure?
-   Migration path?
+1. How does Tier 2 invoke Tier 1? Is this a Claude Code native capability or does the SKILL.md need to instruct the
+   agent to use a specific tool?
+2. Should business skills (plan-sales, plan-hiring, draft-investor-update) be part of this redesign or remain as-is?
+3. Where do user stories live? New `docs/stories/` directory? Inside `docs/specs/{feature}/stories.md`?
+4. Does the consumer-owns-template pattern apply to all artifacts or just cross-skill handoffs?
+5. What happens to existing projects using the current skill structure? Migration path?

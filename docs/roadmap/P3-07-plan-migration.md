@@ -14,7 +14,5 @@ updated: "2026-02-19"
 
 ## Problem
 
-Large-scale migrations (database, framework, infrastructure) are high-risk
-operations that require careful planning, risk assessment, and rollback
-strategies -- but teams often underestimate scope and miss critical
-dependencies.
+Large-scale migrations (database, framework, infrastructure) are high-risk operations that require careful planning,
+risk assessment, and rollback strategies -- but teams often underestimate scope and miss critical dependencies.

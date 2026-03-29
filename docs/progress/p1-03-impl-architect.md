@@ -9,18 +9,16 @@ created: "2026-02-14"
 
 ## Summary
 
-This plan removes all Laravel/PHP-specific references from the 3 SKILL.md files
-and replaces them with framework-agnostic equivalents. It also adds:
+This plan removes all Laravel/PHP-specific references from the 3 SKILL.md files and replaces them with
+framework-agnostic equivalents. It also adds:
 
 1. **Stack detection** step in each SKILL.md Setup section
-2. **Stack hints** directory (`docs/stack-hints/`) with a sample `laravel.md`
-   file
+2. **Stack hints** directory (`docs/stack-hints/`) with a sample `laravel.md` file
 3. Updated **Shared Principle #4** in all 3 files
-4. Framework-agnostic **spawn prompt** text for Architect, DBA, and Backend
-   Engineer
+4. Framework-agnostic **spawn prompt** text for Architect, DBA, and Backend Engineer
 
-**Total edits: 14** across 3 existing files + **1 new file**
-(`docs/stack-hints/laravel.md`) + **1 directory** (`docs/stack-hints/`).
+**Total edits: 14** across 3 existing files + **1 new file** (`docs/stack-hints/laravel.md`) + **1 directory**
+(`docs/stack-hints/`).
 
 ---
 
@@ -296,45 +294,36 @@ IMPLEMENTATION STANDARDS:
 
 ## New File: docs/stack-hints/laravel.md
 
-This file preserves all the Laravel-specific guidance removed from the SKILL.md
-files. It is automatically prepended to spawn prompts when the project's
-`composer.json` contains `laravel/framework`.
+This file preserves all the Laravel-specific guidance removed from the SKILL.md files. It is automatically prepended to
+spawn prompts when the project's `composer.json` contains `laravel/framework`.
 
 **Content:**
 
 ```markdown
 # Laravel Stack Hints
 
-These hints are automatically prepended to agent spawn prompts when a Laravel
-project is detected (via `composer.json` containing `laravel/framework`).
+These hints are automatically prepended to agent spawn prompts when a Laravel project is detected (via `composer.json`
+containing `laravel/framework`).
 
 ## General Principles
 
-- Follow the "Laravel Way" — prefer Eloquent, Blade, built-in helpers, and
-  conventions over custom solutions.
-- Use `artisan` commands for scaffolding (`make:model`, `make:controller`,
-  `make:request`, etc.).
+- Follow the "Laravel Way" — prefer Eloquent, Blade, built-in helpers, and conventions over custom solutions.
+- Use `artisan` commands for scaffolding (`make:model`, `make:controller`, `make:request`, etc.).
 
 ## Backend Engineer Hints
 
-- **Models**: Use Eloquent models with relationships, scopes, accessors, and
-  mutators.
-- **Validation**: Use Form Request classes for validation. Controllers don't
-  validate.
-- **Serialization**: Use API Resources for response shaping. Controllers return
-  Resources.
+- **Models**: Use Eloquent models with relationships, scopes, accessors, and mutators.
+- **Validation**: Use Form Request classes for validation. Controllers don't validate.
+- **Serialization**: Use API Resources for response shaping. Controllers return Resources.
 - **Authorization**: Use Policies and Gates for authorization logic.
-- **Background work**: Use Jobs, Events, Notifications, and Listeners for async
-  processing.
-- **Facades**: Avoid static facade calls in business logic — use dependency
-  injection instead.
-- **Testing**: Use Laravel's built-in testing helpers. Feature tests for
-  auth/authorization flows, complex query scopes, migration verification.
+- **Background work**: Use Jobs, Events, Notifications, and Listeners for async processing.
+- **Facades**: Avoid static facade calls in business logic — use dependency injection instead.
+- **Testing**: Use Laravel's built-in testing helpers. Feature tests for auth/authorization flows, complex query scopes,
+  migration verification.
 
 ## DBA Hints
 
-- Follow Laravel migration conventions (`Schema::create`,
-  `$table->timestamps()`, etc.).
+- Follow Laravel migration conventions (`Schema::create`, `$table->timestamps()`, etc.).
 - Use Eloquent relationships to define the data model in code.
 - Soft deletes via `SoftDeletes` trait where audit trails are needed.
 
@@ -342,42 +331,33 @@ project is detected (via `composer.json` containing `laravel/framework`).
 
 - Prefer Laravel's built-in service container, middleware, and event system.
 - Use service providers for binding interfaces to implementations.
-- Follow the standard Laravel directory structure unless there's a compelling
-  reason to deviate.
+- Follow the standard Laravel directory structure unless there's a compelling reason to deviate.
 ```
 
 ---
 
 ## Design Decisions
 
-1. **Stack hints are additive, not replacements**: The default SKILL.md prompts
-   are framework-agnostic. Stack hints supplement them with framework-specific
-   guidance. This means a project with no stack hints still works — agents just
+1. **Stack hints are additive, not replacements**: The default SKILL.md prompts are framework-agnostic. Stack hints
+   supplement them with framework-specific guidance. This means a project with no stack hints still works — agents just
    follow generic best practices.
-2. **Detection by dependency manifest**: Reading `package.json`,
-   `composer.json`, etc. is a cheap, reliable heuristic that runs once at
-   startup. No external tools needed.
-3. **One hint file per stack**: `docs/stack-hints/{stack}.md` keeps
-   stack-specific content out of SKILL.md files entirely. Users can create their
-   own (e.g., `nextjs.md`, `django.md`) or customize the provided `laravel.md`.
-4. **Preserved Laravel guidance**: Every Laravel-specific instruction removed
-   from SKILL.md files is preserved in `docs/stack-hints/laravel.md`. Laravel
-   projects lose nothing.
-5. **Generic implementation standards**: The Backend Engineer's implementation
-   standards now use framework-agnostic language ("route handlers/controllers",
-   "framework's validation layer", "framework's response serialization") that
+2. **Detection by dependency manifest**: Reading `package.json`, `composer.json`, etc. is a cheap, reliable heuristic
+   that runs once at startup. No external tools needed.
+3. **One hint file per stack**: `docs/stack-hints/{stack}.md` keeps stack-specific content out of SKILL.md files
+   entirely. Users can create their own (e.g., `nextjs.md`, `django.md`) or customize the provided `laravel.md`.
+4. **Preserved Laravel guidance**: Every Laravel-specific instruction removed from SKILL.md files is preserved in
+   `docs/stack-hints/laravel.md`. Laravel projects lose nothing.
+5. **Generic implementation standards**: The Backend Engineer's implementation standards now use framework-agnostic
+   language ("route handlers/controllers", "framework's validation layer", "framework's response serialization") that
    maps naturally to any web framework.
 
 ## Interaction with P1-01
 
-This plan and P1-01 (Concurrent Write Safety) both modify the 3 SKILL.md files
-but touch different sections. P1-03 edits Setup steps, Shared Principle #4, and
-framework-specific spawn prompt text. P1-01 edits Write Safety sections,
-Orchestration Flow, Failure Recovery, and WRITE SAFETY blocks in spawn prompts.
-They can be implemented in either order — the implementing engineer should
-re-read files before applying edits to account for any renumbering.
+This plan and P1-01 (Concurrent Write Safety) both modify the 3 SKILL.md files but touch different sections. P1-03 edits
+Setup steps, Shared Principle #4, and framework-specific spawn prompt text. P1-01 edits Write Safety sections,
+Orchestration Flow, Failure Recovery, and WRITE SAFETY blocks in spawn prompts. They can be implemented in either order
+— the implementing engineer should re-read files before applying edits to account for any renumbering.
 
-The one overlap: P1-03 renumbers Setup steps (adds step 2 for stack detection).
-If P1-01 is applied first and references `4. Read docs/specs/...` or
-`5. Read docs/architecture/...` in old_string, those step numbers will have
-shifted to 5 and 6 respectively. The engineer should adjust accordingly.
+The one overlap: P1-03 renumbers Setup steps (adds step 2 for stack detection). If P1-01 is applied first and references
+`4. Read docs/specs/...` or `5. Read docs/architecture/...` in old_string, those step numbers will have shifted to 5 and
+6 respectively. The engineer should adjust accordingly.

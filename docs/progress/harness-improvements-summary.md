@@ -8,27 +8,22 @@ completed: "2026-03-27"
 
 ## Summary
 
-Analyzed Anthropic's harness design paper for long-running application
-development against the Conclave plugin architecture. Identified 9 improvement
-areas, roadmapped as 3 P2 items and 6 P3 items. Product Skeptic approved with 3
-corrections (all applied). Analyst revision added P2-13 (user-writable config
-convention) and P3-31 (design assumptions documentation).
+Analyzed Anthropic's harness design paper for long-running application development against the Conclave plugin
+architecture. Identified 9 improvement areas, roadmapped as 3 P2 items and 6 P3 items. Product Skeptic approved with 3
+corrections (all applied). Analyst revision added P2-13 (user-writable config convention) and P3-31 (design assumptions
+documentation).
 
 ## What Was Accomplished
 
 - Fetched and analyzed the Anthropic harness design paper
-- Compared paper findings against Conclave's existing architecture (strengths
-  and gaps)
-- Incorporated user priorities (QA Agent high, cost tracking excluded, QA
-  separate from code skeptic)
+- Compared paper findings against Conclave's existing architecture (strengths and gaps)
+- Incorporated user priorities (QA Agent high, cost tracking excluded, QA separate from code skeptic)
 - Incorporated best practices document on skill design patterns
 - Spawned Analyst (Caelen Greymark) for dependency/effort/impact analysis
 - Spawned Product Skeptic (Wren Cinderglass) for quality gate review
-- Applied Skeptic corrections: P2-12 category fix, P2-11 effort downgrade,
-  roadmap state errors
+- Applied Skeptic corrections: P2-12 category fix, P2-11 effort downgrade, roadmap state errors
 - Wrote 7 roadmap item files and updated \_index.md
-- Established `.claude/conclave/` user-writable config convention (scoped in
-  P2-11)
+- Established `.claude/conclave/` user-writable config convention (scoped in P2-11)
 
 ## Roadmap Items Created
 
@@ -50,8 +45,7 @@ convention) and P3-31 (design assumptions documentation).
 2. **Wave 2a**: P2-07 (Principles Split) + P2-13 (Config Convention) in parallel
 3. **Wave 2b**: P2-11 (Sprint Contracts) — after P2-13 settles the convention
 4. **Wave 3**: P2-12 (QA Agent) + P2-08 (Plugin Organization, if ready)
-5. **P3 batch**: P3-26/27/28 in any order; P3-27 + P3-28 batched (same files);
-   P3-29 last; P3-31 anytime
+5. **P3 batch**: P3-26/27/28 in any order; P3-27 + P3-28 batched (same files); P3-29 last; P3-31 anytime
 
 ## Files Created
 
@@ -75,5 +69,5 @@ convention) and P3-31 (design assumptions documentation).
 ## Verification
 
 - Product Skeptic approved with corrections (all applied)
-- Skeptic corrections: P2-12 category core-framework→quality-reliability, P2-11
-  effort Large→Medium, roadmap state errors noted
+- Skeptic corrections: P2-12 category core-framework→quality-reliability, P2-11 effort Large→Medium, roadmap state
+  errors noted

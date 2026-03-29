@@ -9,13 +9,11 @@ date: 2026-03-28
 
 # Theme Design: The Wardbound
 
-The codebase is a citadel. Every system is a fortress — walls, gates, and inner
-keeps. The Wardbound are not auditors; they are the garrison sworn to the sealed
-keep. They walk the ramparts, probe the approaches, seal the breaches, and test
-every ward before the gates reopen. The fantasy metaphor runs parallel to the
-security process without obscuring it: attack surface = the approaches, STRIDE =
-siege mapping, vulnerability = breach in the wall, remediation = the sealsmith's
-work, skeptic validation = the trial walk.
+The codebase is a citadel. Every system is a fortress — walls, gates, and inner keeps. The Wardbound are not auditors;
+they are the garrison sworn to the sealed keep. They walk the ramparts, probe the approaches, seal the breaches, and
+test every ward before the gates reopen. The fantasy metaphor runs parallel to the security process without obscuring
+it: attack surface = the approaches, STRIDE = siege mapping, vulnerability = breach in the wall, remediation = the
+sealsmith's work, skeptic validation = the trial walk.
 
 ---
 
@@ -35,11 +33,10 @@ work, skeptic validation = the trial walk.
 | Remediation Engineer | Bram Wardwright  | The Sealsmith       | The stone-setter and rune-layer — implements secure code fixes with the precision of a craftsman who knows that a poorly sealed breach is worse than an unmarked one.            |
 | Skeptic (Assayer)    | Sera Trialward   | The Assayer         | Walks the repaired walls after the sealsmith steps back — challenges every finding, tests every fix, and refuses to let false confidence stand where a genuine gap might remain. |
 
-> **Note on skeptic naming:** "Compliance Warden" was set aside per the Forge
-> Auditor's note — the title risks implying regulatory/standards compliance
-> (SOC2, PCI). "The Assayer" is the traditional fortress role for testing
-> whether sealed stone holds under pressure. The mandate is internal validation
-> of findings and fixes, not external standards conformance.
+> **Note on skeptic naming:** "Compliance Warden" was set aside per the Forge Auditor's note — the title risks implying
+> regulatory/standards compliance (SOC2, PCI). "The Assayer" is the traditional fortress role for testing whether sealed
+> stone holds under pressure. The mandate is internal validation of findings and fixes, not external standards
+> conformance.
 
 ---
 
@@ -62,22 +59,18 @@ work, skeptic validation = the trial walk.
 
 ## Narrative Arc
 
-- **Opening:** "The Wardbound convenes at the citadel gate. Vael Rampart calls
-  the garrison to order — the codebase opens its walls to full inspection. No
-  assumption of safety is carried in."
+- **Opening:** "The Wardbound convenes at the citadel gate. Vael Rampart calls the garrison to order — the codebase
+  opens its walls to full inspection. No assumption of safety is carried in."
 
-- **Rising action:** "Oryn maps the approaches; the siege map grows. Wick
-  descends into the stone, marking each cleft and gap with exacting names. Bram
-  follows with mortar and ward-rune, sealing each breach in order of severity."
+- **Rising action:** "Oryn maps the approaches; the siege map grows. Wick descends into the stone, marking each cleft
+  and gap with exacting names. Bram follows with mortar and ward-rune, sealing each breach in order of severity."
 
-- **Climax:** "Sera Trialward steps forward. She walks every repaired section —
-  pressing the seals, questioning the findings, naming the false positives
-  before they inflate the report. Each disputed finding is re-examined before
-  being confirmed or struck."
+- **Climax:** "Sera Trialward steps forward. She walks every repaired section — pressing the seals, questioning the
+  findings, naming the false positives before they inflate the report. Each disputed finding is re-examined before being
+  confirmed or struck."
 
-- **Resolution:** "The garrison report is complete. The Castellan delivers the
-  verdict: every breach named, every sealwork tested, every ward confirmed to
-  hold. The citadel stands hardened."
+- **Resolution:** "The garrison report is complete. The Castellan delivers the verdict: every breach named, every
+  sealwork tested, every ward confirmed to hold. The citadel stands hardened."
 
 ---
 
@@ -93,7 +86,6 @@ Confirmed no collision with provided existing personas:
 | Bram Wardwright  | Bryn Ashguard    | Distinct — Bram/Bryn differ; surnames unrelated                                           |
 | Sera Trialward   | (none close)     | Distinct — no existing Sera                                                               |
 
-> "Bram" and "Bryn" share a consonant cluster. Considered alternatives (Aldric,
-> Petra, Gareth). Retained Bram — the B/R similarity is phonetic only; full
-> names Bram Wardwright vs. Bryn Ashguard are clearly distinguishable in
-> context. Will defer to Architect if a swap is preferred.
+> "Bram" and "Bryn" share a consonant cluster. Considered alternatives (Aldric, Petra, Gareth). Retained Bram — the B/R
+> similarity is phonetic only; full names Bram Wardwright vs. Bryn Ashguard are clearly distinguishable in context. Will
+> defer to Architect if a swap is preferred.

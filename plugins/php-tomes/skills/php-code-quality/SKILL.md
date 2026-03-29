@@ -1,18 +1,16 @@
 ---
 name: php-code-quality
 description:
-  "Use this skill when writing or reviewing PHP code for style, naming, types,
-  or documentation. Covers PSR-12/PER-CS formatting, naming conventions, strict
-  typing, union/intersection/DNF types, PHPStan (level 0-9) and Psalm
-  configuration, baseline management, PHPDoc (when to write vs skip), generics
-  via @template, and PHP-CS-Fixer/Pint setup."
+  "Use this skill when writing or reviewing PHP code for style, naming, types, or documentation. Covers PSR-12/PER-CS
+  formatting, naming conventions, strict typing, union/intersection/DNF types, PHPStan (level 0-9) and Psalm
+  configuration, baseline management, PHPDoc (when to write vs skip), generics via @template, and PHP-CS-Fixer/Pint
+  setup."
 ---
 
 # PHP Code Quality
 
-Apply these rules to every PHP file you write, review, or refactor. When
-generating new code, follow them by default. When reviewing existing code, flag
-violations.
+Apply these rules to every PHP file you write, review, or refactor. When generating new code, follow them by default.
+When reviewing existing code, flag violations.
 
 ## File Structure
 
@@ -447,20 +445,17 @@ insert_final_newline = true
 
 Run these checks on every PR:
 
-1. **Code style**: `vendor/bin/php-cs-fixer fix --dry-run --diff` (or
-   `vendor/bin/pint --test`)
+1. **Code style**: `vendor/bin/php-cs-fixer fix --dry-run --diff` (or `vendor/bin/pint --test`)
 2. **Static analysis**: `vendor/bin/phpstan analyse --memory-limit=512M`
 3. **Baseline enforcement**: Fail if baseline grows
 
-Do not auto-fix in CI — fail the build and require local fixes. Auto-fixing on
-CI can cause divergence between the branch and remote.
+Do not auto-fix in CI — fail the build and require local fixes. Auto-fixing on CI can cause divergence between the
+branch and remote.
 
 ## Quick Reference
 
 See the reference files for deeper details:
 
-- [code-style.md](references/code-style.md) — PSR-12/PER-CS rules, formatting
-  details, tool configs
-- [type-system.md](references/type-system.md) — All PHP types, PHPStan/Psalm
-  levels, generics, custom rules
+- [code-style.md](references/code-style.md) — PSR-12/PER-CS rules, formatting details, tool configs
+- [type-system.md](references/type-system.md) — All PHP types, PHPStan/Psalm levels, generics, custom rules
 - [documentation.md](references/documentation.md) — PHPDoc tags, API docs, ADRs

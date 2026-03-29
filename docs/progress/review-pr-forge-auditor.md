@@ -5,8 +5,8 @@ agent: "forge-auditor"
 phase: "author-review"
 status: "complete"
 last_action:
-  "Phase 3 SKILL.md full compliance review — APPROVED. All Five Principles
-  satisfied. 1,469 lines, 10 spawn prompts, 40 methodologies verified."
+  "Phase 3 SKILL.md full compliance review — APPROVED. All Five Principles satisfied. 1,469 lines, 10 spawn prompts, 40
+  methodologies verified."
 updated: "2026-03-29T15:25:00Z"
 ---
 
@@ -23,13 +23,12 @@ updated: "2026-03-29T15:25:00Z"
 
 ### Principle 3 (Non-Overlapping Mandates): 3 VIOLATIONS
 
-1. **Swiftblade ↔ Delver** — N+1 query detection in both checklists. Fix: remove
-   from Delver, narrow to schema-level concerns.
-2. **Sentinel ↔ Chandler** — Dependency CVE detection in both checklists. Fix:
-   remove from Sentinel, Chandler owns CVE detection.
-3. **Sentinel ↔ Structuralist** — Race condition detection overlaps. Fix:
-   Sentinel owns exploitable race conditions, Structuralist owns correctness
-   race conditions. Add boundary test.
+1. **Swiftblade ↔ Delver** — N+1 query detection in both checklists. Fix: remove from Delver, narrow to schema-level
+   concerns.
+2. **Sentinel ↔ Chandler** — Dependency CVE detection in both checklists. Fix: remove from Sentinel, Chandler owns CVE
+   detection.
+3. **Sentinel ↔ Structuralist** — Race condition detection overlaps. Fix: Sentinel owns exploitable race conditions,
+   Structuralist owns correctness race conditions. Add boundary test.
 
 ### Non-Blocking Observations
 

@@ -4,8 +4,7 @@ team: "build-product"
 agent: "impl-architect"
 phase: "design"
 status: "awaiting_review"
-last_action:
-  "Completed implementation plan with exact edit pairs for all 4 files"
+last_action: "Completed implementation plan with exact edit pairs for all 4 files"
 updated: "2026-02-18T00:00:00Z"
 ---
 
@@ -13,8 +12,7 @@ updated: "2026-02-18T00:00:00Z"
 
 - [00:00] Claimed task #1, read all 3 SKILL.md files, spec, and ADR template
 - [00:01] Analyzed differences across files, verified exact line content
-- [00:02] Produced implementation plan with exact old_string/new_string edit
-  pairs
+- [00:02] Produced implementation plan with exact old_string/new_string edit pairs
 
 ---
 
@@ -22,18 +20,15 @@ updated: "2026-02-18T00:00:00Z"
 
 ## Overview
 
-This plan implements the P2-05 Content Deduplication spec by making targeted
-edits to 3 SKILL.md files and creating ADR-002. The changes fall into three
-categories:
+This plan implements the P2-05 Content Deduplication spec by making targeted edits to 3 SKILL.md files and creating
+ADR-002. The changes fall into three categories:
 
-1. **Normalization** (plan-product only): Fix quote style, table formatting, and
-   add missing `---` separator
+1. **Normalization** (plan-product only): Fix quote style, table formatting, and add missing `---` separator
 2. **Markers** (all 3 files): Add HTML comment markers around shared sections
 3. **ADR creation**: Document the validated duplication decision
 
-After all edits, Shared Principles content between markers will be
-byte-identical across all 3 files. Communication Protocol content will be
-structurally equivalent (skeptic name column varies by design).
+After all edits, Shared Principles content between markers will be byte-identical across all 3 files. Communication
+Protocol content will be structurally equivalent (skeptic name column varies by design).
 
 ---
 
@@ -41,9 +36,8 @@ structurally equivalent (skeptic name column varies by design).
 
 ### Edit 1.1 — Normalize quote style in Principle #2 (line 148)
 
-**Rationale**: plan-product uses single quotes `'message'` and `'broadcast'`
-while build-product and review-quality use double quotes. Normalize to double
-quotes for byte-identity.
+**Rationale**: plan-product uses single quotes `'message'` and `'broadcast'` while build-product and review-quality use
+double quotes. Normalize to double quotes for byte-identity.
 
 **old_string**:
 
@@ -59,8 +53,7 @@ quotes for byte-identity.
 
 ### Edit 1.2 — Normalize quote style in tool mapping note (line 173)
 
-**Rationale**: Same single-to-double quote normalization for the Communication
-Protocol tool mapping note.
+**Rationale**: Same single-to-double quote normalization for the Communication Protocol tool mapping note.
 
 **old_string**:
 
@@ -76,9 +69,8 @@ Protocol tool mapping note.
 
 ### Edit 1.3 — Normalize table formatting (lines 177-189)
 
-**Rationale**: plan-product uses unpadded `|col|col|col|` format while
-build-product and review-quality use padded `| col | col | col |` format.
-Normalize to padded.
+**Rationale**: plan-product uses unpadded `|col|col|col|` format while build-product and review-quality use padded
+`| col | col | col |` format. Normalize to padded.
 
 **old_string**:
 
@@ -118,9 +110,8 @@ Normalize to padded.
 
 ### Edit 1.4 — Add `---` separator and markers around Shared Principles (lines 141+)
 
-**Rationale**: build-product and review-quality both have a `---` separator
-before `## Shared Principles`. plan-product lacks it. Add the separator and wrap
-with markers.
+**Rationale**: build-product and review-quality both have a `---` separator before `## Shared Principles`. plan-product
+lacks it. Add the separator and wrap with markers.
 
 **old_string**:
 
@@ -146,15 +137,14 @@ These principles apply to **every agent on every team**. They are included in ev
 ### CRITICAL — Non-Negotiable
 ```
 
-Note: This edit is applied AFTER Edit 1.1 has already been applied (the quote
-normalization). The Shared Principles closing marker is added in the next edit.
+Note: This edit is applied AFTER Edit 1.1 has already been applied (the quote normalization). The Shared Principles
+closing marker is added in the next edit.
 
 ### Edit 1.5 — Add closing principles marker and opening communication-protocol marker
 
-**Rationale**: Close the principles section and open the communication-protocol
-section. In plan-product, there is NO `---` between Shared Principles and
-Communication Protocol (unlike build-product and review-quality which have one).
-We need to add the closing marker, then a `---`, then the opening marker.
+**Rationale**: Close the principles section and open the communication-protocol section. In plan-product, there is NO
+`---` between Shared Principles and Communication Protocol (unlike build-product and review-quality which have one). We
+need to add the closing marker, then a `---`, then the opening marker.
 
 **old_string**:
 
@@ -179,8 +169,8 @@ We need to add the closing marker, then a `---`, then the opening marker.
 
 ### Edit 1.6 — Add closing communication-protocol marker
 
-**Rationale**: Close the communication-protocol section after the Message Format
-code block, before the Contract Negotiation Pattern comment.
+**Rationale**: Close the communication-protocol section after the Message Format code block, before the Contract
+Negotiation Pattern comment.
 
 **old_string**:
 
@@ -206,8 +196,8 @@ code block, before the Contract Negotiation Pattern comment.
 
 ### Edit 2.1 — Add markers around Shared Principles (lines 159-186)
 
-**Rationale**: build-product already has normalized content (double quotes,
-padded tables, `---` separator). Only needs markers.
+**Rationale**: build-product already has normalized content (double quotes, padded tables, `---` separator). Only needs
+markers.
 
 **old_string**:
 
@@ -292,9 +282,8 @@ These principles apply to **every agent on every team**. They are included in ev
 
 ### Edit 2.2 — Add closing communication-protocol marker and skill-specific markers
 
-**Rationale**: Close the shared communication-protocol section after the Message
-Format code block, then wrap the Contract Negotiation Pattern in skill-specific
-markers.
+**Rationale**: Close the shared communication-protocol section after the Message Format code block, then wrap the
+Contract Negotiation Pattern in skill-specific markers.
 
 **old_string**:
 
@@ -320,8 +309,7 @@ Blocking: [task number if applicable]
 
 ### Edit 2.3 — Add closing skill-specific marker after Contract Negotiation Pattern
 
-**Rationale**: Close the skill-specific section after the ASCII diagram code
-block.
+**Rationale**: Close the skill-specific section after the ASCII diagram code block.
 
 **old_string**:
 
@@ -332,8 +320,8 @@ block.
 ## Teammates to Spawn
 ```
 
-Note: This matches the `---` followed by `## Teammates to Spawn` that comes
-after the Contract Negotiation Pattern ASCII art block (line 279 area).
+Note: This matches the `---` followed by `## Teammates to Spawn` that comes after the Contract Negotiation Pattern ASCII
+art block (line 279 area).
 
 **new_string**:
 
@@ -345,11 +333,9 @@ after the Contract Negotiation Pattern ASCII art block (line 279 area).
 ## Teammates to Spawn
 ```
 
-IMPORTANT: There are two `---` followed by section headings in the area after
-the Communication Protocol. The one we target is specifically
-`## Teammates to Spawn` (NOT `## Backend ↔ Frontend Contract Negotiation`). The
-old_string must be specific enough to avoid ambiguity — the blank line before
-`---` before `## Teammates to Spawn` is the unique target.
+IMPORTANT: There are two `---` followed by section headings in the area after the Communication Protocol. The one we
+target is specifically `## Teammates to Spawn` (NOT `## Backend ↔ Frontend Contract Negotiation`). The old_string must
+be specific enough to avoid ambiguity — the blank line before `---` before `## Teammates to Spawn` is the unique target.
 
 ---
 
@@ -357,8 +343,7 @@ old_string must be specific enough to avoid ambiguity — the blank line before
 
 ### Edit 3.1 — Add markers around Shared Principles (lines 149-177)
 
-**Rationale**: review-quality already has normalized content. Only needs
-markers.
+**Rationale**: review-quality already has normalized content. Only needs markers.
 
 **old_string**:
 
@@ -443,8 +428,7 @@ These principles apply to **every agent on every team**. They are included in ev
 
 ### Edit 3.2 — Add closing communication-protocol marker
 
-**Rationale**: Close the communication-protocol section after the Message Format
-code block.
+**Rationale**: Close the communication-protocol section after the Message Format code block.
 
 **old_string**:
 
@@ -491,58 +475,48 @@ Accepted
 
 ## Context
 
-Three SKILL.md files (`plan-product`, `build-product`, `review-quality`) contain
-approximately 126 duplicated lines across two shared sections: Shared Principles
-(12 numbered principles in 4 tiers) and Communication Protocol (tool mapping,
-"When to Message" table, "Message Format" template).
+Three SKILL.md files (`plan-product`, `build-product`, `review-quality`) contain approximately 126 duplicated lines
+across two shared sections: Shared Principles (12 numbered principles in 4 tiers) and Communication Protocol (tool
+mapping, "When to Message" table, "Message Format" template).
 
-This duplication creates a maintenance drift risk: any change to shared
-principles requires editing 3 files identically. Cosmetic inconsistencies
-already present (quote style, table formatting, horizontal rules) demonstrate
-that manual synchronization is unreliable.
+This duplication creates a maintenance drift risk: any change to shared principles requires editing 3 files identically.
+Cosmetic inconsistencies already present (quote style, table formatting, horizontal rules) demonstrate that manual
+synchronization is unreliable.
 
 Key constraints:
 
-1. SKILL.md files must remain self-contained. Each skill must function in
-   isolation without reading external shared files. This is the core
-   architectural property that makes skills portable.
+1. SKILL.md files must remain self-contained. Each skill must function in isolation without reading external shared
+   files. This is the core architectural property that makes skills portable.
 2. No agent behavior changes. Agents read the same content they read today.
-3. The Communication Protocol has one intentional per-skill variation: the
-   skeptic name in the "Plan ready for review" table row (`product-skeptic`,
-   `quality-skeptic`, `ops-skeptic`).
-4. `build-product` has a unique Contract Negotiation Pattern subsection not
-   present in the other skills.
+3. The Communication Protocol has one intentional per-skill variation: the skeptic name in the "Plan ready for review"
+   table row (`product-skeptic`, `quality-skeptic`, `ops-skeptic`).
+4. `build-product` has a unique Contract Negotiation Pattern subsection not present in the other skills.
 
 ## Decision
 
 ### Validated duplication with HTML comment markers
 
-Keep shared content duplicated in each SKILL.md file (preserving
-self-containment), but wrap shared sections with HTML comment markers that
-enable CI-based drift detection (P2-04).
+Keep shared content duplicated in each SKILL.md file (preserving self-containment), but wrap shared sections with HTML
+comment markers that enable CI-based drift detection (P2-04).
 
 Marker format:
 
-- `<!-- BEGIN SHARED: principles -->` / `<!-- END SHARED: principles -->` around
-  Shared Principles
-- `<!-- BEGIN SHARED: communication-protocol -->` /
-  `<!-- END SHARED: communication-protocol -->` around Communication Protocol
-- `<!-- BEGIN SKILL-SPECIFIC: communication-extras -->` /
-  `<!-- END SKILL-SPECIFIC: communication-extras -->` around per-skill extras
-  (e.g., Contract Negotiation Pattern)
-- `<!-- Authoritative source: plan-product/SKILL.md. Keep in sync across all skills. -->`
-  after each BEGIN SHARED marker
+- `<!-- BEGIN SHARED: principles -->` / `<!-- END SHARED: principles -->` around Shared Principles
+- `<!-- BEGIN SHARED: communication-protocol -->` / `<!-- END SHARED: communication-protocol -->` around Communication
+  Protocol
+- `<!-- BEGIN SKILL-SPECIFIC: communication-extras -->` / `<!-- END SKILL-SPECIFIC: communication-extras -->` around
+  per-skill extras (e.g., Contract Negotiation Pattern)
+- `<!-- Authoritative source: plan-product/SKILL.md. Keep in sync across all skills. -->` after each BEGIN SHARED marker
 
 ### Authoritative source designation
 
-`plan-product/SKILL.md` is the authoritative source for all shared content. When
-editing Shared Principles or Communication Protocol, edit plan-product first,
-then propagate to the other skill files.
+`plan-product/SKILL.md` is the authoritative source for all shared content. When editing Shared Principles or
+Communication Protocol, edit plan-product first, then propagate to the other skill files.
 
 ### Normalization before marking
 
-Before adding markers, normalize cosmetic inconsistencies so that the Shared
-Principles section is byte-identical across all 3 files:
+Before adding markers, normalize cosmetic inconsistencies so that the Shared Principles section is byte-identical across
+all 3 files:
 
 - Quote style: single quotes in plan-product normalized to double quotes
 - Table formatting: unpadded format in plan-product normalized to padded format
@@ -551,50 +525,40 @@ Principles section is byte-identical across all 3 files:
 ### Validation contract
 
 - Shared Principles: byte-identical across all files (after normalization)
-- Communication Protocol: structurally equivalent (same headings, same table
-  rows; skeptic name column may vary per skill)
+- Communication Protocol: structurally equivalent (same headings, same table rows; skeptic name column may vary per
+  skill)
 
 ### 8-skill revision trigger
 
-When the skill count exceeds 8, revisit this approach. At that scale, editing 8+
-files for a single principle change is burdensome, and extraction to a
-plugin-scoped shared file becomes justified. The markers make future extraction
-straightforward: content between markers moves to the shared file and is
-replaced by an include directive or equivalent.
+When the skill count exceeds 8, revisit this approach. At that scale, editing 8+ files for a single principle change is
+burdensome, and extraction to a plugin-scoped shared file becomes justified. The markers make future extraction
+straightforward: content between markers moves to the shared file and is replaced by an include directive or equivalent.
 
 ## Alternatives Considered
 
 ### Extract shared content to CLAUDE.md
 
-Rejected. CLAUDE.md is owned by the project, not the plugin, creating an
-ownership conflict. It also pollutes the context of every agent invocation (not
-just skill invocations) with content only relevant to skill-spawned agents.
+Rejected. CLAUDE.md is owned by the project, not the plugin, creating an ownership conflict. It also pollutes the
+context of every agent invocation (not just skill invocations) with content only relevant to skill-spawned agents.
 
 ### Extract to a shared file within the plugin
 
-Rejected at current scale (3 skills). Breaks the self-containment property of
-SKILL.md files. Each skill would need to read an external file, adding a
-dependency and reducing portability. Justified only when skill count exceeds 8
-(see decision trigger above).
+Rejected at current scale (3 skills). Breaks the self-containment property of SKILL.md files. Each skill would need to
+read an external file, adding a dependency and reducing portability. Justified only when skill count exceeds 8 (see
+decision trigger above).
 
 ### Do nothing
 
-Rejected. The existing cosmetic drift (quote styles, table formatting)
-demonstrates that untracked duplication leads to inconsistency. Even at 3
-skills, the maintenance burden is real.
+Rejected. The existing cosmetic drift (quote styles, table formatting) demonstrates that untracked duplication leads to
+inconsistency. Even at 3 skills, the maintenance burden is real.
 
 ## Consequences
 
-- **Positive**: Shared content remains in each SKILL.md, preserving
-  self-containment and portability.
-- **Positive**: HTML comment markers are invisible to agents processing the
-  markdown, so no behavioral changes.
-- **Positive**: CI validation (P2-04) will automatically detect drift,
-  eliminating manual synchronization errors.
-- **Positive**: Markers make future extraction straightforward when scale
-  justifies it.
-- **Negative**: Any shared content change still requires editing 3 files.
-  Mitigated by CI catching drift.
+- **Positive**: Shared content remains in each SKILL.md, preserving self-containment and portability.
+- **Positive**: HTML comment markers are invisible to agents processing the markdown, so no behavioral changes.
+- **Positive**: CI validation (P2-04) will automatically detect drift, eliminating manual synchronization errors.
+- **Positive**: Markers make future extraction straightforward when scale justifies it.
+- **Negative**: Any shared content change still requires editing 3 files. Mitigated by CI catching drift.
 - **Negative**: Markers add 4-6 comment lines per file. Minimal impact.
 ```
 
@@ -602,9 +566,8 @@ skills, the maintenance burden is real.
 
 ## Byte-Identity Verification
 
-After all edits are applied, the content between
-`<!-- BEGIN SHARED: principles -->` and `<!-- END SHARED: principles -->` in all
-3 files will be:
+After all edits are applied, the content between `<!-- BEGIN SHARED: principles -->` and
+`<!-- END SHARED: principles -->` in all 3 files will be:
 
 ```
 <!-- Authoritative source: plan-product/SKILL.md. Keep in sync across all skills. -->
@@ -637,13 +600,12 @@ These principles apply to **every agent on every team**. They are included in ev
 12. **Use Sonnet for execution agents, Opus for reasoning agents.** Researchers, architects, and skeptics benefit from deeper reasoning (Opus). Engineers executing well-defined specs can use Sonnet for cost efficiency.
 ```
 
-This content is already byte-identical in build-product and review-quality.
-After Edits 1.1 normalizes plan-product's quotes, all 3 will match.
+This content is already byte-identical in build-product and review-quality. After Edits 1.1 normalizes plan-product's
+quotes, all 3 will match.
 
 ## Communication Protocol Structural Equivalence
 
-The only variation between files in the communication-protocol section is the
-"Plan ready for review" table row:
+The only variation between files in the communication-protocol section is the "Plan ready for review" table row:
 
 - plan-product: `write(product-skeptic, ...)` / `Product Skeptic`
 - build-product: `write(quality-skeptic, ...)` / `Quality Skeptic`

@@ -14,5 +14,5 @@ updated: "2026-02-19"
 
 ## Problem
 
-New hires at startups face inconsistent onboarding experiences due to ad-hoc
-processes, leading to slower ramp-up times, missed context, and early attrition.
+New hires at startups face inconsistent onboarding experiences due to ad-hoc processes, leading to slower ramp-up times,
+missed context, and early attrition.

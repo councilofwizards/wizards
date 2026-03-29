@@ -14,6 +14,5 @@ updated: "2026-02-19"
 
 ## Problem
 
-Startups need financial planning (burn rate analysis, runway projections, budget
-allocation) but founders often make financial decisions without structured
-models or scenario analysis.
+Startups need financial planning (burn rate analysis, runway projections, budget allocation) but founders often make
+financial decisions without structured models or scenario analysis.

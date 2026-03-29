@@ -11,9 +11,9 @@ completed: "2026-03-27"
 
 ## Summary
 
-Implemented P2-11 Sprint Contracts / Definition of Done. 5 files touched: 1 new
-artifact template, 3 SKILL.md modifications, 1 validator update. All 3 stages
-completed successfully. All 11 success criteria verified by Quality Skeptic.
+Implemented P2-11 Sprint Contracts / Definition of Done. 5 files touched: 1 new artifact template, 3 SKILL.md
+modifications, 1 validator update. All 3 stages completed successfully. All 11 success criteria verified by Quality
+Skeptic.
 
 ## Changes
 
@@ -23,14 +23,12 @@ Sprint contract artifact template with YAML frontmatter and 5 sections.
 
 ### scripts/validators/artifact-templates.sh (MODIFIED)
 
-Added `sprint-contract:sprint-contract` to expected_templates. F-series now
-checks 5 templates.
+Added `sprint-contract:sprint-contract` to expected_templates. F-series now checks 5 templates.
 
 ### plugins/conclave/skills/plan-implementation/SKILL.md (MODIFIED)
 
 - Setup step 2 extended with contract template reading + custom override lookup
-- New Orchestration Flow step 3: Contract Negotiation GATE before plan-skeptic
-  review
+- New Orchestration Flow step 3: Contract Negotiation GATE before plan-skeptic review
 - Step 8: implementation plan frontmatter includes sprint-contract link
 
 ### plugins/conclave/skills/build-implementation/SKILL.md (MODIFIED)
@@ -50,8 +48,7 @@ checks 5 templates.
 ## Verification
 
 - Plan Skeptic (Voss Grimthorn) approved implementation plan
-- Quality Skeptic (Mira Flintridge) approved implementation — all 11 success
-  criteria PASS
-- Critical ordering verified: contract negotiation before plan-skeptic review in
-  both plan-implementation and build-product
+- Quality Skeptic (Mira Flintridge) approved implementation — all 11 success criteria PASS
+- Critical ordering verified: contract negotiation before plan-skeptic review in both plan-implementation and
+  build-product
 - Conclave validators pass (pre-existing php-tomes failures unrelated)

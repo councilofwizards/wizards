@@ -1,13 +1,11 @@
-> **HISTORICAL**: This is the original design document that inspired this
-> plugin. Command names (`/product`, `/implement`, `/quality`), directory
-> structure, and API references may not reflect the current implementation. The
+> **HISTORICAL**: This is the original design document that inspired this plugin. Command names (`/product`,
+> `/implement`, `/quality`), directory structure, and API references may not reflect the current implementation. The
 > authoritative skill definitions are in `plugins/conclave/skills/*/SKILL.md`.
 
 # Agent Teams Framework: Product & Implementation
 
-A comprehensive framework for orchestrating Claude Code Agent Teams to plan,
-build, and operate a SaaS product. Designed for the native Agent Teams feature
-(`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`).
+A comprehensive framework for orchestrating Claude Code Agent Teams to plan, build, and operate a SaaS product. Designed
+for the native Agent Teams feature (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`).
 
 ---
 
@@ -63,75 +61,59 @@ build, and operate a SaaS product. Designed for the native Agent Teams feature
 
 ### How Teams Interact
 
-Teams communicate through **artifact files** in the project repository, not
-direct cross-team messaging. The Product Team writes specs; the Implementation
-Team consumes them. This decoupling lets each team run independently while
+Teams communicate through **artifact files** in the project repository, not direct cross-team messaging. The Product
+Team writes specs; the Implementation Team consumes them. This decoupling lets each team run independently while
 maintaining a clear contract.
 
 - `docs/roadmap/` — Product Team owns this. The canonical prioritized backlog.
-- `docs/specs/` — Product Team writes feature specs here. Implementation Team
-  reads them.
-- `docs/architecture/` — Architect maintains ADRs (Architecture Decision
-  Records) here.
-- `docs/progress/` — Implementation Team writes progress notes here. Product
-  Team reads them.
+- `docs/specs/` — Product Team writes feature specs here. Implementation Team reads them.
+- `docs/architecture/` — Architect maintains ADRs (Architecture Decision Records) here.
+- `docs/progress/` — Implementation Team writes progress notes here. Product Team reads them.
 
 ---
 
 ## Shared Principles
 
-These principles apply to **every agent on every team**. They are included in
-every spawn prompt.
+These principles apply to **every agent on every team**. They are included in every spawn prompt.
 
 ### CRITICAL — Non-Negotiable
 
-1. **No agent proceeds past planning without Skeptic sign-off.** The Skeptic
-   must explicitly approve plans before implementation begins. If the Skeptic
-   has not approved, the work is blocked.
-2. **Communicate constantly via inbox messages.** Your `write()` and
-   `broadcast()` are your primary tools. Never assume another agent knows your
-   status. When you complete a task, discover a blocker, change an approach, or
-   need input — message immediately.
-3. **No assumptions.** If you don't know something, ask. Message a teammate,
-   message the lead, or research it. Never guess at requirements, API contracts,
-   data shapes, or business rules.
+1. **No agent proceeds past planning without Skeptic sign-off.** The Skeptic must explicitly approve plans before
+   implementation begins. If the Skeptic has not approved, the work is blocked.
+2. **Communicate constantly via inbox messages.** Your `write()` and `broadcast()` are your primary tools. Never assume
+   another agent knows your status. When you complete a task, discover a blocker, change an approach, or need input —
+   message immediately.
+3. **No assumptions.** If you don't know something, ask. Message a teammate, message the lead, or research it. Never
+   guess at requirements, API contracts, data shapes, or business rules.
 
 ### IMPORTANT — High-Value Practices
 
-4. **Minimal, clean solutions.** Write the least code that correctly solves the
-   problem. Prefer framework-provided tools over custom implementations (the
-   "Laravel Way" for backend). Every line of code is a liability.
-5. **TDD by default.** Write the test first. Write the minimum code to pass it.
-   Refactor. This is not optional for implementation agents.
-6. **SOLID and DRY.** Single responsibility. Open for extension, closed for
-   modification. Depend on abstractions. Don't repeat yourself. These aren't
-   aspirational — they're required.
-7. **Unit tests with mocks preferred.** Design backend code to be testable with
-   mocks and avoid database overhead. Use feature/integration tests only where
-   database interaction is the thing being tested or where they prevent
-   regressions that unit tests cannot catch.
+4. **Minimal, clean solutions.** Write the least code that correctly solves the problem. Prefer framework-provided tools
+   over custom implementations (the "Laravel Way" for backend). Every line of code is a liability.
+5. **TDD by default.** Write the test first. Write the minimum code to pass it. Refactor. This is not optional for
+   implementation agents.
+6. **SOLID and DRY.** Single responsibility. Open for extension, closed for modification. Depend on abstractions. Don't
+   repeat yourself. These aren't aspirational — they're required.
+7. **Unit tests with mocks preferred.** Design backend code to be testable with mocks and avoid database overhead. Use
+   feature/integration tests only where database interaction is the thing being tested or where they prevent regressions
+   that unit tests cannot catch.
 
 ### ESSENTIAL — Quality Standards
 
-8. **Contracts are sacred.** When a backend engineer and frontend engineer agree
-   on an API contract (request shape, response shape, status codes, error
-   format), that contract is documented and neither side deviates without
-   explicit renegotiation and Skeptic approval.
-9. **Document decisions, not just code.** When you make a non-obvious choice,
-   write a brief note explaining why. ADRs for architecture. Inline comments for
-   tricky logic. Spec annotations for requirement interpretations.
-10. **Delegate mode for leads.** Team leads coordinate, review, and synthesize.
-    They do not implement. If you are a team lead, use delegate mode — your job
-    is orchestration, not execution.
+8. **Contracts are sacred.** When a backend engineer and frontend engineer agree on an API contract (request shape,
+   response shape, status codes, error format), that contract is documented and neither side deviates without explicit
+   renegotiation and Skeptic approval.
+9. **Document decisions, not just code.** When you make a non-obvious choice, write a brief note explaining why. ADRs
+   for architecture. Inline comments for tricky logic. Spec annotations for requirement interpretations.
+10. **Delegate mode for leads.** Team leads coordinate, review, and synthesize. They do not implement. If you are a team
+    lead, use delegate mode — your job is orchestration, not execution.
 
 ### NICE-TO-HAVE — When Feasible
 
-11. **Progressive disclosure in specs.** Start with a one-paragraph summary,
-    then expand into details. Readers should be able to stop reading at any
-    depth and still have a useful understanding.
-12. **Use Sonnet for execution agents, Opus for reasoning agents.** Researchers,
-    architects, and skeptics benefit from deeper reasoning (Opus). Engineers
-    executing well-defined specs can use Sonnet for cost efficiency.
+11. **Progressive disclosure in specs.** Start with a one-paragraph summary, then expand into details. Readers should be
+    able to stop reading at any depth and still have a useful understanding.
+12. **Use Sonnet for execution agents, Opus for reasoning agents.** Researchers, architects, and skeptics benefit from
+    deeper reasoning (Opus). Engineers executing well-defined specs can use Sonnet for cost efficiency.
 
 ---
 
@@ -157,8 +139,7 @@ All agents follow these communication rules. This is the lifeblood of the team.
 
 ### Message Format
 
-Keep messages structured so they can be parsed quickly by context-constrained
-agents:
+Keep messages structured so they can be parsed quickly by context-constrained agents:
 
 ```
 [TYPE]: [BRIEF_SUBJECT]
@@ -169,22 +150,17 @@ Blocking: [task number if applicable]
 
 ### Contract Negotiation Pattern (Backend ↔ Frontend)
 
-This is the most critical communication pattern. When backend and frontend
-engineers are working on the same feature:
+This is the most critical communication pattern. When backend and frontend engineers are working on the same feature:
 
-1. **Backend proposes** an API contract (endpoint, method, request body,
-   response shape, status codes, error format) and sends it to frontend via
-   `write()`.
-2. **Frontend reviews** and either accepts or proposes modifications via
-   `write()` back.
-3. **Both sides iterate** until agreement. Neither proceeds to implementation
-   until agreed.
-4. **Skeptic reviews** the final contract for completeness, edge cases, error
-   handling, and consistency with existing API patterns.
-5. **Contract is written** to `docs/specs/[feature]/api-contract.md` as the
-   authoritative source.
-6. **Any change** to the contract after agreement requires re-notification to
-   all affected agents and Skeptic re-approval.
+1. **Backend proposes** an API contract (endpoint, method, request body, response shape, status codes, error format) and
+   sends it to frontend via `write()`.
+2. **Frontend reviews** and either accepts or proposes modifications via `write()` back.
+3. **Both sides iterate** until agreement. Neither proceeds to implementation until agreed.
+4. **Skeptic reviews** the final contract for completeness, edge cases, error handling, and consistency with existing
+   API patterns.
+5. **Contract is written** to `docs/specs/[feature]/api-contract.md` as the authoritative source.
+6. **Any change** to the contract after agreement requires re-notification to all affected agents and Skeptic
+   re-approval.
 
 ---
 
@@ -192,10 +168,9 @@ engineers are working on the same feature:
 
 ### Purpose
 
-The Product Team owns **what gets built and why**. They maintain the roadmap,
-research opportunities, define requirements, design the data model and system
-architecture, and ensure that every feature is well-specified before it reaches
-the Implementation Team.
+The Product Team owns **what gets built and why**. They maintain the roadmap, research opportunities, define
+requirements, design the data model and system architecture, and ensure that every feature is well-specified before it
+reaches the Implementation Team.
 
 ### Invocation
 
@@ -248,38 +223,29 @@ Arguments can be:
 └──────────────┘     └──────────────┘     └──────────────┘
 ```
 
-**Step 1 — ORIENT (Product Owner)** The PO reads `docs/roadmap/`,
-`docs/progress/`, and any relevant `docs/specs/` files. They assess current
-state and determine what the team should focus on. They then create tasks for
-the team and assign them.
+**Step 1 — ORIENT (Product Owner)** The PO reads `docs/roadmap/`, `docs/progress/`, and any relevant `docs/specs/`
+files. They assess current state and determine what the team should focus on. They then create tasks for the team and
+assign them.
 
-**Step 2 — RESEARCH (Researcher, in parallel with others as needed)** The
-Researcher investigates the problem space. This might mean reading existing
-code, analyzing user feedback files, reviewing competitor approaches, or
-examining technical constraints. Findings are messaged to the PO and the Skeptic
-simultaneously.
+**Step 2 — RESEARCH (Researcher, in parallel with others as needed)** The Researcher investigates the problem space.
+This might mean reading existing code, analyzing user feedback files, reviewing competitor approaches, or examining
+technical constraints. Findings are messaged to the PO and the Skeptic simultaneously.
 
-**Step 3 — DESIGN (Architect + DBA, in parallel)** The Architect designs the
-system-level solution: which components are involved, how they interact, what
-new services or modules are needed. Simultaneously, the DBA designs the data
-model: tables, relationships, indexes, migrations. Both message each other to
-ensure alignment (e.g., the data model supports the architect's component
-boundaries).
+**Step 3 — DESIGN (Architect + DBA, in parallel)** The Architect designs the system-level solution: which components are
+involved, how they interact, what new services or modules are needed. Simultaneously, the DBA designs the data model:
+tables, relationships, indexes, migrations. Both message each other to ensure alignment (e.g., the data model supports
+the architect's component boundaries).
 
-**Step 4 — SKEPTIC REVIEW (Skeptic)** The Skeptic receives all outputs and
-reviews them holistically. They look for: vague requirements, missing edge
-cases, unstated assumptions, data model gaps, architectural over-engineering or
-under-engineering, missing error handling, scalability concerns, and
-inconsistencies between the spec, architecture, and data model. They send
-specific, actionable rejection feedback.
+**Step 4 — SKEPTIC REVIEW (Skeptic)** The Skeptic receives all outputs and reviews them holistically. They look for:
+vague requirements, missing edge cases, unstated assumptions, data model gaps, architectural over-engineering or
+under-engineering, missing error handling, scalability concerns, and inconsistencies between the spec, architecture, and
+data model. They send specific, actionable rejection feedback.
 
-**Step 5 — FINALIZE (All agents)** Agents address the Skeptic's feedback. This
-may require additional research, design changes, or requirement clarifications.
-The cycle repeats until the Skeptic approves.
+**Step 5 — FINALIZE (All agents)** Agents address the Skeptic's feedback. This may require additional research, design
+changes, or requirement clarifications. The cycle repeats until the Skeptic approves.
 
-**Step 6 — PUBLISH (Product Owner)** The PO writes the final spec to
-`docs/specs/[feature-name]/spec.md`, updates `docs/roadmap/`, and marks the
-feature as "ready for implementation."
+**Step 6 — PUBLISH (Product Owner)** The PO writes the final spec to `docs/specs/[feature-name]/spec.md`, updates
+`docs/roadmap/`, and marks the feature as "ready for implementation."
 
 ### Agent Relationships
 
@@ -295,8 +261,7 @@ product-owner ◄──────────► product-skeptic
      └──► dba ──────────────────┘
 ```
 
-Every agent can message every other agent. The arrows above show the primary
-communication flows, not restrictions.
+Every agent can message every other agent. The arrows above show the primary communication flows, not restrictions.
 
 ---
 
@@ -304,9 +269,8 @@ communication flows, not restrictions.
 
 ### Purpose
 
-The Implementation Team **builds what the Product Team specified**. They pick up
-specs from `docs/specs/`, implement them following TDD, and deliver tested,
-working code.
+The Implementation Team **builds what the Product Team specified**. They pick up specs from `docs/specs/`, implement
+them following TDD, and deliver tested, working code.
 
 ### Invocation
 
@@ -316,8 +280,7 @@ working code.
 
 Arguments can be:
 
-- _(empty)_ — Resume any in-progress work, or pick up the next "ready for
-  implementation" item from the roadmap
+- _(empty)_ — Resume any in-progress work, or pick up the next "ready for implementation" item from the roadmap
 - `[spec-name]` — Implement a specific spec
 - `review` — Review current implementation progress and identify blockers
 
@@ -369,39 +332,32 @@ Arguments can be:
                      └──────────────┘     └──────────────┘
 ```
 
-**Step 1 — INTAKE (Tech Lead)** The Tech Lead reads the spec from `docs/specs/`,
-understands the requirements, and creates a numbered task list. They spawn the
-team with appropriate context in each agent's spawn prompt.
+**Step 1 — INTAKE (Tech Lead)** The Tech Lead reads the spec from `docs/specs/`, understands the requirements, and
+creates a numbered task list. They spawn the team with appropriate context in each agent's spawn prompt.
 
-**Step 2 — PLAN (Architect)** The Architect reads the spec and the Product
-Team's architecture notes. They produce a concrete implementation plan: which
-files to create/modify, which interfaces to define, which services to build,
-what the dependency graph looks like. This plan is shared with all teammates.
+**Step 2 — PLAN (Architect)** The Architect reads the spec and the Product Team's architecture notes. They produce a
+concrete implementation plan: which files to create/modify, which interfaces to define, which services to build, what
+the dependency graph looks like. This plan is shared with all teammates.
 
-**Step 3 — CONTRACT NEGOTIATION (Backend + Frontend)** Following the
-communication protocol above, the Backend and Frontend Engineers negotiate API
-contracts for every endpoint the feature requires. They define request/response
-shapes, status codes, error formats, authentication requirements, and pagination
-patterns. These are documented in the spec directory.
+**Step 3 — CONTRACT NEGOTIATION (Backend + Frontend)** Following the communication protocol above, the Backend and
+Frontend Engineers negotiate API contracts for every endpoint the feature requires. They define request/response shapes,
+status codes, error formats, authentication requirements, and pagination patterns. These are documented in the spec
+directory.
 
-**Step 4 — SKEPTIC GATE (Quality Skeptic)** The Quality Skeptic reviews the
-implementation plan and API contracts. They check for: missing error cases,
-inconsistencies with existing code patterns, security issues (mass assignment,
-SQL injection, XSS), performance concerns (N+1 queries, missing indexes), and
-test strategy gaps. Implementation is blocked until they approve.
+**Step 4 — SKEPTIC GATE (Quality Skeptic)** The Quality Skeptic reviews the implementation plan and API contracts. They
+check for: missing error cases, inconsistencies with existing code patterns, security issues (mass assignment, SQL
+injection, XSS), performance concerns (N+1 queries, missing indexes), and test strategy gaps. Implementation is blocked
+until they approve.
 
-**Step 5 — IMPLEMENT (Backend + Frontend, in parallel)** Both engineers
-implement simultaneously, following TDD:
+**Step 5 — IMPLEMENT (Backend + Frontend, in parallel)** Both engineers implement simultaneously, following TDD:
 
 1. Write a failing test
 2. Write the minimum code to pass it
 3. Refactor
 4. Repeat
 
-They message each other frequently — especially when implementing the
-agreed-upon contract. If either side discovers the contract needs adjustment,
-they follow the Contract Change protocol (message all affected, get Skeptic
-re-approval).
+They message each other frequently — especially when implementing the agreed-upon contract. If either side discovers the
+contract needs adjustment, they follow the Contract Change protocol (message all affected, get Skeptic re-approval).
 
 **Step 6 — QUALITY GATE (Quality Skeptic)** The Skeptic reviews all code:
 
@@ -413,16 +369,15 @@ re-approval).
 - Tests edge cases and error paths
 - Reports issues as specific, actionable messages
 
-If issues are found, they message the responsible engineer with specifics. The
-engineer fixes and resubmits. This cycle repeats until the Skeptic approves.
+If issues are found, they message the responsible engineer with specifics. The engineer fixes and resubmits. This cycle
+repeats until the Skeptic approves.
 
-**Step 7 — DELIVER (Tech Lead)** The Tech Lead writes progress notes to
-`docs/progress/`, updates the roadmap status, and marks the task as complete.
+**Step 7 — DELIVER (Tech Lead)** The Tech Lead writes progress notes to `docs/progress/`, updates the roadmap status,
+and marks the task as complete.
 
 ### Critical: The Backend ↔ Frontend Communication Loop
 
-This is the highest-value communication pattern on the Implementation Team.
-Here's how it works in practice:
+This is the highest-value communication pattern on the Implementation Team. Here's how it works in practice:
 
 ```
 backend-eng                          frontend-eng
@@ -472,9 +427,8 @@ backend-eng                          frontend-eng
 
 ### Purpose
 
-An optional third team focused on **cross-cutting quality and operational
-concerns**. Invoked when features need security review, performance testing,
-deployment planning, or operational readiness assessment. Can also be invoked
+An optional third team focused on **cross-cutting quality and operational concerns**. Invoked when features need
+security review, performance testing, deployment planning, or operational readiness assessment. Can also be invoked
 post-implementation for regression testing.
 
 ### Invocation
@@ -504,8 +458,7 @@ Arguments:
 
 ## Slash Commands (Skills)
 
-These are the files you place in `.claude/skills/` or `.claude/commands/` to
-trigger each team.
+These are the files you place in `.claude/skills/` or `.claude/commands/` to trigger each team.
 
 ### `/product` — Invoke the Product Team
 
@@ -515,17 +468,15 @@ trigger each team.
 ---
 name: product
 description: >
-  Invoke the Product Team to review the roadmap, research opportunities, define
-  requirements, and create implementation specs. Use when you need to plan new
-  features, reprioritize the backlog, or refine existing specs.
-argument-hint:
-  "[new <idea> | review <spec-name> | reprioritize | (empty for general review)]"
+  Invoke the Product Team to review the roadmap, research opportunities, define requirements, and create implementation
+  specs. Use when you need to plan new features, reprioritize the backlog, or refine existing specs.
+argument-hint: "[new <idea> | review <spec-name> | reprioritize | (empty for general review)]"
 ---
 
 # Product Team Orchestration
 
-You are orchestrating the Product Team. Your role is TEAM LEAD (Product Owner).
-Enable delegate mode — you coordinate, you do NOT write specs yourself.
+You are orchestrating the Product Team. Your role is TEAM LEAD (Product Owner). Enable delegate mode — you coordinate,
+you do NOT write specs yourself.
 
 ## Setup
 
@@ -537,8 +488,7 @@ Enable delegate mode — you coordinate, you do NOT write specs yourself.
 
 Based on $ARGUMENTS:
 
-- **Empty/no args**: General review cycle. Assess roadmap health, identify gaps,
-  reprioritize.
+- **Empty/no args**: General review cycle. Assess roadmap health, identify gaps, reprioritize.
 - **"new [idea]"**: Research and spec a new feature.
 - **"review [name]"**: Deep review of an existing spec.
 - **"reprioritize"**: Full roadmap reassessment with evidence.
@@ -552,32 +502,31 @@ Create an agent team called "product-team" with these teammates:
 - **Name**: `researcher`
 - **Model**: opus
 - **Prompt**: [See Appendix — Researcher Spawn Prompt]
-- **Tasks**: Investigate the problem space. Read codebase. Analyze user needs.
-  Report findings to product-owner and product-skeptic.
+- **Tasks**: Investigate the problem space. Read codebase. Analyze user needs. Report findings to product-owner and
+  product-skeptic.
 
 ### Software Architect
 
 - **Name**: `architect`
 - **Model**: opus
 - **Prompt**: [See Appendix — Architect Spawn Prompt]
-- **Tasks**: Design system architecture for the feature. Write ADRs. Define
-  component boundaries. Coordinate with DBA on data model alignment.
+- **Tasks**: Design system architecture for the feature. Write ADRs. Define component boundaries. Coordinate with DBA on
+  data model alignment.
 
 ### DBA
 
 - **Name**: `dba`
 - **Model**: opus
 - **Prompt**: [See Appendix — DBA Spawn Prompt]
-- **Tasks**: Design data model. Review schemas. Define migrations. Coordinate
-  with Architect.
+- **Tasks**: Design data model. Review schemas. Define migrations. Coordinate with Architect.
 
 ### Product Skeptic
 
 - **Name**: `product-skeptic`
 - **Model**: opus
 - **Prompt**: [See Appendix — Product Skeptic Spawn Prompt]
-- **Tasks**: Review ALL outputs. Challenge assumptions. Reject vague
-  requirements. Demand evidence. Nothing advances without your approval.
+- **Tasks**: Review ALL outputs. Challenge assumptions. Reject vague requirements. Demand evidence. Nothing advances
+  without your approval.
 
 ## Orchestration Flow
 
@@ -590,8 +539,8 @@ Create an agent team called "product-team" with these teammates:
 
 ## Quality Gate
 
-NO spec is published without explicit Skeptic approval. If the Skeptic has
-concerns, the team iterates. This is non-negotiable.
+NO spec is published without explicit Skeptic approval. If the Skeptic has concerns, the team iterates. This is
+non-negotiable.
 ```
 
 ### `/implement` — Invoke the Implementation Team
@@ -602,17 +551,15 @@ concerns, the team iterates. This is non-negotiable.
 ---
 name: implement
 description: >
-  Invoke the Implementation Team to build a feature from an existing spec. Picks
-  up the next ready item from the roadmap if no spec is specified. Resumes
-  in-progress work if any exists.
+  Invoke the Implementation Team to build a feature from an existing spec. Picks up the next ready item from the roadmap
+  if no spec is specified. Resumes in-progress work if any exists.
 argument-hint: "[<spec-name> | review | (empty for next item)]"
 ---
 
 # Implementation Team Orchestration
 
-You are orchestrating the Implementation Team. Your role is TEAM LEAD (Tech
-Lead). Enable delegate mode — you coordinate and review, you do NOT write code
-yourself.
+You are orchestrating the Implementation Team. Your role is TEAM LEAD (Tech Lead). Enable delegate mode — you coordinate
+and review, you do NOT write code yourself.
 
 ## Setup
 
@@ -625,8 +572,7 @@ yourself.
 
 Based on $ARGUMENTS:
 
-- **Empty/no args**: Check for in-progress work first. If none, pick next ready
-  roadmap item.
+- **Empty/no args**: Check for in-progress work first. If none, pick next ready roadmap item.
 - **"[spec-name]"**: Implement the named spec.
 - **"review"**: Review current implementation status and identify blockers.
 
@@ -639,32 +585,29 @@ Create an agent team called "impl-team" with these teammates:
 - **Name**: `impl-architect`
 - **Model**: opus
 - **Prompt**: [See Appendix — Impl Architect Spawn Prompt]
-- **Tasks**: Translate spec into implementation plan. Define interfaces.
-  Identify files to create/modify.
+- **Tasks**: Translate spec into implementation plan. Define interfaces. Identify files to create/modify.
 
 ### Backend Engineer
 
 - **Name**: `backend-eng`
 - **Model**: sonnet
 - **Prompt**: [See Appendix — Backend Engineer Spawn Prompt]
-- **Tasks**: Implement server-side code. TDD. Laravel Way. Negotiate API
-  contracts with frontend-eng.
+- **Tasks**: Implement server-side code. TDD. Laravel Way. Negotiate API contracts with frontend-eng.
 
 ### Frontend Engineer
 
 - **Name**: `frontend-eng`
 - **Model**: sonnet
 - **Prompt**: [See Appendix — Frontend Engineer Spawn Prompt]
-- **Tasks**: Implement client-side code. TDD. Negotiate API contracts with
-  backend-eng.
+- **Tasks**: Implement client-side code. TDD. Negotiate API contracts with backend-eng.
 
 ### Quality Skeptic
 
 - **Name**: `quality-skeptic`
 - **Model**: opus
 - **Prompt**: [See Appendix — Quality Skeptic Spawn Prompt]
-- **Tasks**: Review plan, contracts, and all code. Run tests. Verify spec
-  conformance. Nothing ships without your approval.
+- **Tasks**: Review plan, contracts, and all code. Run tests. Verify spec conformance. Nothing ships without your
+  approval.
 
 ## Orchestration Flow
 
@@ -683,8 +626,7 @@ Create an agent team called "impl-team" with these teammates:
 - Quality Skeptic MUST approve code before delivery
 - Any contract change requires re-notification and re-approval
 - All code follows TDD: test first, then implement, then refactor
-- Backend prefers unit tests with mocks; feature tests only where DB testing
-  adds value
+- Backend prefers unit tests with mocks; feature tests only where DB testing adds value
 ```
 
 ### `/quality` — Invoke the Quality & Operations Team
@@ -695,21 +637,18 @@ Create an agent team called "impl-team" with these teammates:
 ---
 name: quality
 description: >
-  Invoke the Quality & Operations Team for security audits, performance
-  analysis, deployment readiness, or regression testing.
-argument-hint:
-  "[security <scope> | performance <scope> | deploy <feature> | regression]"
+  Invoke the Quality & Operations Team for security audits, performance analysis, deployment readiness, or regression
+  testing.
+argument-hint: "[security <scope> | performance <scope> | deploy <feature> | regression]"
 ---
 
 # Quality & Operations Team Orchestration
 
-You are orchestrating the Quality & Operations Team. Your role is QA LEAD.
-Enable delegate mode.
+You are orchestrating the Quality & Operations Team. Your role is QA LEAD. Enable delegate mode.
 
 ## Spawn the Team
 
-Create an agent team called "quality-team" with teammates appropriate to
-$ARGUMENTS:
+Create an agent team called "quality-team" with teammates appropriate to $ARGUMENTS:
 
 - **security**: Spawn security-auditor + ops-skeptic
 - **performance**: Spawn test-eng + ops-skeptic
@@ -787,8 +726,7 @@ project-root/
 
 ## Summary
 
-[One paragraph. If you can't explain it in one paragraph, you don't understand
-it yet.]
+[One paragraph. If you can't explain it in one paragraph, you don't understand it yet.]
 
 ## Problem
 
@@ -842,8 +780,8 @@ it yet.]
 
 ## Appendix: Agent Spawn Prompts
 
-These are the complete spawn prompts for each agent role. Copy them into your
-skill files or use them directly in your orchestration prompts.
+These are the complete spawn prompts for each agent role. Copy them into your skill files or use them directly in your
+orchestration prompts.
 
 ---
 
@@ -1269,21 +1207,16 @@ export CLAUDE_CODE_SPAWN_BACKEND=tmux
 
 ## Tips for Effective Use
 
-1. **Plan in Plan Mode, execute in teams.** Use `/product` with plan mode to
-   scope the work cheaply (fewer tokens), then hand the plan to `/implement` for
-   parallel execution (more tokens but faster).
-2. **Start with 2-3 agents, not 5.** If a feature is small, you don't need every
-   role. The Tech Lead can skip the Architect and decompose the spec directly.
-   The minimum viable Implementation Team is: Tech Lead + one engineer + Quality
-   Skeptic.
-3. **Monitor the Skeptic.** If the Skeptic is too lenient, your quality drops.
-   If they're too strict, your velocity drops. Tune their spawn prompt to match
-   your quality bar.
-4. **Contracts prevent 80% of integration bugs.** The time invested in Backend ↔
-   Frontend contract negotiation pays back many times over. Don't skip it.
-5. **Token cost scales linearly with agents.** Each agent is a full context
-   window. Budget accordingly. Use Sonnet for execution agents and Opus for
-   reasoning agents to manage cost.
-6. **Use `docs/progress/` as team memory.** When you `/implement` a feature
-   across multiple sessions, progress notes let the next session pick up where
-   you left off. This is the "Document & Clear" pattern at team scale.
+1. **Plan in Plan Mode, execute in teams.** Use `/product` with plan mode to scope the work cheaply (fewer tokens), then
+   hand the plan to `/implement` for parallel execution (more tokens but faster).
+2. **Start with 2-3 agents, not 5.** If a feature is small, you don't need every role. The Tech Lead can skip the
+   Architect and decompose the spec directly. The minimum viable Implementation Team is: Tech Lead + one engineer +
+   Quality Skeptic.
+3. **Monitor the Skeptic.** If the Skeptic is too lenient, your quality drops. If they're too strict, your velocity
+   drops. Tune their spawn prompt to match your quality bar.
+4. **Contracts prevent 80% of integration bugs.** The time invested in Backend ↔ Frontend contract negotiation pays back
+   many times over. Don't skip it.
+5. **Token cost scales linearly with agents.** Each agent is a full context window. Budget accordingly. Use Sonnet for
+   execution agents and Opus for reasoning agents to manage cost.
+6. **Use `docs/progress/` as team memory.** When you `/implement` a feature across multiple sessions, progress notes let
+   the next session pick up where you left off. This is the "Document & Clear" pattern at team scale.

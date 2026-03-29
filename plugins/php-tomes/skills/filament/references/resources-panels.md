@@ -87,8 +87,7 @@ Filament auto-checks these policy methods:
 | `forceDelete`    | Permanently deleting soft-deleted records      |
 | `forceDeleteAny` | Bulk permanently deleting soft-deleted records |
 
-No policy = all allowed. Use
-`$panel->authorizationPolicy(AuthorizationPolicy::Strict)` to flip to deny-all.
+No policy = all allowed. Use `$panel->authorizationPolicy(AuthorizationPolicy::Strict)` to flip to deny-all.
 
 ## Global Search
 

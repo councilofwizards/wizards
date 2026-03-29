@@ -1,25 +1,21 @@
-> **HISTORICAL**: This was the original build plan. The final implementation
-> deviates significantly (1 plugin instead of 3, renamed skills). See README.md
-> for the current architecture. Preserved for design decision context.
+> **HISTORICAL**: This was the original build plan. The final implementation deviates significantly (1 plugin instead of
+> 3, renamed skills). See README.md for the current architecture. Preserved for design decision context.
 
 # Implementation Plan: Plugin Marketplace
 
 ## Overview
 
-Build the `councilofwizards/wizards` Claude Code plugin marketplace. Three
-plugins package the Agent Teams framework (from `docs/original-prompt.md`) into
-installable Claude Code plugins following the marketplace spec (from
+Build the `councilofwizards/wizards` Claude Code plugin marketplace. Three plugins package the Agent Teams framework
+(from `docs/original-prompt.md`) into installable Claude Code plugins following the marketplace spec (from
 `docs/plugin-marketplaces.md`).
 
 ## Decisions Made
 
-- **Scope**: Laravel SaaS specific — keep all stack references from
-  original-prompt.md
-- **Model assignments**: Opus for reasoning roles (leads, architects, skeptics),
-  Sonnet for execution roles (engineers) — per Principle #12
+- **Scope**: Laravel SaaS specific — keep all stack references from original-prompt.md
+- **Model assignments**: Opus for reasoning roles (leads, architects, skeptics), Sonnet for execution roles (engineers)
+  — per Principle #12
 - **Quality team**: Fully synthesized spawn prompts matching appendix style
-- **DRY**: Each SKILL.md is fully self-contained (shared principles + comms
-  protocol duplicated in each)
+- **DRY**: Each SKILL.md is fully self-contained (shared principles + comms protocol duplicated in each)
 
 ---
 
@@ -41,16 +37,14 @@ forger ──┬──► Task #1 (scaffold) ──► Task #2 (/product SKILL.m
 scribe ──┴──► Task #3 (/implement SKILL.md) ──► Task #4 (/quality) ┘
 ```
 
-Forger and Scribe work in parallel. Skeptic waits for all 4 tasks, then does
-line-by-line review against source docs. Nothing ships without Skeptic APPROVED
-verdict.
+Forger and Scribe work in parallel. Skeptic waits for all 4 tasks, then does line-by-line review against source docs.
+Nothing ships without Skeptic APPROVED verdict.
 
 ### Key Instruction: tmux Focus
 
-**IMPORTANT**: When spawning agents, DO NOT TYPE in the terminal until all
-agents have started. The tmux pane creation steals keyboard focus, and
-keystrokes bleed into the new panes, breaking the agent startup commands. Wait
-5-10 seconds after spawning before typing anything.
+**IMPORTANT**: When spawning agents, DO NOT TYPE in the terminal until all agents have started. The tmux pane creation
+steals keyboard focus, and keystrokes bleed into the new panes, breaking the agent startup commands. Wait 5-10 seconds
+after spawning before typing anything.
 
 ---
 
@@ -152,8 +146,7 @@ keystrokes bleed into the new panes, breaking the agent startup commands. Wait
 - Shared Principles (lines ~69-96) — all 12
 - Communication Protocol (lines ~99-139)
 - Both quality gates (pre-implementation + post-implementation)
-- Model assignments: Tech Lead=Opus, Impl Architect=Opus, Backend Eng=Sonnet,
-  Frontend Eng=Sonnet, Quality Skeptic=Opus
+- Model assignments: Tech Lead=Opus, Impl Architect=Opus, Backend Eng=Sonnet, Frontend Eng=Sonnet, Quality Skeptic=Opus
 
 **Path**: `plugins/quality-team/skills/quality/SKILL.md`
 
@@ -163,8 +156,7 @@ keystrokes bleed into the new panes, breaking the agent startup commands. Wait
   - Test Engineer (Sonnet) — comprehensive test suites, edge cases, regression
   - DevOps Engineer (Sonnet) — infrastructure, deployment, CI/CD, env parity
   - Security Auditor (Opus) — injection, XSS, CSRF, auth bypass, mass assignment
-  - Ops Skeptic (Opus) — challenges production readiness claims, demands
-    evidence
+  - Ops Skeptic (Opus) — challenges production readiness claims, demands evidence
 - Conditional team composition:
   - security → security-auditor + ops-skeptic
   - performance → test-eng + ops-skeptic
@@ -228,8 +220,7 @@ The Skeptic must verify ALL of the following before approving:
 - [ ] Contract negotiation pattern present in /implement SKILL.md
 - [ ] Quality gates correct in each skill
 - [ ] Model assignments correct (Opus for reasoning, Sonnet for execution)
-- [ ] No fabricated content (except quality team spawn prompts, which are
-      synthesized)
+- [ ] No fabricated content (except quality team spawn prompts, which are synthesized)
 - [ ] No missing content from source docs
 - [ ] Consistent formatting across all three plugins
 
@@ -238,9 +229,8 @@ The Skeptic must verify ALL of the following before approving:
 ## How to Execute
 
 1. Start a fresh Claude Code session
-2. Say: "Read docs/implementation-plan.md and execute it. Spin up the agent team
-   as described. IMPORTANT: after you spawn agents, do NOT type anything for 10
-   seconds — tmux pane creation steals keyboard focus."
+2. Say: "Read docs/implementation-plan.md and execute it. Spin up the agent team as described. IMPORTANT: after you
+   spawn agents, do NOT type anything for 10 seconds — tmux pane creation steals keyboard focus."
 3. Wait for all agents to start before interacting
 4. The Skeptic will automatically begin review once builders finish
 5. Address any Skeptic rejections

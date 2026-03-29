@@ -10,11 +10,10 @@ updated: 2026-03-10
 
 ## Overview
 
-Inject fictional persona names and titles into 33 spawn prompts across 11
-multi-agent SKILL.md files, add a sign-off convention to the shared
-communication protocol, and fix the placeholder skeptic names in the
-authoritative source and its sync/validation toolchain. Six steps, strict
-dependency order, zero interface changes (all markdown and shell edits).
+Inject fictional persona names and titles into 33 spawn prompts across 11 multi-agent SKILL.md files, add a sign-off
+convention to the shared communication protocol, and fix the placeholder skeptic names in the authoritative source and
+its sync/validation toolchain. Six steps, strict dependency order, zero interface changes (all markdown and shell
+edits).
 
 ## File Changes
 
@@ -39,8 +38,8 @@ dependency order, zero interface changes (all markdown and shell edits).
 
 ## Interface Definitions
 
-N/A — all changes are to markdown content and shell scripts. No application
-interfaces, type signatures, or API contracts are affected.
+N/A — all changes are to markdown content and shell scripts. No application interfaces, type signatures, or API
+contracts are affected.
 
 ## Dependency Order
 
@@ -58,15 +57,13 @@ Current (line 39):
 Keep messages structured so they can be parsed quickly by context-constrained agents:
 ```
 
-Insert the following line AFTER line 39, BEFORE the empty line and fenced code
-block:
+Insert the following line AFTER line 39, BEFORE the empty line and fenced code block:
 
 ```
 When addressing the user, sign messages with your persona name and title.
 ```
 
-Result: line 39 stays, new line 40 is the sign-off instruction, then blank line,
-then the fenced code block.
+Result: line 39 stays, new line 40 is the sign-off instruction, then blank line, then the fenced code block.
 
 **Change 1b — Placeholder fix (Story 4):**
 
@@ -132,31 +129,26 @@ AUTH_SKEPTIC_DISPLAY="{Skill Skeptic}"
     echo "${display:-{Skill Skeptic}}"
 ```
 
-**Important note on sed substitution:** The sync script's sed on lines 209 and
-212 uses `$AUTH_SKEPTIC_SLUG` and `$AUTH_SKEPTIC_DISPLAY` as the search
-patterns. Since these now contain `{` and `}` characters, the sed command will
-interpret them as literal characters in the basic regex context used by default
-sed — this works correctly because `{` and `}` are not special in
-`sed 's/.../..../g'` basic replacement syntax (they are only special in BRE
-interval syntax when preceded by a backslash or in ERE mode). The existing sed
-on lines 209/212 uses `sed "s/$AUTH_SKEPTIC_SLUG/$target_slug/g"` which will
-correctly match the literal `{skill-skeptic}` string and replace it with the
-target's actual skeptic slug. No changes needed to the sed substitution lines
-themselves.
+**Important note on sed substitution:** The sync script's sed on lines 209 and 212 uses `$AUTH_SKEPTIC_SLUG` and
+`$AUTH_SKEPTIC_DISPLAY` as the search patterns. Since these now contain `{` and `}` characters, the sed command will
+interpret them as literal characters in the basic regex context used by default sed — this works correctly because `{`
+and `}` are not special in `sed 's/.../..../g'` basic replacement syntax (they are only special in BRE interval syntax
+when preceded by a backslash or in ERE mode). The existing sed on lines 209/212 uses
+`sed "s/$AUTH_SKEPTIC_SLUG/$target_slug/g"` which will correctly match the literal `{skill-skeptic}` string and replace
+it with the target's actual skeptic slug. No changes needed to the sed substitution lines themselves.
 
 ### Step 3: Edit `scripts/validators/skill-shared-content.sh`
 
-Add two patterns to the `normalize_skeptic_names` function. Insert before the
-existing last two lines (task-skeptic/Task Skeptic on lines 74-75):
+Add two patterns to the `normalize_skeptic_names` function. Insert before the existing last two lines (task-skeptic/Task
+Skeptic on lines 74-75):
 
 ```bash
         -e 's/{skill-skeptic}/SKEPTIC_NAME/g' \
         -e 's/{Skill Skeptic}/SKEPTIC_NAME/g' \
 ```
 
-Placement: after the `task-skeptic`/`Task Skeptic` lines (74-75), before the
-closing single quote. Or equivalently, anywhere in the sed chain — order does
-not matter since all patterns are independent. Safest to add at the end, before
+Placement: after the `task-skeptic`/`Task Skeptic` lines (74-75), before the closing single quote. Or equivalently,
+anywhere in the sed chain — order does not matter since all patterns are independent. Safest to add at the end, before
 the closing of the sed expression.
 
 ### Step 4: Edit 11 multi-agent SKILL.md files (33 spawn prompts)
@@ -176,8 +168,8 @@ You are {Fictional Name}, {Title} — the {Role Name} on the {Team Name}.
 When communicating with the user, introduce yourself by your name and title.
 ```
 
-This replaces 1 line with 2 lines inside a fenced code block. The second line is
-always identical. The first line's prefix changes per persona.
+This replaces 1 line with 2 lines inside a fenced code block. The second line is always identical. The first line's
+prefix changes per persona.
 
 Complete list of 33 edits (file, line number, before, after):
 
@@ -185,8 +177,7 @@ Complete list of 33 edits (file, line number, before, after):
 
 - **Line 215**: `You are the Market Researcher on the Market Research Team.` ->
   `You are Theron Blackwell, Scout of the Outer Reaches — the Market Researcher on the Market Research Team.\nWhen communicating with the user, introduce yourself by your name and title.`
-- **Line 255**: `You are the Customer Researcher on the Market Research Team.`
-  ->
+- **Line 255**: `You are the Customer Researcher on the Market Research Team.` ->
   `You are Lyssa Moonwhisper, Oracle of the People's Voice — the Customer Researcher on the Market Research Team.\nWhen communicating with the user, introduce yourself by your name and title.`
 
 #### ideate-product/SKILL.md
@@ -212,42 +203,34 @@ Complete list of 33 edits (file, line number, before, after):
 
 - **Line 238**: `You are the Software Architect on the Spec Writing Team.` ->
   `You are Kael Stoneheart, Master Builder of the Keep — the Software Architect on the Spec Writing Team.\nWhen communicating with the user, introduce yourself by your name and title.`
-- **Line 288**: `You are the Database Architect (DBA) on the Spec Writing Team.`
-  ->
+- **Line 288**: `You are the Database Architect (DBA) on the Spec Writing Team.` ->
   `You are Nix Deepvault, Keeper of the Vaults — the Database Architect (DBA) on the Spec Writing Team.\nWhen communicating with the user, introduce yourself by your name and title.`
 - **Line 339**: `You are the Skeptic on the Spec Writing Team.` ->
   `You are Wren Cinderglass, Siege Inspector — the Skeptic on the Spec Writing Team.\nWhen communicating with the user, introduce yourself by your name and title.`
 
 #### plan-implementation/SKILL.md
 
-- **Line 222**:
-  `You are the Implementation Architect on the Implementation Planning Team.` ->
+- **Line 222**: `You are the Implementation Architect on the Implementation Planning Team.` ->
   `You are Seren Mapwright, Siege Engineer — the Implementation Architect on the Implementation Planning Team.\nWhen communicating with the user, introduce yourself by your name and title.`
-- **Line 276**: `You are the Plan Skeptic on the Implementation Planning Team.`
-  ->
+- **Line 276**: `You are the Plan Skeptic on the Implementation Planning Team.` ->
   `You are Hale Blackthorn, War Auditor — the Plan Skeptic on the Implementation Planning Team.\nWhen communicating with the user, introduce yourself by your name and title.`
 
 #### build-implementation/SKILL.md
 
-- **Line 302**: `You are the Backend Engineer on the Implementation Build Team.`
-  ->
+- **Line 302**: `You are the Backend Engineer on the Implementation Build Team.` ->
   `You are Bram Copperfield, Foundry Smith — the Backend Engineer on the Implementation Build Team.\nWhen communicating with the user, introduce yourself by your name and title.`
-- **Line 352**:
-  `You are the Frontend Engineer on the Implementation Build Team.` ->
+- **Line 352**: `You are the Frontend Engineer on the Implementation Build Team.` ->
   `You are Ivy Lightweaver, Glamour Artificer — the Frontend Engineer on the Implementation Build Team.\nWhen communicating with the user, introduce yourself by your name and title.`
-- **Line 397**: `You are the Quality Skeptic on the Implementation Build Team.`
-  ->
+- **Line 397**: `You are the Quality Skeptic on the Implementation Build Team.` ->
   `You are Mira Flintridge, Master Inspector of the Forge — the Quality Skeptic on the Implementation Build Team.\nWhen communicating with the user, introduce yourself by your name and title.`
 
 #### review-quality/SKILL.md
 
 - **Line 246**: `You are the Test Engineer on the Quality & Operations Team.` ->
   `You are Jinx Copperwire, Trap Specialist — the Test Engineer on the Quality & Operations Team.\nWhen communicating with the user, introduce yourself by your name and title.`
-- **Line 299**: `You are the DevOps Engineer on the Quality & Operations Team.`
-  ->
+- **Line 299**: `You are the DevOps Engineer on the Quality & Operations Team.` ->
   `You are Bolt Ironpipe, Siege Mechanic — the DevOps Engineer on the Quality & Operations Team.\nWhen communicating with the user, introduce yourself by your name and title.`
-- **Line 355**: `You are the Security Auditor on the Quality & Operations Team.`
-  ->
+- **Line 355**: `You are the Security Auditor on the Quality & Operations Team.` ->
   `You are Shade Nightlock, Arcane Ward Specialist — the Security Auditor on the Quality & Operations Team.\nWhen communicating with the user, introduce yourself by your name and title.`
 - **Line 413**: `You are the Ops Skeptic on the Quality & Operations Team.` ->
   `You are Bryn Ashguard, Garrison Commander — the Ops Skeptic on the Quality & Operations Team.\nWhen communicating with the user, introduce yourself by your name and title.`
@@ -295,15 +278,13 @@ Complete list of 33 edits (file, line number, before, after):
 bash scripts/sync-shared-content.sh
 ```
 
-This propagates the updated communication protocol (with sign-off line and
-placeholder fix) from the authoritative source to all 11 multi-agent SKILL.md
-files, substituting `{skill-skeptic}`/`{Skill Skeptic}` with each skill's actual
+This propagates the updated communication protocol (with sign-off line and placeholder fix) from the authoritative
+source to all 11 multi-agent SKILL.md files, substituting `{skill-skeptic}`/`{Skill Skeptic}` with each skill's actual
 skeptic name.
 
-**Expected output:** 11 SYNC, 7 SKIP (2 utility + 2 tier-2 + 2 PoC + 1
-run-task... actually: setup-project, wizard-guide, plan-product, build-product,
-tier1-test, tier2-test = 6 skips, plus run-task = 7). Verify all 11 multi-agent
-skills show SYNC.
+**Expected output:** 11 SYNC, 7 SKIP (2 utility + 2 tier-2 + 2 PoC + 1 run-task... actually: setup-project,
+wizard-guide, plan-product, build-product, tier1-test, tier2-test = 6 skips, plus run-task = 7). Verify all 11
+multi-agent skills show SYNC.
 
 ### Step 6: Run validators
 
@@ -314,9 +295,8 @@ bash scripts/validate.sh
 **Expected: 12/12 PASS.** Key validators exercised:
 
 - **B1** (principles drift): unchanged, should pass
-- **B2** (protocol drift): the new sign-off line will be identical across all
-  skills (it contains no skeptic names). The `{skill-skeptic}`/`{Skill Skeptic}`
-  patterns are now in the normalizer, so the authoritative source normalizes the
+- **B2** (protocol drift): the new sign-off line will be identical across all skills (it contains no skeptic names). The
+  `{skill-skeptic}`/`{Skill Skeptic}` patterns are now in the normalizer, so the authoritative source normalizes the
   same as each skill's substituted version.
 - **B3** (authoritative source markers): unchanged, should pass
 - **A1-A4**: no frontmatter or structural changes, should pass
@@ -344,11 +324,8 @@ bash scripts/validate.sh
 
 ## Out of Scope
 
-- run-task skill: uses dynamic hub-and-spoke with no fixed persona mapping. Not
-  in the 33-prompt scope.
-- Lead/orchestrator prompts: spec explicitly excludes lead orchestration
-  sections.
+- run-task skill: uses dynamic hub-and-spoke with no fixed persona mapping. Not in the 33-prompt scope.
+- Lead/orchestrator prompts: spec explicitly excludes lead orchestration sections.
 - YAML frontmatter: no changes.
 - Persona .md files themselves: already created in a prior commit.
-- Tier 2 composites, single-agent utilities, PoC skills: no spawn prompts,
-  excluded by design.
+- Tier 2 composites, single-agent utilities, PoC skills: no spawn prompts, excluded by design.

@@ -16,8 +16,7 @@
 
 ## HTTP Helper Functions
 
-The `pest-plugin-laravel` package exposes Laravel's HTTP testing methods as
-global functions:
+The `pest-plugin-laravel` package exposes Laravel's HTTP testing methods as global functions:
 
 | Function                        | Description                         |
 | ------------------------------- | ----------------------------------- |
@@ -36,8 +35,7 @@ global functions:
 | `withCookie($name, $value)`     | Set cookie for next request         |
 | `withSession($data)`            | Set session data for next request   |
 
-All return a `TestResponse` object — the same as `$this->get()` in PHPUnit-style
-Laravel tests.
+All return a `TestResponse` object — the same as `$this->get()` in PHPUnit-style Laravel tests.
 
 ---
 
@@ -141,8 +139,7 @@ it('allows admin access', function (User $user) {
 })->with('admin users');
 ```
 
-Factory closures are evaluated lazily — one per test case, with
-`RefreshDatabase` rollback between each.
+Factory closures are evaluated lazily — one per test case, with `RefreshDatabase` rollback between each.
 
 ---
 
@@ -191,8 +188,7 @@ vendor/bin/pest --parallel --ci
 | `DatabaseTransactions` | No             | Single-process only           |
 | `DatabaseTruncation`   | Partial        | Safe with per-process DBs     |
 
-Always use `RefreshDatabase` for parallel suites. Laravel automatically creates
-`test_<token>` databases per process.
+Always use `RefreshDatabase` for parallel suites. Laravel automatically creates `test_<token>` databases per process.
 
 ---
 
@@ -252,8 +248,8 @@ vendor/bin/pest --drift tests/Unit
 vendor/bin/pest --drift tests/Feature
 ```
 
-Drift cannot convert shared assertion helpers from base `TestCase` classes.
-Extract those to `expect()->extend()` or shared `beforeEach()` closures.
+Drift cannot convert shared assertion helpers from base `TestCase` classes. Extract those to `expect()->extend()` or
+shared `beforeEach()` closures.
 
 ---
 

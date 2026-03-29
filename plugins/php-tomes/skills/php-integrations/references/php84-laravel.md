@@ -59,9 +59,8 @@ class User extends Model
 }
 ```
 
-> **Warning:** Inside `get` hooks, use `$this->getRawOriginal('column')` or
-> `$this->attributes['column']` to access raw values. Accessing `$this->email`
-> inside the `email` get hook causes infinite recursion.
+> **Warning:** Inside `get` hooks, use `$this->getRawOriginal('column')` or `$this->attributes['column']` to access raw
+> values. Accessing `$this->email` inside the `email` get hook causes infinite recursion.
 
 ---
 
@@ -208,8 +207,8 @@ enum UserRole: string
 <phpunit failOnDeprecation="true">
 ```
 
-**Applies to:** functions, methods, class constants, enum cases. **Does not
-apply to:** class declarations, properties (use `@deprecated` PHPDoc for those).
+**Applies to:** functions, methods, class constants, enum cases. **Does not apply to:** class declarations, properties
+(use `@deprecated` PHPDoc for those).
 
 ---
 
@@ -239,8 +238,8 @@ class ApiClient
 }
 ```
 
-> **Note:** `new` in initializers is a PHP 8.1 feature, not 8.4. It is included
-> here because it pairs well with 8.4 patterns in Laravel.
+> **Note:** `new` in initializers is a PHP 8.1 feature, not 8.4. It is included here because it pairs well with 8.4
+> patterns in Laravel.
 
 ---
 
@@ -266,11 +265,10 @@ class ApiClient
 | `new` in initializers                  | 8.1              |
 | `Attribute::make()` accessors          | 8.1 (Laravel 9+) |
 
-Laravel 11.x requires PHP 8.2+. Pin `"php": "^8.4"` in `composer.json` before
-using 8.4-only features.
+Laravel 11.x requires PHP 8.2+. Pin `"php": "^8.4"` in `composer.json` before using 8.4-only features.
 
-For packages targeting PHP 8.2+, use `Attribute::make()` and traditional getters
-for broad compatibility. Feature-detect only if necessary:
+For packages targeting PHP 8.2+, use `Attribute::make()` and traditional getters for broad compatibility. Feature-detect
+only if necessary:
 
 ```php
 if (PHP_VERSION_ID >= 80400) {

@@ -27,8 +27,7 @@
 | `$connection`              | string    | Queue connection name                         |
 | `$deleteWhenMissingModels` | bool      | Skip instead of fail when model not found     |
 
-Methods: `backoff(): array`, `retryUntil(): DateTime`, `failed(Throwable)`,
-`uniqueId(): string`, `middleware(): array`.
+Methods: `backoff(): array`, `retryUntil(): DateTime`, `failed(Throwable)`, `uniqueId(): string`, `middleware(): array`.
 
 ## Dispatch Methods
 
@@ -125,8 +124,8 @@ final class OrderAuditSubscriber
 
 ## Model Events
 
-Lifecycle: `creating`, `created`, `updating`, `updated`, `saving`, `saved`,
-`deleting`, `deleted`, `restoring`, `restored`, `replicating`, `retrieved`.
+Lifecycle: `creating`, `created`, `updating`, `updated`, `saving`, `saved`, `deleting`, `deleted`, `restoring`,
+`restored`, `replicating`, `retrieved`.
 
 ```php
 // Observer
@@ -203,10 +202,8 @@ Note: leading dot (`.custom.name`) for custom `broadcastAs()` names.
 
 ## Anti-Patterns
 
-- **Dispatching inside DB transaction** without `->afterCommit()` — race
-  condition
-- **Serializing Eloquent models** in job constructor — store IDs, load in
-  `handle()`
+- **Dispatching inside DB transaction** without `->afterCommit()` — race condition
+- **Serializing Eloquent models** in job constructor — store IDs, load in `handle()`
 - **Non-idempotent jobs** — guard with state checks
 - **Oversized payloads** — SQS 256KB limit; pass references, not data
 - **Blanket `Event::fake()`** — silences model observers, corrupts test state
