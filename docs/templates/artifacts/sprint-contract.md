@@ -1,8 +1,8 @@
 ---
 type: "sprint-contract"
 feature: ""
-status: "draft"              # draft | negotiating | signed
-signed-by: []               # e.g. ["planning-lead", "plan-skeptic"]
+status: "draft" # draft | negotiating | signed
+signed-by: [] # e.g. ["planning-lead", "plan-skeptic"]
 created: ""
 updated: ""
 ---
@@ -32,8 +32,8 @@ updated: ""
 
 <!-- Both Lead and Skeptic must sign before the contract is considered binding. -->
 
-- **Planning Lead**: __________ (date: ______)
-- **Plan Skeptic**: __________ (date: ______)
+- **Planning Lead**: \***\*\_\_\*\*** (date: **\_\_**)
+- **Plan Skeptic**: \***\*\_\_\*\*** (date: **\_\_**)
 
 ## Amendment Log
 

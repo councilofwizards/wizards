@@ -14,4 +14,6 @@ updated: "2026-02-19"
 
 ## Problem
 
-Startups collect data across multiple tools but lack a coherent analytics strategy, leading to vanity metrics, unmeasured funnels, and data-uninformed decision-making.
+Startups collect data across multiple tools but lack a coherent analytics
+strategy, leading to vanity metrics, unmeasured funnels, and data-uninformed
+decision-making.

@@ -41,7 +41,7 @@ describe('User', function () {
 ### Equality & Type
 
 | Method                                                                      | Asserts      |
-|-----------------------------------------------------------------------------|--------------|
+| --------------------------------------------------------------------------- | ------------ |
 | `toBe($v)`                                                                  | Strict `===` |
 | `toEqual($v)`                                                               | Loose `==`   |
 | `toBeTrue()` / `toBeFalse()` / `toBeNull()` / `toBeEmpty()`                 | Truthiness   |
@@ -52,7 +52,7 @@ describe('User', function () {
 ### Numeric
 
 | Method                                               | Asserts         |
-|------------------------------------------------------|-----------------|
+| ---------------------------------------------------- | --------------- |
 | `toBeGreaterThan($n)` / `toBeGreaterThanOrEqual($n)` | `>` / `>=`      |
 | `toBeLessThan($n)` / `toBeLessThanOrEqual($n)`       | `<` / `<=`      |
 | `toBeBetween($min, $max)`                            | Inclusive range |
@@ -60,7 +60,7 @@ describe('User', function () {
 ### String
 
 | Method                              | Asserts            |
-|-------------------------------------|--------------------|
+| ----------------------------------- | ------------------ |
 | `toContain($sub)`                   | Contains substring |
 | `toStartWith($p)` / `toEndWith($s)` | Prefix / suffix    |
 | `toMatch($regex)`                   | Regex match        |
@@ -68,7 +68,7 @@ describe('User', function () {
 ### Array & Object
 
 | Method                                     | Asserts              |
-|--------------------------------------------|----------------------|
+| ------------------------------------------ | -------------------- |
 | `toContain($v)`                            | Array contains value |
 | `toHaveCount($n)`                          | Count check          |
 | `toHaveKey($k)` / `toHaveKeys([$k1, $k2])` | Key existence        |
@@ -171,7 +171,7 @@ arch('jobs queued')->expect('App\Jobs')->toImplement(ShouldQueue::class)->ignori
 ### Rules
 
 | Rule                                                | Asserts                   |
-|-----------------------------------------------------|---------------------------|
+| --------------------------------------------------- | ------------------------- |
 | `toExtend($c)` / `toImplement($i)`                  | Inheritance               |
 | `toUseStrictTypes()`                                | `declare(strict_types=1)` |
 | `not->toUse($ns)`                                   | No imports from namespace |
@@ -191,7 +191,7 @@ arch('jobs queued')->expect('App\Jobs')->toImplement(ShouldQueue::class)->ignori
 ## Test Modifiers
 
 | Modifier                              | Purpose          |
-|---------------------------------------|------------------|
+| ------------------------------------- | ---------------- |
 | `->todo()`                            | Incomplete       |
 | `->skip()` / `->skip(bool, 'reason')` | Skip             |
 | `->group('name')`                     | Group            |
@@ -224,7 +224,7 @@ Higher-order: `expect($user)->name->toBe('Jane')->active->toBeTrue();`
 ## CLI Flags
 
 | Flag                                             | Purpose                   |
-|--------------------------------------------------|---------------------------|
+| ------------------------------------------------ | ------------------------- |
 | `--parallel` / `--processes=N`                   | Parallel execution        |
 | `--coverage` / `--coverage-html=dir` / `--min=N` | Coverage                  |
 | `--type-coverage` / `--min=100`                  | Type declaration coverage |
@@ -241,7 +241,7 @@ Higher-order: `expect($user)->name->toBe('Jane')->active->toBeTrue();`
 ## Plugins
 
 | Plugin                           | Purpose                                           |
-|----------------------------------|---------------------------------------------------|
+| -------------------------------- | ------------------------------------------------- |
 | `pest-plugin-laravel`            | HTTP/auth/artisan helpers (`get()`, `actingAs()`) |
 | `pest-plugin-watch`              | File-watch re-runner                              |
 | `pest-plugin-drift`              | PHPUnit migration codemod                         |

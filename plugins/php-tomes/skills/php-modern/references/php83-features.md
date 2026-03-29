@@ -11,8 +11,8 @@
 
 ## Typed Class Constants
 
-RFC: [Typed Class Constants](https://wiki.php.net/rfc/typed_class_constants). Type declarations enforced at compile time
-and across inheritance.
+RFC: [Typed Class Constants](https://wiki.php.net/rfc/typed_class_constants).
+Type declarations enforced at compile time and across inheritance.
 
 ```php
 interface HasVersion
@@ -54,8 +54,8 @@ class Config
 
 ## json_validate()
 
-RFC: [json_validate](https://wiki.php.net/rfc/json_validate). Validates JSON without parsing — 2-5x faster than
-`json_decode()` for large strings.
+RFC: [json_validate](https://wiki.php.net/rfc/json_validate). Validates JSON
+without parsing — 2-5x faster than `json_decode()` for large strings.
 
 ```php
 json_validate('{"name": "Alice"}');   // true
@@ -86,8 +86,9 @@ $data = json_decode($input, true);
 
 ## Override Attribute
 
-RFC: [Marking Overridden Methods](https://wiki.php.net/rfc/marking_overriden_methods). Compile-time check that a method
-override is intentional.
+RFC:
+[Marking Overridden Methods](https://wiki.php.net/rfc/marking_overriden_methods).
+Compile-time check that a method override is intentional.
 
 ```php
 class UserRepository extends BaseRepository
@@ -97,7 +98,8 @@ class UserRepository extends BaseRepository
 }
 ```
 
-If `BaseRepository::findAll()` is renamed, PHP throws a compile-time error. Apply to ALL intentional overrides.
+If `BaseRepository::findAll()` is renamed, PHP throws a compile-time error.
+Apply to ALL intentional overrides.
 
 ### Catching Refactoring Bugs
 
@@ -112,7 +114,8 @@ class TaggedCache extends Cache
 
 ## Readonly Amendments
 
-PHP 8.3 allows `clone` on readonly classes. Supports value-object wither patterns.
+PHP 8.3 allows `clone` on readonly classes. Supports value-object wither
+patterns.
 
 ```php
 readonly class Money
@@ -168,7 +171,7 @@ $seeded = new \Random\Randomizer(new \Random\Engine\Mt19937(42));
 ## Quick Reference
 
 | Feature                      | What It Solves                                   |
-|------------------------------|--------------------------------------------------|
+| ---------------------------- | ------------------------------------------------ |
 | Typed class constants        | Enforces constant types across inheritance       |
 | `json_validate()`            | Fast JSON validation without allocation overhead |
 | `#[Override]`                | Compile-time check that override is intentional  |

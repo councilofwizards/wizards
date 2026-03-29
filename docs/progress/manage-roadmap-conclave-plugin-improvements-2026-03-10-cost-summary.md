@@ -12,8 +12,8 @@ updated: "2026-03-10T15:20:00Z"
 
 ## Agents Spawned
 
-| Agent | Model | Role |
-|-------|-------|------|
+| Agent   | Model  | Role                                                                   |
+| ------- | ------ | ---------------------------------------------------------------------- |
 | analyst | sonnet | Dependency analysis, effort/impact estimation, conflict identification |
 
 ## Session Notes

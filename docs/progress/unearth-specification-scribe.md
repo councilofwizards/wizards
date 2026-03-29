@@ -4,7 +4,9 @@ team: "conclave-forge"
 agent: "scribe"
 phase: "design"
 status: "complete"
-last_action: "Assembled complete SKILL.md for unearth-specification; all A-series and B-series validators pass"
+last_action:
+  "Assembled complete SKILL.md for unearth-specification; all A-series and
+  B-series validators pass"
 updated: "2026-03-29T01:10:00Z"
 ---
 
@@ -15,11 +17,16 @@ updated: "2026-03-29T01:10:00Z"
 **Skill written**: `plugins/conclave/skills/unearth-specification/SKILL.md`
 
 **Sources consumed**:
-- `docs/progress/unearth-specification-architect.md` — blueprint (phase decomposition, agent roster, output structure)
-- `docs/progress/unearth-specification-armorer.md` — methodology manifests (4 methods per agent)
-- `docs/progress/unearth-specification-lorekeeper.md` — theme design (personas, vocabulary, narrative arc)
+
+- `docs/progress/unearth-specification-architect.md` — blueprint (phase
+  decomposition, agent roster, output structure)
+- `docs/progress/unearth-specification-armorer.md` — methodology manifests (4
+  methods per agent)
+- `docs/progress/unearth-specification-lorekeeper.md` — theme design (personas,
+  vocabulary, narrative arc)
 
 **Validator results** (A-series + B-series):
+
 - A1/frontmatter: PASS (23 files)
 - A2/required-sections: PASS (23 files)
 - A3/spawn-definitions: PASS (23 files)
@@ -30,23 +37,30 @@ updated: "2026-03-29T01:10:00Z"
 
 ## Structural Decisions
 
-**Communication protocol skeptic row**: Used `The Assayer` as display name (normalizes to SKEPTIC_NAME in B2 validator).
-`Assayer` alone (no "The") is not in the B2 normalizer list — using `The Assayer` ensures the row normalizes correctly.
+**Communication protocol skeptic row**: Used `The Assayer` as display name
+(normalizes to SKEPTIC_NAME in B2 validator). `Assayer` alone (no "The") is not
+in the B2 normalizer list — using `The Assayer` ensures the row normalizes
+correctly.
 
-**Lightweight mode**: Logic Excavator (Mott Loreseam) is the only non-skeptic Opus agent, downgraded to Sonnet under
-`--light`. The Assayer remains Opus always.
+**Lightweight mode**: Logic Excavator (Mott Loreseam) is the only non-skeptic
+Opus agent, downgraded to Sonnet under `--light`. The Assayer remains Opus
+always.
 
-**Fork-join in Phase 2**: All three excavators (logic, schema, boundary) are explicitly spawned simultaneously.
-The instructions use "simultaneously" and "do NOT wait" to make the parallel intent unambiguous.
+**Fork-join in Phase 2**: All three excavators (logic, schema, boundary) are
+explicitly spawned simultaneously. The instructions use "simultaneously" and "do
+NOT wait" to make the parallel intent unambiguous.
 
-**Chronicler write isolation**: Explicit "NEVER read source code" constraint added to both the Orchestration Flow
-and the Chronicler's spawn prompt. Gap flagging to Dig Master is required before proceeding.
+**Chronicler write isolation**: Explicit "NEVER read source code" constraint
+added to both the Orchestration Flow and the Chronicler's spawn prompt. Gap
+flagging to Dig Master is required before proceeding.
 
-**Checkpoint phases**: `survey | excavate | chronicle | complete` — matches the three pipeline phases plus terminal
-state, consistent with other multi-phase skills.
+**Checkpoint phases**: `survey | excavate | chronicle | complete` — matches the
+three pipeline phases plus terminal state, consistent with other multi-phase
+skills.
 
-**Output directory**: `docs/specifications/{project-name}/` — separate from `docs/progress/` to distinguish output
-artifacts from agent progress checkpoints.
+**Output directory**: `docs/specifications/{project-name}/` — separate from
+`docs/progress/` to distinguish output artifacts from agent progress
+checkpoints.
 
 ## SCAFFOLD Comments Placed
 
@@ -57,8 +71,11 @@ artifacts from agent progress checkpoints.
 
 ## Progress Notes
 
-- [01:00] Read reference files: craft-laravel SKILL.md, squash-bugs SKILL.md, three deliverable files
-- [01:02] Confirmed structural template from craft-laravel (most structurally similar: fork-join, Opus skeptic)
+- [01:00] Read reference files: craft-laravel SKILL.md, squash-bugs SKILL.md,
+  three deliverable files
+- [01:02] Confirmed structural template from craft-laravel (most structurally
+  similar: fork-join, Opus skeptic)
 - [01:04] Assembled complete SKILL.md (~700 lines) in single Write operation
-- [01:06] B2 protocol-drift failure: `Assayer` not in normalizer list; fixed to `The Assayer` + corrected spacing
+- [01:06] B2 protocol-drift failure: `Assayer` not in normalizer list; fixed to
+  `The Assayer` + corrected spacing
 - [01:08] All 7 A/B validators passing; skill file complete and compliant

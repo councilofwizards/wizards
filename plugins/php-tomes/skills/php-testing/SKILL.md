@@ -1,29 +1,39 @@
 ---
 name: php-testing
-description: "Use this skill when writing PHP tests, choosing between PHPUnit and Pest, designing test architecture (unit/integration/E2E), creating mocks and stubs, writing data providers or datasets, setting up architecture testing with arch(), or configuring mutation testing with Infection. Covers PHPUnit 11 attributes, Pest 3 expect() API, and CI pipeline patterns."
+description:
+  "Use this skill when writing PHP tests, choosing between PHPUnit and Pest,
+  designing test architecture (unit/integration/E2E), creating mocks and stubs,
+  writing data providers or datasets, setting up architecture testing with
+  arch(), or configuring mutation testing with Infection. Covers PHPUnit 11
+  attributes, Pest 3 expect() API, and CI pipeline patterns."
 ---
 
 # PHP Testing
 
 ## Test Architecture: The Test Pyramid
 
-- **Unit tests (70-80%)** — Fast (< 1ms each), no I/O, test one behavioral unit. Run on every file save.
-- **Integration tests (15-20%)** — Cross one system boundary (database, HTTP, filesystem). Run on every commit.
-- **E2E tests (5-10%)** — Full system through UI or public API. Run pre-deploy or nightly.
+- **Unit tests (70-80%)** — Fast (< 1ms each), no I/O, test one behavioral unit.
+  Run on every file save.
+- **Integration tests (15-20%)** — Cross one system boundary (database, HTTP,
+  filesystem). Run on every commit.
+- **E2E tests (5-10%)** — Full system through UI or public API. Run pre-deploy
+  or nightly.
 
 > Principle: prefer the cheapest test that adequately covers the risk.
 
-**Unit test candidates:** Pure functions, value objects, domain logic, service classes with mocked collaborators,
-complex conditionals.
+**Unit test candidates:** Pure functions, value objects, domain logic, service
+classes with mocked collaborators, complex conditionals.
 
-**Do NOT unit test:** Getters/setters with no logic, framework infrastructure, configuration, database schema.
+**Do NOT unit test:** Getters/setters with no logic, framework infrastructure,
+configuration, database schema.
 
-**Integration test candidates:** Repository implementations, HTTP handlers, service coordination, event publishing.
+**Integration test candidates:** Repository implementations, HTTP handlers,
+service coordination, event publishing.
 
 ### Directory Structure
 
-Mirror source under `tests/` with separate suites (`unit`, `integration`, `feature`) in `phpunit.xml`. No unit test
-should import a framework class.
+Mirror source under `tests/` with separate suites (`unit`, `integration`,
+`feature`) in `phpunit.xml`. No unit test should import a framework class.
 
 ---
 
@@ -68,8 +78,8 @@ final class TaxCalculatorTest extends TestCase
 }
 ```
 
-Key rules: extend `TestCase` (not framework base classes), declare `final`, use `strict_types`, one logical assertion
-per test.
+Key rules: extend `TestCase` (not framework base classes), declare `final`, use
+`strict_types`, one logical assertion per test.
 
 ### Naming
 
@@ -80,7 +90,8 @@ per test.
 
 ### Assertions
 
-Prefer strict: `assertSame` (type + value) over `assertEquals` (loose). See references/phpunit.md for full list.
+Prefer strict: `assertSame` (type + value) over `assertEquals` (loose). See
+references/phpunit.md for full list.
 
 ### Data Providers
 
@@ -105,8 +116,8 @@ public static function vatRateProvider(): array
 
 ## Pest 3.x
 
-Pest compiles `test()` / `it()` closures into anonymous `TestCase` subclasses on PHPUnit's runner. All PHPUnit tooling
-works.
+Pest compiles `test()` / `it()` closures into anonymous `TestCase` subclasses on
+PHPUnit's runner. All PHPUnit tooling works.
 
 ### Basic Syntax
 
@@ -120,7 +131,8 @@ test('fullName concatenates first and last', function () {
 });
 ```
 
-Use `it()` when description completes "it ___". Use `test()` for imperative descriptions.
+Use `it()` when description completes "it \_\_\_". Use `test()` for imperative
+descriptions.
 
 ### `describe()` and Lifecycle
 
@@ -134,7 +146,8 @@ describe('User', function () {
 });
 ```
 
-Hooks: `beforeEach` = `setUp()`, `afterEach` = `tearDown()`, `beforeAll` = `setUpBeforeClass()`.
+Hooks: `beforeEach` = `setUp()`, `afterEach` = `tearDown()`, `beforeAll` =
+`setUpBeforeClass()`.
 
 ### `uses()` Configuration
 
@@ -156,7 +169,8 @@ expect('hello')->toStartWith('hel');
 expect(fn () => risky())->toThrow(RuntimeException::class, 'message');
 ```
 
-Chaining: `->and($other)->toBe(...)`. Iterate: `->each->toBeInt()`. See references/pest.md for full API.
+Chaining: `->and($other)->toBe(...)`. Iterate: `->each->toBeInt()`. See
+references/pest.md for full API.
 
 ### Custom Expectations
 
@@ -203,12 +217,14 @@ arch()->preset()->laravel();
 arch()->preset()->security();
 ```
 
-Key rules: `toExtend()`, `toImplement()`, `toUseStrictTypes()`, `not->toUse()`, `toBeReadonly()`, `toBeFinal()`,
-`toHaveSuffix()`, `toOnlyBeUsedIn()`, `toBeInterface()`, `toBeEnum()`.
+Key rules: `toExtend()`, `toImplement()`, `toUseStrictTypes()`, `not->toUse()`,
+`toBeReadonly()`, `toBeFinal()`, `toHaveSuffix()`, `toOnlyBeUsedIn()`,
+`toBeInterface()`, `toBeEnum()`.
 
 ### Test Modifiers
 
-`->todo()`, `->skip(condition, 'reason')`, `->fails()`, `->group('name')`, `->only()`, `->repeat(n)`.
+`->todo()`, `->skip(condition, 'reason')`, `->fails()`, `->group('name')`,
+`->only()`, `->repeat(n)`.
 
 ---
 
@@ -217,7 +233,7 @@ Key rules: `toExtend()`, `toImplement()`, `toUseStrictTypes()`, `not->toUse()`, 
 ### Test Doubles Taxonomy
 
 | Double    | PHPUnit API               | Purpose                                 |
-|-----------|---------------------------|-----------------------------------------|
+| --------- | ------------------------- | --------------------------------------- |
 | **Stub**  | `createStub()`            | Returns canned value; no call assertion |
 | **Mock**  | `createMock()`            | Asserts method IS called                |
 | **Spy**   | Hand-written class        | Records calls for later assertion       |
@@ -226,8 +242,9 @@ Key rules: `toExtend()`, `toImplement()`, `toUseStrictTypes()`, `not->toUse()`, 
 
 ### When to Mock
 
-Mock across **architectural boundaries** (domain <-> external service, app <-> persistence, cross-module). Do NOT mock
-same-layer collaborators, third-party libraries directly, or the thing being integration-tested.
+Mock across **architectural boundaries** (domain <-> external service, app <->
+persistence, cross-module). Do NOT mock same-layer collaborators, third-party
+libraries directly, or the thing being integration-tested.
 
 ```php
 // ❌ Bad — mocking within the domain layer
@@ -240,8 +257,8 @@ $gateway->method('charge')->willReturn(ChargeResult::success());
 
 ### Over-Mocking Signs
 
-More mock setup than assertions, mocking within same layer, testing call order when order isn't the behavior, mocking
-cheap-to-instantiate concrete classes.
+More mock setup than assertions, mocking within same layer, testing call order
+when order isn't the behavior, mocking cheap-to-instantiate concrete classes.
 
 ```php
 // ❌ Bad — over-mocked
@@ -254,7 +271,8 @@ $order->method('getItems')->willReturn([$item]);
 $order = new Order([new OrderItem(price: 10_00, quantity: 2)]);
 ```
 
-> **Rule:** Mock types you own at architectural boundaries. Use real objects or hand-written fakes everywhere else.
+> **Rule:** Mock types you own at architectural boundaries. Use real objects or
+> hand-written fakes everywhere else.
 
 ---
 
@@ -262,22 +280,26 @@ $order = new Order([new OrderItem(price: 10_00, quantity: 2)]);
 
 ### Database Isolation
 
-Wrap each test in a transaction, roll back in `tearDown()`. In Laravel: `RefreshDatabase` or `DatabaseTransactions`.
+Wrap each test in a transaction, roll back in `tearDown()`. In Laravel:
+`RefreshDatabase` or `DatabaseTransactions`.
 
 ### Test Data Patterns
 
-**Object Mother** — factory methods: `UserMother::active()`, `UserMother::withEmail('a@b.com')`.
+**Object Mother** — factory methods: `UserMother::active()`,
+`UserMother::withEmail('a@b.com')`.
 
-**Test Builder** — fluent immutable API: `(new OrderBuilder())->withProduct(42)->build()`.
+**Test Builder** — fluent immutable API:
+`(new OrderBuilder())->withProduct(42)->build()`.
 
-**Hand-written Fakes** — `InMemoryUserRepository` implementing the interface with an array store.
+**Hand-written Fakes** — `InMemoryUserRepository` implementing the interface
+with an array store.
 
 ---
 
 ## Mutation Testing with Infection
 
-Measures test **effectiveness**, not just coverage. Mutations are small deliberate code changes; surviving mutations =
-test gaps.
+Measures test **effectiveness**, not just coverage. Mutations are small
+deliberate code changes; surviving mutations = test gaps.
 
 ### Setup
 
@@ -285,7 +307,8 @@ test gaps.
 composer require --dev infection/infection
 ```
 
-Key config: `"testFrameworkOptions": "--testsuite=unit"`, `"minMsi": 75`, `"minCoveredMsi": 85`, `"threads": "max"`.
+Key config: `"testFrameworkOptions": "--testsuite=unit"`, `"minMsi": 75`,
+`"minCoveredMsi": 85`, `"threads": "max"`.
 
 ### Running
 
@@ -305,7 +328,7 @@ vendor/bin/infection --git-diff-filter=AM --git-diff-base=origin/main
 ### Thresholds
 
 | Maturity    | minMsi | minCoveredMsi |
-|-------------|--------|---------------|
+| ----------- | ------ | ------------- |
 | Greenfield  | 80%    | 90%           |
 | Established | 70%    | 80%           |
 | Legacy      | 50%    | 65%           |
@@ -328,8 +351,8 @@ vendor/bin/infection --git-diff-filter=AM --git-diff-base=origin/main
 ## CI Pipeline
 
 ```yaml
-- run: vendor/bin/phpunit --testsuite=unit          # every push
-- run: vendor/bin/phpunit --testsuite=integration   # every PR
-- run: vendor/bin/infection --git-diff-filter=AM --threads=max  # PR (incremental)
-- run: vendor/bin/phpunit --testsuite=feature       # merge to main
+- run: vendor/bin/phpunit --testsuite=unit # every push
+- run: vendor/bin/phpunit --testsuite=integration # every PR
+- run: vendor/bin/infection --git-diff-filter=AM --threads=max # PR (incremental)
+- run: vendor/bin/phpunit --testsuite=feature # merge to main
 ```

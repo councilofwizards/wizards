@@ -14,13 +14,23 @@ updated: "2026-02-14"
 
 ## Problem
 
-When an agent's context window fills up or a session is interrupted, all in-progress work is lost. The skills reference a recovery procedure ("summarize current state to `docs/progress/`"), but there's no structured checkpoint format. Recovery depends on agents voluntarily saving state before they lose context — which is unreliable.
+When an agent's context window fills up or a session is interrupted, all
+in-progress work is lost. The skills reference a recovery procedure ("summarize
+current state to `docs/progress/`"), but there's no structured checkpoint
+format. Recovery depends on agents voluntarily saving state before they lose
+context — which is unreliable.
 
 ## Proposed Solution
 
-1. **Structured checkpoint format**: Define a YAML-frontmatter checkpoint file that agents write at key milestones (task claimed, plan drafted, review requested, review approved).
-2. **Checkpoint convention in SKILL.md**: Add explicit instructions to spawn prompts requiring agents to write checkpoints after each significant state change.
-3. **Resume protocol**: When `/build-product` or `/plan-product` is invoked with no arguments, scan `docs/progress/` for incomplete checkpoints and resume from the last known state.
+1. **Structured checkpoint format**: Define a YAML-frontmatter checkpoint file
+   that agents write at key milestones (task claimed, plan drafted, review
+   requested, review approved).
+2. **Checkpoint convention in SKILL.md**: Add explicit instructions to spawn
+   prompts requiring agents to write checkpoints after each significant state
+   change.
+3. **Resume protocol**: When `/build-product` or `/plan-product` is invoked with
+   no arguments, scan `docs/progress/` for incomplete checkpoints and resume
+   from the last known state.
 
 ## Checkpoint File Format
 
@@ -45,8 +55,10 @@ updated: "2026-02-14T10:30:00Z"
 ## Architectural Considerations
 
 - Checkpoints must not create concurrent write conflicts (solved by P1-01).
-- The resume protocol adds complexity to the "Determine Mode" section of each skill.
-- Checkpoint writes should be lightweight — agents should not spend significant context on state management.
+- The resume protocol adds complexity to the "Determine Mode" section of each
+  skill.
+- Checkpoint writes should be lightweight — agents should not spend significant
+  context on state management.
 
 ## Success Criteria
 

@@ -12,14 +12,16 @@ updated: "2026-03-10T15:25:00Z"
 
 ## Agents Spawned
 
-| Agent | Model | Role |
-|-------|-------|------|
-| story-writer | sonnet | Draft user stories from roadmap item |
-| story-skeptic | opus | INVEST/SMART review of all stories |
+| Agent         | Model  | Role                                 |
+| ------------- | ------ | ------------------------------------ |
+| story-writer  | sonnet | Draft user stories from roadmap item |
+| story-skeptic | opus   | INVEST/SMART review of all stories   |
 
 ## Session Notes
 
 - Story writer drafted 5 stories covering all 3 bundled changes + validator gate
-- Story skeptic approved all 5 stories on first review (no revision cycles needed)
-- Skeptic verified claims against actual codebase (sync script lines 173-174, 207-213)
+- Story skeptic approved all 5 stories on first review (no revision cycles
+  needed)
+- Skeptic verified claims against actual codebase (sync script lines 173-174,
+  207-213)
 - Final artifact: docs/specs/persona-system-activation/stories.md

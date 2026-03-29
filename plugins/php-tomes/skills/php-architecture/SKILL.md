@@ -1,12 +1,18 @@
 ---
 name: php-architecture
-description: "Use this skill when structuring a PHP project, applying SOLID principles, choosing design patterns (Strategy, Repository, Factory, Decorator), wiring dependency injection, designing exception hierarchies, setting up PSR-3 logging with Monolog, or implementing resilience patterns (circuit breaker, retry, timeout, fallback). Also covers layered and hexagonal architecture."
+description:
+  "Use this skill when structuring a PHP project, applying SOLID principles,
+  choosing design patterns (Strategy, Repository, Factory, Decorator), wiring
+  dependency injection, designing exception hierarchies, setting up PSR-3
+  logging with Monolog, or implementing resilience patterns (circuit breaker,
+  retry, timeout, fallback). Also covers layered and hexagonal architecture."
 ---
 
 # PHP Architecture Skill
 
-Apply these principles when designing, reviewing, or refactoring PHP application architecture. Target PHP 8.2+. Use
-`final` classes by default, `readonly` constructor promotion, and strict types everywhere.
+Apply these principles when designing, reviewing, or refactoring PHP application
+architecture. Target PHP 8.2+. Use `final` classes by default, `readonly`
+constructor promotion, and strict types everywhere.
 
 ## SOLID Principles
 
@@ -42,12 +48,13 @@ final class UserRegistrar
 // Each concern is driven by a different team — auth, marketing, billing, ops
 ```
 
-Trade-off: SRP can produce many small classes. Excessive decomposition without cohesion creates "shotgun surgery." Group
-by actor, not by technical layer.
+Trade-off: SRP can produce many small classes. Excessive decomposition without
+cohesion creates "shotgun surgery." Group by actor, not by technical layer.
 
 ### Open/Closed Principle (OCP)
 
-Open for extension, closed for modification. Use abstraction and polymorphism instead of conditionals.
+Open for extension, closed for modification. Use abstraction and polymorphism
+instead of conditionals.
 
 ```php
 // ✅ Good — new discount types require no modification to existing code
@@ -74,13 +81,14 @@ final class LoyaltyDiscount implements DiscountStrategy
 // ❌ Bad — growing if/elseif/else chain for each discount type
 ```
 
-Trade-off: Apply OCP where variation is known to occur. Premature abstraction for extension points that never change
-adds indirection with no benefit.
+Trade-off: Apply OCP where variation is known to occur. Premature abstraction
+for extension points that never change adds indirection with no benefit.
 
 ### Liskov Substitution Principle (LSP)
 
-Subtypes must be substitutable for their base types. Violations occur when overrides strengthen preconditions, weaken
-postconditions, or throw unexpected exceptions.
+Subtypes must be substitutable for their base types. Violations occur when
+overrides strengthen preconditions, weaken postconditions, or throw unexpected
+exceptions.
 
 ```php
 // ✅ Good — both implement Shape independently via interface
@@ -111,7 +119,8 @@ Prefer composition over inheritance to avoid LSP violations entirely.
 
 ### Interface Segregation Principle (ISP)
 
-Split fat interfaces into cohesive, focused ones. Clients depend only on what they use.
+Split fat interfaces into cohesive, focused ones. Clients depend only on what
+they use.
 
 ```php
 // ✅ Good — role-based interfaces
@@ -142,7 +151,8 @@ final class UserProjectionService
 
 ### Dependency Inversion Principle (DIP)
 
-High-level modules depend on abstractions, not low-level modules. Foundation of testability.
+High-level modules depend on abstractions, not low-level modules. Foundation of
+testability.
 
 ```php
 // ✅ Good — CheckoutService knows nothing about Stripe
@@ -172,17 +182,20 @@ final class CheckoutService
 
 ## Design Patterns
 
-Use patterns to solve recurring problems. Using a pattern without the problem it solves is over-engineering.
+Use patterns to solve recurring problems. Using a pattern without the problem it
+solves is over-engineering.
 
 ### Strategy
 
-Interchangeable algorithms selected at construction time. Use for pricing engines, export formats, notification
-channels, or replacing type-branching conditionals.
+Interchangeable algorithms selected at construction time. Use for pricing
+engines, export formats, notification channels, or replacing type-branching
+conditionals.
 
 ### Repository
 
-Decouple domain logic from persistence. The interface lives in the domain layer; the implementation lives in
-infrastructure. Never expose query builder methods (`->where()`, `->orderBy()`) through the interface.
+Decouple domain logic from persistence. The interface lives in the domain layer;
+the implementation lives in infrastructure. Never expose query builder methods
+(`->where()`, `->orderBy()`) through the interface.
 
 ```php
 // ✅ Good — domain-focused interface
@@ -195,12 +208,13 @@ interface OrderRepository
 }
 ```
 
-Skip this pattern for simple CRUD with no domain logic. Using Eloquent directly is fine for basic screens.
+Skip this pattern for simple CRUD with no domain logic. Using Eloquent directly
+is fine for basic screens.
 
 ### Factory
 
-Use when object construction is complex, conditional, or requires coordination of dependencies the caller should not
-know about.
+Use when object construction is complex, conditional, or requires coordination
+of dependencies the caller should not know about.
 
 ```php
 // ✅ Good — factory encapsulates construction complexity
@@ -232,7 +246,8 @@ Skip factories when `new ClassName()` is clear and sufficient.
 
 ### Observer
 
-Decouple reactions to state changes. In Laravel, prefer the Event/Listener system over SplSubject/SplObserver.
+Decouple reactions to state changes. In Laravel, prefer the Event/Listener
+system over SplSubject/SplObserver.
 
 ```php
 // ❌ Bad — observer cascades: observers triggering observers triggering more observers
@@ -241,8 +256,8 @@ Decouple reactions to state changes. In Laravel, prefer the Event/Listener syste
 
 ### Decorator
 
-Add behavior without subclassing. Compose capabilities at runtime. Use for cross-cutting concerns: logging, caching,
-authorization, retry logic, metrics.
+Add behavior without subclassing. Compose capabilities at runtime. Use for
+cross-cutting concerns: logging, caching, authorization, retry logic, metrics.
 
 ```php
 // ✅ Good — composable decorators wrapping the same interface
@@ -258,7 +273,8 @@ $logger = new ContextEnrichingLogger(
 
 ### Constructor Injection is the Default
 
-All dependencies declared in the constructor are explicit, required, and available for the object's full lifetime.
+All dependencies declared in the constructor are explicit, required, and
+available for the object's full lifetime.
 
 ```php
 // ✅ Good — explicit, testable, always valid
@@ -272,7 +288,8 @@ final class OrderService
 }
 ```
 
-Use setter injection only for genuinely optional dependencies (e.g., optional logger in a library).
+Use setter injection only for genuinely optional dependencies (e.g., optional
+logger in a library).
 
 ### Anti-Patterns
 
@@ -285,8 +302,8 @@ $payments = app(PaymentGateway::class); // inside a service method
 // Hides dependencies, non-portable, requires running container for tests
 ```
 
-**Rule:** If you write `app()` or `resolve()` outside a ServiceProvider, factory, or bootstrap file, the dependency
-graph design is wrong.
+**Rule:** If you write `app()` or `resolve()` outside a ServiceProvider,
+factory, or bootstrap file, the dependency graph design is wrong.
 
 ### Laravel Container Bindings
 
@@ -316,13 +333,13 @@ $this->app->bind(PaymentGateway::class, static function ($app): PaymentGateway {
 ### Three Layers
 
 | Layer          | Contains                                                      | Depends On           | Never Imports       |
-|----------------|---------------------------------------------------------------|----------------------|---------------------|
+| -------------- | ------------------------------------------------------------- | -------------------- | ------------------- |
 | Domain         | Entities, VOs, repository interfaces, domain services, events | Nothing              | Framework, DB, HTTP |
 | Application    | Use-case handlers, commands, DTOs                             | Domain               | Framework, DB       |
 | Infrastructure | Eloquent repos, HTTP clients, mailers, queue adapters         | Domain + Application | -                   |
 
-**Dependency direction:** Infrastructure -> Application -> Domain. Domain defines interfaces; infrastructure implements
-them.
+**Dependency direction:** Infrastructure -> Application -> Domain. Domain
+defines interfaces; infrastructure implements them.
 
 ```php
 // ❌ Bad — domain entity extending Eloquent Model
@@ -343,27 +360,34 @@ class Order extends Model {} // Corrupts the layer boundary
 - Solo/small-team projects where overhead is unjustified
 - Prototypes and MVPs prioritizing iteration speed
 
-A Laravel app using Eloquent directly in controllers with no complex domain logic is not "bad architecture" -- it is
-appropriate for the problem size.
+A Laravel app using Eloquent directly in controllers with no complex domain
+logic is not "bad architecture" -- it is appropriate for the problem size.
 
 ### Hexagonal Architecture (Ports and Adapters)
 
-- **Driving adapters** (primary): Controllers, Artisan commands, queue listeners -- call application services
-- **Driven adapters** (secondary): Eloquent repositories, HTTP clients, mailers -- implement domain ports
+- **Driving adapters** (primary): Controllers, Artisan commands, queue listeners
+  -- call application services
+- **Driven adapters** (secondary): Eloquent repositories, HTTP clients, mailers
+  -- implement domain ports
 
 ## Exception Hierarchy
 
 ### PHP Throwable Tree
 
-- `\Exception` -> `\LogicException` (programmer errors) and `\RuntimeException` (external failures)
+- `\Exception` -> `\LogicException` (programmer errors) and `\RuntimeException`
+  (external failures)
 - `\Error` (engine-level) -- `TypeError`, `DivisionByZeroError`, etc.
-- Catch `\Throwable` only at top-level handlers. In application code, catch the most specific type.
+- Catch `\Throwable` only at top-level handlers. In application code, catch the
+  most specific type.
 
 ### Custom Exception Design Rules
 
-1. One base exception per bounded context (`BillingException`, `InventoryException`)
-2. Extend `RuntimeException` for I/O failures, `LogicException` for programmer errors
-3. Add structured context via constructor properties -- never encode data only in the message string
+1. One base exception per bounded context (`BillingException`,
+   `InventoryException`)
+2. Extend `RuntimeException` for I/O failures, `LogicException` for programmer
+   errors
+3. Add structured context via constructor properties -- never encode data only
+   in the message string
 4. Keep hierarchies shallow -- rarely more than 3 levels
 
 ```php
@@ -385,8 +409,8 @@ class PaymentDeclinedException extends BillingException
 
 ### Exception Chaining
 
-Always pass the original exception as `$previous` when wrapping. Throwing without `$previous` discards the original
-stack trace.
+Always pass the original exception as `$previous` when wrapping. Throwing
+without `$previous` discards the original stack trace.
 
 ```php
 // ✅ Good — preserves cause chain
@@ -398,7 +422,7 @@ catch (\PDOException $e) {
 ### When to Throw vs Return
 
 | Scenario                       | Approach                                                    |
-|--------------------------------|-------------------------------------------------------------|
+| ------------------------------ | ----------------------------------------------------------- |
 | Programmer error               | `throw \InvalidArgumentException`                           |
 | External system failure        | `throw \RuntimeException` subclass                          |
 | "Not found" (expected, common) | Return `null` or empty collection                           |
@@ -439,7 +463,7 @@ throw new PaymentDeclinedException(declineCode: 'D0012');
 ### Log Level Guide
 
 | Level     | When                                                               |
-|-----------|--------------------------------------------------------------------|
+| --------- | ------------------------------------------------------------------ |
 | emergency | System unusable; immediate human intervention required             |
 | alert     | Immediate action needed (full disk, DB down)                       |
 | critical  | Component failure                                                  |
@@ -464,15 +488,16 @@ $this->logger->info('Order placed', [
 
 ### Correlation IDs
 
-Attach a unique request/trace ID to every log entry. Accept `X-Correlation-ID` from upstream or generate one. Propagate
-to all outgoing HTTP calls.
+Attach a unique request/trace ID to every log entry. Accept `X-Correlation-ID`
+from upstream or generate one. Propagate to all outgoing HTTP calls.
 
 ## Graceful Degradation
 
 ### Circuit Breaker
 
-Prevent hammering a failing dependency. Three states: Closed (normal), Open (fail fast), Half-Open (probe). Store state
-in Redis for multi-worker environments.
+Prevent hammering a failing dependency. Three states: Closed (normal), Open
+(fail fast), Half-Open (probe). Store state in Redis for multi-worker
+environments.
 
 ```php
 $result = $breaker->call(
@@ -483,7 +508,8 @@ $result = $breaker->call(
 
 ### Retry with Exponential Backoff
 
-Use for transient failures. Always add jitter to avoid thundering herd. Cap max retries (3 is typical) and max delay.
+Use for transient failures. Always add jitter to avoid thundering herd. Cap max
+retries (3 is typical) and max delay.
 
 ```php
 // ❌ Bad — infinite retry
@@ -495,7 +521,8 @@ for ($i = 0; $i < 3; $i++) { try { return $svc->call(); } catch (\Exception) {} 
 
 ### Timeouts
 
-Every external call must have a bounded timeout. Unbounded calls let a slow dependency exhaust all PHP-FPM workers.
+Every external call must have a bounded timeout. Unbounded calls let a slow
+dependency exhaust all PHP-FPM workers.
 
 ### Fallback Hierarchy
 
@@ -507,10 +534,13 @@ Every external call must have a bounded timeout. Unbounded calls let a slow depe
 
 ### Partial Failure Handling
 
-When processing collections, collect errors and continue rather than aborting on first failure. Return structured
-results: `{sent: int, failed: int, errors: array}`.
+When processing collections, collect errors and continue rather than aborting on
+first failure. Return structured results:
+`{sent: int, failed: int, errors: array}`.
 
 ## References
 
-- [SOLID Patterns Reference](references/solid-patterns.md) -- detailed examples and evidence
-- [Error Handling Reference](references/error-handling.md) -- exception hierarchy, logging setup, resilience patterns
+- [SOLID Patterns Reference](references/solid-patterns.md) -- detailed examples
+  and evidence
+- [Error Handling Reference](references/error-handling.md) -- exception
+  hierarchy, logging setup, resilience patterns

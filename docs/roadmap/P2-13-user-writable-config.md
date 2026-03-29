@@ -15,16 +15,21 @@ spec: docs/specs/user-writable-config/spec.md
 
 ## Summary
 
-Establish `.claude/conclave/` as the standard user-writable directory for project-specific plugin configuration. Since the plugin is installed from a marketplace (read-only cache), users need a writable location for configuration that agents read at runtime.
+Establish `.claude/conclave/` as the standard user-writable directory for
+project-specific plugin configuration. Since the plugin is installed from a
+marketplace (read-only cache), users need a writable location for configuration
+that agents read at runtime.
 
 ## Motivation
 
 Multiple upcoming features need a user-writable location:
+
 - P2-11 (Sprint Contracts): custom template overrides
 - P3-29 (Evaluator Tuning): few-shot calibration examples per skill
 - General: project-specific agent guidance files
 
-Without a defined convention, each feature will invent its own storage path, leading to inconsistency.
+Without a defined convention, each feature will invent its own storage path,
+leading to inconsistency.
 
 ## Directory Structure
 
@@ -39,15 +44,18 @@ Without a defined convention, each feature will invent its own storage path, lea
     stack-preferences.md  # e.g., "prefer Pest over PHPUnit"
 ```
 
-`docs/` stays for skill outputs (artifacts, progress, specs). `.claude/conclave/` is for plugin configuration.
+`docs/` stays for skill outputs (artifacts, progress, specs).
+`.claude/conclave/` is for plugin configuration.
 
 ## Scope
 
 1. Define the convention and subdirectory naming
 2. Update `setup-project` to scaffold `.claude/conclave/` skeleton on init
 3. Document in `wizard-guide` under "Project Configuration"
-4. Add `.claude/conclave/` to `.gitignore` template (may contain project-sensitive config)
-5. Skills read from `.claude/conclave/` defensively — graceful degradation if files absent
+4. Add `.claude/conclave/` to `.gitignore` template (may contain
+   project-sensitive config)
+5. Skills read from `.claude/conclave/` defensively — graceful degradation if
+   files absent
 
 ## Success Criteria
 

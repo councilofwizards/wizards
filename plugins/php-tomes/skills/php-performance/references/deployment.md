@@ -23,7 +23,11 @@ jobs:
       - uses: shivammathur/setup-php@v2
         with: { php-version: "8.4", tools: php-cs-fixer }
       - uses: actions/cache@v4
-        with: { path: ~/.composer/cache, key: "composer-${{ hashFiles('composer.lock') }}" }
+        with:
+          {
+            path: ~/.composer/cache,
+            key: "composer-${{ hashFiles('composer.lock') }}",
+          }
       - run: composer install --no-interaction --prefer-dist
       - run: php-cs-fixer fix --dry-run --diff
   analyze:
@@ -34,7 +38,11 @@ jobs:
     needs: lint
     strategy: { matrix: { php: ["8.3", "8.4"] } }
     services:
-      mysql: { image: "mysql:8.0", env: { MYSQL_ROOT_PASSWORD: secret, MYSQL_DATABASE: testing } }
+      mysql:
+        {
+          image: "mysql:8.0",
+          env: { MYSQL_ROOT_PASSWORD: secret, MYSQL_DATABASE: testing },
+        }
     steps:
       - run: vendor/bin/phpunit --coverage-clover coverage.xml
   build:
@@ -42,11 +50,16 @@ jobs:
     if: github.ref == 'refs/heads/main'
     steps:
       - uses: docker/build-push-action@v5
-        with: { push: true, tags: "ghcr.io/${{ github.repository }}:${{ github.sha }}", cache-from: "type=gha" }
+        with:
+          {
+            push: true,
+            tags: "ghcr.io/${{ github.repository }}:${{ github.sha }}",
+            cache-from: "type=gha",
+          }
 ```
 
-Cache `~/.composer/cache` keyed on `composer.lock` hash. Pin actions to full SHA. Use GitHub Environments with required
-reviewers for production.
+Cache `~/.composer/cache` keyed on `composer.lock` hash. Pin actions to full
+SHA. Use GitHub Environments with required reviewers for production.
 
 ## Docker Multi-Stage Build
 
@@ -73,12 +86,13 @@ HEALTHCHECK --interval=30s --timeout=5s CMD curl -f http://localhost/up || exit 
 ### Base Image Comparison
 
 | Factor      | Alpine             | Debian Slim   |
-|-------------|--------------------|---------------|
+| ----------- | ------------------ | ------------- |
 | Size        | ~80-120 MB         | ~180-300 MB   |
 | Complexity  | Higher (musl libc) | Lower (glibc) |
 | CVE surface | Smaller            | Larger        |
 
-Start Alpine; switch to Debian only if extensions fail to compile. Tag images with Git SHA for immutable deploys.
+Start Alpine; switch to Debian only if extensions fail to compile. Tag images
+with Git SHA for immutable deploys.
 
 ## PHP-FPM Configuration
 
@@ -107,7 +121,8 @@ max_execution_time=30
 ## Environment Configuration
 
 - Commit `.env.example` (empty values); never commit `.env` with credentials
-- After `config:cache`, `.env` is not read; use `config()` not `env()` in app code
+- After `config:cache`, `.env` is not read; use `config()` not `env()` in app
+  code
 - Use secrets managers (Vault, AWS SSM) in production
 - Validate required env vars at boot before accepting traffic
 
@@ -129,7 +144,7 @@ securityContext:
 ## Zero-Downtime Strategies
 
 | Strategy   | Infra Overhead | Rollback Speed | Mixed Versions? |
-|------------|----------------|----------------|-----------------|
+| ---------- | -------------- | -------------- | --------------- |
 | Blue-green | Double         | Seconds        | No              |
 | Rolling    | Minimal        | Minutes        | Yes             |
 | Canary     | Minimal        | Seconds        | Yes             |
@@ -167,7 +182,7 @@ readinessProbe:
 ### Dangerous Operations
 
 | Operation           | Risk             | Safe Alternative              |
-|---------------------|------------------|-------------------------------|
+| ------------------- | ---------------- | ----------------------------- |
 | Rename column       | Old code breaks  | Add new, backfill, drop old   |
 | Add NOT NULL column | Old inserts fail | Add nullable, backfill, alter |
 | Drop column         | Old reads fail   | Remove code first, then drop  |
@@ -200,5 +215,10 @@ Image scanning in CI:
 
 ```yaml
 - uses: aquasecurity/trivy-action@master
-  with: { image-ref: "ghcr.io/${{ github.repository }}:${{ github.sha }}", severity: "CRITICAL,HIGH", exit-code: 1 }
+  with:
+    {
+      image-ref: "ghcr.io/${{ github.repository }}:${{ github.sha }}",
+      severity: "CRITICAL,HIGH",
+      exit-code: 1,
+    }
 ```

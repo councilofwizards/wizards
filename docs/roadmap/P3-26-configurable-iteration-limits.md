@@ -14,11 +14,18 @@ updated: 2026-03-27
 
 ## Summary
 
-Add a `--max-iterations N` flag to multi-agent skills that controls the skeptic rejection cap before escalation to the user. Default remains 3 (current behavior). Allows more iterations for subjective outputs (research, ideation) where 5+ rounds may be needed.
+Add a `--max-iterations N` flag to multi-agent skills that controls the skeptic
+rejection cap before escalation to the user. Default remains 3 (current
+behavior). Allows more iterations for subjective outputs (research, ideation)
+where 5+ rounds may be needed.
 
 ## Motivation
 
-Anthropic's harness design paper describes 5-15 iteration cycles between generator and evaluator for subjective tasks like frontend design. The current hard cap of 3 rejections before escalation is appropriate for implementation tasks (tests either pass or fail) but may be conservative for research, ideation, and story writing where refinement is more iterative.
+Anthropic's harness design paper describes 5-15 iteration cycles between
+generator and evaluator for subjective tasks like frontend design. The current
+hard cap of 3 rejections before escalation is appropriate for implementation
+tasks (tests either pass or fail) but may be conservative for research,
+ideation, and story writing where refinement is more iterative.
 
 ## Scope
 

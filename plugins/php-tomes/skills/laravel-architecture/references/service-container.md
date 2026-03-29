@@ -65,8 +65,8 @@ $gateway = $this->app->make(PaymentGateway::class);
 $gateway = $this->app->makeWith(StripeGateway::class, ['apiKey' => 'override']);
 ```
 
-Auto-wiring resolves concrete classes via reflection — no binding needed if all constructor params are type-hinted or
-have defaults.
+Auto-wiring resolves concrete classes via reflection — no binding needed if all
+constructor params are type-hinted or have defaults.
 
 ---
 
@@ -102,7 +102,7 @@ boot() called on ALL providers (in order)     → resolve, configure, register l
 ### Method Reference
 
 | Method                         | Phase    | Purpose                                     |
-|--------------------------------|----------|---------------------------------------------|
+| ------------------------------ | -------- | ------------------------------------------- |
 | `register()`                   | Register | Bind into container, `mergeConfigFrom`      |
 | `boot()`                       | Boot     | Routes, events, views, policies, `extend()` |
 | `mergeConfigFrom($path, $key)` | Register | Merge package defaults                      |
@@ -154,8 +154,9 @@ Run `php artisan optimize:clear` after adding/removing deferred providers.
 
 ## Facade Mechanics
 
-Facades extend `Illuminate\Support\Facades\Facade`, implement `getFacadeAccessor()` returning a container key.
-`__callStatic` resolves the instance and forwards the call.
+Facades extend `Illuminate\Support\Facades\Facade`, implement
+`getFacadeAccessor()` returning a container key. `__callStatic` resolves the
+instance and forwards the call.
 
 ```php
 // These are equivalent:
@@ -187,7 +188,7 @@ Cache::shouldReceive('get')->once()->with('key')->andReturn('value');
 ## Facade-to-Contract Mapping
 
 | Facade      | Contract                                  |
-|-------------|-------------------------------------------|
+| ----------- | ----------------------------------------- |
 | `Auth`      | `Illuminate\Contracts\Auth\Factory`       |
 | `Cache`     | `Illuminate\Contracts\Cache\Factory`      |
 | `Config`    | `Illuminate\Contracts\Config\Repository`  |
@@ -209,7 +210,8 @@ Cache::shouldReceive('get')->once()->with('key')->andReturn('value');
 
 ### env() Rule
 
-`env()` is valid ONLY inside `config/*.php`. After `config:cache`, `env()` returns `null` elsewhere.
+`env()` is valid ONLY inside `config/*.php`. After `config:cache`, `env()`
+returns `null` elsewhere.
 
 ```php
 // config/services.php
@@ -275,7 +277,7 @@ return Application::configure(basePath: dirname(__DIR__))
 ## Anti-Patterns
 
 | Anti-Pattern                    | Problem                          | Fix                                          |
-|---------------------------------|----------------------------------|----------------------------------------------|
+| ------------------------------- | -------------------------------- | -------------------------------------------- |
 | `app()` in domain code          | Service locator, hidden deps     | Constructor injection                        |
 | Binding concrete, not interface | Tight coupling                   | `bind(Interface::class, Concrete::class)`    |
 | `make()` in `register()`        | Provider ordering fragility      | Defer inside closure                         |

@@ -12,7 +12,8 @@ updated: "2026-02-14T00:00:00Z"
 
 ## Overview
 
-This is a pure documentation feature. Create 3 template files and add 1 new Setup step to each of the 3 SKILL.md files. No code, no APIs, no tests.
+This is a pure documentation feature. Create 3 template files and add 1 new
+Setup step to each of the 3 SKILL.md files. No code, no APIs, no tests.
 
 **Source spec**: `docs/specs/artifact-format-templates/spec.md`
 
@@ -27,12 +28,12 @@ Create this file with the exact content from spec Section 1:
 ```markdown
 ---
 title: ""
-status: "draft"                  # draft | ready_for_review | approved | ready_for_implementation
-priority: ""                     # P1 | P2 | P3
-category: ""                     # core-framework | new-skills | developer-experience | quality-reliability | documentation
-approved_by: ""                  # agent or role that approved
-created: ""                      # YYYY-MM-DD
-updated: ""                      # YYYY-MM-DD
+status: "draft" # draft | ready_for_review | approved | ready_for_implementation
+priority: "" # P1 | P2 | P3
+category: "" # core-framework | new-skills | developer-experience | quality-reliability | documentation
+approved_by: "" # agent or role that approved
+created: "" # YYYY-MM-DD
+updated: "" # YYYY-MM-DD
 ---
 
 # {Title} Specification
@@ -62,7 +63,7 @@ updated: ""                      # YYYY-MM-DD
 <!-- Table or list of files changed, with brief description of each change. -->
 
 | File | Change |
-|------|--------|
+| ---- | ------ |
 
 ## Success Criteria
 
@@ -76,8 +77,8 @@ Create this file with the exact content from spec Section 2:
 ```markdown
 ---
 feature: ""
-status: "complete"               # in_progress | complete
-completed: ""                    # YYYY-MM-DD (when status is complete)
+status: "complete" # in_progress | complete
+completed: "" # YYYY-MM-DD (when status is complete)
 ---
 
 # {Priority}: {Title} -- Progress
@@ -114,10 +115,10 @@ Create this file with the exact content from spec Section 3:
 ```markdown
 ---
 title: ""
-status: "proposed"               # proposed | accepted | deprecated | superseded
-created: ""                      # YYYY-MM-DD
-updated: ""                      # YYYY-MM-DD
-superseded_by: ""                # ADR number, if applicable
+status: "proposed" # proposed | accepted | deprecated | superseded
+created: "" # YYYY-MM-DD
+updated: "" # YYYY-MM-DD
+superseded_by: "" # ADR number, if applicable
 ---
 
 # ADR-{NNN}: {Title}
@@ -154,13 +155,16 @@ superseded_by: ""                # ADR number, if applicable
 
 ## Part 2: Files to Modify
 
-Each SKILL.md gets one new step inserted as Step 2 in its Setup section, after the existing Step 1 (directory creation) and before the existing Step 2 (detect stack). All subsequent steps are renumbered.
+Each SKILL.md gets one new step inserted as Step 2 in its Setup section, after
+the existing Step 1 (directory creation) and before the existing Step 2 (detect
+stack). All subsequent steps are renumbered.
 
 ### 2A. `plugins/conclave/skills/plan-product/SKILL.md`
 
 **Location**: Setup section, lines 17-26.
 
 **BEFORE** (lines 22-26):
+
 ```
 2. **Detect project stack.** Read the project root for dependency manifests (`package.json`, `composer.json`, `Gemfile`, `go.mod`, `requirements.txt`, `Cargo.toml`, `pom.xml`, etc.) to identify the tech stack. If a matching stack hint file exists at `docs/stack-hints/{stack}.md`, read it and prepend its guidance to all spawn prompts.
 3. Read `docs/roadmap/` to understand current state
@@ -169,6 +173,7 @@ Each SKILL.md gets one new step inserted as Step 2 in its Setup section, after t
 ```
 
 **AFTER** (insert new Step 2 after line 21, renumber old Steps 2-5 to 3-6):
+
 ```
 2. Read `docs/specs/_template.md`, `docs/progress/_template.md`, and `docs/architecture/_template.md` if they exist. Use these as reference formats when producing artifacts.
 3. **Detect project stack.** Read the project root for dependency manifests (`package.json`, `composer.json`, `Gemfile`, `go.mod`, `requirements.txt`, `Cargo.toml`, `pom.xml`, etc.) to identify the tech stack. If a matching stack hint file exists at `docs/stack-hints/{stack}.md`, read it and prepend its guidance to all spawn prompts.
@@ -177,7 +182,9 @@ Each SKILL.md gets one new step inserted as Step 2 in its Setup section, after t
 6. Read `docs/specs/` for existing specs
 ```
 
-**Exact edit**: Replace the text starting at "2. **Detect project stack.**" through "5. Read `docs/specs/` for existing specs" with the new 5-line block above.
+**Exact edit**: Replace the text starting at "2. **Detect project stack.**"
+through "5. Read `docs/specs/` for existing specs" with the new 5-line block
+above.
 
 ---
 
@@ -186,6 +193,7 @@ Each SKILL.md gets one new step inserted as Step 2 in its Setup section, after t
 **Location**: Setup section, lines 17-27.
 
 **BEFORE** (lines 23-27):
+
 ```
 2. **Detect project stack.** Read the project root for dependency manifests (`package.json`, `composer.json`, `Gemfile`, `go.mod`, `requirements.txt`, `Cargo.toml`, `pom.xml`, etc.) to identify the tech stack. If a matching stack hint file exists at `docs/stack-hints/{stack}.md`, read it and prepend its guidance to all spawn prompts.
 3. Read `docs/roadmap/` to find the next "ready for implementation" item
@@ -195,6 +203,7 @@ Each SKILL.md gets one new step inserted as Step 2 in its Setup section, after t
 ```
 
 **AFTER** (insert new Step 2, renumber old Steps 2-6 to 3-7):
+
 ```
 2. Read `docs/specs/_template.md` and `docs/progress/_template.md` if they exist. Use these as reference formats when producing artifacts.
 3. **Detect project stack.** Read the project root for dependency manifests (`package.json`, `composer.json`, `Gemfile`, `go.mod`, `requirements.txt`, `Cargo.toml`, `pom.xml`, etc.) to identify the tech stack. If a matching stack hint file exists at `docs/stack-hints/{stack}.md`, read it and prepend its guidance to all spawn prompts.
@@ -204,7 +213,9 @@ Each SKILL.md gets one new step inserted as Step 2 in its Setup section, after t
 7. Read `docs/architecture/` for relevant ADRs
 ```
 
-**Exact edit**: Replace the text starting at "2. **Detect project stack.**" through "6. Read `docs/architecture/` for relevant ADRs" with the new 6-line block above.
+**Exact edit**: Replace the text starting at "2. **Detect project stack.**"
+through "6. Read `docs/architecture/` for relevant ADRs" with the new 6-line
+block above.
 
 ---
 
@@ -213,6 +224,7 @@ Each SKILL.md gets one new step inserted as Step 2 in its Setup section, after t
 **Location**: Setup section, lines 16-26.
 
 **BEFORE** (lines 22-26):
+
 ```
 2. **Detect project stack.** Read the project root for dependency manifests (`package.json`, `composer.json`, `Gemfile`, `go.mod`, `requirements.txt`, `Cargo.toml`, `pom.xml`, etc.) to identify the tech stack. If a matching stack hint file exists at `docs/stack-hints/{stack}.md`, read it and prepend its guidance to all spawn prompts.
 3. Read `docs/roadmap/` to understand what features are in play
@@ -222,6 +234,7 @@ Each SKILL.md gets one new step inserted as Step 2 in its Setup section, after t
 ```
 
 **AFTER** (insert new Step 2, renumber old Steps 2-6 to 3-7):
+
 ```
 2. Read `docs/progress/_template.md` if it exists. Use it as a reference format when writing findings.
 3. **Detect project stack.** Read the project root for dependency manifests (`package.json`, `composer.json`, `Gemfile`, `go.mod`, `requirements.txt`, `Cargo.toml`, `pom.xml`, etc.) to identify the tech stack. If a matching stack hint file exists at `docs/stack-hints/{stack}.md`, read it and prepend its guidance to all spawn prompts.
@@ -231,7 +244,9 @@ Each SKILL.md gets one new step inserted as Step 2 in its Setup section, after t
 7. Read `docs/architecture/` for relevant ADRs and system design
 ```
 
-**Exact edit**: Replace the text starting at "2. **Detect project stack.**" through "6. Read `docs/architecture/` for relevant ADRs and system design" with the new 6-line block above.
+**Exact edit**: Replace the text starting at "2. **Detect project stack.**"
+through "6. Read `docs/architecture/` for relevant ADRs and system design" with
+the new 6-line block above.
 
 ---
 
@@ -251,8 +266,10 @@ Each SKILL.md gets one new step inserted as Step 2 in its Setup section, after t
 ## Verification
 
 After implementation, verify:
+
 1. All 3 template files exist at their specified paths
 2. Each SKILL.md Setup section has the new Step 2 with "if they exist" guard
 3. Each SKILL.md has correct step renumbering (no duplicate or skipped numbers)
-4. Template content matches spec Sections 1-3 exactly (no additions, no omissions)
+4. Template content matches spec Sections 1-3 exactly (no additions, no
+   omissions)
 5. No other sections of the SKILL.md files were changed

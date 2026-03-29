@@ -12,20 +12,20 @@ updated: "2026-02-18"
 
 ## Team Composition
 
-| Agent | Model | Role |
-|-------|-------|------|
-| team-lead | opus | Product Owner (orchestration) |
-| researcher | opus | Researcher |
-| architect | opus | Software Architect |
-| product-skeptic | opus | Product Skeptic |
+| Agent           | Model | Role                          |
+| --------------- | ----- | ----------------------------- |
+| team-lead       | opus  | Product Owner (orchestration) |
+| researcher      | opus  | Researcher                    |
+| architect       | opus  | Software Architect            |
+| product-skeptic | opus  | Product Skeptic               |
 
 ## Phase Summary
 
-| Phase | Agents Active | Notes |
-|-------|--------------|-------|
-| Research | researcher, architect | Parallel assessment of roadmap candidates |
-| Review | product-skeptic | Feature selection review with 5 conditions |
-| Decision | team-lead | Resolved P3-10 vs P3-22 disagreement, set policy precedent |
+| Phase    | Agents Active         | Notes                                                      |
+| -------- | --------------------- | ---------------------------------------------------------- |
+| Research | researcher, architect | Parallel assessment of roadmap candidates                  |
+| Review   | product-skeptic       | Feature selection review with 5 conditions                 |
+| Decision | team-lead             | Resolved P3-10 vs P3-22 disagreement, set policy precedent |
 
 ## Deliverables
 

@@ -1,19 +1,27 @@
 ---
 name: php-modern
-description: "Use this skill when adopting PHP 8.3/8.4 features (property hooks, asymmetric visibility, typed constants, #[Override], json_validate), working with enums, readonly classes, or Fibers, or choosing between application servers (FrankenPHP, Swoole, ReactPHP, RoadRunner). Covers long-running PHP patterns, memory isolation, connection pooling, concurrency models, and migration checklists."
+description:
+  "Use this skill when adopting PHP 8.3/8.4 features (property hooks, asymmetric
+  visibility, typed constants, #[Override], json_validate), working with enums,
+  readonly classes, or Fibers, or choosing between application servers
+  (FrankenPHP, Swoole, ReactPHP, RoadRunner). Covers long-running PHP patterns,
+  memory isolation, connection pooling, concurrency models, and migration
+  checklists."
 ---
 
 # PHP Modern Features & Application Servers
 
-This skill covers PHP 8.3/8.4 language features, enums and readonly patterns, fibers and async primitives, application
-server selection, long-running PHP patterns, and concurrency strategies.
+This skill covers PHP 8.3/8.4 language features, enums and readonly patterns,
+fibers and async primitives, application server selection, long-running PHP
+patterns, and concurrency strategies.
 
 ## PHP 8.4 Headline Features
 
 ### Property Hooks
 
-Property hooks embed `get`/`set` logic directly on property declarations, eliminating getter/setter boilerplate.
-Inspired by C# properties. RFC: [Property Hooks](https://wiki.php.net/rfc/property-hooks).
+Property hooks embed `get`/`set` logic directly on property declarations,
+eliminating getter/setter boilerplate. Inspired by C# properties. RFC:
+[Property Hooks](https://wiki.php.net/rfc/property-hooks).
 
 ```php
 class User
@@ -45,11 +53,14 @@ class Circle
 
 **Key rules:**
 
-- Interfaces can declare `public string $fullName { get; }` requiring implementations to provide a get hook
+- Interfaces can declare `public string $fullName { get; }` requiring
+  implementations to provide a get hook
 - Abstract classes can declare `abstract public string $label { get; }`
 - Readonly properties can have a `get` hook but NOT a `set` hook
-- ~5-15ns overhead per access vs plain properties; negligible for web requests, cache in hot paths
-- Migration: replace private field + getter/setter with a single hooked public property
+- ~5-15ns overhead per access vs plain properties; negligible for web requests,
+  cache in hot paths
+- Migration: replace private field + getter/setter with a single hooked public
+  property
 
 ### Asymmetric Visibility
 
@@ -70,17 +81,18 @@ class EventStore
 ```
 
 | Declaration              | Read      | Write        |
-|--------------------------|-----------|--------------|
+| ------------------------ | --------- | ------------ |
 | `public private(set)`    | public    | private only |
 | `public protected(set)`  | public    | protected    |
 | `protected private(set)` | protected | private only |
 
-**vs readonly:** `readonly` = write-once. `public private(set)` = writable internally any number of times.
+**vs readonly:** `readonly` = write-once. `public private(set)` = writable
+internally any number of times.
 
 ### #[\Deprecated] Attribute
 
-Triggers `E_USER_DEPRECATED` via PHP's native mechanism. Applies to functions, methods, class constants, enum cases. NOT
-classes or properties.
+Triggers `E_USER_DEPRECATED` via PHP's native mechanism. Applies to functions,
+methods, class constants, enum cases. NOT classes or properties.
 
 ```php
 #[\Deprecated(message: 'Use formatIso8601() instead.', since: '2.4')]
@@ -89,8 +101,9 @@ public function formatDate(\DateTime $dt): string { /* ... */ }
 
 ### New Array Functions
 
-`array_find()`, `array_find_key()`, `array_any()`, `array_all()` — fill gaps that previously required `array_filter()` +
-boilerplate. RFC: [Array Find](https://wiki.php.net/rfc/array_find).
+`array_find()`, `array_find_key()`, `array_any()`, `array_all()` — fill gaps
+that previously required `array_filter()` + boilerplate. RFC:
+[Array Find](https://wiki.php.net/rfc/array_find).
 
 ```php
 $first = array_find($users, fn($u) => $u['active']); // First match or null
@@ -101,16 +114,20 @@ $all   = array_all($users, fn($u) => $u['active']);   // bool
 
 ### Other 8.4 Additions
 
-- **`new` in initializers everywhere**: `private Logger $logger = new NullLogger()`
+- **`new` in initializers everywhere**:
+  `private Logger $logger = new NullLogger()`
 - **`\Dom\HTMLDocument`**: HTML5-compliant DOM API replacing `DOMDocument`
-- **`exit()`/`die()` as true functions**: `register_shutdown_function(exit(...))`
-- **JIT improvements**: 5-15% on framework benchmarks vs 8.3 JIT, up to 40% on numerical workloads
+- **`exit()`/`die()` as true functions**:
+  `register_shutdown_function(exit(...))`
+- **JIT improvements**: 5-15% on framework benchmarks vs 8.3 JIT, up to 40% on
+  numerical workloads
 
 ## PHP 8.3 Features
 
 ### Typed Class Constants
 
-Type declarations on constants, enforced across inheritance. Child can narrow but not widen.
+Type declarations on constants, enforced across inheritance. Child can narrow
+but not widen.
 
 ```php
 interface HasVersion
@@ -123,7 +140,8 @@ Supports all types except `void`, `never`, `callable`, intersection types.
 
 ### json_validate()
 
-Validates JSON without parsing — 2-5x faster than `json_decode()` + error check for large strings.
+Validates JSON without parsing — 2-5x faster than `json_decode()` + error check
+for large strings.
 
 ```php
 if (json_validate($payload)) {
@@ -133,8 +151,8 @@ if (json_validate($payload)) {
 
 ### #[Override] Attribute
 
-Compile-time check that a method intentionally overrides a parent method. If parent method is renamed, PHP throws a
-compile-time error.
+Compile-time check that a method intentionally overrides a parent method. If
+parent method is renamed, PHP throws a compile-time error.
 
 ```php
 #[Override]
@@ -147,7 +165,8 @@ public function findAll(): array { /* ... */ }
 
 - **Dynamic class constant fetch**: `Color::{$name}` — works with enum cases too
 - **Randomizer additions**: `getFloat()`, `nextFloat()`, `pickArrayKeys()`
-- **Readonly clone (partial)**: `clone` allowed on readonly classes for wither patterns
+- **Readonly clone (partial)**: `clone` allowed on readonly classes for wither
+  patterns
 
 ## Enums (PHP 8.1+)
 
@@ -180,8 +199,9 @@ $s = Status::tryFrom('unknown'); // null
 
 ## Readonly (PHP 8.1+/8.2+)
 
-**Readonly properties** (8.1): assigned exactly once, re-assignment is fatal error.
-**Readonly classes** (8.2): all declared properties implicitly readonly. The canonical value object pattern.
+**Readonly properties** (8.1): assigned exactly once, re-assignment is fatal
+error. **Readonly classes** (8.2): all declared properties implicitly readonly.
+The canonical value object pattern.
 
 ```php
 readonly class Money
@@ -198,11 +218,13 @@ readonly class Money
 }
 ```
 
-Rules: cannot extend non-readonly class, cannot have untyped properties, static properties not affected.
+Rules: cannot extend non-readonly class, cannot have untyped properties, static
+properties not affected.
 
 ## Fibers (PHP 8.1+)
 
-Stackful coroutines for cooperative multitasking. Single-threaded — interleave I/O, not CPU work.
+Stackful coroutines for cooperative multitasking. Single-threaded — interleave
+I/O, not CPU work.
 
 ```php
 $fiber = new Fiber(function (): void {
@@ -213,28 +235,32 @@ $result = $fiber->start();     // Returns 'paused'
 $fiber->resume('hello');       // Fiber prints "Resumed with: hello"
 ```
 
-**Limitations:** No parallelism, no preemption, cannot suspend from `__destruct` or signal handlers.
+**Limitations:** No parallelism, no preemption, cannot suspend from `__destruct`
+or signal handlers.
 
-**Practical use:** Fibers are the building block; ReactPHP, Amp, and Swoole are the batteries-included solutions. Use
-`Fiber::getCurrent() !== null` to detect fiber context.
+**Practical use:** Fibers are the building block; ReactPHP, Amp, and Swoole are
+the batteries-included solutions. Use `Fiber::getCurrent() !== null` to detect
+fiber context.
 
 ## Application Servers
 
 ### Server Comparison
 
 | Server     | Extension? | Model                    | RPS (approx)  | Best For                     |
-|------------|------------|--------------------------|---------------|------------------------------|
+| ---------- | ---------- | ------------------------ | ------------- | ---------------------------- |
 | PHP-FPM    | No         | Process per request      | ~800          | Baseline, simple deployments |
 | FrankenPHP | No         | Worker pool (Go/Caddy)   | ~4,200-6,800  | Simplest long-running path   |
 | Swoole     | Yes        | Coroutine workers        | ~5,000-12,000 | Max throughput, WebSocket    |
 | ReactPHP   | No         | Event loop (single proc) | ~2,000        | Workers, CLI async, no ext   |
 | RoadRunner | No         | Worker pool (Go binary)  | ~3,500-5,000  | Go ecosystem, gRPC support   |
 
-> Benchmarks are approximate for typical Laravel JSON endpoint (4 cores, 8GB RAM).
+> Benchmarks are approximate for typical Laravel JSON endpoint (4 cores, 8GB
+> RAM).
 
 ### FrankenPHP
 
-Embeds PHP in Caddy (Go). Worker mode = 3-10x throughput over PHP-FPM. Automatic TLS, HTTP/2, HTTP/3, Early Hints (103).
+Embeds PHP in Caddy (Go). Worker mode = 3-10x throughput over PHP-FPM. Automatic
+TLS, HTTP/2, HTTP/3, Early Hints (103).
 
 ```caddyfile
 {
@@ -255,11 +281,12 @@ Laravel Octane integration: `php artisan octane:install --server=frankenphp`
 
 ### Swoole
 
-C extension with coroutine-based runtime. Multi-process model with master/manager/workers. Coroutines transparently
-suspend at I/O (MySQL, Redis, cURL) via `Runtime::enableCoroutine(SWOOLE_HOOK_ALL)`.
+C extension with coroutine-based runtime. Multi-process model with
+master/manager/workers. Coroutines transparently suspend at I/O (MySQL, Redis,
+cURL) via `Runtime::enableCoroutine(SWOOLE_HOOK_ALL)`.
 
-Key features: connection pooling (`PDOPool`), Swoole Table (shared memory), Task Workers (blocking work offload), native
-WebSocket server.
+Key features: connection pooling (`PDOPool`), Swoole Table (shared memory), Task
+Workers (blocking work offload), native WebSocket server.
 
 ```php
 $server->set([
@@ -272,22 +299,27 @@ $server->set([
 
 ### ReactPHP
 
-Pure PHP, event-driven, non-blocking I/O. No extensions required. Single-threaded — one blocking call blocks everything.
-Uses Promises or Fiber-based `await()`.
+Pure PHP, event-driven, non-blocking I/O. No extensions required.
+Single-threaded — one blocking call blocks everything. Uses Promises or
+Fiber-based `await()`.
 
-Choose ReactPHP when: no extensions allowed, building background workers/CLI tools, team knows JS-style async.
+Choose ReactPHP when: no extensions allowed, building background workers/CLI
+tools, team knows JS-style async.
 
 ## Long-Running PHP: Critical Patterns
 
-These patterns apply to ALL long-running servers (FrankenPHP worker mode, Swoole, ReactPHP, RoadRunner).
+These patterns apply to ALL long-running servers (FrankenPHP worker mode,
+Swoole, ReactPHP, RoadRunner).
 
 ### Memory Leak Prevention
 
 - **Static caches grow unbounded** — use instance caches with `reset()` methods
-- **Closures capture large objects** — use `WeakReference::create()` for long-lived listeners
+- **Closures capture large objects** — use `WeakReference::create()` for
+  long-lived listeners
 - **WeakMap** for request-scoped metadata — auto-freed when key object is GC'd
 - Call `gc_collect_cycles()` every ~500 requests (not every request — expensive)
-- Monitor: compare `memory_get_usage(true)` before/after requests; alert on >1MB growth
+- Monitor: compare `memory_get_usage(true)` before/after requests; alert on >1MB
+  growth
 
 ### State Isolation Between Requests
 
@@ -295,7 +327,8 @@ Cardinal rule: **no state survives between requests unless explicitly shared.**
 
 - Reset singletons holding request-specific data (auth context, locale, etc.)
 - Laravel Octane clones the container per request automatically
-- Without Octane: implement `RequestScopeResetter` with registered reset callbacks
+- Without Octane: implement `RequestScopeResetter` with registered reset
+  callbacks
 - Never write to `$_SERVER`, `$_GET`, `$_POST` — use the request object
 
 ### Database Connection Management
@@ -309,7 +342,8 @@ Cardinal rule: **no state survives between requests unless explicitly shared.**
 
 - Handle SIGTERM to drain in-flight requests before stopping
 - Set `max_request` limits (Swoole) or equivalent as a memory leak safety valve
-- Wrap request handlers in `try/catch(\Throwable)` — uncaught exceptions can kill workers
+- Wrap request handlers in `try/catch(\Throwable)` — uncaught exceptions can
+  kill workers
 
 ### Migration Checklist
 
@@ -360,20 +394,25 @@ $responses = Async\await(React\Promise\all([
 
 ### pcntl_fork for CPU Parallelism
 
-Fork-based parallel processing for CPU-intensive work. NOT safe inside Swoole coroutines. Use `Swoole\Process` or Task
-Workers instead.
+Fork-based parallel processing for CPU-intensive work. NOT safe inside Swoole
+coroutines. Use `Swoole\Process` or Task Workers instead.
 
 ### Shared-Nothing vs Shared-State
 
-- **Default: shared-nothing** — workers communicate via Redis/DB/queue. No race conditions, easy horizontal scaling.
-- **Shared state (Swoole Table)** — only for read-heavy, rarely-changing data where Redis latency is too high (rate
-  limiting, feature flags).
+- **Default: shared-nothing** — workers communicate via Redis/DB/queue. No race
+  conditions, easy horizontal scaling.
+- **Shared state (Swoole Table)** — only for read-heavy, rarely-changing data
+  where Redis latency is too high (rate limiting, feature flags).
 
 ## References
 
-- [php84-features.md](references/php84-features.md) — PHP 8.4 property hooks, asymmetric visibility, array
-  functions, #[\Deprecated]
-- [php83-features.md](references/php83-features.md) — PHP 8.3 typed constants, json_validate, #[Override], randomizer
-- [type-system-oop.md](references/type-system-oop.md) — Type system reference, OOP patterns, SPL, generators
-- [servers.md](references/servers.md) — FrankenPHP, Swoole, ReactPHP architecture and configuration
-- [concurrency.md](references/concurrency.md) — Concurrency patterns, long-running PHP, connection pooling
+- [php84-features.md](references/php84-features.md) — PHP 8.4 property hooks,
+  asymmetric visibility, array functions, #[\Deprecated]
+- [php83-features.md](references/php83-features.md) — PHP 8.3 typed constants,
+  json_validate, #[Override], randomizer
+- [type-system-oop.md](references/type-system-oop.md) — Type system reference,
+  OOP patterns, SPL, generators
+- [servers.md](references/servers.md) — FrankenPHP, Swoole, ReactPHP
+  architecture and configuration
+- [concurrency.md](references/concurrency.md) — Concurrency patterns,
+  long-running PHP, connection pooling

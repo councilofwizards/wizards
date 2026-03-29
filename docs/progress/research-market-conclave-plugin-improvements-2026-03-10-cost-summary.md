@@ -12,9 +12,9 @@ updated: "2026-03-10T15:00:00Z"
 
 ## Agents Spawned
 
-| Agent | Model | Role |
-|-------|-------|------|
-| market-researcher | sonnet | Architecture and ecosystem analysis |
+| Agent               | Model  | Role                                  |
+| ------------------- | ------ | ------------------------------------- |
+| market-researcher   | sonnet | Architecture and ecosystem analysis   |
 | customer-researcher | sonnet | User experience and thematic analysis |
 
 ## Session Notes

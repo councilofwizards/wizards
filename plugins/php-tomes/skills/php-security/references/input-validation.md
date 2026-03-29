@@ -21,8 +21,9 @@ $email = filter_var($input, FILTER_VALIDATE_EMAIL);
 // Follows RFC 5321/5322 — accepts IDN addresses
 ```
 
-> **Gotcha:** Accepts internationalized addresses (e.g., `user@xn--nxasmq6b.com`). Add an ASCII check if your mailer
-> doesn't support IDN.
+> **Gotcha:** Accepts internationalized addresses (e.g.,
+> `user@xn--nxasmq6b.com`). Add an ASCII check if your mailer doesn't support
+> IDN.
 
 ### FILTER_VALIDATE_INT
 
@@ -48,7 +49,8 @@ $url = filter_var($input, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED);
 // Validates structure only — does NOT check reachability or scheme safety
 ```
 
-> **Gotcha:** Accepts `javascript:` and `data:` URLs. Always validate the scheme separately for href attributes.
+> **Gotcha:** Accepts `javascript:` and `data:` URLs. Always validate the scheme
+> separately for href attributes.
 
 ### FILTER_VALIDATE_IP
 
@@ -95,7 +97,8 @@ match($value) { 'admin' => ... }         // strict comparison
 
 ### PHP 8.0 Change
 
-`0 == "foo"` changed from `true` (PHP 7) to `false` (PHP 8.0+). Audit all loose comparisons when migrating from PHP 7.
+`0 == "foo"` changed from `true` (PHP 7) to `false` (PHP 8.0+). Audit all loose
+comparisons when migrating from PHP 7.
 
 ---
 
@@ -286,7 +289,7 @@ function validateRedirectUrl(string $url, string $allowedHost): string
 ### Anti-Patterns
 
 | Anti-Pattern                  | Why It's Dangerous                                       |
-|-------------------------------|----------------------------------------------------------|
+| ----------------------------- | -------------------------------------------------------- |
 | `strip_tags()` on input       | Irreversibly changes data; doesn't prevent all XSS       |
 | `FILTER_SANITIZE_*`           | Silently modifies data — use `FILTER_VALIDATE_*` instead |
 | Validation in models          | Too late — errors become deep exceptions                 |

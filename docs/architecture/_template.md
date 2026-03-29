@@ -1,9 +1,9 @@
 ---
 title: ""
-status: "proposed"               # proposed | accepted | deprecated | superseded
-created: ""                      # YYYY-MM-DD
-updated: ""                      # YYYY-MM-DD
-superseded_by: ""                # ADR number, if applicable
+status: "proposed" # proposed | accepted | deprecated | superseded
+created: "" # YYYY-MM-DD
+updated: "" # YYYY-MM-DD
+superseded_by: "" # ADR number, if applicable
 ---
 
 # ADR-{NNN}: {Title}

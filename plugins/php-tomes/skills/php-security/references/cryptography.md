@@ -33,7 +33,8 @@ $hash = password_hash($password, PASSWORD_ARGON2ID, [
 $hash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
 ```
 
-> **Gotcha:** BCrypt truncates at 72 bytes. For longer passwords, pre-hash: `hash('sha256', $password, true)`.
+> **Gotcha:** BCrypt truncates at 72 bytes. For longer passwords, pre-hash:
+> `hash('sha256', $password, true)`.
 
 ### Verification
 
@@ -57,7 +58,7 @@ if (password_needs_rehash($storedHash, PASSWORD_ARGON2ID, [
 ### Tuning Parameters
 
 | Algorithm | Parameter   | Recommended   | Notes                       |
-|-----------|-------------|---------------|-----------------------------|
+| --------- | ----------- | ------------- | --------------------------- |
 | Argon2id  | memory_cost | 65536 (64 MB) | Tune to server RAM          |
 | Argon2id  | time_cost   | 4             | Tune to acceptable latency  |
 | Argon2id  | threads     | 2             | Match available cores       |
@@ -67,7 +68,8 @@ if (password_needs_rehash($storedHash, PASSWORD_ARGON2ID, [
 
 ## Symmetric Encryption (Secret-Key)
 
-Uses XSalsa20-Poly1305 via `sodium_crypto_secretbox`. Provides authenticated encryption (confidentiality + integrity).
+Uses XSalsa20-Poly1305 via `sodium_crypto_secretbox`. Provides authenticated
+encryption (confidentiality + integrity).
 
 ### Key Generation
 
@@ -107,13 +109,15 @@ function decrypt(string $encoded, string $key): string
 }
 ```
 
-> **Critical:** Generate a new random nonce for each encryption. Nonce reuse with the same key breaks confidentiality.
+> **Critical:** Generate a new random nonce for each encryption. Nonce reuse
+> with the same key breaks confidentiality.
 
 ---
 
 ## AEAD Encryption
 
-Authenticated Encryption with Associated Data — authenticates (but doesn't encrypt) additional context data.
+Authenticated Encryption with Associated Data — authenticates (but doesn't
+encrypt) additional context data.
 
 ### Key Generation
 
@@ -208,11 +212,13 @@ $key = sodium_crypto_pwhash(
 
 ## Envelope Encryption
 
-Encrypt data with a per-record DEK (Data Encryption Key), then encrypt the DEK with a KEK (Key Encryption Key). Makes
-key rotation cheap — re-encrypt only the DEK.
+Encrypt data with a per-record DEK (Data Encryption Key), then encrypt the DEK
+with a KEK (Key Encryption Key). Makes key rotation cheap — re-encrypt only the
+DEK.
 
-Pattern: generate DEK with `sodium_crypto_secretbox_keygen()`, encrypt data with DEK, encrypt DEK with KEK using
-`sodium_crypto_secretbox()`, store both ciphertexts. On decrypt, reverse the process. Always `sodium_memzero($dek)`
+Pattern: generate DEK with `sodium_crypto_secretbox_keygen()`, encrypt data with
+DEK, encrypt DEK with KEK using `sodium_crypto_secretbox()`, store both
+ciphertexts. On decrypt, reverse the process. Always `sodium_memzero($dek)`
 after use.
 
 ---
@@ -229,8 +235,9 @@ $expected === $provided;
 $expected == $provided;
 ```
 
-> **Gotcha:** `hash_equals()` returns false immediately if lengths differ. Ensure tokens are always the same length (
-> e.g., `bin2hex(random_bytes(32))` always produces 64 chars).
+> **Gotcha:** `hash_equals()` returns false immediately if lengths differ.
+> Ensure tokens are always the same length ( e.g., `bin2hex(random_bytes(32))`
+> always produces 64 chars).
 
 ---
 
@@ -269,7 +276,7 @@ sodium_memzero($key); // Clear from memory
 ### Key Management Rules
 
 | Rule                          | Reason                                                 |
-|-------------------------------|--------------------------------------------------------|
+| ----------------------------- | ------------------------------------------------------ |
 | Never hardcode keys           | Source code is in version control                      |
 | Separate keys per environment | Compromised staging key doesn't affect production      |
 | Rotate periodically           | Limits blast radius of key compromise                  |
@@ -281,7 +288,7 @@ sodium_memzero($key); // Clear from memory
 ## Anti-Patterns
 
 | Anti-Pattern                               | Risk                              | Correct Approach                            |
-|--------------------------------------------|-----------------------------------|---------------------------------------------|
+| ------------------------------------------ | --------------------------------- | ------------------------------------------- |
 | `openssl_encrypt()` without auth (AES-CBC) | Padding oracle attacks            | Use sodium or AES-GCM with tag verification |
 | ECB mode                                   | Leaks plaintext structure         | Use authenticated modes (XSalsa20-Poly1305) |
 | `rand()` / `mt_rand()` for tokens          | Predictable output                | `random_bytes()` / `random_int()`           |

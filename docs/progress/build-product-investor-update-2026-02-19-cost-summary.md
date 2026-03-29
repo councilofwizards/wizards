@@ -8,13 +8,13 @@ date: "2026-02-19"
 
 ## Agent Usage
 
-| Agent | Model | Role |
-|-------|-------|------|
-| team-lead | opus | Orchestration, roadmap updates, summary writing |
-| impl-architect | opus | Implementation plan with section-by-section sourcing |
-| backend-eng | sonnet | SKILL.md creation (738 lines) |
-| frontend-eng | sonnet | Validator modification (4 sed lines) |
-| quality-skeptic | opus | Pre-implementation + post-implementation review |
+| Agent           | Model  | Role                                                 |
+| --------------- | ------ | ---------------------------------------------------- |
+| team-lead       | opus   | Orchestration, roadmap updates, summary writing      |
+| impl-architect  | opus   | Implementation plan with section-by-section sourcing |
+| backend-eng     | sonnet | SKILL.md creation (738 lines)                        |
+| frontend-eng    | sonnet | Validator modification (4 sed lines)                 |
+| quality-skeptic | opus   | Pre-implementation + post-implementation review      |
 
 ## Artifacts Produced
 

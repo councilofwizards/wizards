@@ -32,7 +32,8 @@
 
 ### Unit: < 1ms, no I/O, run on file save
 
-Test: pure functions, value objects, domain logic, service classes (mocked deps), complex conditionals.
+Test: pure functions, value objects, domain logic, service classes (mocked
+deps), complex conditionals.
 
 Skip: getters/setters, framework infra, config, DB schema.
 
@@ -70,7 +71,7 @@ Naming: `{Subject}Test` class, `it_{behavior}` methods.
 ## Mocking Decision Guide
 
 | Boundary                     | Mock?  | Example                        |
-|------------------------------|--------|--------------------------------|
+| ---------------------------- | ------ | ------------------------------ |
 | Domain <-> external service  | Yes    | Mailer, payment, SMS           |
 | App <-> persistence          | Yes    | Repository interface           |
 | Cross-module                 | Yes    | Module A -> Module B           |
@@ -81,7 +82,7 @@ Naming: `{Subject}Test` class, `it_{behavior}` methods.
 ### Double Selection
 
 | Need                                   | Use                                  |
-|----------------------------------------|--------------------------------------|
+| -------------------------------------- | ------------------------------------ |
 | Return a value, don't care about calls | **Stub** (`createStub()`)            |
 | Verify method IS called                | **Mock** (`createMock()`)            |
 | Record calls, assert later             | **Spy** (hand-written)               |
@@ -147,7 +148,7 @@ final class SpyEventDispatcher implements EventDispatcherInterface
 ## Database Isolation
 
 | Strategy             | Speed  | Default?                    |
-|----------------------|--------|-----------------------------|
+| -------------------- | ------ | --------------------------- |
 | Transaction rollback | Fast   | Yes                         |
 | Schema recreation    | Slow   | Only if tests modify schema |
 | Separate test DB     | Medium | MySQL/Postgres integration  |
@@ -167,17 +168,19 @@ Laravel: `RefreshDatabase`, `DatabaseTransactions`, `LazilyRefreshDatabase`.
 
 ```json5
 {
-    "source": { "directories": ["src"] },
-    "mutators": { "@default": true },
-    "testFrameworkOptions": "--testsuite=unit",
-    "minMsi": 75, "minCoveredMsi": 85, "threads": "max"
+  source: { directories: ["src"] },
+  mutators: { "@default": true },
+  testFrameworkOptions: "--testsuite=unit",
+  minMsi: 75,
+  minCoveredMsi: 85,
+  threads: "max",
 }
 ```
 
 ### Key Mutators
 
 | Mutator                           | Catches                 |
-|-----------------------------------|-------------------------|
+| --------------------------------- | ----------------------- |
 | ConditionalBoundary (`>` -> `>=`) | Off-by-one              |
 | Logical (`&&` -> `\|\|`)          | Wrong conditionals      |
 | Return (returns null)             | Untested returns        |
@@ -187,7 +190,7 @@ Laravel: `RefreshDatabase`, `DatabaseTransactions`, `LazilyRefreshDatabase`.
 ### Thresholds
 
 | Maturity    | minMsi | minCoveredMsi |
-|-------------|--------|---------------|
+| ----------- | ------ | ------------- |
 | Greenfield  | 80%    | 90%           |
 | Established | 70%    | 80%           |
 | Legacy      | 50%    | 65%           |
@@ -197,10 +200,11 @@ Laravel: `RefreshDatabase`, `DatabaseTransactions`, `LazilyRefreshDatabase`.
 ## CI Pipeline
 
 ```yaml
-- run: vendor/bin/phpunit --testsuite=unit          # every push
-- run: vendor/bin/phpunit --testsuite=integration   # every PR
-- run: vendor/bin/infection --git-diff-filter=AM --git-diff-base=origin/${{ github.base_ref }} --threads=max  # PR
-- run: vendor/bin/phpunit --testsuite=feature       # merge to main
+- run: vendor/bin/phpunit --testsuite=unit # every push
+- run: vendor/bin/phpunit --testsuite=integration # every PR
+- run: vendor/bin/infection --git-diff-filter=AM --git-diff-base=origin/${{
+    github.base_ref }} --threads=max # PR
+- run: vendor/bin/phpunit --testsuite=feature # merge to main
 ```
 
 ---
@@ -208,7 +212,7 @@ Laravel: `RefreshDatabase`, `DatabaseTransactions`, `LazilyRefreshDatabase`.
 ## Test Smells
 
 | Smell                              | Fix                            |
-|------------------------------------|--------------------------------|
+| ---------------------------------- | ------------------------------ |
 | Unit test > 10ms                   | Remove I/O dependency          |
 | Order-dependent tests              | Use setUp() for fresh state    |
 | Mystery guest (invisible fixtures) | Set up data in the test        |

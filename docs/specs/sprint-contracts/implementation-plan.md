@@ -12,17 +12,22 @@ updated: "2026-03-27"
 
 ## Overview
 
-Add a pre-execution Sprint Contract negotiation step to the implementation pipeline. Before code is written, the Lead and Plan Skeptic negotiate and sign measurable acceptance criteria. The Quality Skeptic evaluates against these criteria as explicit pass/fail items. Five files touched: 1 new artifact template, 3 SKILL.md prompt modifications, 1 validator update. No new agents, no shared content changes.
+Add a pre-execution Sprint Contract negotiation step to the implementation
+pipeline. Before code is written, the Lead and Plan Skeptic negotiate and sign
+measurable acceptance criteria. The Quality Skeptic evaluates against these
+criteria as explicit pass/fail items. Five files touched: 1 new artifact
+template, 3 SKILL.md prompt modifications, 1 validator update. No new agents, no
+shared content changes.
 
 ## File Changes
 
-| Action | File Path | Description |
-|--------|-----------|-------------|
-| create | `docs/templates/artifacts/sprint-contract.md` | Sprint contract artifact template with YAML frontmatter |
-| modify | `plugins/conclave/skills/plan-implementation/SKILL.md` | Extend Setup step 2 (template reading) + insert Orchestration Flow step 3 (contract negotiation) + add frontmatter link instruction in step 8 |
-| modify | `plugins/conclave/skills/build-implementation/SKILL.md` | Insert Setup step 5 (contract reading) + add Spawn step 5 (contract injection) + extend Quality Skeptic prompt with SPRINT CONTRACT EVALUATION block |
-| modify | `plugins/conclave/skills/build-product/SKILL.md` | Extend Setup step 2 + add artifact detection row + update detection report format + insert Stage 1 step 3 (contract negotiation) + add Stage 2 step 2b (contract injection) + extend Quality Skeptic prompt |
-| modify | `scripts/validators/artifact-templates.sh` | Add `sprint-contract:sprint-contract` to `expected_templates` variable |
+| Action | File Path                                               | Description                                                                                                                                                                                                 |
+| ------ | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| create | `docs/templates/artifacts/sprint-contract.md`           | Sprint contract artifact template with YAML frontmatter                                                                                                                                                     |
+| modify | `plugins/conclave/skills/plan-implementation/SKILL.md`  | Extend Setup step 2 (template reading) + insert Orchestration Flow step 3 (contract negotiation) + add frontmatter link instruction in step 8                                                               |
+| modify | `plugins/conclave/skills/build-implementation/SKILL.md` | Insert Setup step 5 (contract reading) + add Spawn step 5 (contract injection) + extend Quality Skeptic prompt with SPRINT CONTRACT EVALUATION block                                                        |
+| modify | `plugins/conclave/skills/build-product/SKILL.md`        | Extend Setup step 2 + add artifact detection row + update detection report format + insert Stage 1 step 3 (contract negotiation) + add Stage 2 step 2b (contract injection) + extend Quality Skeptic prompt |
+| modify | `scripts/validators/artifact-templates.sh`              | Add `sprint-contract:sprint-contract` to `expected_templates` variable                                                                                                                                      |
 
 ---
 
@@ -42,7 +47,8 @@ Add a pre-execution Sprint Contract negotiation step to the implementation pipel
                                                             depends on all of the above for consistency
 ```
 
-Run `bash scripts/validate.sh` after steps 1 and 2 (F-series gates template + validator). Run after each subsequent file.
+Run `bash scripts/validate.sh` after steps 1 and 2 (F-series gates template +
+validator). Run after each subsequent file.
 
 ---
 
@@ -51,12 +57,12 @@ Run `bash scripts/validate.sh` after steps 1 and 2 (F-series gates template + va
 ### Sprint Contract Frontmatter Schema
 
 ```yaml
-type: "sprint-contract"        # required — checked by F1 validator
-feature: ""                    # feature name, filled at runtime
-status: "draft"                # draft | negotiating | signed
-signed-by: []                  # ["planning-lead", "plan-skeptic"] or ["implementation-coordinator", "quality-skeptic"]
-created: ""                    # ISO-8601
-updated: ""                    # ISO-8601
+type: "sprint-contract" # required — checked by F1 validator
+feature: "" # feature name, filled at runtime
+status: "draft" # draft | negotiating | signed
+signed-by: [] # ["planning-lead", "plan-skeptic"] or ["implementation-coordinator", "quality-skeptic"]
+created: "" # ISO-8601
+updated: "" # ISO-8601
 ```
 
 ### Artifact Detection Result (build-product only)
@@ -90,8 +96,8 @@ Contract Verdict: ALL PASS / FAILED ({N} of {total} criteria failed)
 ---
 type: "sprint-contract"
 feature: ""
-status: "draft"              # draft | negotiating | signed
-signed-by: []               # e.g. ["planning-lead", "plan-skeptic"]
+status: "draft" # draft | negotiating | signed
+signed-by: [] # e.g. ["planning-lead", "plan-skeptic"]
 created: ""
 updated: ""
 ---
@@ -121,8 +127,8 @@ updated: ""
 
 <!-- Both Lead and Skeptic must sign before the contract is considered binding. -->
 
-- **Planning Lead**: __________ (date: ______)
-- **Plan Skeptic**: __________ (date: ______)
+- **Planning Lead**: \***\*\_\_\*\*** (date: **\_\_**)
+- **Plan Skeptic**: \***\*\_\_\*\*** (date: **\_\_**)
 
 ## Amendment Log
 
@@ -131,7 +137,9 @@ updated: ""
 <!-- No amendments. -->
 ```
 
-**Validator impact**: After creating this file AND updating `artifact-templates.sh`, `bash scripts/validate.sh` must pass F1 with 5 templates checked.
+**Validator impact**: After creating this file AND updating
+`artifact-templates.sh`, `bash scripts/validate.sh` must pass F1 with 5
+templates checked.
 
 ---
 
@@ -156,9 +164,12 @@ implementation-plan:implementation-plan
 sprint-contract:sprint-contract"
 ```
 
-**One-line diff**: Add `sprint-contract:sprint-contract` as the 5th entry before the closing `"`.
+**One-line diff**: Add `sprint-contract:sprint-contract` as the 5th entry before
+the closing `"`.
 
-**Validator impact**: F1 now checks 5 templates. Pass requires `docs/templates/artifacts/sprint-contract.md` to exist with `type: "sprint-contract"`.
+**Validator impact**: F1 now checks 5 templates. Pass requires
+`docs/templates/artifacts/sprint-contract.md` to exist with
+`type: "sprint-contract"`.
 
 ---
 
@@ -169,11 +180,13 @@ Three insertion points. Current line references are stable textual anchors.
 ### Change 3a: Setup step 2 — Extend to read sprint contract template
 
 **Anchor** (current line 25):
+
 ```
 2. Read `docs/templates/artifacts/implementation-plan.md` — this is the output template your team must produce.
 ```
 
 **Replace with**:
+
 ```
 2. Read `docs/templates/artifacts/implementation-plan.md` — this is the output template your team must produce. Also read the sprint contract template using this lookup order:
    - First, check `.claude/conclave/templates/sprint-contract.md` (custom override)
@@ -183,13 +196,17 @@ Three insertion points. Current line references are stable textual anchors.
 
 ### Change 3b: Orchestration Flow — Insert Contract Negotiation as new step 3
 
-**Anchor** — the block between these two existing lines (currently lines 112 and 113):
+**Anchor** — the block between these two existing lines (currently lines 112 and
+113):
+
 ```
 2. impl-architect produces the implementation plan
 3. plan-skeptic reviews the plan against the spec (GATE — blocks finalization)
 ```
 
-**Replace with** (inserting new step 3, renumbering old 3→4, 4→5, 5→6, 6→7, 7→8, 8→9, 9→10):
+**Replace with** (inserting new step 3, renumbering old 3→4, 4→5, 5→6, 6→7, 7→8,
+8→9, 9→10):
+
 ```
 2. impl-architect produces the implementation plan
 3. **Contract Negotiation** (GATE — must complete before plan review):
@@ -208,9 +225,13 @@ Three insertion points. Current line references are stable textual anchors.
 10. **Team Lead only**: Write end-of-session summary to `docs/progress/{feature}-summary.md` using the format from `docs/progress/_template.md`
 ```
 
-**Note on step 4**: The old step 3 text (`plan-skeptic reviews the plan against the spec`) is extended to include contract reference. The new text replaces it entirely.
+**Note on step 4**: The old step 3 text
+(`plan-skeptic reviews the plan against the spec`) is extended to include
+contract reference. The new text replaces it entirely.
 
-**Note on step 8**: Old step 7 text ends with `conforming to the template at \`docs/templates/artifacts/implementation-plan.md\``. New step 8 extends that sentence to add the `sprint-contract:` frontmatter requirement.
+**Note on step 8**: Old step 7 text ends with
+`conforming to the template at \`docs/templates/artifacts/implementation-plan.md\``. New step 8 extends that sentence to add the `sprint-contract:`
+frontmatter requirement.
 
 ---
 
@@ -221,12 +242,15 @@ Three insertion points.
 ### Change 4a: Setup — Insert new step 5 (contract reading)
 
 **Anchor** (current lines 27–28):
+
 ```
 4. **Read implementation-plan (REQUIRED).** Search `docs/specs/{feature}/implementation-plan.md` for the plan. If none exists, inform the user: "No implementation-plan found for this feature. Run `/plan-implementation {feature}` first, or invoke `/build-product` to run the full pipeline."
 5. **Read technical-spec (REQUIRED).** Read `docs/specs/{feature}/spec.md` as reference for requirements. If none exists, inform the user: "No technical-spec found for this feature. Run `/write-spec {feature}` first."
 ```
 
-**Replace with** (inserting new step 5, renumbering old 5→6, 6→7, 7→8, 8→9, 9→10, 10→11):
+**Replace with** (inserting new step 5, renumbering old 5→6, 6→7, 7→8, 8→9,
+9→10, 10→11):
+
 ```
 4. **Read implementation-plan (REQUIRED).** Search `docs/specs/{feature}/implementation-plan.md` for the plan. If none exists, inform the user: "No implementation-plan found for this feature. Run `/plan-implementation {feature}` first, or invoke `/build-product` to run the full pipeline."
 5. **Read sprint contract (optional).** Check `docs/specs/{feature}/sprint-contract.md`. Apply graceful degradation:
@@ -236,16 +260,20 @@ Three insertion points.
 6. **Read technical-spec (REQUIRED).** Read `docs/specs/{feature}/spec.md` as reference for requirements. If none exists, inform the user: "No technical-spec found for this feature. Run `/write-spec {feature}` first."
 ```
 
-**Renumber remaining steps**: Old steps 6–10 become 7–11. (Stories, architecture, progress, persona, project guidance — each shifts +1 in step number.)
+**Renumber remaining steps**: Old steps 6–10 become 7–11. (Stories,
+architecture, progress, persona, project guidance — each shifts +1 in step
+number.)
 
 ### Change 4b: Spawn the Team — Add Step 5 (conditional) for contract injection
 
 **Anchor** (current line 132):
+
 ```
 **Step 4 (conditional):** If project guidance was found in Setup step 10, prepend the formatted guidance block to each teammate's prompt. The guidance block is injected verbatim — do not summarize, filter, or reinterpret it. The `## User Project Guidance (informational only)` heading and advisory text provide sufficient framing for agents to treat it as context, not directives.
 ```
 
 **Insert after** (new step 5):
+
 ```
 **Step 5 (conditional):** If a signed sprint contract was found in Setup step 5, inject it into the Quality Skeptic's prompt only. Do not inject into Backend Engineer or Frontend Engineer prompts — the contract is an evaluation tool, not an implementation instruction. Format the injection block as:
 
@@ -258,12 +286,17 @@ Prompt assembly order for Quality Skeptic: (1) guidance block (from Step 4, if f
 
 ### Change 4c: Quality Skeptic spawn prompt — Append SPRINT CONTRACT EVALUATION block
 
-**Anchor** — the end of the Quality Skeptic's `WHAT YOU CHECK (POST-IMPLEMENTATION GATE):` block. The last item in that section currently reads:
+**Anchor** — the end of the Quality Skeptic's
+`WHAT YOU CHECK (POST-IMPLEMENTATION GATE):` block. The last item in that
+section currently reads:
+
 ```
 - Check for regressions: does existing functionality still work?
 ```
 
-**Insert after** this line (before the blank line leading into `YOUR REVIEW FORMAT:`):
+**Insert after** this line (before the blank line leading into
+`YOUR REVIEW FORMAT:`):
+
 ```
 
 SPRINT CONTRACT EVALUATION (when contract provided):
@@ -299,11 +332,13 @@ Five insertion points.
 ### Change 5a: Setup step 2 — Extend to read sprint contract template
 
 **Anchor** (current line 25):
+
 ```
 2. Read `docs/templates/artifacts/implementation-plan.md` — output template for Stage 1.
 ```
 
 **Replace with**:
+
 ```
 2. Read `docs/templates/artifacts/implementation-plan.md` — output template for Stage 1. Also read the sprint contract template using this lookup order:
    - First, check `.claude/conclave/templates/sprint-contract.md` (custom override)
@@ -314,6 +349,7 @@ Five insertion points.
 ### Change 5b: Artifact Detection — Add sprint-contract row to table
 
 **Anchor** — the Detection Paths table (current lines 110–114):
+
 ```
 | Stage | Artifact Type | Expected Path | Possible Results |
 |---|---|---|---|
@@ -323,6 +359,7 @@ Five insertion points.
 ```
 
 **Replace with**:
+
 ```
 | Stage | Artifact Type | Expected Path | Possible Results |
 |---|---|---|---|
@@ -332,7 +369,9 @@ Five insertion points.
 | 3 (Quality) | quality report | Progress checkpoints with `team: "build-product"`, `phase: "review"` | COMPLETE / NOT_FOUND |
 ```
 
-**Detection logic** (insert as a new paragraph after the table, before the FOUND/COMPLETE bullet points):
+**Detection logic** (insert as a new paragraph after the table, before the
+FOUND/COMPLETE bullet points):
+
 ```
 Sprint-contract detection logic:
 - `SIGNED`: File exists, frontmatter `status: "signed"` — skip contract negotiation, use existing contract
@@ -343,6 +382,7 @@ Sprint-contract detection logic:
 ### Change 5c: Artifact Detection report format — Add sprint-contract line
 
 **Anchor** — the report format block (current lines 122–133):
+
 ```
 Artifact Detection for "{feature}":
   Prerequisites:
@@ -358,6 +398,7 @@ Skipping:          [stages with FOUND/COMPLETE artifacts]
 ```
 
 **Replace with**:
+
 ```
 Artifact Detection for "{feature}":
   Prerequisites:
@@ -376,6 +417,7 @@ Skipping:          [stages with FOUND/COMPLETE artifacts]
 ### Change 5d: Stage 1 Orchestration Flow — Insert Contract Negotiation as new step 3
 
 **Anchor** — Stage 1 steps (current lines 204–211):
+
 ```
 1. Share the technical spec, user stories, and ADRs with impl-architect and plan-skeptic
 2. Spawn impl-architect to produce the implementation plan
@@ -387,7 +429,9 @@ Skipping:          [stages with FOUND/COMPLETE artifacts]
 8. Report: `"Stage 1 (Planning) complete. Artifact: docs/specs/{feature}/implementation-plan.md"`
 ```
 
-**Replace with** (inserting new step 3 BEFORE plan-skeptic review, renumbering 3→4, 4→5, 5→6, 6→7, 7→8, 8→9):
+**Replace with** (inserting new step 3 BEFORE plan-skeptic review, renumbering
+3→4, 4→5, 5→6, 6→7, 7→8, 8→9):
+
 ```
 1. Share the technical spec, user stories, and ADRs with impl-architect and plan-skeptic
 2. Spawn impl-architect to produce the implementation plan
@@ -410,20 +454,26 @@ Skipping:          [stages with FOUND/COMPLETE artifacts]
 ### Change 5e: Stage 2 Build — Add step 2b for contract injection + edge case step 1 addendum
 
 **Stage 2 step 1 addendum** — After the current Stage 2 step 1:
+
 ```
 1. Share the implementation plan, technical spec, and user stories with backend-eng and frontend-eng
 ```
+
 **Replace with**:
+
 ```
 1. Share the implementation plan, technical spec, and user stories with backend-eng and frontend-eng.
    **Contract check**: If sprint-contract was NOT_FOUND or UNSIGNED from artifact detection (and Stage 1 was skipped), run contract negotiation now before any other Stage 2 steps: Lead proposes criteria from spec, quality-skeptic reviews and approves, write to `docs/specs/{feature}/sprint-contract.md` with `signed-by: ["implementation-coordinator", "quality-skeptic"]`.
 ```
 
 **Stage 2 step 2b** — After current Stage 2 step 2:
+
 ```
 2. Spawn backend-eng, frontend-eng, and quality-skeptic (if not already spawned)
 ```
+
 **Insert after**:
+
 ```
 2b. **Contract injection**: If a signed sprint contract exists (from Stage 1, a prior session, or just-negotiated in step 1), inject it into the Quality Skeptic's spawn prompt using the same format as build-implementation:
 
@@ -437,11 +487,13 @@ Skipping:          [stages with FOUND/COMPLETE artifacts]
 ### Change 5f: Quality Skeptic spawn prompt — Append SPRINT CONTRACT EVALUATION block
 
 **Anchor** — the last item in `WHAT YOU CHECK (POST-IMPLEMENTATION GATE):`:
+
 ```
 - Check for regressions: does existing functionality still work?
 ```
 
 **Insert after** this line (before `YOUR REVIEW FORMAT:`):
+
 ```
 
 SPRINT CONTRACT EVALUATION (when contract provided):
@@ -472,15 +524,15 @@ If NO sprint contract is provided, perform your standard review (current behavio
 
 ## Test Strategy
 
-| Test Type | Scope | Description |
-|-----------|-------|-------------|
-| validator | F-series | Run `bash scripts/validate.sh` after creating template + updating validator — must show 5 templates checked, all PASS |
-| validator | all-series | Run `bash scripts/validate.sh` after each SKILL.md edit — 12/12 checks must pass throughout |
-| structural | plan-implementation | Verify step numbering is coherent (no gaps, no duplicate numbers, 10 steps total in Orchestration Flow) |
-| structural | build-implementation | Verify setup step numbering is coherent (old 5-10 shifted to 6-11, total 11 steps) |
-| structural | build-product | Verify Stage 1 has 9 steps, Stage 2 has steps 1, 1-addendum, 2, 2b, 3-9, detection table has 4 rows |
-| content | Quality Skeptic prompts | Both build-implementation and build-product Quality Skeptic prompts contain identical SPRINT CONTRACT EVALUATION blocks |
-| content | setup step 2 | Both plan-implementation and build-product setup step 2 contain identical defensive reading contract for sprint contract template |
+| Test Type  | Scope                   | Description                                                                                                                       |
+| ---------- | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| validator  | F-series                | Run `bash scripts/validate.sh` after creating template + updating validator — must show 5 templates checked, all PASS             |
+| validator  | all-series              | Run `bash scripts/validate.sh` after each SKILL.md edit — 12/12 checks must pass throughout                                       |
+| structural | plan-implementation     | Verify step numbering is coherent (no gaps, no duplicate numbers, 10 steps total in Orchestration Flow)                           |
+| structural | build-implementation    | Verify setup step numbering is coherent (old 5-10 shifted to 6-11, total 11 steps)                                                |
+| structural | build-product           | Verify Stage 1 has 9 steps, Stage 2 has steps 1, 1-addendum, 2, 2b, 3-9, detection table has 4 rows                               |
+| content    | Quality Skeptic prompts | Both build-implementation and build-product Quality Skeptic prompts contain identical SPRINT CONTRACT EVALUATION blocks           |
+| content    | setup step 2            | Both plan-implementation and build-product setup step 2 contain identical defensive reading contract for sprint contract template |
 
 ### Execution Order
 
@@ -500,9 +552,18 @@ If NO sprint contract is provided, perform your standard review (current behavio
 
 ## Critical Constraints
 
-1. **Contract BEFORE plan review** — in both plan-implementation and build-product Stage 1, the contract negotiation step is step 3 (after plan production, before plan review). This is non-negotiable per the Skeptic review.
-2. **Quality Skeptic only** — Sprint contract is injected ONLY into the Quality Skeptic prompt, not backend-eng or frontend-eng.
-3. **No shared content changes** — `plugins/conclave/shared/` is untouched. No sync script run needed.
-4. **Graceful degradation** — All contract reading steps are optional. Features without contracts experience zero behavior change.
-5. **`--light` mode** — Contract negotiation is preserved in all three skills regardless of `--light` flag.
-6. **`signed-by` varies by context** — `["planning-lead", "plan-skeptic"]` in normal flow; `["implementation-coordinator", "quality-skeptic"]` in Stage 2 fallback. Both are valid.
+1. **Contract BEFORE plan review** — in both plan-implementation and
+   build-product Stage 1, the contract negotiation step is step 3 (after plan
+   production, before plan review). This is non-negotiable per the Skeptic
+   review.
+2. **Quality Skeptic only** — Sprint contract is injected ONLY into the Quality
+   Skeptic prompt, not backend-eng or frontend-eng.
+3. **No shared content changes** — `plugins/conclave/shared/` is untouched. No
+   sync script run needed.
+4. **Graceful degradation** — All contract reading steps are optional. Features
+   without contracts experience zero behavior change.
+5. **`--light` mode** — Contract negotiation is preserved in all three skills
+   regardless of `--light` flag.
+6. **`signed-by` varies by context** — `["planning-lead", "plan-skeptic"]` in
+   normal flow; `["implementation-coordinator", "quality-skeptic"]` in Stage 2
+   fallback. Both are valid.

@@ -2,14 +2,17 @@
 
 ## What This Is
 
-A Claude Code plugin marketplace (`wizards`) containing the `conclave` plugin — 23 skills that spawn coordinated AI
-agent teams for planning, building, and operating SaaS products.
+A Claude Code plugin marketplace (`wizards`) containing the `conclave` plugin —
+23 skills that spawn coordinated AI agent teams for planning, building, and
+operating SaaS products.
 
 ## Tech Stack
 
 - Shell scripts (bash) for validators and CI
-- Markdown (SKILL.md files) for skill definitions — Claude Code reads these as static markdown
-- YAML frontmatter for metadata in roadmap, spec, progress, and architecture files
+- Markdown (SKILL.md files) for skill definitions — Claude Code reads these as
+  static markdown
+- YAML frontmatter for metadata in roadmap, spec, progress, and architecture
+  files
 - No application runtime — this is a plugin/tooling project, not a web app
 
 ## Project Structure
@@ -81,26 +84,36 @@ wizards/
 
 ### Pipeline Skills
 
-Pipeline skills spawn their own Agent Teams directly and orchestrate agents through sequential stages:
+Pipeline skills spawn their own Agent Teams directly and orchestrate agents
+through sequential stages:
 
-- **plan-product**: 5 stages (research → ideation → roadmap → stories → spec), 9 agents + lead
-- **build-product**: 3 stages (planning → build → quality review), 6 agents + lead
+- **plan-product**: 5 stages (research → ideation → roadmap → stories → spec), 9
+  agents + lead
+- **build-product**: 3 stages (planning → build → quality review), 6 agents +
+  lead
 
-Both use frontmatter-based artifact detection to skip completed stages on re-invocation.
+Both use frontmatter-based artifact detection to skip completed stages on
+re-invocation.
 
 ### Artifact Contract System
 
-Skills produce and consume typed artifacts with YAML frontmatter. Templates at `docs/templates/artifacts/`:
+Skills produce and consume typed artifacts with YAML frontmatter. Templates at
+`docs/templates/artifacts/`:
 
-- `research-findings.md` — produced by research-market / plan-product, consumed by ideate-product
-- `product-ideas.md` — produced by ideate-product / plan-product, consumed by manage-roadmap
-- `user-stories.md` — produced by write-stories / plan-product, consumed by write-spec
-- `implementation-plan.md` — produced by plan-implementation / build-product, consumed by build-implementation
+- `research-findings.md` — produced by research-market / plan-product, consumed
+  by ideate-product
+- `product-ideas.md` — produced by ideate-product / plan-product, consumed by
+  manage-roadmap
+- `user-stories.md` — produced by write-stories / plan-product, consumed by
+  write-spec
+- `implementation-plan.md` — produced by plan-implementation / build-product,
+  consumed by build-implementation
 
 ## Skill Classification
 
-Skills are classified as engineering or non-engineering for shared content injection. Engineering skills receive both
-Universal Principles and Engineering Principles blocks. Non-engineering skills receive only the Universal Principles
+Skills are classified as engineering or non-engineering for shared content
+injection. Engineering skills receive both Universal Principles and Engineering
+Principles blocks. Non-engineering skills receive only the Universal Principles
 block. Single-agent skills are skipped entirely.
 
 | Classification         | Skills                                                                                                                                                                                                                         |
@@ -109,14 +122,16 @@ block. Single-agent skills are skipped entirely.
 | Non-engineering        | research-market, ideate-product, manage-roadmap, write-stories, plan-sales, plan-hiring, draft-investor-update                                                                                                                 |
 | Single-agent (skipped) | setup-project, wizard-guide                                                                                                                                                                                                    |
 
-**`write-stories`**: non-engineering — its agents produce story artifacts but do not write code.
-**`run-task`**: engineering — generic agents may implement code; engineering is the safe default.
-**Unknown skills**: default to engineering at sync/validation time with a `WARN` log. Add to the list in both
+**`write-stories`**: non-engineering — its agents produce story artifacts but do
+not write code. **`run-task`**: engineering — generic agents may implement code;
+engineering is the safe default. **Unknown skills**: default to engineering at
+sync/validation time with a `WARN` log. Add to the list in both
 `sync-shared-content.sh` and `skill-shared-content.sh`.
 
 ### Category Taxonomy
 
-Skills are also classified by domain category for discovery and taxonomy purposes:
+Skills are also classified by domain category for discovery and taxonomy
+purposes:
 
 | Category      | Skills                                                                                                                                                                                                                         |
 | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -125,16 +140,27 @@ Skills are also classified by domain category for discovery and taxonomy purpose
 | `business`    | plan-sales, plan-hiring, draft-investor-update                                                                                                                                                                                 |
 | `utility`     | setup-project, wizard-guide, tier1-test                                                                                                                                                                                        |
 
-Category-to-classification mapping: `engineering` → engineering (both principle blocks); `planning`, `business`, `utility` → non-engineering (universal principles only).
+Category-to-classification mapping: `engineering` → engineering (both principle
+blocks); `planning`, `business`, `utility` → non-engineering (universal
+principles only).
 
 ## Shared Content Architecture
 
-- **Authoritative source**: `plugins/conclave/shared/` owns Shared Principles and Communication Protocol
-- **Sync**: Run `bash scripts/sync-shared-content.sh` to push shared/ content to all multi-agent SKILL.md files
-- **Markers**: `<!-- BEGIN SHARED: universal-principles -->` / `<!-- END SHARED: universal-principles -->` (all multi-agent skills), `<!-- BEGIN SHARED: engineering-principles -->` / `<!-- END SHARED: engineering-principles -->` (engineering skills only), and `communication-protocol`
-- **Drift detection**: `scripts/validators/skill-shared-content.sh` (B1-B3 checks)
-- **Per-skill variation**: Skeptic name in Communication Protocol differs per skill (19 name pairs in normalizer)
-- **Exclusions**: Skills with `type: single-agent` are skipped by shared content checks and sync
+- **Authoritative source**: `plugins/conclave/shared/` owns Shared Principles
+  and Communication Protocol
+- **Sync**: Run `bash scripts/sync-shared-content.sh` to push shared/ content to
+  all multi-agent SKILL.md files
+- **Markers**: `<!-- BEGIN SHARED: universal-principles -->` /
+  `<!-- END SHARED: universal-principles -->` (all multi-agent skills),
+  `<!-- BEGIN SHARED: engineering-principles -->` /
+  `<!-- END SHARED: engineering-principles -->` (engineering skills only), and
+  `communication-protocol`
+- **Drift detection**: `scripts/validators/skill-shared-content.sh` (B1-B3
+  checks)
+- **Per-skill variation**: Skeptic name in Communication Protocol differs per
+  skill (19 name pairs in normalizer)
+- **Exclusions**: Skills with `type: single-agent` are skipped by shared content
+  checks and sync
 
 ## Validation
 
@@ -146,46 +172,58 @@ bash scripts/validate.sh
 
 Check categories:
 
-- **A-series** (skill-structure.sh): YAML frontmatter (incl. optional tier), required sections (2 paths:
-  single-agent, multi-agent), spawn definitions (Name + Model fields), shared content markers
-- **B-series** (skill-shared-content.sh): Shared principles/protocol drift, authoritative source verification (reads
-  from shared/)
-- **C-series** (roadmap-frontmatter.sh): Roadmap file frontmatter and filename conventions
+- **A-series** (skill-structure.sh): YAML frontmatter (incl. optional tier),
+  required sections (2 paths: single-agent, multi-agent), spawn definitions
+  (Name + Model fields), shared content markers
+- **B-series** (skill-shared-content.sh): Shared principles/protocol drift,
+  authoritative source verification (reads from shared/)
+- **C-series** (roadmap-frontmatter.sh): Roadmap file frontmatter and filename
+  conventions
 - **D-series** (spec-frontmatter.sh): Spec file frontmatter
 - **E-series** (progress-checkpoint.sh): Checkpoint file frontmatter
-- **F-series** (artifact-templates.sh): Artifact template existence and correct type fields
-- **G-series** (split-readiness.sh): Advisory gate — warns when business skill count reaches split threshold (ADR-005)
+- **F-series** (artifact-templates.sh): Artifact template existence and correct
+  type fields
+- **G-series** (split-readiness.sh): Advisory gate — warns when business skill
+  count reaches split threshold (ADR-005)
 
 ## Key ADRs
 
 - **ADR-001**: Roadmap file structure (one file per item, YAML frontmatter)
-- **ADR-002**: Content deduplication strategy (validated duplication with HTML markers)
+- **ADR-002**: Content deduplication strategy (validated duplication with HTML
+  markers)
 - **ADR-003**: Onboarding wizard single-agent pattern
-- **ADR-004**: Two-tier skill architecture (superseded — flattened to single tier)
-- **ADR-005**: Plugin split readiness gate (keep single plugin until business skills reach 7)
+- **ADR-004**: Two-tier skill architecture (superseded — flattened to single
+  tier)
+- **ADR-005**: Plugin split readiness gate (keep single plugin until business
+  skills reach 7)
 
 ## Development Guidelines
 
-- SKILL.md files are the product. Every edit to shared content must be made in `plugins/conclave/shared/` and synced via
+- SKILL.md files are the product. Every edit to shared content must be made in
+  `plugins/conclave/shared/` and synced via
   `bash scripts/sync-shared-content.sh`.
 - Run `bash scripts/validate.sh` before committing. All checks must pass.
-- Roadmap items use frontmatter with `status`, `priority`, `category`, `effort`, `impact`, `dependencies`.
-- Specs follow `docs/specs/_template.md`. Progress files follow `docs/progress/_template.md`. ADRs follow
-  `docs/architecture/_template.md`.
-- Business skills are larger than engineering skills due to output templates and domain-specific formats. This is
-  expected.
-- The Skeptic role is non-negotiable in every multi-agent skill. Never remove or weaken it.
+- Roadmap items use frontmatter with `status`, `priority`, `category`, `effort`,
+  `impact`, `dependencies`.
+- Specs follow `docs/specs/_template.md`. Progress files follow
+  `docs/progress/_template.md`. ADRs follow `docs/architecture/_template.md`.
+- Business skills are larger than engineering skills due to output templates and
+  domain-specific formats. This is expected.
+- The Skeptic role is non-negotiable in every multi-agent skill. Never remove or
+  weaken it.
 
 ### SCAFFOLD Comments
 
-SKILL.md files encode assumptions about model capabilities that may become stale as models improve. Document these
-assumptions with inline HTML comments using this format:
+SKILL.md files encode assumptions about model capabilities that may become stale
+as models improve. Document these assumptions with inline HTML comments using
+this format:
 
 ```
 <!-- SCAFFOLD: [what this scaffolding does] | ASSUMPTION: [model-capability assumption] | TEST REMOVAL: [condition for testing removal] -->
 ```
 
-All three fields are required. A comment missing any field is considered malformed.
+All three fields are required. A comment missing any field is considered
+malformed.
 
 Examples:
 
@@ -195,15 +233,23 @@ Examples:
 **Placement rules**:
 
 - Place directly above or on the same line as the construct it documents
-- NEVER place inside spawn prompt code blocks (verbatim content injected into agent context) — agents may misinterpret the comment as an instruction
-- SCAFFOLD comment content must NOT contain `##`-prefixed lines (would interfere with A-series section detection)
+- NEVER place inside spawn prompt code blocks (verbatim content injected into
+  agent context) — agents may misinterpret the comment as an instruction
+- SCAFFOLD comment content must NOT contain `##`-prefixed lines (would interfere
+  with A-series section detection)
 
-SCAFFOLD comments are documentation for skill maintainers, not end-user-visible. No validator enforces the convention — enforcement is by code review.
+SCAFFOLD comments are documentation for skill maintainers, not end-user-visible.
+No validator enforces the convention — enforcement is by code review.
 
 ## Current Roadmap Status
 
-- **P1**: All 4 items complete (bootstrap, write safety, state persistence, stack generalization)
-- **P2**: 7/8 complete. P2-07 (shared content extraction) done. P2-08 (plugin organization) remaining.
-- **P3**: 4/19 complete. 15 items not started across engineering, business, and documentation categories.
-- P2-02 (Skill Composability) is parked, superseded by ADR-004 (now also superseded).
-- **Architecture**: All skills use Agent Teams directly. 24 skills, 12/12 validators pass.
+- **P1**: All 4 items complete (bootstrap, write safety, state persistence,
+  stack generalization)
+- **P2**: 7/8 complete. P2-07 (shared content extraction) done. P2-08 (plugin
+  organization) remaining.
+- **P3**: 4/19 complete. 15 items not started across engineering, business, and
+  documentation categories.
+- P2-02 (Skill Composability) is parked, superseded by ADR-004 (now also
+  superseded).
+- **Architecture**: All skills use Agent Teams directly. 24 skills, 12/12
+  validators pass.

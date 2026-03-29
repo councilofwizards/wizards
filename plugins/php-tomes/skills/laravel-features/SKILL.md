@@ -1,12 +1,18 @@
 ---
 name: laravel-features
-description: "Use this skill when dispatching Laravel jobs, configuring queues or Horizon, writing event listeners, broadcasting with Reverb/Echo, writing feature tests with facade fakes, building Blade components, creating Livewire components with Alpine.js, or choosing ecosystem packages (Sanctum, Scout, Cashier, Pennant, Pulse). Covers job batching, factory patterns, wire:model, #[Computed], and package development."
+description:
+  "Use this skill when dispatching Laravel jobs, configuring queues or Horizon,
+  writing event listeners, broadcasting with Reverb/Echo, writing feature tests
+  with facade fakes, building Blade components, creating Livewire components
+  with Alpine.js, or choosing ecosystem packages (Sanctum, Scout, Cashier,
+  Pennant, Pulse). Covers job batching, factory patterns, wire:model,
+  #[Computed], and package development."
 ---
 
 # Laravel Features Skill
 
-Covers Laravel queues/events, testing, Blade templating, Livewire, and ecosystem packages.
-Target: Laravel 11.x, PHP 8.2+, Livewire 3.x.
+Covers Laravel queues/events, testing, Blade templating, Livewire, and ecosystem
+packages. Target: Laravel 11.x, PHP 8.2+, Livewire 3.x.
 
 ---
 
@@ -14,7 +20,8 @@ Target: Laravel 11.x, PHP 8.2+, Livewire 3.x.
 
 ### Job Design
 
-Implement `ShouldQueue` with four traits: `Dispatchable`, `InteractsWithQueue`, `Queueable`, `SerializesModels`.
+Implement `ShouldQueue` with four traits: `Dispatchable`, `InteractsWithQueue`,
+`Queueable`, `SerializesModels`.
 
 ```php
 final class ProcessOrder implements ShouldQueue
@@ -44,7 +51,8 @@ final class ProcessOrder implements ShouldQueue
 
 **Critical rules:**
 
-- Store IDs in constructors, not Eloquent models (avoids bloated payloads, stale data)
+- Store IDs in constructors, not Eloquent models (avoids bloated payloads, stale
+  data)
 - Make jobs idempotent — guard with state checks before performing actions
 - Use `->afterCommit()` when dispatching inside database transactions
 - Set `$timeout` < `retry_after` in queue config, or duplicate execution occurs
@@ -101,7 +109,8 @@ final class ProcessOrder implements ShouldQueue, ShouldBeUnique
 
 ### Horizon
 
-Redis-only queue dashboard and auto-balancing supervisor. Protect `/horizon` with a `viewHorizon` gate.
+Redis-only queue dashboard and auto-balancing supervisor. Protect `/horizon`
+with a `viewHorizon` gate.
 
 ```bash
 composer require laravel/horizon && php artisan horizon:install
@@ -138,19 +147,21 @@ final class ReserveInventory
 }
 ```
 
-**Laravel 11 auto-discovery:** Any listener with a typed `handle()` parameter in `app/Listeners` is auto-registered. No
-`$listen` array needed.
+**Laravel 11 auto-discovery:** Any listener with a typed `handle()` parameter in
+`app/Listeners` is auto-registered. No `$listen` array needed.
 
 ### Queued Listeners
 
-Implement `ShouldQueue` on the listener class. Add `$queue`, `$delay`, `$tries`, `$timeout` properties. Use
-`shouldQueue()` for conditional queueing.
+Implement `ShouldQueue` on the listener class. Add `$queue`, `$delay`, `$tries`,
+`$timeout` properties. Use `shouldQueue()` for conditional queueing.
 
 ### Model Observers
 
-Centralize model event handling. Register via `Order::observe(OrderObserver::class)`.
+Centralize model event handling. Register via
+`Order::observe(OrderObserver::class)`.
 
-> **Warning:** Observers do NOT fire on bulk operations (`Model::where()->delete()`).
+> **Warning:** Observers do NOT fire on bulk operations
+> (`Model::where()->delete()`).
 
 ### Testing Events
 
@@ -161,7 +172,8 @@ Event::assertDispatched(OrderPlaced::class, fn ($e) => $e->order->is($order));
 Event::assertNotDispatched(OrderCancelled::class);
 ```
 
-Scope fakes: `Event::fake([OrderPlaced::class])` — blanket fakes silence Eloquent model events.
+Scope fakes: `Event::fake([OrderPlaced::class])` — blanket fakes silence
+Eloquent model events.
 
 ---
 
@@ -178,7 +190,8 @@ final class OrderStatusUpdated implements ShouldBroadcast
 }
 ```
 
-Channel types: `Channel` (public), `PrivateChannel` (auth required), `PresenceChannel` (auth + member tracking).
+Channel types: `Channel` (public), `PrivateChannel` (auth required),
+`PresenceChannel` (auth + member tracking).
 
 ### Channel Authorization
 
@@ -191,14 +204,15 @@ Broadcast::channel('orders.{orderId}', fn (User $user, int $orderId): bool =>
 
 ### Reverb (Self-Hosted WebSocket)
 
-First-party WebSocket server. Uses Pusher wire protocol — switching between Reverb and Pusher requires only config
-changes.
+First-party WebSocket server. Uses Pusher wire protocol — switching between
+Reverb and Pusher requires only config changes.
 
 ### Echo Client
 
 ```javascript
-Echo.private(`orders.${orderId}`)
-    .listen('.order.updated', (e) => updateStatus(e.status));
+Echo.private(`orders.${orderId}`).listen(".order.updated", (e) =>
+  updateStatus(e.status),
+);
 ```
 
 ---
@@ -222,7 +236,7 @@ $this->assertDatabaseHas('posts', ['title' => 'Hello', 'user_id' => $user->id]);
 ### Key Response Assertions
 
 | Method                  | Status |
-|-------------------------|--------|
+| ----------------------- | ------ |
 | `assertOk()`            | 200    |
 | `assertCreated()`       | 201    |
 | `assertNoContent()`     | 204    |
@@ -231,15 +245,15 @@ $this->assertDatabaseHas('posts', ['title' => 'Hello', 'user_id' => $user->id]);
 | `assertUnauthorized()`  | 401    |
 | `assertUnprocessable()` | 422    |
 
-JSON: `assertJson()` (partial), `assertExactJson()` (exact), `assertJsonStructure()`, `assertJsonPath()`,
-`assertJsonValidationErrors()`.
+JSON: `assertJson()` (partial), `assertExactJson()` (exact),
+`assertJsonStructure()`, `assertJsonPath()`, `assertJsonValidationErrors()`.
 
 View: `assertViewIs()`, `assertViewHas()`, `assertSee()`, `assertSeeInOrder()`.
 
 ### Facade Fakes
 
 | Fake                   | Assert methods                                                     |
-|------------------------|--------------------------------------------------------------------|
+| ---------------------- | ------------------------------------------------------------------ |
 | `Bus::fake()`          | `assertDispatched`, `assertBatched`, `assertNotDispatched`         |
 | `Mail::fake()`         | `assertSent`, `assertQueued`, `assertSentCount`                    |
 | `Event::fake()`        | `assertDispatched`, `assertDispatchedTimes`, `assertNotDispatched` |
@@ -248,8 +262,9 @@ View: `assertViewIs()`, `assertViewHas()`, `assertSee()`, `assertSeeInOrder()`.
 | `Storage::fake()`      | `assertExists`, `assertMissing`                                    |
 | `Http::fake()`         | `assertSent`, URL pattern matching, sequences                      |
 
-**Warning:** `Event::fake()` without arguments silences ALL events including Eloquent model events. Use selective
-faking: `Event::fake([SpecificEvent::class])`.
+**Warning:** `Event::fake()` without arguments silences ALL events including
+Eloquent model events. Use selective faking:
+`Event::fake([SpecificEvent::class])`.
 
 ### Http::fake for Outbound Requests
 
@@ -285,7 +300,8 @@ User::factory()->count(3)->sequence(
 )->create();
 ```
 
-States, sequences, relationships (`has`, `for`, `hasAttached`), and callbacks (`afterCreating`).
+States, sequences, relationships (`has`, `for`, `hasAttached`), and callbacks
+(`afterCreating`).
 
 ### File Upload Testing
 
@@ -313,8 +329,8 @@ Every reusable UI piece should be a component, not an `@include`.
 </div>
 ```
 
-**Class-based components**: use when PHP logic is needed (data fetching, formatting, DI). Class in
-`app/View/Components/`.
+**Class-based components**: use when PHP logic is needed (data fetching,
+formatting, DI). Class in `app/View/Components/`.
 
 ### Props, Attributes, Slots
 
@@ -329,15 +345,19 @@ Every reusable UI piece should be a component, not an `@include`.
 
 ### Asset Injection
 
-`@push('scripts')` / `@stack('scripts')` — use `@once` to prevent duplicate script loading.
+`@push('scripts')` / `@stack('scripts')` — use `@once` to prevent duplicate
+script loading.
 
 ### Blade Security
 
 - `{{ }}` auto-escapes via `htmlspecialchars()` — always use for untrusted data
-- `{!! !!}` is raw output — only use with sanitized HTML (Markdown parser, HTMLPurifier output)
+- `{!! !!}` is raw output — only use with sanitized HTML (Markdown parser,
+  HTMLPurifier output)
 - `@js()` for safe JavaScript embedding — uses `JSON_HEX_*` flags
-- `{{ }}` does NOT prevent `javascript:` URIs — validate URL schemes before rendering in `href`/`src`
-- Never pass user input to `Blade::render()` first argument or `<x-dynamic-component :component="...">`
+- `{{ }}` does NOT prevent `javascript:` URIs — validate URL schemes before
+  rendering in `href`/`src`
+- Never pass user input to `Blade::render()` first argument or
+  `<x-dynamic-component :component="...">`
 
 ---
 
@@ -345,15 +365,16 @@ Every reusable UI piece should be a component, not an `@include`.
 
 ### Component Architecture
 
-PHP class + Blade view. Single root element required. Auto-discovered in `app/Livewire/`.
+PHP class + Blade view. Single root element required. Auto-discovered in
+`app/Livewire/`.
 
-**Lifecycle:** `boot()` → `mount()` → `render()` (initial); `boot()` → `hydrate()` → `updated{Prop}()` → `render()` →
-`dehydrate()` (updates).
+**Lifecycle:** `boot()` → `mount()` → `render()` (initial); `boot()` →
+`hydrate()` → `updated{Prop}()` → `render()` → `dehydrate()` (updates).
 
 ### Wire Directives
 
 | Directive                        | Purpose                       |
-|----------------------------------|-------------------------------|
+| -------------------------------- | ----------------------------- |
 | `wire:model`                     | Two-way bind on submit (lazy) |
 | `wire:model.live`                | Bind on every input           |
 | `wire:model.live.debounce.300ms` | Live with debounce            |
@@ -380,16 +401,18 @@ public function save(): void
 }
 ```
 
-**Form Objects**: extract state to a `Livewire\Form` class for reuse. Bind with `wire:model="form.title"`.
+**Form Objects**: extract state to a `Livewire\Form` class for reuse. Bind with
+`wire:model="form.title"`.
 
 ### Computed Properties
 
-`#[Computed]` — evaluated once per request, memoized. Access as `$this->posts` in Blade. Not serialized into snapshots.
+`#[Computed]` — evaluated once per request, memoized. Access as `$this->posts`
+in Blade. Not serialized into snapshots.
 
 ### Lazy Loading
 
-`#[Lazy]` skips initial server render, shows placeholder, loads via background request. Multiple lazy components load in
-parallel.
+`#[Lazy]` skips initial server render, shows placeholder, loads via background
+request. Multiple lazy components load in parallel.
 
 ### Performance Rules
 
@@ -404,7 +427,8 @@ parallel.
 
 Alpine ships with Livewire 3 — no separate install needed.
 
-**Rule:** Keep state in Alpine when server doesn't need it. Use Livewire when PHP must act.
+**Rule:** Keep state in Alpine when server doesn't need it. Use Livewire when
+PHP must act.
 
 ```blade
 {{-- Alpine for UI toggle, Livewire for persistence --}}
@@ -414,7 +438,8 @@ Alpine ships with Livewire 3 — no separate install needed.
 </div>
 ```
 
-`$wire` proxy: read/write properties, call actions (returns Promise), dispatch events.
+`$wire` proxy: read/write properties, call actions (returns Promise), dispatch
+events.
 
 ### Volt (Single-File Components)
 
@@ -432,15 +457,17 @@ $increment = action(fn () => $this->count++);
 
 ### wire:navigate (SPA Mode)
 
-Converts page navigation to fetch + DOM swap. Use `.hover` for prefetch. `#[Persist]` keeps components alive across
-navigations.
+Converts page navigation to fetch + DOM swap. Use `.hover` for prefetch.
+`#[Persist]` keeps components alive across navigations.
 
 ### Security
 
-- Snapshots are HMAC-signed — tampering causes `CorruptComponentPayloadException`
+- Snapshots are HMAC-signed — tampering causes
+  `CorruptComponentPayloadException`
 - Public properties are visible in snapshots — never store sensitive data
 - `#[Locked]` prevents browser mutation of a public property
-- Action arguments come from HTTP body — always validate and authorize inside actions
+- Action arguments come from HTTP body — always validate and authorize inside
+  actions
 
 ---
 
@@ -449,7 +476,7 @@ navigations.
 ### Decision Matrix
 
 | Package            | Use When                               | Avoid When                       |
-|--------------------|----------------------------------------|----------------------------------|
+| ------------------ | -------------------------------------- | -------------------------------- |
 | **Sanctum**        | SPA/mobile API auth                    | Need OAuth server (use Passport) |
 | **Passport**       | Full OAuth2 server                     | Only SPA auth (Sanctum simpler)  |
 | **Horizon**        | Redis queue monitoring                 | Non-Redis drivers                |
@@ -467,7 +494,8 @@ navigations.
 
 ### Building Laravel Packages
 
-Structure: `src/` (provider, facades, contracts), `config/`, `database/migrations/`, `resources/views/`.
+Structure: `src/` (provider, facades, contracts), `config/`,
+`database/migrations/`, `resources/views/`.
 
 **Key rules:**
 

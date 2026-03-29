@@ -12,12 +12,12 @@ status: "complete"
 
 ### Agent Configuration
 
-| Agent | Model | Role |
-|-------|-------|------|
-| Team Lead (product-owner) | opus | Orchestration, P2-08 update, summary |
-| researcher | opus | Roadmap assessment, P3-10 lessons, P3-14 readiness |
-| architect | opus | CI validation, P2 readiness, 14 roadmap stubs |
-| product-skeptic | opus | Review and approval |
+| Agent                     | Model | Role                                               |
+| ------------------------- | ----- | -------------------------------------------------- |
+| Team Lead (product-owner) | opus  | Orchestration, P2-08 update, summary               |
+| researcher                | opus  | Roadmap assessment, P3-10 lessons, P3-14 readiness |
+| architect                 | opus  | CI validation, P2 readiness, 14 roadmap stubs      |
+| product-skeptic           | opus  | Review and approval                                |
 
 ### Agent Count: 4 (1 lead + 3 spawned)
 

@@ -20,14 +20,15 @@
 ## PSR Standards Evolution
 
 | Standard   | Year | Status                               |
-|------------|------|--------------------------------------|
+| ---------- | ---- | ------------------------------------ |
 | PSR-1      | 2012 | Active — minimal baseline            |
 | PSR-2      | 2012 | Deprecated — replaced by PSR-12      |
 | PSR-12     | 2019 | Active — extended style for PHP 7+   |
 | PER-CS 2.0 | 2023 | Active — living standard for PHP 8.x |
 
-PER-CS 2.0 is the current recommendation. Laravel Pint defaults to PER-CS. Symfony tracks it.
-Do not mix PSR-12 and PER-CS rulesets in the same fixer config — some rules conflict.
+PER-CS 2.0 is the current recommendation. Laravel Pint defaults to PER-CS.
+Symfony tracks it. Do not mix PSR-12 and PER-CS rulesets in the same fixer
+config — some rules conflict.
 
 ## PSR-1 Baseline
 
@@ -137,7 +138,7 @@ $result = array_slice(
 ## Naming Convention Table
 
 | Construct                          | Convention         | Example                      |
-|------------------------------------|--------------------|------------------------------|
+| ---------------------------------- | ------------------ | ---------------------------- |
 | Classes, interfaces, traits, enums | `StudlyCaps`       | `UserRepository`, `HasRoles` |
 | Methods and functions              | `camelCase`        | `findByEmail()`              |
 | Variables and properties           | `camelCase`        | `$userId`, `$orderItems`     |
@@ -220,7 +221,7 @@ $orders = Order::query()
 ## Brace Placement
 
 | Construct         | Brace position |
-|-------------------|----------------|
+| ----------------- | -------------- |
 | Class             | Own line       |
 | Method            | Own line       |
 | Control structure | Same line      |
@@ -270,11 +271,11 @@ return (new PhpCsFixer\Config())
 
 ```json
 {
-    "preset": "per",
-    "rules": {
-        "declare_strict_types": true,
-        "ordered_imports": { "sort_algorithm": "alpha" }
-    }
+  "preset": "per",
+  "rules": {
+    "declare_strict_types": true,
+    "ordered_imports": { "sort_algorithm": "alpha" }
+  }
 }
 ```
 
@@ -305,11 +306,13 @@ insert_final_newline = true
 
 ## CI Integration
 
-Run style checks on every PR. Do not auto-fix in CI — fail the build and require local fixes.
+Run style checks on every PR. Do not auto-fix in CI — fail the build and require
+local fixes.
 
 ```yaml
 - name: Check code style
   run: vendor/bin/php-cs-fixer fix --dry-run --diff
 ```
 
-Auto-fixing on CI can cause divergence between the branch and remote if the fix is committed back.
+Auto-fixing on CI can cause divergence between the branch and remote if the fix
+is committed back.

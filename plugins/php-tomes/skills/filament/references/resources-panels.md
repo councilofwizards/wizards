@@ -13,7 +13,7 @@
 ## Panel Provider Config
 
 | Method                           | Default              | Description                    |
-|----------------------------------|----------------------|--------------------------------|
+| -------------------------------- | -------------------- | ------------------------------ |
 | `id(string)`                     | required             | Unique panel identifier        |
 | `path(string)`                   | `''`                 | URL prefix                     |
 | `default()`                      | false                | Mark as default panel          |
@@ -51,7 +51,7 @@
 ## Resource Properties
 
 | Property / Method                      | Purpose                                           |
-|----------------------------------------|---------------------------------------------------|
+| -------------------------------------- | ------------------------------------------------- |
 | `$model`                               | Eloquent model class string                       |
 | `$navigationIcon`                      | Heroicons name for nav item                       |
 | `$navigationGroup`                     | Groups nav items under a heading                  |
@@ -75,7 +75,7 @@
 Filament auto-checks these policy methods:
 
 | Policy method    | Filament action                                |
-|------------------|------------------------------------------------|
+| ---------------- | ---------------------------------------------- |
 | `viewAny`        | Seeing resource in nav and listing records     |
 | `view`           | Viewing a record detail page                   |
 | `create`         | Accessing create page and saving               |
@@ -87,7 +87,8 @@ Filament auto-checks these policy methods:
 | `forceDelete`    | Permanently deleting soft-deleted records      |
 | `forceDeleteAny` | Bulk permanently deleting soft-deleted records |
 
-No policy = all allowed. Use `$panel->authorizationPolicy(AuthorizationPolicy::Strict)` to flip to deny-all.
+No policy = all allowed. Use
+`$panel->authorizationPolicy(AuthorizationPolicy::Strict)` to flip to deny-all.
 
 ## Global Search
 
@@ -166,7 +167,7 @@ $panel->userMenuItems([
 ## Artisan Commands
 
 | Command                                                                | Description                          |
-|------------------------------------------------------------------------|--------------------------------------|
+| ---------------------------------------------------------------------- | ------------------------------------ |
 | `make:filament-resource {Model}`                                       | Generate resource + pages            |
 | `make:filament-resource {Model} --generate`                            | Auto-scaffold form/table from DB     |
 | `make:filament-resource {Model} --simple`                              | Modal editing, no view page          |

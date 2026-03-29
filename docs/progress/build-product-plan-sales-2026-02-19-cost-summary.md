@@ -12,13 +12,13 @@ status: "complete"
 
 ### Agent Configuration
 
-| Agent | Model | Role |
-|-------|-------|------|
-| Team Lead (tech-lead) | opus | Orchestration, validator fixes, post-impl review |
-| impl-architect | opus | Implementation plan |
-| backend-eng | sonnet | Write SKILL.md |
-| frontend-eng | sonnet | Modify validator |
-| quality-skeptic | opus | Pre-implementation gate review |
+| Agent                 | Model  | Role                                             |
+| --------------------- | ------ | ------------------------------------------------ |
+| Team Lead (tech-lead) | opus   | Orchestration, validator fixes, post-impl review |
+| impl-architect        | opus   | Implementation plan                              |
+| backend-eng           | sonnet | Write SKILL.md                                   |
+| frontend-eng          | sonnet | Modify validator                                 |
+| quality-skeptic       | opus   | Pre-implementation gate review                   |
 
 ### Agent Count: 5 (1 lead + 4 spawned)
 
@@ -31,9 +31,11 @@ status: "complete"
 
 - Section-by-section implementation plan for 1182-line SKILL.md
 - Pre-implementation gate review (approved)
-- SKILL.md creation (Collaborative Analysis skill with 5 phases, 5 agent roles, dual-skeptic gate)
+- SKILL.md creation (Collaborative Analysis skill with 5 phases, 5 agent roles,
+  dual-skeptic gate)
 - Validator modification (strategy-skeptic normalization)
-- 3 pre-existing validator bugfixes (flaky skill-structure.sh, roadmap effort casing, progress-checkpoint teams enum)
+- 3 pre-existing validator bugfixes (flaky skill-structure.sh, roadmap effort
+  casing, progress-checkpoint teams enum)
 - Post-implementation review with all 14 success criteria verified
 - Roadmap status update
 

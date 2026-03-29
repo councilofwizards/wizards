@@ -1,13 +1,19 @@
 ---
 name: php-performance
-description: "Use this skill when tuning OPcache/JIT, fixing N+1 queries, managing memory, configuring Composer, building CI/CD pipelines, writing Dockerfiles for PHP, deploying with zero downtime, or setting up logging, metrics, and tracing. Covers PHP-FPM tuning, preloading, read replicas, Prometheus, OpenTelemetry, health checks, and Kubernetes probes."
+description:
+  "Use this skill when tuning OPcache/JIT, fixing N+1 queries, managing memory,
+  configuring Composer, building CI/CD pipelines, writing Dockerfiles for PHP,
+  deploying with zero downtime, or setting up logging, metrics, and tracing.
+  Covers PHP-FPM tuning, preloading, read replicas, Prometheus, OpenTelemetry,
+  health checks, and Kubernetes probes."
 ---
 
 # PHP Performance, Dependencies, Deployment & Observability
 
 ## OPcache Configuration
 
-OPcache stores compiled bytecode in shared memory, eliminating parse/compile per request. Typical 3-10x throughput gain.
+OPcache stores compiled bytecode in shared memory, eliminating parse/compile per
+request. Typical 3-10x throughput gain.
 
 ```ini
 ; Production OPcache config
@@ -32,7 +38,8 @@ assert($freeMemory > 0.10 * $totalMemory, 'OPcache memory >90% full');
 
 ### Preloading (PHP 7.4+)
 
-Compile framework files once at FPM start. Laravel: run `php artisan optimize` during container builds.
+Compile framework files once at FPM start. Laravel: run `php artisan optimize`
+during container builds.
 
 ```ini
 opcache.preload=/var/www/html/bootstrap/preload.php
@@ -41,16 +48,16 @@ opcache.preload_user=www-data
 
 ### JIT
 
-JIT compiles hot opcodes to native machine code. Helps CPU-bound workloads (+20-50%), negligible for I/O-bound web
-apps (+0-5%).
+JIT compiles hot opcodes to native machine code. Helps CPU-bound workloads
+(+20-50%), negligible for I/O-bound web apps (+0-5%).
 
 ```ini
 opcache.jit_buffer_size=64M
 opcache.jit=1255                    ; Tracing JIT — recommended default
 ```
 
-Enable JIT only after benchmarking your specific workload. For typical Laravel HTTP requests, JIT overhead may exceed
-its benefit.
+Enable JIT only after benchmarking your specific workload. For typical Laravel
+HTTP requests, JIT overhead may exceed its benefit.
 
 ## Database Optimization
 
@@ -74,8 +81,8 @@ foreach ($orders as $order) {
 
 ### Indexing Strategy
 
-Follow the **leftmost prefix rule** for composite indexes: `(a, b, c)` supports `(a)`, `(a, b)`, `(a, b, c)` but not
-`(b)` alone.
+Follow the **leftmost prefix rule** for composite indexes: `(a, b, c)` supports
+`(a)`, `(a, b)`, `(a, b, c)` but not `(b)` alone.
 
 ```sql
 -- Correct composite index for filter + sort
@@ -83,8 +90,8 @@ CREATE INDEX idx_orders_user_status_date
     ON orders (user_id, status, created_at DESC);
 ```
 
-Use `EXPLAIN` / `EXPLAIN ANALYZE` to verify index usage. Watch for `type=ALL` (full table scan) and `key=NULL` (no
-index).
+Use `EXPLAIN` / `EXPLAIN ANALYZE` to verify index usage. Watch for `type=ALL`
+(full table scan) and `key=NULL` (no index).
 
 ### Query Caching
 
@@ -95,7 +102,8 @@ $topProducts = Cache::remember('products:top10', 300, function () {
 });
 ```
 
-Never cache user-specific data under shared keys. Always include user/tenant ID in the cache key.
+Never cache user-specific data under shared keys. Always include user/tenant ID
+in the cache key.
 
 ### Read Replicas
 
@@ -123,7 +131,8 @@ User::orderBy('id')->chunkById(1000, function ($chunk) {
 // Peak memory: ~100KB (1 chunk)
 ```
 
-Prefer `chunkById()` over `chunk()` for tables over ~100K rows — it uses `WHERE id > last_seen_id` instead of OFFSET.
+Prefer `chunkById()` over `chunk()` for tables over ~100K rows — it uses
+`WHERE id > last_seen_id` instead of OFFSET.
 
 ### WeakMap for Object Caches (PHP 8.0+)
 
@@ -170,7 +179,8 @@ composer install \
   --prefer-dist
 ```
 
-`--classmap-authoritative` eliminates `file_exists` calls during autoloading — 30-40% faster class resolution.
+`--classmap-authoritative` eliminates `file_exists` calls during autoloading —
+30-40% faster class resolution.
 
 ### Version Constraints
 
@@ -185,14 +195,15 @@ composer install \
 "vendor/package": "1.2.3"
 ```
 
-The lock file provides reproducibility. Caret constraints in `composer.json` allow safe updates.
+The lock file provides reproducibility. Caret constraints in `composer.json`
+allow safe updates.
 
 ### Platform Requirements
 
 ```json
 {
-    "require": { "php": "^8.2", "ext-pdo": "*", "ext-redis": "*" },
-    "config": { "platform": { "php": "8.2.0" } }
+  "require": { "php": "^8.2", "ext-pdo": "*", "ext-redis": "*" },
+  "config": { "platform": { "php": "8.2.0" } }
 }
 ```
 
@@ -213,7 +224,8 @@ Automate with Dependabot or Renovate Bot.
 lint → static-analysis → test → build → deploy
 ```
 
-Fail fast: a style error in 10 seconds is cheaper than one caught after a 3-minute test suite.
+Fail fast: a style error in 10 seconds is cheaper than one caught after a
+3-minute test suite.
 
 ### GitHub Actions PHP Pipeline
 
@@ -244,8 +256,8 @@ jobs:
 
 ### Caching
 
-Cache `~/.composer/cache` keyed on `composer.lock` hash. Avoid caching `vendor/` directly — state depends on PHP
-version.
+Cache `~/.composer/cache` keyed on `composer.lock` hash. Avoid caching `vendor/`
+directly — state depends on PHP version.
 
 ### Pipeline Security
 
@@ -281,7 +293,8 @@ pm.max_spare_servers = 5
 pm.max_requests = 500               ; Recycle workers to prevent memory leaks
 ```
 
-A typical Laravel worker uses 30-60 MB. For a 512 MB container: `floor(512 / 40) = 12`, leave headroom.
+A typical Laravel worker uses 30-60 MB. For a 512 MB container:
+`floor(512 / 40) = 12`, leave headroom.
 
 ### Image Best Practices
 
@@ -295,7 +308,7 @@ A typical Laravel worker uses 30-60 MB. For a 512 MB container: `floor(512 / 40)
 ### Strategies
 
 | Strategy   | Rollback Speed | Complexity |
-|------------|----------------|------------|
+| ---------- | -------------- | ---------- |
 | Blue-green | Seconds        | Medium     |
 | Rolling    | Minutes        | Low        |
 | Canary     | Seconds        | High       |
@@ -315,7 +328,8 @@ Schema::table('users', fn ($t) => $t->string('display_name')->nullable());
 // Phase 4 — Drop old column after all old code is gone
 ```
 
-Run migrations **before** deploying new application code. Never run `migrate:fresh` in production.
+Run migrations **before** deploying new application code. Never run
+`migrate:fresh` in production.
 
 ### Deployer (Atomic Symlink)
 
@@ -340,11 +354,13 @@ $logger->info('order.placed', [
 ]);
 ```
 
-Use dot-namespaced event names. Include IDs, not full objects. Never log passwords/tokens/PII.
+Use dot-namespaced event names. Include IDs, not full objects. Never log
+passwords/tokens/PII.
 
 ### Correlation IDs
 
-Generate a UUID at the request boundary. Propagate it through every log line, queue job, and outbound HTTP call.
+Generate a UUID at the request boundary. Propagate it through every log line,
+queue job, and outbound HTTP call.
 
 ```php
 // Middleware: extract or generate correlation ID
@@ -363,15 +379,15 @@ $response->headers->set('X-Correlation-Id', $id);
 
 ### Container Logging
 
-Always write to `stdout`/`stderr` in containers. Let Fluent Bit/Fluentd/Promtail collect logs. Never write to files in
-containers — unbounded disk usage.
+Always write to `stdout`/`stderr` in containers. Let Fluent Bit/Fluentd/Promtail
+collect logs. Never write to files in containers — unbounded disk usage.
 
 ## Metrics Collection
 
 ### RED Method (Request-Driven Services)
 
 | Signal   | Metric                            | Type      |
-|----------|-----------------------------------|-----------|
+| -------- | --------------------------------- | --------- |
 | Rate     | `http_requests_total`             | Counter   |
 | Errors   | `http_requests_total{status=5xx}` | Counter   |
 | Duration | `http_request_duration_seconds`   | Histogram |
@@ -387,7 +403,8 @@ $duration = (hrtime(true) - $start) / 1e9;
 $metrics->recordRequest($request->method(), $route, $response->getStatusCode(), $duration);
 ```
 
-Protect the `/metrics` endpoint — never expose it publicly. Use IP allowlist or auth.
+Protect the `/metrics` endpoint — never expose it publicly. Use IP allowlist or
+auth.
 
 ### Label Design
 
@@ -424,12 +441,14 @@ try {
 }
 ```
 
-Name spans after the operation (`order.place`), not the implementation (`OrderService::place`). Use W3C TraceContext (
-`traceparent` header) for cross-service propagation.
+Name spans after the operation (`order.place`), not the implementation
+(`OrderService::place`). Use W3C TraceContext ( `traceparent` header) for
+cross-service propagation.
 
 ### Sampling
 
-`AlwaysOnSampler` for low-traffic. `TraceIdRatioBasedSampler(0.1)` for 10% sampling on high-traffic services.
+`AlwaysOnSampler` for low-traffic. `TraceIdRatioBasedSampler(0.1)` for 10%
+sampling on high-traffic services.
 
 ## Health Checks
 
@@ -446,8 +465,10 @@ Route::get('/health/ready', fn (HealthCheckService $h) =>
 );
 ```
 
-- **Liveness**: Is the process alive? Failure restarts the container. Check only internal state.
-- **Readiness**: Can it serve traffic? Failure removes from load balancer. Check DB, Redis, etc.
+- **Liveness**: Is the process alive? Failure restarts the container. Check only
+  internal state.
+- **Readiness**: Can it serve traffic? Failure removes from load balancer. Check
+  DB, Redis, etc.
 
 Never put external dependency checks in liveness probes.
 

@@ -17,7 +17,7 @@
 ## Job Configuration Properties
 
 | Property                   | Type      | Description                                   |
-|----------------------------|-----------|-----------------------------------------------|
+| -------------------------- | --------- | --------------------------------------------- |
 | `$tries`                   | int       | Max retry attempts                            |
 | `$maxExceptions`           | int       | Max exceptions before marking failed          |
 | `$timeout`                 | int       | Seconds before job is killed (requires pcntl) |
@@ -27,7 +27,8 @@
 | `$connection`              | string    | Queue connection name                         |
 | `$deleteWhenMissingModels` | bool      | Skip instead of fail when model not found     |
 
-Methods: `backoff(): array`, `retryUntil(): DateTime`, `failed(Throwable)`, `uniqueId(): string`, `middleware(): array`.
+Methods: `backoff(): array`, `retryUntil(): DateTime`, `failed(Throwable)`,
+`uniqueId(): string`, `middleware(): array`.
 
 ## Dispatch Methods
 
@@ -65,7 +66,7 @@ Requires `job_batches` table. Jobs must `use Batchable`.
 ## Job Middleware
 
 | Middleware                            | Purpose                              |
-|---------------------------------------|--------------------------------------|
+| ------------------------------------- | ------------------------------------ |
 | `WithoutOverlapping($key)`            | Prevent concurrent runs per resource |
 | `RateLimited($limiterName)`           | Integrate with named RateLimiter     |
 | `ThrottlesExceptions($max, $minutes)` | Back off after N exceptions          |
@@ -124,8 +125,8 @@ final class OrderAuditSubscriber
 
 ## Model Events
 
-Lifecycle: `creating`, `created`, `updating`, `updated`, `saving`, `saved`, `deleting`, `deleted`, `restoring`,
-`restored`, `replicating`, `retrieved`.
+Lifecycle: `creating`, `created`, `updating`, `updated`, `saving`, `saved`,
+`deleting`, `deleted`, `restoring`, `restored`, `replicating`, `retrieved`.
 
 ```php
 // Observer
@@ -143,7 +144,7 @@ protected static function booted(): void
 ## Broadcasting Channels
 
 | Type     | Class                     | Auth Required               |
-|----------|---------------------------|-----------------------------|
+| -------- | ------------------------- | --------------------------- |
 | Public   | `Channel('name')`         | No                          |
 | Private  | `PrivateChannel('name')`  | Yes (return bool)           |
 | Presence | `PresenceChannel('name')` | Yes (return array or false) |
@@ -182,29 +183,30 @@ class Order extends Model
 
 ```javascript
 // Public
-Echo.channel('announcements').listen('EventName', (e) => {});
+Echo.channel("announcements").listen("EventName", (e) => {});
 
 // Private
-Echo.private(`orders.${id}`).listen('.custom.name', (e) => {});
+Echo.private(`orders.${id}`).listen(".custom.name", (e) => {});
 
 // Presence
 Echo.join(`chat.${id}`)
-    .here((members) => {})
-    .joining((m) => {})
-    .leaving((m) => {})
-    .listen('MessageSent', (e) => {});
+  .here((members) => {})
+  .joining((m) => {})
+  .leaving((m) => {})
+  .listen("MessageSent", (e) => {});
 
 // Notifications
-Echo.private(`App.Models.User.${userId}`)
-    .notification((n) => {});
+Echo.private(`App.Models.User.${userId}`).notification((n) => {});
 ```
 
 Note: leading dot (`.custom.name`) for custom `broadcastAs()` names.
 
 ## Anti-Patterns
 
-- **Dispatching inside DB transaction** without `->afterCommit()` — race condition
-- **Serializing Eloquent models** in job constructor — store IDs, load in `handle()`
+- **Dispatching inside DB transaction** without `->afterCommit()` — race
+  condition
+- **Serializing Eloquent models** in job constructor — store IDs, load in
+  `handle()`
 - **Non-idempotent jobs** — guard with state checks
 - **Oversized payloads** — SQS 256KB limit; pass references, not data
 - **Blanket `Event::fake()`** — silences model observers, corrupts test state

@@ -51,7 +51,7 @@ Catch `\Throwable` only at top-level handlers (global handler, middleware).
 ## SPL Exception Semantics
 
 | Class                      | When                                            |
-|----------------------------|-------------------------------------------------|
+| -------------------------- | ----------------------------------------------- |
 | `LogicException`           | Programmer error; invariant violated            |
 | `RuntimeException`         | External failure; I/O, network, filesystem      |
 | `InvalidArgumentException` | Wrong input type or value                       |
@@ -84,8 +84,9 @@ class InsufficientFundsException extends PaymentDeclinedException {}
 class CardExpiredException extends PaymentDeclinedException {}
 ```
 
-Rules: (1) one base per context, (2) extend RuntimeException for I/O / LogicException for programmer errors, (3)
-structured context in properties, (4) keep shallow (3 levels max).
+Rules: (1) one base per context, (2) extend RuntimeException for I/O /
+LogicException for programmer errors, (3) structured context in properties, (4)
+keep shallow (3 levels max).
 
 ## Exception Chaining
 
@@ -102,7 +103,7 @@ try {
 ## When to Throw vs Return
 
 | Scenario                     | Approach                           |
-|------------------------------|------------------------------------|
+| ---------------------------- | ---------------------------------- |
 | Programmer error             | `throw \InvalidArgumentException`  |
 | External system failure      | `throw \RuntimeException` subclass |
 | "Not found" (expected)       | Return `null` or empty collection  |
@@ -122,21 +123,23 @@ public function requireUser(int $id): User {
 
 ## Error-to-Exception Conversion
 
-Convert PHP errors to exceptions at bootstrap via `set_error_handler` throwing `\ErrorException`. Use
-`register_shutdown_function` + `error_get_last()` for fatal errors (`E_ERROR`, `E_PARSE`, `E_CORE_ERROR`) which
-`set_error_handler` cannot intercept.
+Convert PHP errors to exceptions at bootstrap via `set_error_handler` throwing
+`\ErrorException`. Use `register_shutdown_function` + `error_get_last()` for
+fatal errors (`E_ERROR`, `E_PARSE`, `E_CORE_ERROR`) which `set_error_handler`
+cannot intercept.
 
-Register `set_exception_handler` at the application boundary to catch uncaught `\Throwable`, log with full context, and
-render an appropriate error response.
+Register `set_exception_handler` at the application boundary to catch uncaught
+`\Throwable`, log with full context, and render an appropriate error response.
 
 ## PSR-3 Logging
 
-Depend on `Psr\Log\LoggerInterface`, never concrete classes. Test with `NullLogger` or `TestLogger`.
+Depend on `Psr\Log\LoggerInterface`, never concrete classes. Test with
+`NullLogger` or `TestLogger`.
 
 ### RFC 5424 Levels
 
 | Level     | Numeric | When                                |
-|-----------|---------|-------------------------------------|
+| --------- | ------- | ----------------------------------- |
 | emergency | 0       | System unusable                     |
 | alert     | 1       | Immediate action needed             |
 | critical  | 2       | Component failure                   |
@@ -148,9 +151,10 @@ Depend on `Psr\Log\LoggerInterface`, never concrete classes. Test with `NullLogg
 
 ## Monolog Setup
 
-Use `JsonFormatter` for structured output. Key handlers: `RotatingFileHandler` (daily rotation), `StreamHandler` (stderr
-for containers), `FingersCrossedHandler` (buffer until error for context). Add `IntrospectionProcessor` and
-`WebProcessor` for auto-enrichment.
+Use `JsonFormatter` for structured output. Key handlers: `RotatingFileHandler`
+(daily rotation), `StreamHandler` (stderr for containers),
+`FingersCrossedHandler` (buffer until error for context). Add
+`IntrospectionProcessor` and `WebProcessor` for auto-enrichment.
 
 ## Structured Logging
 
@@ -166,15 +170,17 @@ $this->logger->info('Order placed', [
 
 ## Correlation IDs
 
-Implement as a Monolog `ProcessorInterface`. Accept `X-Correlation-ID` from upstream headers or generate via
-`bin2hex(random_bytes(16))`. Propagate to all outgoing HTTP calls.
+Implement as a Monolog `ProcessorInterface`. Accept `X-Correlation-ID` from
+upstream headers or generate via `bin2hex(random_bytes(16))`. Propagate to all
+outgoing HTTP calls.
 
 ## What to Log vs Never Log
 
-**Log:** Service entry/exit for critical ops, external system calls, exceptions, auth events, auth denials, config
-warnings.
+**Log:** Service entry/exit for critical ops, external system calls, exceptions,
+auth events, auth denials, config warnings.
 
-**Never log:** PII (GDPR violation), passwords, API keys, full request bodies (may contain payment data).
+**Never log:** PII (GDPR violation), passwords, API keys, full request bodies
+(may contain payment data).
 
 ```php
 // ❌ Bad
@@ -186,7 +192,8 @@ $this->logger->info('Login', ['user_id' => $user->id]);
 
 ## Circuit Breaker
 
-Three states: Closed (normal), Open (fail fast), Half-Open (probe). Store state in Redis for multi-worker PHP-FPM.
+Three states: Closed (normal), Open (fail fast), Half-Open (probe). Store state
+in Redis for multi-worker PHP-FPM.
 
 ```php
 $breaker = new CircuitBreaker(
@@ -212,7 +219,8 @@ $result = $retry->execute(
 );
 ```
 
-AWS Architecture Blog (2015): full jitter outperforms no-jitter and equal-jitter for load distribution.
+AWS Architecture Blog (2015): full jitter outperforms no-jitter and equal-jitter
+for load distribution.
 
 ## Timeouts
 
@@ -231,7 +239,8 @@ $redis->connect('127.0.0.1', 6379, timeout: 2.0);
 
 ## Fallback Strategies
 
-Hierarchy: (1) Live data -> (2) Hot cache -> (3) Stale cache -> (4) Static default -> (5) Graceful null.
+Hierarchy: (1) Live data -> (2) Hot cache -> (3) Stale cache -> (4) Static
+default -> (5) Graceful null.
 
 ```php
 public function getProduct(int $id): ?Product

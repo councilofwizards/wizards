@@ -14,4 +14,6 @@ updated: "2026-02-19"
 
 ## Problem
 
-Startups struggle to build systematic customer success processes, leading to reactive support, missed churn signals, and failure to capture expansion revenue opportunities.
+Startups struggle to build systematic customer success processes, leading to
+reactive support, missed churn signals, and failure to capture expansion revenue
+opportunities.

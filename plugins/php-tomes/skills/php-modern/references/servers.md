@@ -10,7 +10,7 @@
 ## Server Comparison
 
 | Feature             | PHP-FPM       | FrankenPHP        | Swoole              | ReactPHP         |
-|---------------------|---------------|-------------------|---------------------|------------------|
+| ------------------- | ------------- | ----------------- | ------------------- | ---------------- |
 | Extension required  | No            | No                | Yes (swoole)        | No               |
 | Process model       | Fork per req  | Worker pool       | Multi-process       | Single process   |
 | Concurrency         | 1 req/process | 1 req/worker      | N coroutines/worker | Event loop       |
@@ -23,7 +23,8 @@
 
 ## FrankenPHP
 
-PHP embedded in Go/Caddy binary. Two modes: classic (PHP-FPM drop-in) and worker (long-running, 3-10x throughput).
+PHP embedded in Go/Caddy binary. Two modes: classic (PHP-FPM drop-in) and worker
+(long-running, 3-10x throughput).
 
 ### Caddyfile: Worker Mode
 
@@ -49,7 +50,7 @@ example.com {
 ### Configuration Reference
 
 | Directive                    | Default      | Description                      |
-|------------------------------|--------------|----------------------------------|
+| ---------------------------- | ------------ | -------------------------------- |
 | `frankenphp { num_threads }` | 2x CPU cores | PHP threads per server           |
 | `worker { file path }`       | --           | Worker PHP script path           |
 | `worker { num N }`           | 2x CPU cores | Persistent worker count          |
@@ -110,7 +111,8 @@ php artisan octane:start --server=frankenphp --workers=8
 
 ## Swoole
 
-C extension providing async, coroutine-based runtime. Multi-process: master, manager, workers + task workers.
+C extension providing async, coroutine-based runtime. Multi-process: master,
+manager, workers + task workers.
 
 ### Server Setup
 
@@ -132,7 +134,7 @@ $server->set([
 ### Lifecycle Events
 
 | Event         | When                 | Use                           |
-|---------------|----------------------|-------------------------------|
+| ------------- | -------------------- | ----------------------------- |
 | `start`       | Master process start | Log PID                       |
 | `workerStart` | Each worker start    | Bootstrap app, load container |
 | `request`     | Each HTTP request    | Handle request in coroutine   |
@@ -221,7 +223,8 @@ CMD ["php", "server.php"]
 
 ## ReactPHP
 
-Pure PHP, event-driven, non-blocking I/O. No extensions required. Single-threaded, single-process.
+Pure PHP, event-driven, non-blocking I/O. No extensions required.
+Single-threaded, single-process.
 
 ### Event Loop
 
@@ -233,7 +236,8 @@ $loop->futureTick(fn() => echo "Next tick\n");
 $loop->run();
 ```
 
-Auto-detects best backend: `ExtEventLoop` > `ExtEvLoop` > `ExtUvLoop` > `StreamSelectLoop`.
+Auto-detects best backend: `ExtEventLoop` > `ExtEvLoop` > `ExtUvLoop` >
+`StreamSelectLoop`.
 
 ### HTTP Server
 
@@ -260,7 +264,7 @@ React\Promise\all([$browser->get($url1), $browser->get($url2)])
 ### Component Ecosystem
 
 | Package               | Purpose                   |
-|-----------------------|---------------------------|
+| --------------------- | ------------------------- |
 | `react/event-loop`    | Core event loop           |
 | `react/promise`       | Promise/A+ implementation |
 | `react/stream`        | Readable/writable streams |
@@ -269,7 +273,8 @@ React\Promise\all([$browser->get($url1), $browser->get($url2)])
 | `react/dns`           | Async DNS resolver        |
 | `react/child-process` | Async child processes     |
 
-> Any package making blocking I/O calls blocks the entire event loop. Use async-aware alternatives.
+> Any package making blocking I/O calls blocks the entire event loop. Use
+> async-aware alternatives.
 
 ### When to Choose ReactPHP
 

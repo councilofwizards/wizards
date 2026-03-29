@@ -1,21 +1,30 @@
 ---
 name: laravel-architecture
-description: "Use this skill when binding services in Laravel's container, writing service providers, choosing facades vs injected contracts, defining Eloquent models/relationships/scopes, preventing N+1 queries, designing routes and controllers, writing Form Requests, configuring middleware, or setting up authentication (Sanctum/Passport) and authorization (gates/policies). Covers mass assignment, query optimization, and security hardening."
+description:
+  "Use this skill when binding services in Laravel's container, writing service
+  providers, choosing facades vs injected contracts, defining Eloquent
+  models/relationships/scopes, preventing N+1 queries, designing routes and
+  controllers, writing Form Requests, configuring middleware, or setting up
+  authentication (Sanctum/Passport) and authorization (gates/policies). Covers
+  mass assignment, query optimization, and security hardening."
 ---
 
 # Laravel Architecture Skill
 
-Comprehensive guide for building well-architected Laravel 11.x applications covering the service container, Eloquent
-ORM, routing/controllers, and security (authentication + authorization).
+Comprehensive guide for building well-architected Laravel 11.x applications
+covering the service container, Eloquent ORM, routing/controllers, and security
+(authentication + authorization).
 
 ## References
 
-- [service-container.md](references/service-container.md) — IoC container, providers, facades, request lifecycle,
-  configuration
-- [eloquent.md](references/eloquent.md) — Models, relationships, query patterns, performance, architecture
-- [routing-controllers.md](references/routing-controllers.md) — Routes, controllers, middleware, Form Requests, API
-  Resources
-- [security.md](references/security.md) — Sanctum, Passport, gates, policies, security hardening
+- [service-container.md](references/service-container.md) — IoC container,
+  providers, facades, request lifecycle, configuration
+- [eloquent.md](references/eloquent.md) — Models, relationships, query patterns,
+  performance, architecture
+- [routing-controllers.md](references/routing-controllers.md) — Routes,
+  controllers, middleware, Form Requests, API Resources
+- [security.md](references/security.md) — Sanctum, Passport, gates, policies,
+  security hardening
 
 ---
 
@@ -24,19 +33,20 @@ ORM, routing/controllers, and security (authentication + authorization).
 ### Binding Types
 
 | Method                     | Lifecycle                     | When to use                            |
-|----------------------------|-------------------------------|----------------------------------------|
+| -------------------------- | ----------------------------- | -------------------------------------- |
 | `bind()`                   | New instance per resolution   | Stateful, request-scoped objects       |
 | `singleton()`              | One per container             | Stateless services, connections        |
 | `scoped()`                 | One per request (Octane-safe) | Request-stateful services under Octane |
 | `instance()`               | Pre-built object              | Externally constructed instances       |
 | `bindIf()`/`singletonIf()` | Conditional                   | Package providers (allow app override) |
 
-**Prefer `scoped()` over `singleton()` for request-stateful services when running Octane.**
+**Prefer `scoped()` over `singleton()` for request-stateful services when
+running Octane.**
 
 ### Auto-Wiring
 
-The container reads constructor type hints via reflection. No explicit binding needed for concrete classes with
-resolvable parameters:
+The container reads constructor type hints via reflection. No explicit binding
+needed for concrete classes with resolvable parameters:
 
 ```php
 final class OrderService
@@ -60,10 +70,12 @@ $this->app->when(ReportMailer::class)
 
 ### Anti-Patterns
 
-- **Service locator in domain code**: `app()` / `resolve()` outside ServiceProviders hides dependencies. Inject via
-  constructor.
-- **Binding concretes instead of interfaces**: Couples consumers to implementations.
-- **Resolving in `register()`**: Other providers may not exist yet. Defer resolution inside closures.
+- **Service locator in domain code**: `app()` / `resolve()` outside
+  ServiceProviders hides dependencies. Inject via constructor.
+- **Binding concretes instead of interfaces**: Couples consumers to
+  implementations.
+- **Resolving in `register()`**: Other providers may not exist yet. Defer
+  resolution inside closures.
 
 ---
 
@@ -77,13 +89,15 @@ boot() on ALL providers     → safe to resolve services, register listeners, ro
 ```
 
 - `register()`: container bindings, `mergeConfigFrom()` only.
-- `boot()`: event listeners, view composers, route registration, policy mappings, `extend()`.
-- **Never call `make()` inside `register()`** — bindings from other providers may not exist.
+- `boot()`: event listeners, view composers, route registration, policy
+  mappings, `extend()`.
+- **Never call `make()` inside `register()`** — bindings from other providers
+  may not exist.
 
 ### Deferred Providers
 
-Implement `DeferrableProvider` + `provides()` to load only when a binding is requested. Run `php artisan optimize:clear`
-after changes.
+Implement `DeferrableProvider` + `provides()` to load only when a binding is
+requested. Run `php artisan optimize:clear` after changes.
 
 ### Property Bindings
 
@@ -98,8 +112,9 @@ public array $singletons = [PaymentGateway::class => StripeGateway::class];
 
 Facades proxy static calls to container-resolved instances via `__callStatic`.
 
-**When to use facades**: Routes, controllers, Artisan commands where Laravel context is explicit.
-**When to inject contracts**: Domain/application layer, testable classes, framework-agnostic packages.
+**When to use facades**: Routes, controllers, Artisan commands where Laravel
+context is explicit. **When to inject contracts**: Domain/application layer,
+testable classes, framework-agnostic packages.
 
 ### Testing
 
@@ -109,14 +124,15 @@ Facades proxy static calls to container-resolved instances via `__callStatic`.
 
 ### Anti-Pattern
 
-Never use facades in domain classes. Inject the contract instead to keep domain code framework-independent.
+Never use facades in domain classes. Inject the contract instead to keep domain
+code framework-independent.
 
 ---
 
 ## Configuration & Environment
 
-**Critical Rule**: `env()` is only valid inside `config/*.php` files. Never call `env()` in application code — it
-returns `null` after `config:cache`.
+**Critical Rule**: `env()` is only valid inside `config/*.php` files. Never call
+`env()` in application code — it returns `null` after `config:cache`.
 
 ```php
 // WRONG
@@ -126,8 +142,8 @@ $key = env('STRIPE_SECRET');
 $key = config('services.stripe.secret');
 ```
 
-**Production**: Always run `php artisan config:cache` (10-30% bootstrap reduction). Cast booleans explicitly:
-`(bool) env('APP_DEBUG', false)`.
+**Production**: Always run `php artisan config:cache` (10-30% bootstrap
+reduction). Cast booleans explicitly: `(bool) env('APP_DEBUG', false)`.
 
 ---
 
@@ -135,13 +151,13 @@ $key = config('services.stripe.secret');
 
 ### Mass Assignment
 
-Always use `$fillable` (explicit allowlist). Never use `$guarded = []` in production. Always pass
-`$request->validated()`, never `$request->all()`.
+Always use `$fillable` (explicit allowlist). Never use `$guarded = []` in
+production. Always pass `$request->validated()`, never `$request->all()`.
 
 ### Type Casting
 
-Define `$casts` for all non-string columns: `'boolean'`, `'array'`, `'datetime'`, `'encrypted'`, enum classes, custom
-`CastsAttributes`.
+Define `$casts` for all non-string columns: `'boolean'`, `'array'`,
+`'datetime'`, `'encrypted'`, enum classes, custom `CastsAttributes`.
 
 ### Accessors/Mutators (PHP 8+)
 
@@ -156,8 +172,9 @@ protected function fullName(): Attribute
 
 ### Model Events
 
-Events (`creating`, `created`, `updating`, etc.) fire on single-model operations only. Bulk operations (
-`where()->delete()`) skip events. Use observers for cross-cutting concerns, not business logic.
+Events (`creating`, `created`, `updating`, etc.) fire on single-model operations
+only. Bulk operations ( `where()->delete()`) skip events. Use observers for
+cross-cutting concerns, not business logic.
 
 ---
 
@@ -166,7 +183,7 @@ Events (`creating`, `created`, `updating`, etc.) fire on single-model operations
 ### Quick Reference
 
 | Method                 | Returns          | FK location             |
-|------------------------|------------------|-------------------------|
+| ---------------------- | ---------------- | ----------------------- |
 | `hasOne`               | single model     | child table             |
 | `hasMany`              | Collection       | child table             |
 | `belongsTo`            | single model     | this table              |
@@ -206,15 +223,17 @@ Relation::morphMap(['post' => Post::class, 'user' => User::class]);
 
 ### Top 3 Issues
 
-1. **N+1 queries**: Enable `preventLazyLoading()`. Always `with()` relationships used in loops.
-2. **Hydration waste**: Use `count()`, `exists()`, `pluck()`, `value()` instead of hydrating full models for scalar
-   needs.
-3. **Memory on large datasets**: Use `chunkById()` (mutation-safe), `lazy()` (pipeline), or `cursor()` (minimum memory).
+1. **N+1 queries**: Enable `preventLazyLoading()`. Always `with()` relationships
+   used in loops.
+2. **Hydration waste**: Use `count()`, `exists()`, `pluck()`, `value()` instead
+   of hydrating full models for scalar needs.
+3. **Memory on large datasets**: Use `chunkById()` (mutation-safe), `lazy()`
+   (pipeline), or `cursor()` (minimum memory).
 
 ### Chunking Decision Table
 
 | Need                                       | Method        |
-|--------------------------------------------|---------------|
+| ------------------------------------------ | ------------- |
 | Bulk job dispatch, writes during iteration | `chunkById()` |
 | Read-only, stable order                    | `chunk()`     |
 | Pipeline/filter/map                        | `lazy()`      |
@@ -222,8 +241,9 @@ Relation::morphMap(['post' => Post::class, 'user' => User::class]);
 
 ### Query Builder vs Eloquent
 
-Use `DB::table()` for: bulk inserts (10k+ rows), complex reporting joins, cross-table analytics. Use Eloquent for: CRUD,
-relationships, model events/casts.
+Use `DB::table()` for: bulk inserts (10k+ rows), complex reporting joins,
+cross-table analytics. Use Eloquent for: CRUD, relationships, model
+events/casts.
 
 ---
 
@@ -231,8 +251,8 @@ relationships, model events/casts.
 
 ### Fat Model Anti-Pattern
 
-Signs: methods >15 lines, model imports Request, business rules mixed with persistence, notifications/jobs dispatched
-inside model.
+Signs: methods >15 lines, model imports Request, business rules mixed with
+persistence, notifications/jobs dispatched inside model.
 
 ### Action Classes (Preferred Pattern)
 
@@ -253,8 +273,8 @@ final class CompleteOrder
 }
 ```
 
-Models own data (relationships, casts, scopes). Actions own behavior. Repositories add value only when you need
-persistence abstraction.
+Models own data (relationships, casts, scopes). Actions own behavior.
+Repositories add value only when you need persistence abstraction.
 
 ---
 
@@ -262,10 +282,14 @@ persistence abstraction.
 
 ### Conventions
 
-- **Every route must have a name**: `->name('users.show')`. Use `route()` helper, never hardcode URLs.
-- **Use `Route::resource` / `apiResource`**: Generates all RESTful routes consistently.
-- **No closure routes in web/api**: Prevents `route:cache`. Use invokable controllers.
-- **Route model binding**: Implicit (`Order $order`), by column (`{post:slug}`), or explicit via `Route::bind()`.
+- **Every route must have a name**: `->name('users.show')`. Use `route()`
+  helper, never hardcode URLs.
+- **Use `Route::resource` / `apiResource`**: Generates all RESTful routes
+  consistently.
+- **No closure routes in web/api**: Prevents `route:cache`. Use invokable
+  controllers.
+- **Route model binding**: Implicit (`Order $order`), by column (`{post:slug}`),
+  or explicit via `Route::bind()`.
 
 ### Route Groups
 
@@ -283,21 +307,24 @@ Route::prefix('api/v1')->name('api.v1.')
 
 ### Thin Controller Principle
 
-Controllers do four things: (1) extract request data, (2) call service/action, (3) handle exceptions, (4) return
-response. Business logic belongs in services/actions.
+Controllers do four things: (1) extract request data, (2) call service/action,
+(3) handle exceptions, (4) return response. Business logic belongs in
+services/actions.
 
 ### Form Requests
 
-Encapsulate validation + authorization per request type. Always use `$request->validated()`, never `$request->all()`.
+Encapsulate validation + authorization per request type. Always use
+`$request->validated()`, never `$request->all()`.
 
 ### API Resources
 
-Transform models to JSON, decoupling DB schema from API contract. Use `whenLoaded()` for conditional relationships.
+Transform models to JSON, decoupling DB schema from API contract. Use
+`whenLoaded()` for conditional relationships.
 
 ### Invokable Controllers
 
-Single `__invoke()` method for non-resource actions (login, import, report generation). Required for cacheable non-CRUD
-routes.
+Single `__invoke()` method for non-resource actions (login, import, report
+generation). Required for cacheable non-CRUD routes.
 
 ---
 
@@ -321,8 +348,8 @@ Position of `$next($request)` determines timing. Response path unwinds LIFO.
 
 ### Terminable Middleware
 
-`terminate()` runs after response is sent. Use for metrics, log flushing, lock release. Never throw exceptions in
-`terminate()`.
+`terminate()` runs after response is sent. Use for metrics, log flushing, lock
+release. Never throw exceptions in `terminate()`.
 
 ### Anti-Pattern
 
@@ -334,9 +361,11 @@ Never put business logic in middleware. Use services or policies instead.
 
 ### Sanctum (Recommended for Most Apps)
 
-**SPA mode**: Cookie-based sessions + CSRF via double-submit cookie. SPA must call `GET /sanctum/csrf-cookie` first.
+**SPA mode**: Cookie-based sessions + CSRF via double-submit cookie. SPA must
+call `GET /sanctum/csrf-cookie` first.
 
-**Token mode**: Opaque tokens with abilities and expiration. Tokens hashed with SHA-256 before storage.
+**Token mode**: Opaque tokens with abilities and expiration. Tokens hashed with
+SHA-256 before storage.
 
 ```php
 $token = $user->createToken('mobile', ['read:posts'], now()->addYear());
@@ -344,13 +373,14 @@ $token = $user->createToken('mobile', ['read:posts'], now()->addYear());
 
 ### Passport (OAuth2 Server)
 
-Use only when issuing tokens to third-party applications. Authorization Code + PKCE for SPAs/mobile. Client Credentials
-for machine-to-machine. Avoid Password Grant (deprecated in OAuth 2.1).
+Use only when issuing tokens to third-party applications. Authorization Code +
+PKCE for SPAs/mobile. Client Credentials for machine-to-machine. Avoid Password
+Grant (deprecated in OAuth 2.1).
 
 ### Session vs Token Auth
 
 | Dimension    | Session (Cookie)           | Token (Bearer)       |
-|--------------|----------------------------|----------------------|
+| ------------ | -------------------------- | -------------------- |
 | CSRF         | Yes (mitigated by Sanctum) | No                   |
 | XSS          | Cookie HttpOnly (safe)     | localStorage exposed |
 | Revocation   | Immediate                  | Requires DB lookup   |
@@ -362,14 +392,16 @@ for machine-to-machine. Avoid Password Grant (deprecated in OAuth 2.1).
 
 ### Gates
 
-Closure-based checks for actions not tied to a model. Register in `AppServiceProvider::boot()`.
+Closure-based checks for actions not tied to a model. Register in
+`AppServiceProvider::boot()`.
 
 ```php
 Gate::define('publish-post', fn (User $user) => $user->role === 'editor');
 Gate::authorize('publish-post'); // throws 403 on failure
 ```
 
-`Gate::before()` for super-admin bypass — use narrowly, returns `true` bypasses ALL checks.
+`Gate::before()` for super-admin bypass — use narrowly, returns `true` bypasses
+ALL checks.
 
 ### Policies
 
@@ -384,7 +416,8 @@ Return `Response::deny('message', 403)` for human-readable API error messages.
 
 ### Blade Directives
 
-`@can('update', $post)` hides UI only — always enforce authorization in the controller.
+`@can('update', $post)` hides UI only — always enforce authorization in the
+controller.
 
 ---
 
@@ -392,12 +425,18 @@ Return `Response::deny('message', 403)` for human-readable API error messages.
 
 ### Critical Rules
 
-1. **Mass assignment**: Use `$fillable`, never `$guarded = []`. Pass `$request->validated()`.
-2. **SQL injection**: Use bindings in `whereRaw()`/`orderByRaw()`. Whitelist column names for dynamic ordering.
-3. **XSS**: Use `{{ }}` (escaped) for user content. `{!! !!}` only for trusted, sanitized HTML.
-4. **CSRF in SPAs**: Use `$middleware->statefulApi()` with Sanctum. Never exclude API routes from CSRF globally.
-5. **APP_DEBUG**: Must be `false` in production. Default: `(bool) env('APP_DEBUG', false)`.
-6. **Rate limiting**: Define named limiters for login, API endpoints. Key by user ID or IP.
+1. **Mass assignment**: Use `$fillable`, never `$guarded = []`. Pass
+   `$request->validated()`.
+2. **SQL injection**: Use bindings in `whereRaw()`/`orderByRaw()`. Whitelist
+   column names for dynamic ordering.
+3. **XSS**: Use `{{ }}` (escaped) for user content. `{!! !!}` only for trusted,
+   sanitized HTML.
+4. **CSRF in SPAs**: Use `$middleware->statefulApi()` with Sanctum. Never
+   exclude API routes from CSRF globally.
+5. **APP_DEBUG**: Must be `false` in production. Default:
+   `(bool) env('APP_DEBUG', false)`.
+6. **Rate limiting**: Define named limiters for login, API endpoints. Key by
+   user ID or IP.
 
 ### Signed URLs
 
@@ -410,7 +449,8 @@ Route::get('/download/{file}', Controller::class)->middleware('signed');
 
 ### Encryption
 
-`Crypt` facade uses AES-256-CBC + HMAC. Model cast `'encrypted'` for transparent column encryption.
+`Crypt` facade uses AES-256-CBC + HMAC. Model cast `'encrypted'` for transparent
+column encryption.
 
 ---
 

@@ -1,11 +1,11 @@
 ---
 title: ""
-status: "draft"                  # draft | ready_for_review | approved | ready_for_implementation
-priority: ""                     # P1 | P2 | P3
-category: ""                     # core-framework | new-skills | developer-experience | quality-reliability | documentation
-approved_by: ""                  # agent or role that approved
-created: ""                      # YYYY-MM-DD
-updated: ""                      # YYYY-MM-DD
+status: "draft" # draft | ready_for_review | approved | ready_for_implementation
+priority: "" # P1 | P2 | P3
+category: "" # core-framework | new-skills | developer-experience | quality-reliability | documentation
+approved_by: "" # agent or role that approved
+created: "" # YYYY-MM-DD
+updated: "" # YYYY-MM-DD
 ---
 
 # {Title} Specification
@@ -35,7 +35,7 @@ updated: ""                      # YYYY-MM-DD
 <!-- Table or list of files changed, with brief description of each change. -->
 
 | File | Change |
-|------|--------|
+| ---- | ------ |
 
 ## Success Criteria
 

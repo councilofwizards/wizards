@@ -1,6 +1,11 @@
 ---
 name: php-data-apis
-description: "Use this skill when writing PDO queries, designing database migrations, choosing between Active Record and Data Mapper, implementing the Repository pattern, building REST APIs, versioning endpoints, serializing responses with DTOs, or adding rate limiting. Covers prepared statements, transactions, zero-downtime DDL, RFC 7807 errors, cursor pagination, and PSR-15 middleware."
+description:
+  "Use this skill when writing PDO queries, designing database migrations,
+  choosing between Active Record and Data Mapper, implementing the Repository
+  pattern, building REST APIs, versioning endpoints, serializing responses with
+  DTOs, or adding rate limiting. Covers prepared statements, transactions,
+  zero-downtime DDL, RFC 7807 errors, cursor pagination, and PSR-15 middleware."
 ---
 
 # PHP Database & API Design
@@ -22,7 +27,8 @@ $pdo = new PDO('mysql:host=127.0.0.1;dbname=app;charset=utf8mb4', $user, $pass, 
 ]);
 ```
 
-Mandatory: `ERRMODE_EXCEPTION`, `EMULATE_PREPARES => false`, `charset=utf8mb4` in DSN (never `SET NAMES`).
+Mandatory: `ERRMODE_EXCEPTION`, `EMULATE_PREPARES => false`, `charset=utf8mb4`
+in DSN (never `SET NAMES`).
 
 ### Parameterized Queries
 
@@ -73,8 +79,9 @@ $map  = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);        // [key => value] map
 
 ### Query Builders
 
-For complex queries, prefer a builder over manual string construction: `doctrine/dbal` (mature, type-safe, schema
-introspection), `cakephp/database` (lightweight, standalone), `latitude/latitude` (purely functional, immutable).
+For complex queries, prefer a builder over manual string construction:
+`doctrine/dbal` (mature, type-safe, schema introspection), `cakephp/database`
+(lightweight, standalone), `latitude/latitude` (purely functional, immutable).
 
 ## Transactions
 
@@ -91,8 +98,9 @@ try {
 }
 ```
 
-Rules: keep short (locks), no I/O inside transactions, always rollback on exception, don't read replicas during writes.
-Use savepoints for nested transaction simulation.
+Rules: keep short (locks), no I/O inside transactions, always rollback on
+exception, don't read replicas during writes. Use savepoints for nested
+transaction simulation.
 
 ## Connection Management
 
@@ -104,15 +112,17 @@ PDO::ATTR_PERSISTENT => true
 PDO::ATTR_PERSISTENT => false
 ```
 
-**Read replicas:** route writes to primary, reads to replica. After a write the user must see, read from primary (
-replica lag).
+**Read replicas:** route writes to primary, reads to replica. After a write the
+user must see, read from primary ( replica lag).
 
-**Connection health:** detect MySQL errors 2006 (server gone away) and 2013 (lost connection); use a factory to recreate
-connections on failure rather than trying to reconnect an existing PDO object.
+**Connection health:** detect MySQL errors 2006 (server gone away) and 2013
+(lost connection); use a factory to recreate connections on failure rather than
+trying to reconnect an existing PDO object.
 
 ## Migrations
 
-**Cardinal rule:** never edit a deployed migration. Write a new one to reverse it.
+**Cardinal rule:** never edit a deployed migration. Write a new one to reverse
+it.
 
 ```php
 // ✅ Good — anonymous class with up/down
@@ -128,17 +138,21 @@ return new class {
 
 ### Zero-Downtime Patterns
 
-**Adding NOT NULL column:** (1) add nullable, (2) backfill in batches, (3) add NOT NULL constraint.
+**Adding NOT NULL column:** (1) add nullable, (2) backfill in batches, (3) add
+NOT NULL constraint.
 
-**Renaming a column:** (1) add new + write both, (2) backfill + switch reads, (3) drop old.
+**Renaming a column:** (1) add new + write both, (2) backfill + switch reads,
+(3) drop old.
 
-**Adding indexes:** MySQL `ALGORITHM=INPLACE, LOCK=NONE`; PostgreSQL `CREATE INDEX CONCURRENTLY` (outside transaction).
+**Adding indexes:** MySQL `ALGORITHM=INPLACE, LOCK=NONE`; PostgreSQL
+`CREATE INDEX CONCURRENTLY` (outside transaction).
 
-**Migration testing:** (1) structural — apply `up()`, verify schema, apply `down()`, verify revert; (2) data integrity —
-seed data, run migration, assert correctness; (3) test against target DB engine in CI, not just SQLite.
+**Migration testing:** (1) structural — apply `up()`, verify schema, apply
+`down()`, verify revert; (2) data integrity — seed data, run migration, assert
+correctness; (3) test against target DB engine in CI, not just SQLite.
 
-**Checklist:** timestamp-prefixed name, has `down()`, tested on target DB, large tables use zero-downtime, destructive
-changes approved.
+**Checklist:** timestamp-prefixed name, has `down()`, tested on target DB, large
+tables use zero-downtime, destructive changes approved.
 
 ## ORM Patterns
 
@@ -156,7 +170,8 @@ $user->rename('Alice'); // pure domain logic, testable without DB
 $mapper->save($user);
 ```
 
-Decision: rich domain -> Data Mapper + Repository. CRUD -> Active Record. Laravel -> Eloquent. Symfony -> Doctrine.
+Decision: rich domain -> Data Mapper + Repository. CRUD -> Active Record.
+Laravel -> Eloquent. Symfony -> Doctrine.
 
 ### Repository Pattern
 
@@ -179,8 +194,8 @@ interface UserRepository {
 
 ### Unit of Work
 
-Doctrine EntityManager: tracks dirty objects, flushes as one transaction. Avoid for simple CRUD and long-lived
-processes (memory leak).
+Doctrine EntityManager: tracks dirty objects, flushes as one transaction. Avoid
+for simple CRUD and long-lived processes (memory leak).
 
 ## REST API Design
 
@@ -202,7 +217,7 @@ Rules: plural nouns, max one nesting level, query params for filtering/sorting.
 ### HTTP Verbs and Status Codes
 
 | Verb    | Semantics        | Idempotent | Safe | Key Codes     |
-|---------|------------------|------------|------|---------------|
+| ------- | ---------------- | ---------- | ---- | ------------- |
 | GET     | Retrieve         | Yes        | Yes  | 200, 304, 404 |
 | POST    | Create/trigger   | No         | No   | 201, 400, 422 |
 | PUT     | Replace entirely | Yes        | No   | 200, 204, 404 |
@@ -211,33 +226,40 @@ Rules: plural nouns, max one nesting level, query params for filtering/sorting.
 | HEAD    | Headers only     | Yes        | Yes  | 200, 404      |
 | OPTIONS | Allowed methods  | Yes        | Yes  | 200, 204      |
 
-Never return `200` with `{"success": false}`. Use `422` for business validation failures, `400` for malformed requests.
-`201` must include `Location` header. `429` must include `Retry-After`.
+Never return `200` with `{"success": false}`. Use `422` for business validation
+failures, `400` for malformed requests. `201` must include `Location` header.
+`429` must include `Retry-After`.
 
 ### Error Responses — RFC 7807
 
-All errors: `Content-Type: application/problem+json` with `type`, `title`, `status`, `detail` fields.
+All errors: `Content-Type: application/problem+json` with `type`, `title`,
+`status`, `detail` fields.
 
 ### HATEOAS
 
-Include `links` on every resource (`self` at minimum). Collections get `next`/`prev`/`first`/`last`. Contextual action
-links (e.g., `publish`) appear only when valid. Level 3 Richardson Maturity Model.
+Include `links` on every resource (`self` at minimum). Collections get
+`next`/`prev`/`first`/`last`. Contextual action links (e.g., `publish`) appear
+only when valid. Level 3 Richardson Maturity Model.
 
 ### Content Negotiation
 
-Use `Accept`/`Content-Type` headers. Return `406` when requested type can't be produced. PSR-7 responses are immutable.
+Use `Accept`/`Content-Type` headers. Return `406` when requested type can't be
+produced. PSR-7 responses are immutable.
 
 ## API Versioning
 
-**URL versioning** (public APIs): `/api/v1/articles`. Obvious, cacheable. Used by Stripe, GitHub, Twilio (~70%).
+**URL versioning** (public APIs): `/api/v1/articles`. Obvious, cacheable. Used
+by Stripe, GitHub, Twilio (~70%).
 
-**Header versioning** (internal APIs): `Api-Version: 2` or `Accept: application/vnd.myapi.v2+json`. Needs `Vary` header.
+**Header versioning** (internal APIs): `Api-Version: 2` or
+`Accept: application/vnd.myapi.v2+json`. Needs `Vary` header.
 
-**Non-breaking:** adding optional fields/params/endpoints. **Breaking:** removing/renaming fields, changing types/status
-codes/auth.
+**Non-breaking:** adding optional fields/params/endpoints. **Breaking:**
+removing/renaming fields, changing types/status codes/auth.
 
-**Deprecation (RFC 8594):** `Deprecation: true` + `Sunset` header + `Link` to migration guide. Windows: internal 4-8
-weeks, public 6-12 months. Log every request to deprecated endpoints (path, method, user-agent, IP) to identify
+**Deprecation (RFC 8594):** `Deprecation: true` + `Sunset` header + `Link` to
+migration guide. Windows: internal 4-8 weeks, public 6-12 months. Log every
+request to deprecated endpoints (path, method, user-agent, IP) to identify
 consumers who have not migrated. At sunset: `410 Gone`.
 
 ## Serialization
@@ -259,32 +281,37 @@ final readonly class ArticleResource {
 ### Response Envelopes
 
 Single: `{"data": {...}, "links": {"self": "..."}}`. Collection: add
-`"meta": {"total", "per_page", "current_page", "last_page"}` and `"links": {"first", "prev", "next", "last"}`.
+`"meta": {"total", "per_page", "current_page", "last_page"}` and
+`"links": {"first", "prev", "next", "last"}`.
 
 ### Pagination
 
-**Offset/limit** (`?page=3&per_page=20`): simple, poor at large offsets (O(n)). **Cursor** (`?after=<opaque>&limit=20`):
-stable, O(1) seek, preferred for large datasets. Cursors: base64-encoded JSON, opaque to client.
+**Offset/limit** (`?page=3&per_page=20`): simple, poor at large offsets (O(n)).
+**Cursor** (`?after=<opaque>&limit=20`): stable, O(1) seek, preferred for large
+datasets. Cursors: base64-encoded JSON, opaque to client.
 
 ## Rate Limiting
 
 | Algorithm      | Burst | Memory | Boundary Issue | Best For             |
-|----------------|-------|--------|----------------|----------------------|
+| -------------- | ----- | ------ | -------------- | -------------------- |
 | Fixed Window   | None  | O(1)   | 2x at boundary | Simple internal APIs |
 | Sliding Window | None  | O(n)   | No             | Consumer-facing APIs |
 | Token Bucket   | Yes   | O(1)   | No             | Burst-tolerant APIs  |
 
-Always include headers: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`. On 429: add `Retry-After` +
-RFC 7807 body.
+Always include headers: `X-RateLimit-Limit`, `X-RateLimit-Remaining`,
+`X-RateLimit-Reset`. On 429: add `Retry-After` + RFC 7807 body.
 
-Scope keys: per-user, per-IP (unauth), per-tier. Tiers: unauth 30/min, free 100/min, paid 1000/min. Implement as PSR-15
-middleware. Use Redis atomic operations (pipelines/Lua) to avoid race conditions. For multiple simultaneous limits (
-per-second burst + per-day quota), use a composite limiter that fails fast on first exceeded limit.
+Scope keys: per-user, per-IP (unauth), per-tier. Tiers: unauth 30/min, free
+100/min, paid 1000/min. Implement as PSR-15 middleware. Use Redis atomic
+operations (pipelines/Lua) to avoid race conditions. For multiple simultaneous
+limits ( per-second burst + per-day quota), use a composite limiter that fails
+fast on first exceeded limit.
 
 ## Database-Specific Notes
 
-**MySQL:** `charset=utf8mb4` in DSN, `PARAM_INT` for LIMIT, `max_connections` 151, ProxySQL at scale,
-`ALGORITHM=INPLACE, LOCK=NONE` for DDL.
+**MySQL:** `charset=utf8mb4` in DSN, `PARAM_INT` for LIMIT, `max_connections`
+151, ProxySQL at scale, `ALGORITHM=INPLACE, LOCK=NONE` for DDL.
 
-**PostgreSQL:** native prepares default, PgBouncer transaction-mode, `ADD COLUMN DEFAULT` instant on 11+,
-`CREATE INDEX CONCURRENTLY` outside transactions, `max_connections` 100.
+**PostgreSQL:** native prepares default, PgBouncer transaction-mode,
+`ADD COLUMN DEFAULT` instant on 11+, `CREATE INDEX CONCURRENTLY` outside
+transactions, `max_connections` 100.

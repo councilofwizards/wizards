@@ -37,7 +37,8 @@ Does the method have native type declarations for all params and return?
 ## When PHPDoc Adds Value
 
 1. **Generics** — `@template`, `@extends`, `@implements` (no native syntax)
-2. **Array shapes** — `array{id: int, name: string}` (native `array` loses structure)
+2. **Array shapes** — `array{id: int, name: string}` (native `array` loses
+   structure)
 3. **`@throws`** — PHP has no checked exceptions
 4. **Callable shapes** — `callable(User, int): bool`
 5. **`@deprecated`** — signal migration path with version
@@ -64,7 +65,7 @@ public function create(string $name, int $age): User {}
 ## PHPDoc Tag Reference
 
 | Tag                     | Purpose                                  | Example                                |
-|-------------------------|------------------------------------------|----------------------------------------|
+| ----------------------- | ---------------------------------------- | -------------------------------------- |
 | `@template T`           | Generic type parameter                   | `@template T of Model`                 |
 | `@template-covariant T` | Covariant generic (read-only containers) | `@template-covariant T`                |
 | `@extends`              | Specialize generic parent                | `@extends Collection<User>`            |
@@ -152,10 +153,12 @@ public function filter(mixed $value, callable $predicate): mixed {}
 
 ## PHPDoc Anti-Patterns
 
-- **Outdated `@param` descriptions** that describe a different type than the actual parameter
+- **Outdated `@param` descriptions** that describe a different type than the
+  actual parameter
 - **`@return void`** when the method already has `: void` native type
 - **Copious `{@inheritDoc}`** — prefer explicit docs over inheritance chasing
-- **`@param` as substitute for native types** — add the type hint, not a docblock
+- **`@param` as substitute for native types** — add the type hint, not a
+  docblock
 
 ## PHPDoc Enforcement via PHPStan
 
@@ -254,11 +257,13 @@ use OpenApi\Attributes as OA;
 public function show(User $user): UserResource {}
 ```
 
-Use Scribe for Laravel projects (less boilerplate). Use swagger-php for framework-agnostic needs.
+Use Scribe for Laravel projects (less boilerplate). Use swagger-php for
+framework-agnostic needs.
 
 ## Architecture Decision Records
 
-ADRs capture significant architectural decisions: what was decided, why, and what consequences follow.
+ADRs capture significant architectural decisions: what was decided, why, and
+what consequences follow.
 
 ### When to Write an ADR
 
@@ -275,23 +280,25 @@ Do NOT write ADRs for routine implementation choices or easily reversed changes.
 ```markdown
 # ADR-{number}: {Title}
 
-**Date:** YYYY-MM-DD
-**Status:** Proposed | Accepted | Deprecated | Superseded by ADR-NNN
+**Date:** YYYY-MM-DD **Status:** Proposed | Accepted | Deprecated | Superseded
+by ADR-NNN
 
 ## Context
+
 What situation drives this decision? What constraints exist?
 
 ## Considered Options
+
 1. **Option A**: Description
 2. **Option B**: Description
 
 ## Decision
+
 We will **{Option X}**. Rationale in 2-4 sentences.
 
 ## Consequences
-**Positive:** Benefits
-**Negative:** Trade-offs
-**Risks:** Risks and mitigations
+
+**Positive:** Benefits **Negative:** Trade-offs **Risks:** Risks and mitigations
 ```
 
 ## ADR Status Lifecycle

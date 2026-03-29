@@ -12,11 +12,18 @@ updated: "2026-03-27"
 
 ## Summary
 
-Create a new multi-agent business skill (`/plan-analytics`) that assesses current analytics state, defines a KPI framework aligned to business functions, and produces a structured analytics plan with instrumentation priorities. Hub-and-Spoke pattern with analytics strategist, measurement architect, and metrics skeptic.
+Create a new multi-agent business skill (`/plan-analytics`) that assesses
+current analytics state, defines a KPI framework aligned to business functions,
+and produces a structured analytics plan with instrumentation priorities.
+Hub-and-Spoke pattern with analytics strategist, measurement architect, and
+metrics skeptic.
 
 ## Problem
 
-Startups collect data across multiple tools but lack a coherent measurement framework. This leads to vanity metrics, unmeasured funnels, and data-uninformed decision-making. Teams instrument what's easy to track rather than what matters for business outcomes.
+Startups collect data across multiple tools but lack a coherent measurement
+framework. This leads to vanity metrics, unmeasured funnels, and data-uninformed
+decision-making. Teams instrument what's easy to track rather than what matters
+for business outcomes.
 
 ## Solution
 
@@ -30,23 +37,27 @@ New SKILL.md at `plugins/conclave/skills/plan-analytics/SKILL.md`.
 
 ### Agent Team (3 agents + lead)
 
-| Agent | Model | Role |
-|-------|-------|------|
-| Analytics Strategist | sonnet | Assess current state: tools, existing KPIs, coverage gaps, business functions needing measurement |
+| Agent                 | Model  | Role                                                                                                 |
+| --------------------- | ------ | ---------------------------------------------------------------------------------------------------- |
+| Analytics Strategist  | sonnet | Assess current state: tools, existing KPIs, coverage gaps, business functions needing measurement    |
 | Measurement Architect | sonnet | Design KPI framework: metric definitions, data sources, instrumentation checklist, reporting cadence |
-| Metrics Skeptic | opus | Challenge vanity metrics, flag unmeasured funnels, verify instrumentation achievability |
+| Metrics Skeptic       | opus   | Challenge vanity metrics, flag unmeasured funnels, verify instrumentation achievability              |
 
 ### Pipeline Flow
 
-1. **Setup**: Read project docs + `docs/analytics/_user-data.md`. Create template if absent.
-2. **Phase 1 (Assessment)**: Strategist produces current-state summary and business function inventory.
-3. **Phase 2 (Framework Design)**: Architect produces KPI table, instrumentation checklist, reporting cadence.
+1. **Setup**: Read project docs + `docs/analytics/_user-data.md`. Create
+   template if absent.
+2. **Phase 1 (Assessment)**: Strategist produces current-state summary and
+   business function inventory.
+3. **Phase 2 (Framework Design)**: Architect produces KPI table, instrumentation
+   checklist, reporting cadence.
 4. **Phase 3 (Review)**: Metrics Skeptic reviews. Max iterations: 3.
 5. **Output**: `docs/analytics/analytics-plan-{timestamp}.md`
 
 ### User Data Template (`docs/analytics/_user-data.md`)
 
-Fields: current analytics tools, business stage, key funnels, existing KPIs and owners, known measurement gaps, data warehouse/BI tool.
+Fields: current analytics tools, business stage, key funnels, existing KPIs and
+owners, known measurement gaps, data warehouse/BI tool.
 
 ### Persona
 
@@ -67,14 +78,14 @@ New: `plugins/conclave/shared/personas/metrics-skeptic.md`
 
 ## Files to Modify
 
-| File | Change |
-|------|--------|
-| `plugins/conclave/skills/plan-analytics/SKILL.md` | New — full multi-agent skill definition |
-| `plugins/conclave/shared/personas/metrics-skeptic.md` | New — metrics skeptic persona |
-| `plugins/conclave/.claude-plugin/plugin.json` | Add plan-analytics to skills array |
-| `scripts/sync-shared-content.sh` | Add plan-analytics to NON_ENGINEERING_SKILLS |
-| `scripts/validators/skill-shared-content.sh` | Add plan-analytics to NON_ENGINEERING_SKILLS |
-| `CLAUDE.md` | Add plan-analytics to taxonomy tables |
+| File                                                  | Change                                       |
+| ----------------------------------------------------- | -------------------------------------------- |
+| `plugins/conclave/skills/plan-analytics/SKILL.md`     | New — full multi-agent skill definition      |
+| `plugins/conclave/shared/personas/metrics-skeptic.md` | New — metrics skeptic persona                |
+| `plugins/conclave/.claude-plugin/plugin.json`         | Add plan-analytics to skills array           |
+| `scripts/sync-shared-content.sh`                      | Add plan-analytics to NON_ENGINEERING_SKILLS |
+| `scripts/validators/skill-shared-content.sh`          | Add plan-analytics to NON_ENGINEERING_SKILLS |
+| `CLAUDE.md`                                           | Add plan-analytics to taxonomy tables        |
 
 ## Success Criteria
 

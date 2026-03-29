@@ -18,8 +18,9 @@
 
 ## SRP — Single Responsibility
 
-A class has one reason to change, mapped to a specific actor/stakeholder. Many small classes > fewer large ones, but
-excessive decomposition without cohesion creates shotgun surgery.
+A class has one reason to change, mapped to a specific actor/stakeholder. Many
+small classes > fewer large ones, but excessive decomposition without cohesion
+creates shotgun surgery.
 
 ## OCP — Open/Closed
 
@@ -64,7 +65,8 @@ final class PriceCalculator
 }
 ```
 
-Apply OCP where variation is known. Premature abstraction for stable extension points is wasted indirection.
+Apply OCP where variation is known. Premature abstraction for stable extension
+points is wasted indirection.
 
 ## LSP — Liskov Substitution
 
@@ -99,7 +101,8 @@ class Square extends Rectangle
 }
 ```
 
-PHP's type system enforces structural contracts only, not behavioral ones. Prefer composition over inheritance.
+PHP's type system enforces structural contracts only, not behavioral ones.
+Prefer composition over inheritance.
 
 ## ISP — Interface Segregation
 
@@ -126,8 +129,8 @@ final class UserProjectionService
 }
 ```
 
-Name interfaces after the client role, not the implementor. Avoid excessive fragmentation -- group methods a real client
-uses together.
+Name interfaces after the client role, not the implementor. Avoid excessive
+fragmentation -- group methods a real client uses together.
 
 ## DIP — Dependency Inversion
 
@@ -156,20 +159,22 @@ final class CheckoutService
 }
 ```
 
-For simple scripts with no meaningful variation, the abstraction cost may not be worth paying.
+For simple scripts with no meaningful variation, the abstraction cost may not be
+worth paying.
 
 ## Strategy Pattern
 
 Problem: Behavior varies by context; algorithm family is stable.
 
-When to use: Interchangeable algorithms, configurable behaviors (pricing, export formats, notification channels),
-replacing type-branching conditionals.
+When to use: Interchangeable algorithms, configurable behaviors (pricing, export
+formats, notification channels), replacing type-branching conditionals.
 
 When NOT to use: Only one algorithm with no real variation expected.
 
 ## Repository Pattern
 
-Problem: Decouple domain logic from persistence. Interface in domain layer; implementation in infrastructure.
+Problem: Decouple domain logic from persistence. Interface in domain layer;
+implementation in infrastructure.
 
 ```php
 interface OrderRepository
@@ -180,12 +185,13 @@ interface OrderRepository
 }
 ```
 
-Never expose `->where()`, `->orderBy()`, `->paginate()` through the interface. Use `InMemoryOrderRepository` for tests.
-Skip for simple CRUD.
+Never expose `->where()`, `->orderBy()`, `->paginate()` through the interface.
+Use `InMemoryOrderRepository` for tests. Skip for simple CRUD.
 
 ## Factory Pattern
 
-Problem: Object construction is complex, conditional, or requires hidden dependencies.
+Problem: Object construction is complex, conditional, or requires hidden
+dependencies.
 
 ```php
 final class NotificationFactory
@@ -207,13 +213,16 @@ final class NotificationFactory
 }
 ```
 
-Skip when `new ClassName()` is clear and sufficient. Never use static factories that call `app()`.
+Skip when `new ClassName()` is clear and sufficient. Never use static factories
+that call `app()`.
 
 ## Observer Pattern
 
-Problem: Decouple reactions to state changes. In Laravel, use Event/Listener system.
+Problem: Decouple reactions to state changes. In Laravel, use Event/Listener
+system.
 
-Avoid observer cascades (observers triggering observers) -- creates implicit ordering dependencies.
+Avoid observer cascades (observers triggering observers) -- creates implicit
+ordering dependencies.
 
 ## Decorator Pattern
 
@@ -241,11 +250,13 @@ $logger = new ContextEnrichingLogger(
 );
 ```
 
-Use for logging, caching, auth checks, retry, metrics. Prefer middleware pipeline when interface has many methods.
+Use for logging, caching, auth checks, retry, metrics. Prefer middleware
+pipeline when interface has many methods.
 
 ## Dependency Injection
 
-Constructor injection is the default. All dependencies visible, object always valid, fully testable.
+Constructor injection is the default. All dependencies visible, object always
+valid, fully testable.
 
 ```php
 // ✅ Good — constructor injection
@@ -259,18 +270,21 @@ final class OrderService
 }
 ```
 
-Setter injection: only for genuinely optional deps. Property injection (`#[Inject]`): never in application code.
+Setter injection: only for genuinely optional deps. Property injection
+(`#[Inject]`): never in application code.
 
-Service Locator (`app()`, `resolve()`) in domain/application code: never. Only in ServiceProviders, factories,
-bootstrap.
+Service Locator (`app()`, `resolve()`) in domain/application code: never. Only
+in ServiceProviders, factories, bootstrap.
 
 ## Layered Architecture
 
-**Domain:** Entities, VOs, repository interfaces, domain services, events. Zero framework imports.
+**Domain:** Entities, VOs, repository interfaces, domain services, events. Zero
+framework imports.
 
 **Application:** Use-case handlers, commands, DTOs. Depends on domain only.
 
-**Infrastructure:** Eloquent repos, HTTP clients, mailers. Implements domain interfaces.
+**Infrastructure:** Eloquent repos, HTTP clients, mailers. Implements domain
+interfaces.
 
 ```
 App\Domain\Order\Entity\Order
@@ -279,18 +293,23 @@ App\Application\Order\Handler\PlaceOrderHandler
 App\Infrastructure\Order\Repository\EloquentOrderRepository
 ```
 
-Hexagonal: driving adapters (controllers, CLI) call application layer; driven adapters (repos, clients) implement domain
-ports.
+Hexagonal: driving adapters (controllers, CLI) call application layer; driven
+adapters (repos, clients) implement domain ports.
 
-Layer only when domain complexity justifies it. Simple CRUD does not need layering.
+Layer only when domain complexity justifies it. Simple CRUD does not need
+layering.
 
 ## Evidence
 
-- Dallal & Morasca (2010) -- classes violating OCP/SRP had 2-3x higher defect counts
+- Dallal & Morasca (2010) -- classes violating OCP/SRP had 2-3x higher defect
+  counts
 - Martin (2018) "Clean Architecture" -- DIP at every boundary prevents fragility
 - Gamma et al. (1994) "Design Patterns" -- canonical pattern definitions
-- Fowler (2002) "PoEAA" -- Repository warns against leaking query builders; layered architecture trade-offs
+- Fowler (2002) "PoEAA" -- Repository warns against leaking query builders;
+  layered architecture trade-offs
 - Cockburn (2005) -- hexagonal architecture / ports and adapters
-- Evans (2003) "DDD" -- domain isolation and corruption by infrastructure concerns
-- Seemann (2011) "Dependency Injection in .NET" -- constructor injection as safest DI pattern
+- Evans (2003) "DDD" -- domain isolation and corruption by infrastructure
+  concerns
+- Seemann (2011) "Dependency Injection in .NET" -- constructor injection as
+  safest DI pattern
 - PSR-11 (PHP-FIG, 2017) -- standard ContainerInterface

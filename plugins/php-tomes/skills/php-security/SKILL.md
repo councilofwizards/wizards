@@ -1,14 +1,19 @@
 ---
 name: php-security
-description: "Use this skill when validating user input, preventing SQL injection or XSS, implementing CSRF protection, hashing passwords (Argon2id/bcrypt), encrypting data with sodium, reviewing PHP code for vulnerabilities, or setting up authentication and authorization. Covers OWASP Top 10, prepared statements, Content-Security-Policy, session hardening, and JWT/MFA patterns."
+description:
+  "Use this skill when validating user input, preventing SQL injection or XSS,
+  implementing CSRF protection, hashing passwords (Argon2id/bcrypt), encrypting
+  data with sodium, reviewing PHP code for vulnerabilities, or setting up
+  authentication and authorization. Covers OWASP Top 10, prepared statements,
+  Content-Security-Policy, session hardening, and JWT/MFA patterns."
 ---
 
 # PHP Security Best Practices
 
 ## Input Validation
 
-Validate at trust boundaries (controller/request layer). Use allowlist validation — define what is acceptable, reject
-everything else.
+Validate at trust boundaries (controller/request layer). Use allowlist
+validation — define what is acceptable, reject everything else.
 
 ### Validate with `filter_var()`
 
@@ -89,7 +94,8 @@ $safeFilename = bin2hex(random_bytes(16)) . '.' . $extension;
 ### Input Validation Rules
 
 - Validate at trust boundaries, not in domain objects
-- Prefer `FILTER_VALIDATE_*` over `FILTER_SANITIZE_*` — validation fails loudly, sanitization silently modifies data
+- Prefer `FILTER_VALIDATE_*` over `FILTER_SANITIZE_*` — validation fails loudly,
+  sanitization silently modifies data
 - Store raw validated data; escape at output time (not input time)
 - Never strip characters from passwords — validate length and encoding only
 - Treat database values, queue payloads, and webhook bodies as external inputs
@@ -98,8 +104,8 @@ $safeFilename = bin2hex(random_bytes(16)) . '.' . $extension;
 
 ## SQL Injection Prevention
 
-SQL injection occurs when untrusted data is interpolated into SQL. Prevention: always separate query structure from data
-using prepared statements.
+SQL injection occurs when untrusted data is interpolated into SQL. Prevention:
+always separate query structure from data using prepared statements.
 
 ### PDO Prepared Statements
 
@@ -124,12 +130,14 @@ $pdo = new \PDO($dsn, $user, $password, [
 ]);
 ```
 
-> **Warning:** With `ATTR_EMULATE_PREPARES => true` (default for MySQL), PDO interpolates parameters client-side, losing
-> injection protection when charset mismatches exist.
+> **Warning:** With `ATTR_EMULATE_PREPARES => true` (default for MySQL), PDO
+> interpolates parameters client-side, losing injection protection when charset
+> mismatches exist.
 
 ### Dynamic Identifiers (ORDER BY, column names)
 
-Prepared statements only protect data values, not identifiers. Whitelist identifiers explicitly.
+Prepared statements only protect data values, not identifiers. Whitelist
+identifiers explicitly.
 
 ```php
 // ❌ VULNERABLE — attacker controls column name
@@ -172,12 +180,13 @@ $users = User::whereRaw('name = ? AND age > ?', [$name, $minAge])->get();
 
 ### Second-Order Injection
 
-Always use parameterized queries even for data from your own database — stored attacker input can be interpolated
-unsafely on retrieval.
+Always use parameterized queries even for data from your own database — stored
+attacker input can be interpolated unsafely on retrieval.
 
 ### SQL Injection Rules
 
-- Never use `addslashes()` or `mysql_real_escape_string()` — bypassed with multi-byte encoding
+- Never use `addslashes()` or `mysql_real_escape_string()` — bypassed with
+  multi-byte encoding
 - Always set `PDO::ATTR_EMULATE_PREPARES => false`
 - Always set `PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION`
 - Whitelist all dynamic identifiers (table names, column names, sort directions)
@@ -186,8 +195,8 @@ unsafely on retrieval.
 
 ## XSS Prevention
 
-XSS occurs when untrusted data is rendered in a web page without encoding. Defense: context-aware output encoding at
-render time.
+XSS occurs when untrusted data is rendered in a web page without encoding.
+Defense: context-aware output encoding at render time.
 
 ### HTML Context
 
@@ -233,7 +242,7 @@ echo '<a href="' . e($url) . '">Click</a>';
 ### Encoding by Context
 
 | Context           | Function                                                                          |
-|-------------------|-----------------------------------------------------------------------------------|
+| ----------------- | --------------------------------------------------------------------------------- |
 | HTML content      | `htmlspecialchars($v, ENT_QUOTES \| ENT_SUBSTITUTE, 'UTF-8')`                     |
 | HTML attribute    | Same, within quoted attributes                                                    |
 | JavaScript string | `json_encode($v, JSON_HEX_TAG \| JSON_HEX_APOS \| JSON_HEX_QUOT \| JSON_HEX_AMP)` |
@@ -273,8 +282,9 @@ header(sprintf(
 
 ## CSRF Protection
 
-CSRF tricks authenticated users into submitting requests from attacker-controlled pages. The browser sends cookies
-automatically, so requests arrive authenticated.
+CSRF tricks authenticated users into submitting requests from
+attacker-controlled pages. The browser sends cookies automatically, so requests
+arrive authenticated.
 
 ### Synchronizer Token Pattern
 
@@ -297,7 +307,8 @@ final class CsrfTokenManager
 }
 ```
 
-> **Warning:** Always use `hash_equals()` to compare CSRF tokens — `===` creates a timing oracle.
+> **Warning:** Always use `hash_equals()` to compare CSRF tokens — `===` creates
+> a timing oracle.
 
 ### SameSite Cookies
 
@@ -310,7 +321,7 @@ setcookie('session_id', $sessionId, [
 ```
 
 | SameSite | Cross-site GET | Cross-site POST | Same-site |
-|----------|----------------|-----------------|-----------|
+| -------- | -------------- | --------------- | --------- |
 | Strict   | Blocked        | Blocked         | Sent      |
 | Lax      | Sent           | Blocked         | Sent      |
 | None     | Sent           | Sent            | Sent      |
@@ -326,7 +337,8 @@ setcookie('session_id', $sessionId, [
 ### CSRF Rules
 
 - Never use GET for state-changing operations
-- Explicitly set SameSite on all session cookies — do not rely on browser defaults
+- Explicitly set SameSite on all session cookies — do not rely on browser
+  defaults
 - Use `hash_equals()` for token comparison
 - Rotate tokens on login/logout
 - Never put CSRF tokens in URLs (leaked in logs and browser history)
@@ -361,8 +373,8 @@ if (password_needs_rehash($storedHash, PASSWORD_ARGON2ID)) {
 }
 ```
 
-> **Note:** BCrypt truncates at 72 bytes. For longer passwords, use Argon2id or pre-hash:
-`hash('sha256', $password, true)`.
+> **Note:** BCrypt truncates at 72 bytes. For longer passwords, use Argon2id or
+> pre-hash: `hash('sha256', $password, true)`.
 
 ### Session Hardening
 
@@ -407,14 +419,16 @@ enum Role: string
 }
 ```
 
-Centralize authorization in policy/gate classes — never scatter inline `$_SESSION['role']` checks.
+Centralize authorization in policy/gate classes — never scatter inline
+`$_SESSION['role']` checks.
 
 ---
 
 ## Cryptography
 
-Use `ext-sodium` (ships with PHP 7.2+) for all encryption. Never use `mcrypt`, `openssl_encrypt` without authentication,
-or `rand()`/`mt_rand()` for security values.
+Use `ext-sodium` (ships with PHP 7.2+) for all encryption. Never use `mcrypt`,
+`openssl_encrypt` without authentication, or `rand()`/`mt_rand()` for security
+values.
 
 ### Symmetric Encryption (Secret-Key)
 
@@ -454,11 +468,14 @@ $expectedToken === $providedToken;
 
 ### Key Management Rules
 
-- Never hardcode keys in source code — use environment variables or a secrets manager
+- Never hardcode keys in source code — use environment variables or a secrets
+  manager
 - Separate keys by environment (prod/staging/dev)
 - Use `sodium_memzero($key)` to clear keys from memory when done
-- Use `random_bytes()` for all security-sensitive random values — never `rand()` or `mt_rand()`
-- Use envelope encryption for key rotation: encrypt data with per-record DEK, encrypt DEK with KEK
+- Use `random_bytes()` for all security-sensitive random values — never `rand()`
+  or `mt_rand()`
+- Use envelope encryption for key rotation: encrypt data with per-record DEK,
+  encrypt DEK with KEK
 - Base64 is encoding, not encryption
 
 ---
@@ -467,11 +484,17 @@ $expectedToken === $providedToken;
 
 When reviewing PHP code for security:
 
-1. **Input**: Is all external input validated at trust boundaries using allowlist rules?
+1. **Input**: Is all external input validated at trust boundaries using
+   allowlist rules?
 2. **SQL**: Are all queries parameterized? Are dynamic identifiers whitelisted?
-3. **XSS**: Is output escaped with context-appropriate encoding? Are Blade `{!! !!}` uses justified?
-4. **CSRF**: Do state-changing endpoints verify CSRF tokens? Are cookies SameSite?
-5. **Auth**: Are passwords hashed with Argon2id/BCrypt? Are sessions regenerated on login?
-6. **Crypto**: Is `ext-sodium` used for encryption? Are keys loaded from environment, not hardcoded?
+3. **XSS**: Is output escaped with context-appropriate encoding? Are Blade
+   `{!! !!}` uses justified?
+4. **CSRF**: Do state-changing endpoints verify CSRF tokens? Are cookies
+   SameSite?
+5. **Auth**: Are passwords hashed with Argon2id/BCrypt? Are sessions regenerated
+   on login?
+6. **Crypto**: Is `ext-sodium` used for encryption? Are keys loaded from
+   environment, not hardcoded?
 7. **Comparison**: Are all security-sensitive comparisons using `hash_equals()`?
-8. **Randomness**: Are all tokens generated with `random_bytes()` / `random_int()`?
+8. **Randomness**: Are all tokens generated with `random_bytes()` /
+   `random_int()`?

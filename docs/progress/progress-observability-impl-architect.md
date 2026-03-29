@@ -10,9 +10,12 @@ updated: "2026-02-18T00:00:00Z"
 
 ## Progress Notes
 
-- [00:00] Claimed task #1, read spec, all 3 SKILL.md files, validator pattern, validate.sh, existing checkpoint files
-- [00:01] Analyzed exact text in Determine Mode and Orchestration Flow sections of each SKILL.md
-- [00:02] Produced implementation plan with exact old_string/new_string edit pairs
+- [00:00] Claimed task #1, read spec, all 3 SKILL.md files, validator pattern,
+  validate.sh, existing checkpoint files
+- [00:01] Analyzed exact text in Determine Mode and Orchestration Flow sections
+  of each SKILL.md
+- [00:02] Produced implementation plan with exact old_string/new_string edit
+  pairs
 
 ---
 
@@ -22,10 +25,15 @@ updated: "2026-02-18T00:00:00Z"
 
 This plan implements the P2-03 Progress Observability spec. The changes are:
 
-1. **Status mode** (3 SKILL.md files): Add `"status"` as a new argument mode in the Determine Mode section of each skill, plus update the `argument-hint` frontmatter
-2. **End-of-session summary** (3 SKILL.md files): Add/align an end-of-session summary step in each skill's Orchestration Flow
-3. **Checkpoint validator** (1 new script): Create `scripts/validators/progress-checkpoint.sh`
-4. **Validation pipeline** (1 edit): Add `run_validator "progress-checkpoint.sh"` to `scripts/validate.sh`
+1. **Status mode** (3 SKILL.md files): Add `"status"` as a new argument mode in
+   the Determine Mode section of each skill, plus update the `argument-hint`
+   frontmatter
+2. **End-of-session summary** (3 SKILL.md files): Add/align an end-of-session
+   summary step in each skill's Orchestration Flow
+3. **Checkpoint validator** (1 new script): Create
+   `scripts/validators/progress-checkpoint.sh`
+4. **Validation pipeline** (1 edit): Add
+   `run_validator "progress-checkpoint.sh"` to `scripts/validate.sh`
 
 Total: 10 edits across 4 existing files + 1 new file creation.
 
@@ -41,20 +49,21 @@ Total: 10 edits across 4 existing files + 1 new file creation.
 5. review-quality/SKILL.md (2 EDITs) -- no dependencies
 ```
 
-Files #1-#2 (validator) and #3-#5 (SKILL.md edits) are independent tracks that can be done in parallel.
+Files #1-#2 (validator) and #3-#5 (SKILL.md edits) are independent tracks that
+can be done in parallel.
 
 ---
 
 ## Existing Patterns to Follow
 
-| Pattern | Reference File | Notes |
-|---------|---------------|-------|
-| Bash validator structure | `scripts/validators/spec-frontmatter.sh` | `fail()`, `pass()`, `get_field()`, `field_present()`, `has_frontmatter()` helpers |
-| Validator pipeline integration | `scripts/validate.sh` | `run_validator "name.sh"` pattern |
-| Determine Mode bullet format | All 3 SKILL.md files | Bold mode name, colon, description |
-| Orchestration Flow numbered steps | All 3 SKILL.md files | `N. **Role**: Action description` |
-| Checkpoint YAML frontmatter | `docs/progress/content-dedup-impl-architect.md` | 7 fields: feature, team, agent, phase, status, last_action, updated |
-| argument-hint format | All 3 SKILL.md frontmatter | Pipe-delimited options in brackets |
+| Pattern                           | Reference File                                  | Notes                                                                             |
+| --------------------------------- | ----------------------------------------------- | --------------------------------------------------------------------------------- |
+| Bash validator structure          | `scripts/validators/spec-frontmatter.sh`        | `fail()`, `pass()`, `get_field()`, `field_present()`, `has_frontmatter()` helpers |
+| Validator pipeline integration    | `scripts/validate.sh`                           | `run_validator "name.sh"` pattern                                                 |
+| Determine Mode bullet format      | All 3 SKILL.md files                            | Bold mode name, colon, description                                                |
+| Orchestration Flow numbered steps | All 3 SKILL.md files                            | `N. **Role**: Action description`                                                 |
+| Checkpoint YAML frontmatter       | `docs/progress/content-dedup-impl-architect.md` | 7 fields: feature, team, agent, phase, status, last_action, updated               |
+| argument-hint format              | All 3 SKILL.md frontmatter                      | Pipe-delimited options in brackets                                                |
 
 ---
 
@@ -62,23 +71,29 @@ Files #1-#2 (validator) and #3-#5 (SKILL.md edits) are independent tracks that c
 
 ### Edit 1.1 -- Update argument-hint to include "status"
 
-**Rationale**: The `argument-hint` in frontmatter tells the user what arguments are available. Must include `status`.
+**Rationale**: The `argument-hint` in frontmatter tells the user what arguments
+are available. Must include `status`.
 
 **old_string**:
+
 ```
 argument-hint: "[--light] [new <idea> | review <spec-name> | reprioritize | (empty for general review)]"
 ```
 
 **new_string**:
+
 ```
 argument-hint: "[--light] [status | new <idea> | review <spec-name> | reprioritize | (empty for general review)]"
 ```
 
 ### Edit 1.2 -- Add "status" mode to Determine Mode section
 
-**Rationale**: Add the status argument handler as the first bullet in the mode list, before the existing empty/no args handler. The status mode is checked first so it short-circuits before checkpoint scanning or agent spawning.
+**Rationale**: Add the status argument handler as the first bullet in the mode
+list, before the existing empty/no args handler. The status mode is checked
+first so it short-circuits before checkpoint scanning or agent spawning.
 
 **old_string**:
+
 ```
 Based on $ARGUMENTS:
 - **Empty/no args**: First, scan `docs/progress/` for checkpoint files with `team: "plan-product"` and `status` of `in_progress`, `blocked`, or `awaiting_review`. If found, **resume from the last checkpoint** — re-spawn the relevant agents with their checkpoint content as context. If no incomplete checkpoints exist, proceed with a general review cycle. Assess roadmap health, identify gaps, reprioritize.
@@ -88,6 +103,7 @@ Based on $ARGUMENTS:
 ```
 
 **new_string**:
+
 ```
 Based on $ARGUMENTS:
 - **"status"**: Read all checkpoint files for this skill and generate a consolidated status report. Do NOT spawn any agents. Read `docs/progress/` files with `team: "plan-product"` in their frontmatter, parse their YAML metadata, and output a formatted status summary. If no checkpoint files exist for this skill, report "No active or recent sessions found."
@@ -99,9 +115,11 @@ Based on $ARGUMENTS:
 
 ### Edit 1.3 -- Add end-of-session summary step to Orchestration Flow
 
-**Rationale**: Add step 8 requiring the team lead to write `docs/progress/{feature}-summary.md` on session completion or interruption.
+**Rationale**: Add step 8 requiring the team lead to write
+`docs/progress/{feature}-summary.md` on session completion or interruption.
 
 **old_string**:
+
 ```
 7. **Team Lead only**: Write cost summary to `docs/progress/{skill}-{feature}-{timestamp}-cost-summary.md`
 
@@ -109,6 +127,7 @@ Based on $ARGUMENTS:
 ```
 
 **new_string**:
+
 ```
 7. **Team Lead only**: Write cost summary to `docs/progress/{skill}-{feature}-{timestamp}-cost-summary.md`
 8. **Team Lead only**: Write end-of-session summary to `docs/progress/{feature}-summary.md` using the format from `docs/progress/_template.md`. Include: what was accomplished, what remains, blockers encountered, and whether the feature is complete or in-progress. If the session is interrupted before completion, still write a partial summary noting the interruption point.
@@ -123,11 +142,13 @@ Based on $ARGUMENTS:
 ### Edit 2.1 -- Update argument-hint to include "status"
 
 **old_string**:
+
 ```
 argument-hint: "[--light] [<spec-name> | review | (empty for next item)]"
 ```
 
 **new_string**:
+
 ```
 argument-hint: "[--light] [status | <spec-name> | review | (empty for next item)]"
 ```
@@ -135,6 +156,7 @@ argument-hint: "[--light] [status | <spec-name> | review | (empty for next item)
 ### Edit 2.2 -- Add "status" mode to Determine Mode section
 
 **old_string**:
+
 ```
 Based on $ARGUMENTS:
 - **Empty/no args**: Scan `docs/progress/` for checkpoint files with `team: "build-product"` and `status` of `in_progress`, `blocked`, or `awaiting_review`. If found, **resume from the last checkpoint** — re-spawn the relevant agents with their checkpoint content as context and pick up where they left off. If no incomplete checkpoints exist, pick next ready roadmap item.
@@ -143,6 +165,7 @@ Based on $ARGUMENTS:
 ```
 
 **new_string**:
+
 ```
 Based on $ARGUMENTS:
 - **"status"**: Read all checkpoint files for this skill and generate a consolidated status report. Do NOT spawn any agents. Read `docs/progress/` files with `team: "build-product"` in their frontmatter, parse their YAML metadata, and output a formatted status summary. If no checkpoint files exist for this skill, report "No active or recent sessions found."
@@ -153,15 +176,19 @@ Based on $ARGUMENTS:
 
 ### Edit 2.3 -- Align existing summary step wording in Orchestration Flow
 
-**Rationale**: build-product already has a summary step (step 7), but its wording doesn't mention the template or interruption handling. Align with the standardized convention from the spec.
+**Rationale**: build-product already has a summary step (step 7), but its
+wording doesn't mention the template or interruption handling. Align with the
+standardized convention from the spec.
 
 **old_string**:
+
 ```
 7. **Team Lead only**: Update roadmap status and write aggregated summary to `docs/progress/{feature}-summary.md`
 8. **Team Lead only**: Write cost summary to `docs/progress/{skill}-{feature}-{timestamp}-cost-summary.md`
 ```
 
 **new_string**:
+
 ```
 7. **Team Lead only**: Update roadmap status and write aggregated summary to `docs/progress/{feature}-summary.md` using the format from `docs/progress/_template.md`. Include: what was accomplished, what remains, blockers encountered, and whether the feature is complete or in-progress. If the session is interrupted before completion, still write a partial summary noting the interruption point.
 8. **Team Lead only**: Write cost summary to `docs/progress/{skill}-{feature}-{timestamp}-cost-summary.md`
@@ -174,11 +201,13 @@ Based on $ARGUMENTS:
 ### Edit 3.1 -- Update argument-hint to include "status"
 
 **old_string**:
+
 ```
 argument-hint: "[--light] [security <scope> | performance <scope> | deploy <feature> | regression]"
 ```
 
 **new_string**:
+
 ```
 argument-hint: "[--light] [status | security <scope> | performance <scope> | deploy <feature> | regression]"
 ```
@@ -186,6 +215,7 @@ argument-hint: "[--light] [status | security <scope> | performance <scope> | dep
 ### Edit 3.2 -- Add "status" mode to Determine Mode section
 
 **old_string**:
+
 ```
 Based on $ARGUMENTS:
 - **Empty/no args**: First, scan `docs/progress/` for checkpoint files with `team: "review-quality"` and `status` of `in_progress`, `blocked`, or `awaiting_review`. If found, **resume from the last checkpoint** — re-spawn the relevant agents with their checkpoint content as context. If no incomplete checkpoints exist, perform a general quality assessment of the most recently implemented feature. Spawn test-eng + ops-skeptic. Check `docs/progress/` for the latest completed implementation.
@@ -196,6 +226,7 @@ Based on $ARGUMENTS:
 ```
 
 **new_string**:
+
 ```
 Based on $ARGUMENTS:
 - **"status"**: Read all checkpoint files for this skill and generate a consolidated status report. Do NOT spawn any agents. Read `docs/progress/` files with `team: "review-quality"` in their frontmatter, parse their YAML metadata, and output a formatted status summary. If no checkpoint files exist for this skill, report "No active or recent sessions found."
@@ -208,14 +239,18 @@ Based on $ARGUMENTS:
 
 ### Edit 3.3 -- Add end-of-session summary step to Orchestration Flow
 
-**Rationale**: review-quality step 7 writes `{feature}-quality.md` (a quality report, not a session summary). Keep that step and add step 9 for the session summary.
+**Rationale**: review-quality step 7 writes `{feature}-quality.md` (a quality
+report, not a session summary). Keep that step and add step 9 for the session
+summary.
 
 **old_string**:
+
 ```
 8. **QA Lead only**: Write cost summary to `docs/progress/{skill}-{feature}-{timestamp}-cost-summary.md`
 ```
 
 **new_string**:
+
 ```
 8. **QA Lead only**: Write cost summary to `docs/progress/{skill}-{feature}-{timestamp}-cost-summary.md`
 9. **QA Lead only**: Write end-of-session summary to `docs/progress/{feature}-summary.md` using the format from `docs/progress/_template.md`. Include: what was accomplished, what remains, blockers encountered, and whether the feature is complete or in-progress. If the session is interrupted before completion, still write a partial summary noting the interruption point.
@@ -225,7 +260,8 @@ Based on $ARGUMENTS:
 
 ## File 4: scripts/validators/progress-checkpoint.sh (NEW)
 
-Create this file with the following content. Follows the pattern established by `scripts/validators/spec-frontmatter.sh`.
+Create this file with the following content. Follows the pattern established by
+`scripts/validators/spec-frontmatter.sh`.
 
 ```bash
 #!/usr/bin/env bash
@@ -430,14 +466,17 @@ exit $?
 
 ### Edit 5.1 -- Add progress-checkpoint validator to pipeline
 
-**Rationale**: Integrate the new Category E validator into the existing validation pipeline.
+**Rationale**: Integrate the new Category E validator into the existing
+validation pipeline.
 
 **old_string**:
+
 ```
 run_validator "spec-frontmatter.sh"
 ```
 
 **new_string**:
+
 ```
 run_validator "spec-frontmatter.sh"
 run_validator "progress-checkpoint.sh"
@@ -447,7 +486,8 @@ run_validator "progress-checkpoint.sh"
 
 ## Status Report Format
 
-The spec defines the status report format in Section 2. For reference, the team lead should output this format when the `status` mode is triggered:
+The spec defines the status report format in Section 2. For reference, the team
+lead should output this format when the `status` mode is triggered:
 
 ```
 ## Status Report: {feature-name}
@@ -474,33 +514,42 @@ The spec defines the status report format in Section 2. For reference, the team 
 {If any agent has status "blocked", list their agent name and last_action. Otherwise: "None."}
 ```
 
-This format is specified by the SKILL.md status mode bullet text. The team lead reads checkpoint files, parses frontmatter, and renders this format. No additional SKILL.md text is needed beyond the status mode bullet -- the team lead generates the report format from the instructions in the bullet.
+This format is specified by the SKILL.md status mode bullet text. The team lead
+reads checkpoint files, parses frontmatter, and renders this format. No
+additional SKILL.md text is needed beyond the status mode bullet -- the team
+lead generates the report format from the instructions in the bullet.
 
 ---
 
 ## Edit Execution Order
 
-Edits can be applied in any order WITHIN a file. Edits across files are independent.
+Edits can be applied in any order WITHIN a file. Edits across files are
+independent.
 
 **plan-product/SKILL.md** (3 edits):
+
 1. Edit 1.1 (argument-hint update)
 2. Edit 1.2 (status mode in Determine Mode)
 3. Edit 1.3 (end-of-session summary step)
 
 **build-product/SKILL.md** (3 edits):
+
 1. Edit 2.1 (argument-hint update)
 2. Edit 2.2 (status mode in Determine Mode)
 3. Edit 2.3 (align summary step wording)
 
 **review-quality/SKILL.md** (3 edits):
+
 1. Edit 3.1 (argument-hint update)
 2. Edit 3.2 (status mode in Determine Mode)
 3. Edit 3.3 (end-of-session summary step)
 
 **scripts/validators/progress-checkpoint.sh** (1 creation):
+
 1. Create file with full script content
 
 **scripts/validate.sh** (1 edit):
+
 1. Edit 5.1 (add run_validator line)
 
 Total: 10 edits + 1 file creation across 5 files.
@@ -511,28 +560,37 @@ Total: 10 edits + 1 file creation across 5 files.
 
 ### Manual Verification
 
-1. **Status mode invocation**: Invoke `/plan-product status`, `/build-product status`, `/review-quality status` and verify each produces a status report without spawning agents
-2. **Empty state**: Clear checkpoint files for a skill and verify "No active or recent sessions found."
-3. **Backward compatibility**: Verify status command works with existing checkpoint files (e.g., `content-dedup-impl-architect.md`)
+1. **Status mode invocation**: Invoke `/plan-product status`,
+   `/build-product status`, `/review-quality status` and verify each produces a
+   status report without spawning agents
+2. **Empty state**: Clear checkpoint files for a skill and verify "No active or
+   recent sessions found."
+3. **Backward compatibility**: Verify status command works with existing
+   checkpoint files (e.g., `content-dedup-impl-architect.md`)
 
 ### Automated Validation
 
-1. **Validator on existing checkpoint files**: Run `bash scripts/validators/progress-checkpoint.sh <repo-root>` -- should pass on existing well-formed checkpoints
-2. **Validator on malformed checkpoint**: Create a test checkpoint with missing `status` field and verify `[FAIL]` output
-3. **Full pipeline**: Run `bash scripts/validate.sh` -- should include progress-checkpoint validation in output
-4. **Argument-hint validation**: Existing `skill-structure.sh` validator should still pass after argument-hint changes
+1. **Validator on existing checkpoint files**: Run
+   `bash scripts/validators/progress-checkpoint.sh <repo-root>` -- should pass
+   on existing well-formed checkpoints
+2. **Validator on malformed checkpoint**: Create a test checkpoint with missing
+   `status` field and verify `[FAIL]` output
+3. **Full pipeline**: Run `bash scripts/validate.sh` -- should include
+   progress-checkpoint validation in output
+4. **Argument-hint validation**: Existing `skill-structure.sh` validator should
+   still pass after argument-hint changes
 
 ### Success Criteria Mapping
 
-| Spec Criterion | Implementation |
-|---------------|----------------|
-| 1-3. Status command per skill | Edits 1.2, 2.2, 3.2 (status mode bullets) |
-| 4. Agent status table | Status report format (team lead renders from checkpoint data) |
-| 5. Summary counts | Status report format (Summary section) |
-| 6. Blockers section | Status report format (Blockers section) |
-| 7. No checkpoints message | Status mode bullet text: "If no checkpoint files exist..." |
-| 8. Raw phase values | Status mode bullet: no normalization mentioned |
-| 9. Session summary step | Edits 1.3, 2.3, 3.3 |
-| 10. Template format | Summary step text: "using the format from `docs/progress/_template.md`" |
-| 11. Validator in pipeline | File 4 (script) + Edit 5.1 (pipeline integration) |
-| 12. Backward compatibility | Validator handles existing files; status mode reads any checkpoint with matching team field |
+| Spec Criterion                | Implementation                                                                              |
+| ----------------------------- | ------------------------------------------------------------------------------------------- |
+| 1-3. Status command per skill | Edits 1.2, 2.2, 3.2 (status mode bullets)                                                   |
+| 4. Agent status table         | Status report format (team lead renders from checkpoint data)                               |
+| 5. Summary counts             | Status report format (Summary section)                                                      |
+| 6. Blockers section           | Status report format (Blockers section)                                                     |
+| 7. No checkpoints message     | Status mode bullet text: "If no checkpoint files exist..."                                  |
+| 8. Raw phase values           | Status mode bullet: no normalization mentioned                                              |
+| 9. Session summary step       | Edits 1.3, 2.3, 3.3                                                                         |
+| 10. Template format           | Summary step text: "using the format from `docs/progress/_template.md`"                     |
+| 11. Validator in pipeline     | File 4 (script) + Edit 5.1 (pipeline integration)                                           |
+| 12. Backward compatibility    | Validator handles existing files; status mode reads any checkpoint with matching team field |

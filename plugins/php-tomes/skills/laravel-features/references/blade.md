@@ -74,7 +74,8 @@ public function render(): string
 ])
 ```
 
-Declared props are extracted from `$attributes`. Undeclared values remain in `$attributes`.
+Declared props are extracted from `$attributes`. Undeclared values remain in
+`$attributes`.
 
 ### $attributes Methods
 
@@ -190,14 +191,15 @@ Named slots expose `->isNotEmpty()` and `->attributes`.
 <x-dynamic-component :component="$componentName" :data="$data" />
 ```
 
-> **Security:** Never pass unsanitized user input as the component name. Whitelist allowed values.
+> **Security:** Never pass unsanitized user input as the component name.
+> Whitelist allowed values.
 
 ## Security Directives
 
 ### Output Escaping
 
 | Syntax         | Behavior                                | Use For                     |
-|----------------|-----------------------------------------|-----------------------------|
+| -------------- | --------------------------------------- | --------------------------- |
 | `{{ $var }}`   | `htmlspecialchars()` with `ENT_QUOTES`  | All untrusted data          |
 | `{!! $var !!}` | Raw, unescaped                          | Only sanitized HTML         |
 | `@js($var)`    | `json_encode()` with `JSON_HEX_*` flags | Embedding PHP in `<script>` |
@@ -243,7 +245,7 @@ abort_unless(in_array(parse_url($url, PHP_URL_SCHEME), ['http', 'https']), 422);
 ## Anti-Patterns
 
 | Anti-Pattern                                      | Fix                                        |
-|---------------------------------------------------|--------------------------------------------|
+| ------------------------------------------------- | ------------------------------------------ |
 | Querying DB in templates                          | Prepare data in controller/view model      |
 | Deeply nested `@include` with implicit vars       | Use components with explicit props         |
 | `{!! $userInput !!}` without sanitization         | HTMLPurifier at write time, then `{!! !!}` |

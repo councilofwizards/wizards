@@ -14,7 +14,7 @@
 ### PSR-3 Log Levels
 
 | Level       | Use                                         |
-|-------------|---------------------------------------------|
+| ----------- | ------------------------------------------- |
 | `debug`     | Developer context, suppressed in production |
 | `info`      | Normal events (order placed, user login)    |
 | `warning`   | Recoverable errors, unexpected conditions   |
@@ -29,13 +29,16 @@
   "level": "INFO",
   "extra": {
     "correlation_id": "01954b22-f9e3-7000-9345-3e9a2b1c5d6f",
-    "order_id": 42, "user_id": 7, "total_cents": 4999
+    "order_id": 42,
+    "user_id": 7,
+    "total_cents": 4999
   }
 }
 ```
 
-Rules: dot-namespaced events, IDs not objects, flat context, include `duration_ms` for slow ops. Never log
-passwords/tokens/PII. In containers, write to `stdout`/`stderr` only.
+Rules: dot-namespaced events, IDs not objects, flat context, include
+`duration_ms` for slow ops. Never log passwords/tokens/PII. In containers, write
+to `stdout`/`stderr` only.
 
 ## Correlation IDs
 
@@ -77,7 +80,7 @@ ProcessPaymentJob::dispatch($order->id, CorrelationIdProcessor::get());
 ### Processors
 
 | Processor                  | Adds                                             |
-|----------------------------|--------------------------------------------------|
+| -------------------------- | ------------------------------------------------ |
 | `WebProcessor`             | `url`, `ip`, `http_method`, `server`, `referrer` |
 | `IntrospectionProcessor`   | `file`, `line`, `class`, `function`              |
 | `MemoryUsageProcessor`     | `memory_usage`                                   |
@@ -87,7 +90,7 @@ ProcessPaymentJob::dispatch($order->id, CorrelationIdProcessor::get());
 ### Log Aggregation
 
 | Pattern            | Environment | Stack                     |
-|--------------------|-------------|---------------------------|
+| ------------------ | ----------- | ------------------------- |
 | Stdout + collector | Containers  | Fluent Bit/Fluentd        |
 | File + shipper     | VMs         | Filebeat to Elasticsearch |
 | Loki push          | Grafana     | Promtail or Loki driver   |
@@ -97,7 +100,7 @@ ProcessPaymentJob::dispatch($order->id, CorrelationIdProcessor::get());
 ### RED Method (Request-Driven)
 
 | Signal   | Metric                            | Type      |
-|----------|-----------------------------------|-----------|
+| -------- | --------------------------------- | --------- |
 | Rate     | `http_requests_total`             | Counter   |
 | Errors   | `http_requests_total{status=5xx}` | Counter   |
 | Duration | `http_request_duration_seconds`   | Histogram |
@@ -105,7 +108,7 @@ ProcessPaymentJob::dispatch($order->id, CorrelationIdProcessor::get());
 ### Metric Types
 
 | Type      | Behavior                | Use For                  |
-|-----------|-------------------------|--------------------------|
+| --------- | ----------------------- | ------------------------ |
 | Counter   | Only increases          | Requests, errors         |
 | Gauge     | Up or down              | Queue depth, connections |
 | Histogram | Distribution in buckets | Duration, payload size   |
@@ -121,17 +124,18 @@ $duration = (hrtime(true) - $start) / 1e9;
 $metrics->recordRequest($request->method(), $route, $response->getStatusCode(), $duration);
 ```
 
-Storage: Redis for FPM (shared across workers), APC for long-running, InMemory for tests.
+Storage: Redis for FPM (shared across workers), APC for long-running, InMemory
+for tests.
 
 ### Label Rules
 
-Good (bounded): `method`, `route`, `status_code`, `queue_name`, `job_class`
-Bad (unbounded): `user_id`, `order_id`, `ip_address` — cardinality explosion.
+Good (bounded): `method`, `route`, `status_code`, `queue_name`, `job_class` Bad
+(unbounded): `user_id`, `order_id`, `ip_address` — cardinality explosion.
 
 ### PHP-Specific Metrics
 
 | Metric                              | Type      | Purpose              |
-|-------------------------------------|-----------|----------------------|
+| ----------------------------------- | --------- | -------------------- |
 | `app_cache_hits/misses_total`       | Counter   | Cache efficiency     |
 | `app_db_query_duration_seconds`     | Histogram | Slow query detection |
 | `app_job_duration/failures`         | Hist/Ctr  | Queue health         |
@@ -173,12 +177,13 @@ try {
 }
 ```
 
-Name spans after operations (`order.place`), not implementations. Use W3C TraceContext (`traceparent` header).
+Name spans after operations (`order.place`), not implementations. Use W3C
+TraceContext (`traceparent` header).
 
 ### Sampling
 
 | Strategy                   | Use Case                |
-|----------------------------|-------------------------|
+| -------------------------- | ----------------------- |
 | `AlwaysOnSampler`          | Low-traffic services    |
 | `TraceIdRatioBasedSampler` | High-traffic (e.g. 10%) |
 | `ParentBasedSampler`       | Respect upstream        |
@@ -188,7 +193,7 @@ Name spans after operations (`order.place`), not implementations. Use W3C TraceC
 ### Probe Types
 
 | Probe     | On Failure        | Check                 |
-|-----------|-------------------|-----------------------|
+| --------- | ----------------- | --------------------- |
 | Liveness  | Container restart | Internal state only   |
 | Readiness | Remove from LB    | DB, cache, queue      |
 | Startup   | Delay liveness    | Slow boot, migrations |
@@ -203,5 +208,5 @@ Route::get('/health/ready', function (HealthCheckService $h) {
 });
 ```
 
-Response: `200` = healthy, `503` = unhealthy. Keep `/health/live` trivially fast (no I/O). Exclude non-critical deps
-from readiness.
+Response: `200` = healthy, `503` = unhealthy. Keep `/health/live` trivially fast
+(no I/O). Exclude non-critical deps from readiness.

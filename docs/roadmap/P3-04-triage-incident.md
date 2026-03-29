@@ -14,4 +14,6 @@ updated: "2026-02-19"
 
 ## Problem
 
-When production incidents occur, teams need a structured approach to assess severity, identify root causes, coordinate response, and document findings -- but ad-hoc triage leads to missed signals and inconsistent response quality.
+When production incidents occur, teams need a structured approach to assess
+severity, identify root causes, coordinate response, and document findings --
+but ad-hoc triage leads to missed signals and inconsistent response quality.

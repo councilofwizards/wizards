@@ -28,7 +28,7 @@
 ## Scalar Types
 
 | Type     | Values                 | Notes                             |
-|----------|------------------------|-----------------------------------|
+| -------- | ---------------------- | --------------------------------- |
 | `int`    | Integer numbers        | 64-bit on 64-bit platforms        |
 | `float`  | Floating-point numbers | Accepts `int` without strict mode |
 | `string` | Byte strings           | Not Unicode-aware by default      |
@@ -71,8 +71,8 @@ function parseId(string|int $id): int
 }
 ```
 
-Prefer exceptions over `T|false` returns for new code. Reserve `T|false` for wrapping
-built-in functions.
+Prefer exceptions over `T|false` returns for new code. Reserve `T|false` for
+wrapping built-in functions.
 
 ## Intersection Types
 
@@ -97,7 +97,7 @@ Each intersection group must be wrapped in parentheses.
 ## Special Types
 
 | Type    | Meaning                                  |
-|---------|------------------------------------------|
+| ------- | ---------------------------------------- |
 | `void`  | Returns no value; `return;` is allowed   |
 | `never` | Never returns — always throws or exits   |
 | `mixed` | Top type — accepts any value             |
@@ -105,7 +105,8 @@ Each intersection group must be wrapped in parentheses.
 | `true`  | Standalone true literal type (PHP 8.2+)  |
 | `false` | Standalone false literal type (PHP 8.0+) |
 
-`never` enables dead-code detection — statements after a `never` call are unreachable.
+`never` enables dead-code detection — statements after a `never` call are
+unreachable.
 
 ## Property Types
 
@@ -139,7 +140,7 @@ readonly class Money
 ## self, static, parent
 
 | Keyword  | Resolves to                        | Use case                   |
-|----------|------------------------------------|----------------------------|
+| -------- | ---------------------------------- | -------------------------- |
 | `self`   | Class that defines the method      | Factory methods, clone     |
 | `static` | Late-static-bound class (subclass) | Fluent builders, Eloquent  |
 | `parent` | Parent class                       | Calling overridden methods |
@@ -149,7 +150,7 @@ Use `static` for fluent method chains to preserve subtypes.
 ## Type Coercion Behavior
 
 | Context                     | Result                           |
-|-----------------------------|----------------------------------|
+| --------------------------- | -------------------------------- |
 | Non-strict, `"42"` to `int` | Succeeds, value is `42`          |
 | Strict, `"42"` to `int`     | `TypeError`                      |
 | Strict, `42` to `float`     | Succeeds (only allowed coercion) |
@@ -158,7 +159,7 @@ Use `static` for fluent method chains to preserve subtypes.
 ## PHPStan Levels
 
 | Level | Checks                                                            |
-|-------|-------------------------------------------------------------------|
+| ----- | ----------------------------------------------------------------- |
 | 0     | Unknown classes, functions, methods; wrong argument counts        |
 | 1     | Possibly undefined variables; unknown magic methods               |
 | 2     | Unknown methods on all expressions                                |
@@ -223,7 +224,7 @@ Reduces analysis time by 60-80% on unchanged files.
 Psalm levels run opposite to PHPStan — level 1 is strictest:
 
 | Level | Behavior                                              |
-|-------|-------------------------------------------------------|
+| ----- | ----------------------------------------------------- |
 | 8     | Only obvious errors (missing classes, undefined vars) |
 | 5     | Enforce return types; flag mixed in arithmetic        |
 | 3     | Strict generics; flag unsuppressed errors             |
@@ -251,18 +252,20 @@ Psalm levels run opposite to PHPStan — level 1 is strictest:
 /** @psalm-type UserId = positive-int */
 ```
 
-Psalm offers `non-empty-string`, `positive-int`, `non-empty-list<T>` for finer granularity.
+Psalm offers `non-empty-string`, `positive-int`, `non-empty-list<T>` for finer
+granularity.
 
 ## PHPStan vs Psalm
 
 | Criterion            | PHPStan              | Psalm                      |
-|----------------------|----------------------|----------------------------|
+| -------------------- | -------------------- | -------------------------- |
 | Speed                | Faster               | Slower on large codebases  |
 | Laravel support      | Larastan (excellent) | Plugin (good)              |
 | Generics             | Good via @template   | Better: more literal types |
 | Community extensions | Very large           | Smaller but growing        |
 
-**Recommendation:** PHPStan level 9 with Larastan for Laravel. Add Psalm for heavy generics.
+**Recommendation:** PHPStan level 9 with Larastan for Laravel. Add Psalm for
+heavy generics.
 
 ## Generics with @template
 
@@ -326,7 +329,8 @@ class UserRepository extends Repository
 }
 ```
 
-Use `@template-covariant` when the type parameter only appears in output positions.
+Use `@template-covariant` when the type parameter only appears in output
+positions.
 
 ## Custom PHPStan Rules
 
@@ -372,7 +376,7 @@ vendor/bin/phpstan analyse --generate-baseline phpstan-baseline.neon
 Start at level 0, increment one level per sprint:
 
 | Sprint | Level | Typical Issues                                  |
-|--------|-------|-------------------------------------------------|
+| ------ | ----- | ----------------------------------------------- |
 | 1      | 0     | Basic syntax, unknown functions                 |
 | 2      | 1     | Possibly undefined variables                    |
 | 3      | 2-3   | Wrong argument types on built-ins               |

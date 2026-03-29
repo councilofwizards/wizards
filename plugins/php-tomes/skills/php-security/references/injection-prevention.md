@@ -28,8 +28,8 @@ $pdo = new \PDO($dsn, $user, $password, [
 ]);
 ```
 
-> **Critical:** `ATTR_EMULATE_PREPARES => true` (MySQL default) interpolates client-side — vulnerable to
-> charset-mismatch attacks.
+> **Critical:** `ATTR_EMULATE_PREPARES => true` (MySQL default) interpolates
+> client-side — vulnerable to charset-mismatch attacks.
 
 ### Named Placeholders
 
@@ -82,7 +82,8 @@ $stmt->close();
 
 ## SQL Injection — Dynamic Identifiers
 
-Prepared statements do NOT protect table names, column names, or ORDER BY directions. These must be whitelisted.
+Prepared statements do NOT protect table names, column names, or ORDER BY
+directions. These must be whitelisted.
 
 ```php
 // Column whitelist
@@ -166,13 +167,13 @@ $stmt = $pdo->prepare('CALL get_user_by_email(?)');
 $stmt->execute([$email]);
 ```
 
-> **Gotcha:** If the stored procedure internally concatenates input into dynamic SQL (`EXECUTE`/`EXEC`), injection
-> happens inside the database engine.
+> **Gotcha:** If the stored procedure internally concatenates input into dynamic
+> SQL (`EXECUTE`/`EXEC`), injection happens inside the database engine.
 
 ### Deprecated/Unsafe Functions
 
 | Function                      | Status                  | Alternative             |
-|-------------------------------|-------------------------|-------------------------|
+| ----------------------------- | ----------------------- | ----------------------- |
 | `mysql_real_escape_string()`  | Removed PHP 7.0         | PDO prepared statements |
 | `addslashes()`                | Bypassable (multi-byte) | PDO prepared statements |
 | `mysqli_real_escape_string()` | Unreliable alone        | `mysqli::prepare()`     |
@@ -193,8 +194,8 @@ echo '<p>' . e($userInput) . '</p>';
 echo '<input type="text" value="' . e($userInput) . '">';
 ```
 
-> **Gotcha:** `htmlspecialchars()` without `ENT_QUOTES` does not encode `'`. Single-quoted attributes become a bypass
-> vector.
+> **Gotcha:** `htmlspecialchars()` without `ENT_QUOTES` does not encode `'`.
+> Single-quoted attributes become a bypass vector.
 
 ### JavaScript Context
 
@@ -258,7 +259,9 @@ header('X-Frame-Options: DENY');
 ```
 
 ```html
-<script nonce="<?= e($nonce) ?>">/* allowed */</script>
+<script nonce="<?= e($nonce) ?>">
+  /* allowed */
+</script>
 ```
 
 ---
@@ -283,8 +286,8 @@ if (!hash_equals($_SESSION['csrf_token'], $_POST['_token'] ?? '')) {
 
 ### Double-Submit Cookie (Stateless APIs)
 
-Set a random value as both a cookie (`httponly: false`, `samesite: Strict`) and require it as an `X-CSRF-Token` header.
-Verify with `hash_equals()`.
+Set a random value as both a cookie (`httponly: false`, `samesite: Strict`) and
+require it as an `X-CSRF-Token` header. Verify with `hash_equals()`.
 
 ### Laravel CSRF
 
@@ -299,10 +302,12 @@ Exclude webhook routes: `protected $except = ['/webhooks/stripe'];`
 ## CSRF — SameSite Cookies
 
 | Value  | Cross-site GET | Cross-site POST | Notes                |
-|--------|----------------|-----------------|----------------------|
+| ------ | -------------- | --------------- | -------------------- |
 | Strict | Blocked        | Blocked         | Breaks OAuth flows   |
 | Lax    | Sent           | Blocked         | Recommended default  |
 | None   | Sent           | Sent            | Requires Secure flag |
 
-- JWT in `localStorage` + Bearer header: CSRF does not apply (XSS becomes critical)
-- Cookie-based auth with `credentials: 'include'`: CSRF applies — use token header pattern
+- JWT in `localStorage` + Bearer header: CSRF does not apply (XSS becomes
+  critical)
+- Cookie-based auth with `credentials: 'include'`: CSRF applies — use token
+  header pattern

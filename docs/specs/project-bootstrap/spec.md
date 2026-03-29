@@ -12,20 +12,29 @@ updated: "2026-02-14"
 
 ## Summary
 
-Add a directory-creation check as Step 1 in each skill's Setup section so the plugin works on first install. Three files modified, ~5 lines added per file. No structural changes.
+Add a directory-creation check as Step 1 in each skill's Setup section so the
+plugin works on first install. Three files modified, ~5 lines added per file. No
+structural changes.
 
 ## Problem
 
-All three skills (`plan-product`, `build-product`, `review-quality`) instruct agents to read from `docs/roadmap/`, `docs/specs/`, `docs/progress/`, and `docs/architecture/`. On a fresh install, none of these directories exist. First-run invocations fail or produce disoriented agents.
+All three skills (`plan-product`, `build-product`, `review-quality`) instruct
+agents to read from `docs/roadmap/`, `docs/specs/`, `docs/progress/`, and
+`docs/architecture/`. On a fresh install, none of these directories exist.
+First-run invocations fail or produce disoriented agents.
 
 ## Change
 
-Insert a new Step 1 in each SKILL.md's `## Setup` section before the existing read steps. Renumber existing steps. The inserted text is **identical across all three files**.
+Insert a new Step 1 in each SKILL.md's `## Setup` section before the existing
+read steps. Renumber existing steps. The inserted text is **identical across all
+three files**.
 
 ### Text to Insert
 
 ```markdown
-1. **Ensure project directory structure exists.** Create any missing directories. For each empty directory, ensure a `.gitkeep` file exists so git tracks it:
+1. **Ensure project directory structure exists.** Create any missing
+   directories. For each empty directory, ensure a `.gitkeep` file exists so git
+   tracks it:
    - `docs/roadmap/`
    - `docs/specs/`
    - `docs/progress/`
@@ -37,6 +46,7 @@ Insert a new Step 1 in each SKILL.md's `## Setup` section before the existing re
 ### 1. `plugins/conclave/skills/plan-product/SKILL.md`
 
 **Before** (lines 15–19):
+
 ```markdown
 ## Setup
 
@@ -46,10 +56,13 @@ Insert a new Step 1 in each SKILL.md's `## Setup` section before the existing re
 ```
 
 **After:**
+
 ```markdown
 ## Setup
 
-1. **Ensure project directory structure exists.** Create any missing directories. For each empty directory, ensure a `.gitkeep` file exists so git tracks it:
+1. **Ensure project directory structure exists.** Create any missing
+   directories. For each empty directory, ensure a `.gitkeep` file exists so git
+   tracks it:
    - `docs/roadmap/`
    - `docs/specs/`
    - `docs/progress/`
@@ -62,6 +75,7 @@ Insert a new Step 1 in each SKILL.md's `## Setup` section before the existing re
 ### 2. `plugins/conclave/skills/build-product/SKILL.md`
 
 **Before** (lines 15–20):
+
 ```markdown
 ## Setup
 
@@ -72,10 +86,13 @@ Insert a new Step 1 in each SKILL.md's `## Setup` section before the existing re
 ```
 
 **After:**
+
 ```markdown
 ## Setup
 
-1. **Ensure project directory structure exists.** Create any missing directories. For each empty directory, ensure a `.gitkeep` file exists so git tracks it:
+1. **Ensure project directory structure exists.** Create any missing
+   directories. For each empty directory, ensure a `.gitkeep` file exists so git
+   tracks it:
    - `docs/roadmap/`
    - `docs/specs/`
    - `docs/progress/`
@@ -89,6 +106,7 @@ Insert a new Step 1 in each SKILL.md's `## Setup` section before the existing re
 ### 3. `plugins/conclave/skills/review-quality/SKILL.md`
 
 **Before** (lines 15–20):
+
 ```markdown
 ## Setup
 
@@ -99,10 +117,13 @@ Insert a new Step 1 in each SKILL.md's `## Setup` section before the existing re
 ```
 
 **After:**
+
 ```markdown
 ## Setup
 
-1. **Ensure project directory structure exists.** Create any missing directories. For each empty directory, ensure a `.gitkeep` file exists so git tracks it:
+1. **Ensure project directory structure exists.** Create any missing
+   directories. For each empty directory, ensure a `.gitkeep` file exists so git
+   tracks it:
    - `docs/roadmap/`
    - `docs/specs/`
    - `docs/progress/`
@@ -115,14 +136,19 @@ Insert a new Step 1 in each SKILL.md's `## Setup` section before the existing re
 
 ## Seed Files
 
-None beyond `.gitkeep`. No `_index.md`, no template content, no structured state files. Empty directories with `.gitkeep` are the correct initial state for a fresh project.
+None beyond `.gitkeep`. No `_index.md`, no template content, no structured state
+files. Empty directories with `.gitkeep` are the correct initial state for a
+fresh project.
 
 ## Properties
 
-- **Idempotent**: `mkdir -p` semantics. `.gitkeep` only created in empty directories. Running on an existing project is a no-op.
+- **Idempotent**: `mkdir -p` semantics. `.gitkeep` only created in empty
+  directories. Running on an existing project is a no-op.
 - **Zero dependencies**: No other features need to exist first.
-- **Purely additive**: Only adds lines; no existing lines modified beyond renumbering.
-- **Consistent**: Same canonical directory list, same wording, same position (Step 1) in all 3 skills.
+- **Purely additive**: Only adds lines; no existing lines modified beyond
+  renumbering.
+- **Consistent**: Same canonical directory list, same wording, same position
+  (Step 1) in all 3 skills.
 - **Git-safe**: Empty directories survive `git clone` via `.gitkeep`.
 
 ## Out of Scope
@@ -131,12 +157,20 @@ None beyond `.gitkeep`. No `_index.md`, no template content, no structured state
 - CLAUDE.md generation
 - Stack detection
 - Configurable paths
-- Graceful handling of empty directories by agents (workflow concern, not bootstrap)
+- Graceful handling of empty directories by agents (workflow concern, not
+  bootstrap)
 
 ## Success Criteria
 
-1. A user installs the plugin and runs `/plan-product` on a project with no `docs/` directory. The skill creates the directory structure and proceeds normally.
-2. A user runs `/build-product` on a project where `docs/` exists but `docs/architecture/` is missing. The missing directory is created; existing directories are untouched.
-3. Running any skill on an already-initialized project produces no changes to the directory structure (idempotent).
-4. After the bootstrap step runs on an empty project, `git status` shows the 4 directories tracked via `.gitkeep` files.
-5. The skill's normal flow is not disrupted — directory creation is silent and immediate.
+1. A user installs the plugin and runs `/plan-product` on a project with no
+   `docs/` directory. The skill creates the directory structure and proceeds
+   normally.
+2. A user runs `/build-product` on a project where `docs/` exists but
+   `docs/architecture/` is missing. The missing directory is created; existing
+   directories are untouched.
+3. Running any skill on an already-initialized project produces no changes to
+   the directory structure (idempotent).
+4. After the bootstrap step runs on an empty project, `git status` shows the 4
+   directories tracked via `.gitkeep` files.
+5. The skill's normal flow is not disrupted — directory creation is silent and
+   immediate.

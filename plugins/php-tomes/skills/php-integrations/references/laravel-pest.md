@@ -16,10 +16,11 @@
 
 ## HTTP Helper Functions
 
-The `pest-plugin-laravel` package exposes Laravel's HTTP testing methods as global functions:
+The `pest-plugin-laravel` package exposes Laravel's HTTP testing methods as
+global functions:
 
 | Function                        | Description                         |
-|---------------------------------|-------------------------------------|
+| ------------------------------- | ----------------------------------- |
 | `get($uri, $headers)`           | GET request                         |
 | `post($uri, $data, $headers)`   | POST request                        |
 | `put($uri, $data, $headers)`    | PUT request                         |
@@ -35,7 +36,8 @@ The `pest-plugin-laravel` package exposes Laravel's HTTP testing methods as glob
 | `withCookie($name, $value)`     | Set cookie for next request         |
 | `withSession($data)`            | Set session data for next request   |
 
-All return a `TestResponse` object — the same as `$this->get()` in PHPUnit-style Laravel tests.
+All return a `TestResponse` object — the same as `$this->get()` in PHPUnit-style
+Laravel tests.
 
 ---
 
@@ -139,7 +141,8 @@ it('allows admin access', function (User $user) {
 })->with('admin users');
 ```
 
-Factory closures are evaluated lazily — one per test case, with `RefreshDatabase` rollback between each.
+Factory closures are evaluated lazily — one per test case, with
+`RefreshDatabase` rollback between each.
 
 ---
 
@@ -183,12 +186,13 @@ vendor/bin/pest --parallel --ci
 ### Database Isolation
 
 | Trait                  | Parallel safe? | Notes                         |
-|------------------------|----------------|-------------------------------|
+| ---------------------- | -------------- | ----------------------------- |
 | `RefreshDatabase`      | Yes            | Migrates fresh per-process DB |
 | `DatabaseTransactions` | No             | Single-process only           |
 | `DatabaseTruncation`   | Partial        | Safe with per-process DBs     |
 
-Always use `RefreshDatabase` for parallel suites. Laravel automatically creates `test_<token>` databases per process.
+Always use `RefreshDatabase` for parallel suites. Laravel automatically creates
+`test_<token>` databases per process.
 
 ---
 
@@ -198,18 +202,18 @@ Always use `RefreshDatabase` for parallel suites. Laravel automatically creates 
 
 ```json5
 {
-    "source": {
-        "directories": ["app"],
-        "excludes": ["app/Console", "app/Providers"]
-    },
-    "logs": {
-        "text": "infection.log",
-        "html": "infection.html"
-    },
-    "minMsi": 70,
-    "minCoveredMsi": 80,
-    "testFramework": "pest",
-    "testFrameworkOptions": "--parallel"
+  source: {
+    directories: ["app"],
+    excludes: ["app/Console", "app/Providers"],
+  },
+  logs: {
+    text: "infection.log",
+    html: "infection.html",
+  },
+  minMsi: 70,
+  minCoveredMsi: 80,
+  testFramework: "pest",
+  testFrameworkOptions: "--parallel",
 }
 ```
 
@@ -230,7 +234,7 @@ vendor/bin/infection --git-diff-filter=AM --git-diff-base=main
 ### Conversion Table
 
 | PHPUnit                          | Pest                             |
-|----------------------------------|----------------------------------|
+| -------------------------------- | -------------------------------- |
 | `class FooTest extends TestCase` | `uses(TestCase::class)`          |
 | `public function test_foo()`     | `it('foo', function () {...})`   |
 | `$this->assertEquals($a, $b)`    | `expect($b)->toBe($a)`           |
@@ -248,8 +252,8 @@ vendor/bin/pest --drift tests/Unit
 vendor/bin/pest --drift tests/Feature
 ```
 
-Drift cannot convert shared assertion helpers from base `TestCase` classes. Extract those to `expect()->extend()` or
-shared `beforeEach()` closures.
+Drift cannot convert shared assertion helpers from base `TestCase` classes.
+Extract those to `expect()->extend()` or shared `beforeEach()` closures.
 
 ---
 

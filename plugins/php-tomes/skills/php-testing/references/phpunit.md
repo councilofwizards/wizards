@@ -57,7 +57,7 @@ Rules:
 PHPUnit 11 removed docblock annotations. Use PHP 8 attributes:
 
 | Attribute                          | Purpose                                        |
-|------------------------------------|------------------------------------------------|
+| ---------------------------------- | ---------------------------------------------- |
 | `#[Test]`                          | Marks method as a test                         |
 | `#[DataProvider('methodName')]`    | Parameterized test                             |
 | `#[Depends('testName')]`           | Test dependency                                |

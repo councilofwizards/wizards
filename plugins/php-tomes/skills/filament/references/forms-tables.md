@@ -14,7 +14,7 @@
 ## Field Types
 
 | Field          | Class            | Key Options                                                                    |
-|----------------|------------------|--------------------------------------------------------------------------------|
+| -------------- | ---------------- | ------------------------------------------------------------------------------ |
 | Text           | `TextInput`      | `email()`, `numeric()`, `password()`, `prefix()`, `suffix()`, `mask()`         |
 | Textarea       | `Textarea`       | `rows()`, `cols()`, `autosize()`                                               |
 | Select         | `Select`         | `options()`, `relationship()`, `searchable()`, `multiple()`, `preload()`       |
@@ -51,7 +51,7 @@ TextInput::make('username')->alpha()->minLength(3)->maxLength(20)
 ## Closure Injection
 
 | Parameter    | Type                  | Description                     |
-|--------------|-----------------------|---------------------------------|
+| ------------ | --------------------- | ------------------------------- |
 | `Get $get`   | `\Filament\Forms\Get` | Read another field's value      |
 | `Set $set`   | `\Filament\Forms\Set` | Write to another field          |
 | `$record`    | `?Model`              | Current record (null on create) |
@@ -75,14 +75,15 @@ Select::make('subcategory_id')
 ## Layout Components
 
 | Component  | Usage                                                                   |
-|------------|-------------------------------------------------------------------------|
+| ---------- | ----------------------------------------------------------------------- |
 | `Section`  | `Section::make('Title')->description('...')->collapsible()->schema([])` |
 | `Grid`     | `Grid::make(3)->schema([...])` — fields use `->columnSpan()`            |
 | `Fieldset` | `Fieldset::make('Address')->columns(2)->schema([...])`                  |
 | `Tabs`     | `Tabs::make('Label')->tabs([Tab::make('Name')->schema([...])])`         |
 | `Wizard`   | `Wizard::make([Step::make('Name')->schema([...])])->submitAction(...)`  |
 
-Default columns inside Section: 2. Override with `->columns(1)` or `->columns(['md' => 2, 'lg' => 3])`.
+Default columns inside Section: 2. Override with `->columns(1)` or
+`->columns(['md' => 2, 'lg' => 3])`.
 
 ## File Uploads
 
@@ -105,7 +106,7 @@ FileUpload::make('attachments')
 ## Column Types
 
 | Column    | Class             | Key Options                                                                                 |
-|-----------|-------------------|---------------------------------------------------------------------------------------------|
+| --------- | ----------------- | ------------------------------------------------------------------------------------------- |
 | Text      | `TextColumn`      | `limit()`, `wrap()`, `copyable()`, `money()`, `dateTime()`, `since()`, `badge()`, `color()` |
 | Icon      | `IconColumn`      | `boolean()`, `trueIcon()`, `falseIcon()`, `trueColor()`, `falseColor()`                     |
 | Image     | `ImageColumn`     | `circular()`, `size()`, `stacked()`, `limit()`                                              |
@@ -133,7 +134,7 @@ ImageColumn::make('avatar')->circular()->defaultImageUrl(url('/images/placeholde
 ## Filter Types
 
 | Filter  | Class           | Key Options                                              |
-|---------|-----------------|----------------------------------------------------------|
+| ------- | --------------- | -------------------------------------------------------- |
 | Select  | `SelectFilter`  | `options()`, `relationship()`, `multiple()`, `preload()` |
 | Ternary | `TernaryFilter` | `nullable()`, `trueLabel()`, `falseLabel()`, `queries()` |
 | Trashed | `TrashedFilter` | For soft-deleted models                                  |

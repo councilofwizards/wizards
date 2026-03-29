@@ -1,7 +1,7 @@
 ---
 feature: ""
-status: "complete"               # in_progress | complete
-completed: ""                    # YYYY-MM-DD (when status is complete)
+status: "complete" # in_progress | complete
+completed: "" # YYYY-MM-DD (when status is complete)
 ---
 
 # {Priority}: {Title} -- Progress

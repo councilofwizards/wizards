@@ -15,7 +15,7 @@
 ### Key INI Settings
 
 | Setting                           | Default | Dev   | Production | Notes                                                  |
-|-----------------------------------|---------|-------|------------|--------------------------------------------------------|
+| --------------------------------- | ------- | ----- | ---------- | ------------------------------------------------------ |
 | `opcache.enable`                  | 1       | 1     | 1          | 3-10x throughput vs disabled                           |
 | `opcache.enable_cli`              | 0       | 0     | 0          | Enable only for long-running CLI                       |
 | `opcache.memory_consumption`      | 128     | 128   | 256        | MB; increase if >90% used                              |
@@ -41,7 +41,7 @@ $hitRate = $status['opcache_statistics']['opcache_hit_rate'];
 ### CRTO Bitmask
 
 | Digit | Meaning            | Values                            |
-|-------|--------------------|-----------------------------------|
+| ----- | ------------------ | --------------------------------- |
 | C     | CPU flags          | 0=disable, 1=enable AVX/SSE       |
 | R     | Register allocator | 0=none, 1=local, 2=global         |
 | T     | JIT trigger        | 0=all, 4=hot functions, 5=tracing |
@@ -52,7 +52,7 @@ Common values: `1255` (tracing, recommended), `1205` (function).
 ### Impact by Workload
 
 | Workload                       | JIT Impact |
-|--------------------------------|------------|
+| ------------------------------ | ---------- |
 | Laravel HTTP (I/O-bound)       | +0-5%      |
 | Mathematical computation       | +20-50%    |
 | Image processing (GD, Imagick) | +10-30%    |
@@ -76,14 +76,15 @@ opcache.preload=/var/www/html/preload.php
 opcache.preload_user=www-data
 ```
 
-Laravel: `php artisan optimize` generates a preload file. Run during container builds.
+Laravel: `php artisan optimize` generates a preload file. Run during container
+builds.
 
 ## Database Optimization Patterns
 
 ### EXPLAIN Output (MySQL)
 
 | Column  | Good Values              | Red Flags                           |
-|---------|--------------------------|-------------------------------------|
+| ------- | ------------------------ | ----------------------------------- |
 | `type`  | `ref`, `eq_ref`, `const` | `ALL` (full table scan)             |
 | `rows`  | Close to result count    | Much larger than result count       |
 | `Extra` | `Using index`            | `Using filesort`, `Using temporary` |
@@ -93,7 +94,8 @@ Laravel: `php artisan optimize` generates a preload file. Run during container b
 
 - Leftmost prefix rule: `(a, b, c)` supports `(a)`, `(a, b)`, `(a, b, c)`
 - Place equality columns first, range/sort columns last
-- Covering indexes include all SELECT columns, eliminating row lookups (30-70% faster)
+- Covering indexes include all SELECT columns, eliminating row lookups (30-70%
+  faster)
 
 ### Eager Loading Patterns
 
@@ -156,7 +158,7 @@ memory_get_usage(true);         // Current usage
 ### Chunking Comparison
 
 | Method         | Memory          | Performance on Large Tables |
-|----------------|-----------------|-----------------------------|
+| -------------- | --------------- | --------------------------- |
 | `Model::all()` | O(n) — all rows | N/A                         |
 | `chunk()`      | O(batch)        | Degrades (OFFSET scan)      |
 | `chunkById()`  | O(batch)        | O(log n) with index         |
@@ -186,7 +188,7 @@ zend.gc_threshold=10000         ; Higher = less frequent GC, higher peak memory
 ### Process Manager Modes
 
 | Mode       | Behavior                   | Use Case                     |
-|------------|----------------------------|------------------------------|
+| ---------- | -------------------------- | ---------------------------- |
 | `static`   | Fixed number of workers    | Containers with fixed memory |
 | `dynamic`  | Scales between min and max | VMs, variable load           |
 | `ondemand` | Spawns workers on request  | Low-traffic, saves memory    |
@@ -197,12 +199,13 @@ zend.gc_threshold=10000         ; Higher = less frequent GC, higher peak memory
 max_children = floor(available_memory / avg_worker_memory)
 ```
 
-Typical Laravel worker: 30-60 MB. Measure with: `ps -o rss= -p $(pgrep -d, php-fpm)`
+Typical Laravel worker: 30-60 MB. Measure with:
+`ps -o rss= -p $(pgrep -d, php-fpm)`
 
 ### Key Settings
 
 | Setting                   | Recommended  | Notes                           |
-|---------------------------|--------------|---------------------------------|
+| ------------------------- | ------------ | ------------------------------- |
 | `pm.max_children`         | Memory-based | See formula above               |
 | `pm.start_servers`        | 25% of max   | Processes started on pool boot  |
 | `pm.min_spare_servers`    | 2-3          | Minimum idle workers            |
@@ -213,7 +216,7 @@ Typical Laravel worker: 30-60 MB. Measure with: `ps -o rss= -p $(pgrep -d, php-f
 ## Profiling Tools
 
 | Tool                          | Use Case                                |
-|-------------------------------|-----------------------------------------|
+| ----------------------------- | --------------------------------------- |
 | `EXPLAIN` / `EXPLAIN ANALYZE` | Query execution plan                    |
 | MySQL slow query log          | Slow query identification in production |
 | Laravel Telescope             | Per-request query log in development    |

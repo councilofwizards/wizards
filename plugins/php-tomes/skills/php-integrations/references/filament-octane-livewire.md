@@ -21,7 +21,7 @@
 Filament 3.x automatically checks Eloquent policies:
 
 | Filament Action | Policy Method                            |
-|-----------------|------------------------------------------|
+| --------------- | ---------------------------------------- |
 | View list       | `viewAny(User $user)`                    |
 | View record     | `view(User $user, Model $record)`        |
 | Create          | `create(User $user)`                     |
@@ -31,8 +31,9 @@ Filament 3.x automatically checks Eloquent policies:
 | Force delete    | `forceDelete(User $user, Model $record)` |
 | Restore         | `restore(User $user, Model $record)`     |
 
-If the policy returns `false`, Filament hides the UI element AND blocks the server-side request. Policies are discovered
-via Laravel's automatic registration.
+If the policy returns `false`, Filament hides the UI element AND blocks the
+server-side request. Policies are discovered via Laravel's automatic
+registration.
 
 ---
 
@@ -48,7 +49,8 @@ $panel->id('customer')->path('portal')->authGuard('customer')
     ->resources([OrderResource::class, InvoiceResource::class]);
 ```
 
-Register both in `bootstrap/providers.php`. Share logic via abstract base resources.
+Register both in `bootstrap/providers.php`. Share logic via abstract base
+resources.
 
 ---
 
@@ -141,7 +143,7 @@ class ClearAnalyticsBuffer
 ```
 
 | Workload               | Octane Benefit |
-|------------------------|----------------|
+| ---------------------- | -------------- |
 | High-traffic JSON APIs | High           |
 | Server-rendered Blade  | Medium         |
 | Queue workers / CLI    | None           |
@@ -181,9 +183,11 @@ CMD ["php", "artisan", "octane:start", "--server=frankenphp", \
      "--host=0.0.0.0", "--port=8000", "--workers=${OCTANE_WORKERS:-auto}"]
 ```
 
-Zero-downtime restart: `php artisan octane:reload` or `kill -USR1 $(cat /tmp/octane.pid)`.
+Zero-downtime restart: `php artisan octane:reload` or
+`kill -USR1 $(cat /tmp/octane.pid)`.
 
-Key env vars: `OCTANE_SERVER`, `OCTANE_WORKERS`, `OCTANE_MAX_REQUESTS`, `OCTANE_HTTPS`.
+Key env vars: `OCTANE_SERVER`, `OCTANE_WORKERS`, `OCTANE_MAX_REQUESTS`,
+`OCTANE_HTTPS`.
 
 ---
 
@@ -261,7 +265,8 @@ class AuditLogTable extends Component implements HasTable
 }
 ```
 
-Always include `<x-filament-actions::modals />` in views using Filament modal actions.
+Always include `<x-filament-actions::modals />` in views using Filament modal
+actions.
 
 ---
 
@@ -284,5 +289,6 @@ protected function getListeners(): array
 }
 ```
 
-Use Filament's `fi-*` CSS classes in custom views inside panels for dark mode and theming consistency. Alpine.js is
-always available (registered by Livewire) — no separate import needed.
+Use Filament's `fi-*` CSS classes in custom views inside panels for dark mode
+and theming consistency. Alpine.js is always available (registered by Livewire)
+— no separate import needed.

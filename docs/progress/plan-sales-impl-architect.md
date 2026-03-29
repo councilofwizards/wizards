@@ -12,9 +12,14 @@ updated: "2026-02-19T12:00:00Z"
 
 ## Overview
 
-This document provides a section-by-section implementation plan for `plugins/conclave/skills/plan-sales/SKILL.md`. Each section maps to specific spec success criteria and system design requirements.
+This document provides a section-by-section implementation plan for
+`plugins/conclave/skills/plan-sales/SKILL.md`. Each section maps to specific
+spec success criteria and system design requirements.
 
-The plan-sales SKILL.md is the first Collaborative Analysis skill in the conclave framework. It introduces peer-to-peer mid-process knowledge sharing (Domain Briefs + Cross-Reference Reports), lead-driven synthesis, and a Strategy Skeptic role.
+The plan-sales SKILL.md is the first Collaborative Analysis skill in the
+conclave framework. It introduces peer-to-peer mid-process knowledge sharing
+(Domain Briefs + Cross-Reference Reports), lead-driven synthesis, and a Strategy
+Skeptic role.
 
 ---
 
@@ -34,10 +39,13 @@ argument-hint: "[--light] [status | (empty for new assessment)]"
 ```
 
 **Notes**:
+
 - `name` must match the directory name `plan-sales`
 - `description` taken verbatim from system design
-- `argument-hint` matches spec Arguments table (no `<period>` arg unlike investor update)
-- No `type: single-agent` field -- this is multi-agent, so absence is correct (validator skips single-agent skills for shared content checks)
+- `argument-hint` matches spec Arguments table (no `<period>` arg unlike
+  investor update)
+- No `type: single-agent` field -- this is multi-agent, so absence is correct
+  (validator skips single-agent skills for shared content checks)
 
 **Spec criteria mapped**: SC-7 (--light), SC-8 (status), SC-9 (first-run setup)
 
@@ -50,54 +58,77 @@ argument-hint: "[--light] [status | (empty for new assessment)]"
 ```markdown
 # Sales Strategy Team Orchestration
 
-You are orchestrating the Sales Strategy Team. Your role is TEAM LEAD.
-Unlike Pipeline or Hub-and-Spoke skills, you are running a Collaborative Analysis --
+You are orchestrating the Sales Strategy Team. Your role is TEAM LEAD. Unlike
+Pipeline or Hub-and-Spoke skills, you are running a Collaborative Analysis --
 parallel agents research independently, cross-reference each other's findings,
 and YOU synthesize the final assessment. You coordinate AND write the synthesis
 (Phase 3 is NOT delegate mode).
 ```
 
 **Critical distinction from other skills**:
-- `draft-investor-update`: "Enable delegate mode -- you coordinate, you do NOT write content yourself."
-- `plan-product`: "Enable delegate mode -- you coordinate, you do NOT write specs yourself."
-- `plan-sales`: Team Lead WRITES the synthesis. Phase 3 is lead-driven. Must be explicit about this difference.
+
+- `draft-investor-update`: "Enable delegate mode -- you coordinate, you do NOT
+  write content yourself."
+- `plan-product`: "Enable delegate mode -- you coordinate, you do NOT write
+  specs yourself."
+- `plan-sales`: Team Lead WRITES the synthesis. Phase 3 is lead-driven. Must be
+  explicit about this difference.
 
 **Notes**:
+
 - Must explicitly state the Collaborative Analysis pattern
-- Must explicitly state the lead writes the synthesis (not delegate mode for Phase 3)
-- Must state the lead orchestrates phases 1, 2, 4, 5 in delegate mode but performs Phase 3 directly
-- Spec criteria mapped: SC-2 (Collaborative Analysis protocol executes), SC-14 (Lead-driven synthesis)
+- Must explicitly state the lead writes the synthesis (not delegate mode for
+  Phase 3)
+- Must state the lead orchestrates phases 1, 2, 4, 5 in delegate mode but
+  performs Phase 3 directly
+- Spec criteria mapped: SC-2 (Collaborative Analysis protocol executes), SC-14
+  (Lead-driven synthesis)
 
 ---
 
 ## Section 3: Setup
 
-**Source**: All existing SKILL.md Setup sections + system design First-Run Behavior
+**Source**: All existing SKILL.md Setup sections + system design First-Run
+Behavior
 
 **Structure**:
-1. Ensure project directory structure exists. Create any missing directories. For each empty directory, ensure `.gitkeep`:
+
+1. Ensure project directory structure exists. Create any missing directories.
+   For each empty directory, ensure `.gitkeep`:
    - `docs/roadmap/`
    - `docs/specs/`
    - `docs/progress/`
    - `docs/architecture/`
    - `docs/stack-hints/`
-   - `docs/sales-plans/`  ← **NEW directory** (replaces `docs/investor-updates/` from investor update)
+   - `docs/sales-plans/` ← **NEW directory** (replaces `docs/investor-updates/`
+     from investor update)
 2. Read templates if they exist (same as other skills)
 3. Detect project stack (same pattern as other skills)
 4. Read `docs/roadmap/` to understand current state
 5. Read `docs/progress/` for latest implementation status
 6. Read `docs/specs/` for existing specs
 7. Read `docs/architecture/` for technical decisions
-8. Read `docs/sales-plans/_user-data.md` if it exists. Read any prior sales assessments in `docs/sales-plans/` for consistency reference.
-9. **First-run convenience**: If `docs/sales-plans/` exists but `docs/sales-plans/_user-data.md` does not, create it using the User Data Template embedded in this file (see below). Output a message: "Created docs/sales-plans/_user-data.md -- fill in your market data, pricing, and constraints before the next run for a more specific assessment."
-10. **Data dependency warning**: If `_user-data.md` does not exist OR is empty/template-only, output a prominent warning: "No user data found. Assessment quality depends heavily on user-provided market data. Create docs/sales-plans/_user-data.md for a more specific assessment."
+8. Read `docs/sales-plans/_user-data.md` if it exists. Read any prior sales
+   assessments in `docs/sales-plans/` for consistency reference.
+9. **First-run convenience**: If `docs/sales-plans/` exists but
+   `docs/sales-plans/_user-data.md` does not, create it using the User Data
+   Template embedded in this file (see below). Output a message: "Created
+   docs/sales-plans/\_user-data.md -- fill in your market data, pricing, and
+   constraints before the next run for a more specific assessment."
+10. **Data dependency warning**: If `_user-data.md` does not exist OR is
+    empty/template-only, output a prominent warning: "No user data found.
+    Assessment quality depends heavily on user-provided market data. Create
+    docs/sales-plans/\_user-data.md for a more specific assessment."
 
 **Notes**:
+
 - Steps 1-3 are shared pattern (identical to other skills except directory list)
 - Steps 4-6 are shared pattern
-- Step 7 is new (architecture read for technical decisions -- analysis agents need this)
+- Step 7 is new (architecture read for technical decisions -- analysis agents
+  need this)
 - Steps 8-10 are specific to plan-sales
-- Spec criteria mapped: SC-9 (first-run setup), SC-10 (reads _user-data.md), SC-13 (first-run warnings)
+- Spec criteria mapped: SC-9 (first-run setup), SC-10 (reads \_user-data.md),
+  SC-13 (first-run warnings)
 
 ---
 
@@ -108,16 +139,24 @@ and YOU synthesize the final assessment. You coordinate AND write the synthesis
 ```markdown
 ## Write Safety
 
-Agents working in parallel MUST NOT write to the same file. Follow these conventions:
+Agents working in parallel MUST NOT write to the same file. Follow these
+conventions:
 
-- **Progress files**: Each agent writes ONLY to `docs/progress/plan-sales-{role}.md` (e.g., `docs/progress/plan-sales-market-analyst.md`). Agents NEVER write to a shared progress file.
-- **Shared files**: Only the Team Lead writes to `docs/sales-plans/` output files and shared/aggregated progress summaries. The Team Lead aggregates agent outputs AFTER phases complete.
+- **Progress files**: Each agent writes ONLY to
+  `docs/progress/plan-sales-{role}.md` (e.g.,
+  `docs/progress/plan-sales-market-analyst.md`). Agents NEVER write to a shared
+  progress file.
+- **Shared files**: Only the Team Lead writes to `docs/sales-plans/` output
+  files and shared/aggregated progress summaries. The Team Lead aggregates agent
+  outputs AFTER phases complete.
 - **Architecture files**: Each agent writes to files scoped to their concern.
 ```
 
 **Notes**:
+
 - Same structure as other skills
-- Role names change: `{role}` = market-analyst, product-strategist, gtm-analyst, accuracy-skeptic, strategy-skeptic
+- Role names change: `{role}` = market-analyst, product-strategist, gtm-analyst,
+  accuracy-skeptic, strategy-skeptic
 - Key difference: No agent writes to `docs/sales-plans/` except the Team Lead
 
 ---
@@ -126,9 +165,11 @@ Agents working in parallel MUST NOT write to the same file. Follow these convent
 
 **Source**: Standard pattern + system design phase enum
 
-**Phase enum**: `research | cross-reference | synthesis | review | revision | complete`
+**Phase enum**:
+`research | cross-reference | synthesis | review | revision | complete`
 
 This differs from:
+
 - plan-product: `research | design | review | complete`
 - draft-investor-update: `research | draft | review | revision | complete`
 
@@ -137,14 +178,15 @@ This differs from:
 feature: "sales-strategy"
 team: "plan-sales"
 agent: "role-name"
-phase: "research"         # research | cross-reference | synthesis | review | revision | complete
-status: "in_progress"     # in_progress | blocked | awaiting_review | complete
+phase: "research" # research | cross-reference | synthesis | review | revision | complete
+status: "in_progress" # in_progress | blocked | awaiting_review | complete
 last_action: "Brief description of last completed action"
 updated: "ISO-8601 timestamp"
 ---
 ```
 
 **Notes**:
+
 - Standard format, just different phase enum
 - `team: "plan-sales"` for validator compatibility
 - Checkpoint timing rules same as other skills
@@ -160,13 +202,25 @@ updated: "ISO-8601 timestamp"
 ## Determine Mode
 
 Based on $ARGUMENTS:
-- **"status"**: Read all checkpoint files for this skill and generate a consolidated status report. Do NOT spawn any agents. Read `docs/progress/` files with `team: "plan-sales"` in their frontmatter, parse their YAML metadata, and output a formatted status summary. If no checkpoint files exist for this skill, report "No active or recent sessions found."
-- **Empty/no args**: First, scan `docs/progress/` for checkpoint files with `team: "plan-sales"` and `status` of `in_progress`, `blocked`, or `awaiting_review`. If found, **resume from the last checkpoint** -- re-spawn the relevant agents with their checkpoint content as context. If no incomplete checkpoints exist, start a new assessment.
+
+- **"status"**: Read all checkpoint files for this skill and generate a
+  consolidated status report. Do NOT spawn any agents. Read `docs/progress/`
+  files with `team: "plan-sales"` in their frontmatter, parse their YAML
+  metadata, and output a formatted status summary. If no checkpoint files exist
+  for this skill, report "No active or recent sessions found."
+- **Empty/no args**: First, scan `docs/progress/` for checkpoint files with
+  `team: "plan-sales"` and `status` of `in_progress`, `blocked`, or
+  `awaiting_review`. If found, **resume from the last checkpoint** -- re-spawn
+  the relevant agents with their checkpoint content as context. If no incomplete
+  checkpoints exist, start a new assessment.
 ```
 
 **Notes**:
-- No "period" argument (unlike investor update) -- sales assessments are not period-scoped
-- No "new/review/reprioritize" modes (unlike plan-product) -- sales assessment is a single mode
+
+- No "period" argument (unlike investor update) -- sales assessments are not
+  period-scoped
+- No "new/review/reprioritize" modes (unlike plan-product) -- sales assessment
+  is a single mode
 - Just status and empty/resume
 - Spec criteria mapped: SC-8 (status mode)
 
@@ -179,19 +233,25 @@ Based on $ARGUMENTS:
 ```markdown
 ## Lightweight Mode
 
-If `$ARGUMENTS` begins with `--light`, strip the flag and enable lightweight mode:
-- Output to user: "Lightweight mode enabled: analysis agents using Sonnet. Skeptics remain Opus. Quality gates maintained."
+If `$ARGUMENTS` begins with `--light`, strip the flag and enable lightweight
+mode:
+
+- Output to user: "Lightweight mode enabled: analysis agents using Sonnet.
+  Skeptics remain Opus. Quality gates maintained."
 - Market Analyst: spawn with model **sonnet** instead of opus
 - Product Strategist: spawn with model **sonnet** instead of opus
 - GTM Analyst: spawn with model **sonnet** instead of opus
 - Accuracy Skeptic: unchanged (ALWAYS Opus)
 - Strategy Skeptic: unchanged (ALWAYS Opus)
-- All orchestration flow, quality gates, and communication protocols remain identical
+- All orchestration flow, quality gates, and communication protocols remain
+  identical
 ```
 
 **Notes**:
+
 - Only analysis agents downgrade; skeptics stay Opus
-- This is the same pattern as other skills but with 3 agents changing instead of 1-2
+- This is the same pattern as other skills but with 3 agents changing instead of
+  1-2
 - Spec criteria mapped: SC-7 (--light mode)
 
 ---
@@ -208,45 +268,57 @@ If `$ARGUMENTS` begins with `--light`, strip the flag and enable lightweight mod
 Create an agent team called "plan-sales" with these teammates:
 
 ### Market Analyst
+
 - **Name**: `market-analyst`
 - **Model**: opus
 - **Subagent type**: `general-purpose`
 - **Prompt**: [See Teammate Spawn Prompts below]
-- **Tasks**: Market sizing, competitive landscape, industry trends. Produce Market Domain Brief. Cross-reference peers' findings.
+- **Tasks**: Market sizing, competitive landscape, industry trends. Produce
+  Market Domain Brief. Cross-reference peers' findings.
 
 ### Product Strategist
+
 - **Name**: `product-strategist`
 - **Model**: opus
 - **Subagent type**: `general-purpose`
 - **Prompt**: [See Teammate Spawn Prompts below]
-- **Tasks**: Value proposition, differentiation, product-market fit. Produce Product Domain Brief. Cross-reference peers' findings.
+- **Tasks**: Value proposition, differentiation, product-market fit. Produce
+  Product Domain Brief. Cross-reference peers' findings.
 
 ### GTM Analyst
+
 - **Name**: `gtm-analyst`
 - **Model**: opus
 - **Subagent type**: `general-purpose`
 - **Prompt**: [See Teammate Spawn Prompts below]
-- **Tasks**: Go-to-market channels, pricing, customer acquisition. Produce GTM Domain Brief. Cross-reference peers' findings.
+- **Tasks**: Go-to-market channels, pricing, customer acquisition. Produce GTM
+  Domain Brief. Cross-reference peers' findings.
 
 ### Accuracy Skeptic
+
 - **Name**: `accuracy-skeptic`
 - **Model**: opus
 - **Subagent type**: `general-purpose`
 - **Prompt**: [See Teammate Spawn Prompts below]
-- **Tasks**: Verify all factual claims against evidence. Check projections, market data, sourcing. Apply business quality checklist.
+- **Tasks**: Verify all factual claims against evidence. Check projections,
+  market data, sourcing. Apply business quality checklist.
 
 ### Strategy Skeptic
+
 - **Name**: `strategy-skeptic`
 - **Model**: opus
 - **Subagent type**: `general-purpose`
 - **Prompt**: [See Teammate Spawn Prompts below]
-- **Tasks**: Challenge strategic assumptions, evaluate alternatives, verify coherence, assess early-stage feasibility. Apply business quality checklist.
+- **Tasks**: Challenge strategic assumptions, evaluate alternatives, verify
+  coherence, assess early-stage feasibility. Apply business quality checklist.
 ```
 
 **Notes**:
+
 - All Opus rationale is in the spec/system design; no need to repeat in SKILL.md
 - Team name "plan-sales" matches the skill name
-- Spec criteria mapped: SC-1 (complete team), SC-2 (agents produce briefs/cross-refs)
+- Spec criteria mapped: SC-1 (complete team), SC-2 (agents produce
+  briefs/cross-refs)
 
 ---
 
@@ -256,33 +328,45 @@ Create an agent team called "plan-sales" with these teammates:
 
 This is the core section and the most novel part of the SKILL.md. Must include:
 
-1. **ASCII Phase Diagram** -- Copy verbatim from system design (the box diagram showing all 5 phases + gates)
+1. **ASCII Phase Diagram** -- Copy verbatim from system design (the box diagram
+   showing all 5 phases + gates)
 
 2. **Phase 1: Independent Research (Parallel)**
-   - Trigger: Team Lead distributes initial instructions to all 3 analysis agents
+   - Trigger: Team Lead distributes initial instructions to all 3 analysis
+     agents
    - Agents read: project artifacts + user data (list all input files)
    - Each agent produces a Domain Brief (structured format embedded)
-   - Gate 1: Team Lead verifies all 3 briefs received and complete (lightweight completeness check)
-   - Instructions for the lead: check that each brief addresses its key questions; if severely incomplete, request expansion
+   - Gate 1: Team Lead verifies all 3 briefs received and complete (lightweight
+     completeness check)
+   - Instructions for the lead: check that each brief addresses its key
+     questions; if severely incomplete, request expansion
 
 3. **Phase 2: Cross-Referencing (Parallel)**
-   - Trigger: Team Lead distributes all 3 Domain Briefs to all 3 agents (each receives the two they did not write)
-   - Each agent reviews peers' briefs for: contradictions, gaps, challenges, synergies, answers to peer questions
+   - Trigger: Team Lead distributes all 3 Domain Briefs to all 3 agents (each
+     receives the two they did not write)
+   - Each agent reviews peers' briefs for: contradictions, gaps, challenges,
+     synergies, answers to peer questions
    - Each agent produces a Cross-Reference Report (structured format embedded)
-   - Disagreement handling: disagreements are preserved, not resolved -- both sides flow to synthesis
+   - Disagreement handling: disagreements are preserved, not resolved -- both
+     sides flow to synthesis
    - Gate 2: Team Lead verifies all 3 Cross-Reference Reports received
-   - Critical quality check: A report claiming "no contradictions, no gaps, no challenges" across two briefs is automatically suspect. Send back for revision.
+   - Critical quality check: A report claiming "no contradictions, no gaps, no
+     challenges" across two briefs is automatically suspect. Send back for
+     revision.
 
 4. **Phase 3: Synthesis (Lead-Driven -- NOT Delegate Mode)**
    - Agent: Team Lead (you write this yourself)
    - Input: 3 Domain Briefs + 3 Cross-Reference Reports (6 artifacts)
    - Synthesis process:
-     1. Resolve contradictions -- weigh evidence, choose better-supported position, document reasoning
+     1. Resolve contradictions -- weigh evidence, choose better-supported
+        position, document reasoning
      2. Integrate gap-fills
      3. Evaluate challenged assumptions
      4. Highlight synergies
      5. Write the full assessment using the Output Template
-   - Context management: Synthesize section by section (Target Market, then Competitive Positioning, etc.), not all at once. If context degrades, checkpoint and continue from last completed section.
+   - Context management: Synthesize section by section (Target Market, then
+     Competitive Positioning, etc.), not all at once. If context degrades,
+     checkpoint and continue from last completed section.
    - Output: Draft Sales Strategy Assessment
 
 5. **Phase 4: Review (Dual-Skeptic, Parallel)**
@@ -304,11 +388,15 @@ This is the core section and the most novel part of the SKILL.md. Must include:
    - Output final assessment to user with review/implementation instructions
 
 **Notes**:
+
 - The phase diagram should be copied exactly from the system design
 - Phase 3 must explicitly state "YOU write this -- not delegate mode"
 - Phase 2 quality check (empty cross-refs) must be explicit
 - Context management guidance for Phase 3 is critical for practical success
-- Spec criteria mapped: SC-1 (full assessment), SC-2 (protocol executes), SC-3 (substantive cross-refs), SC-4 (accuracy verification), SC-5 (strategy verification), SC-6 (both approve), SC-9 (writes output), SC-14 (section-by-section synthesis)
+- Spec criteria mapped: SC-1 (full assessment), SC-2 (protocol executes), SC-3
+  (substantive cross-refs), SC-4 (accuracy verification), SC-5 (strategy
+  verification), SC-6 (both approve), SC-9 (writes output), SC-14
+  (section-by-section synthesis)
 
 ---
 
@@ -319,11 +407,16 @@ This is the core section and the most novel part of the SKILL.md. Must include:
 ```markdown
 ## Quality Gate
 
-NO sales strategy assessment is finalized without BOTH Accuracy Skeptic AND Strategy Skeptic approval. If either skeptic has concerns, the Team Lead revises. This is non-negotiable. Maximum 3 revision cycles before escalation to the human operator.
+NO sales strategy assessment is finalized without BOTH Accuracy Skeptic AND
+Strategy Skeptic approval. If either skeptic has concerns, the Team Lead
+revises. This is non-negotiable. Maximum 3 revision cycles before escalation to
+the human operator.
 ```
 
 **Notes**:
-- Same structure as investor update quality gate, but with different skeptic names
+
+- Same structure as investor update quality gate, but with different skeptic
+  names
 - Spec criteria mapped: SC-6 (both must approve)
 
 ---
@@ -335,12 +428,22 @@ NO sales strategy assessment is finalized without BOTH Accuracy Skeptic AND Stra
 ```markdown
 ## Failure Recovery
 
-- **Unresponsive agent**: If any teammate becomes unresponsive or crashes, the Team Lead should re-spawn the role and re-assign any pending tasks or review requests.
-- **Skeptic deadlock**: If EITHER skeptic rejects the same deliverable 3 times, STOP iterating. The Team Lead escalates to the human operator with a summary of the submissions, both skeptics' objections across all rounds, and the team's attempts to address them. The human decides: override the skeptics, provide guidance, or abort.
-- **Context exhaustion**: If any agent's responses become degraded (repetitive, losing context), the Team Lead should read the agent's checkpoint file at `docs/progress/plan-sales-{role}.md`, then re-spawn the agent with the checkpoint content as context to resume from the last known state.
+- **Unresponsive agent**: If any teammate becomes unresponsive or crashes, the
+  Team Lead should re-spawn the role and re-assign any pending tasks or review
+  requests.
+- **Skeptic deadlock**: If EITHER skeptic rejects the same deliverable 3 times,
+  STOP iterating. The Team Lead escalates to the human operator with a summary
+  of the submissions, both skeptics' objections across all rounds, and the
+  team's attempts to address them. The human decides: override the skeptics,
+  provide guidance, or abort.
+- **Context exhaustion**: If any agent's responses become degraded (repetitive,
+  losing context), the Team Lead should read the agent's checkpoint file at
+  `docs/progress/plan-sales-{role}.md`, then re-spawn the agent with the
+  checkpoint content as context to resume from the last known state.
 ```
 
 **Notes**:
+
 - Identical structure to draft-investor-update Failure Recovery
 - "EITHER skeptic" phrasing matches dual-skeptic pattern
 - Role-scoped checkpoint file path uses `plan-sales-{role}` convention
@@ -351,18 +454,23 @@ NO sales strategy assessment is finalized without BOTH Accuracy Skeptic AND Stra
 
 **Source**: `plan-product/SKILL.md` lines 145-174
 
-**Action**: Copy the ENTIRE block between `<!-- BEGIN SHARED: principles -->` and `<!-- END SHARED: principles -->` markers from plan-product/SKILL.md. BYTE-IDENTICAL. No changes whatsoever.
+**Action**: Copy the ENTIRE block between `<!-- BEGIN SHARED: principles -->`
+and `<!-- END SHARED: principles -->` markers from plan-product/SKILL.md.
+BYTE-IDENTICAL. No changes whatsoever.
 
 This includes:
+
 - The horizontal rule `---` before the block
 - `<!-- BEGIN SHARED: principles -->`
 - `<!-- Authoritative source: plan-product/SKILL.md. Keep in sync across all skills. -->`
 - The full `## Shared Principles` section (12 numbered items across 4 tiers)
 - `<!-- END SHARED: principles -->`
 
-**Validation**: CI validator B1 checks byte-identity. Any change will fail the build.
+**Validation**: CI validator B1 checks byte-identity. Any change will fail the
+build.
 
-**Spec criteria mapped**: SC-12 (CI validator passes, shared content drift check)
+**Spec criteria mapped**: SC-12 (CI validator passes, shared content drift
+check)
 
 ---
 
@@ -370,22 +478,36 @@ This includes:
 
 **Source**: `plan-product/SKILL.md` lines 178-213
 
-**Action**: Copy the ENTIRE block between `<!-- BEGIN SHARED: communication-protocol -->` and `<!-- END SHARED: communication-protocol -->` markers from plan-product/SKILL.md.
+**Action**: Copy the ENTIRE block between
+`<!-- BEGIN SHARED: communication-protocol -->` and
+`<!-- END SHARED: communication-protocol -->` markers from
+plan-product/SKILL.md.
 
 **The ONLY change**: In the "When to Message" table, the row:
+
 ```
 | Plan ready for review | `write(product-skeptic, "PLAN REVIEW REQUEST: [details or file path]")` | Product Skeptic |
 ```
+
 becomes:
+
 ```
 | Plan ready for review | `write(accuracy-skeptic, "PLAN REVIEW REQUEST: [details or file path]")` | Accuracy Skeptic |
 ```
 
 This is the ONLY allowed difference. The rest must be byte-identical.
 
-**Validation**: CI validator B2 normalizes skeptic names (`product-skeptic` -> `SKEPTIC_NAME`, `accuracy-skeptic` -> `SKEPTIC_NAME`) before comparison. After normalization, blocks must be identical. The `strategy-skeptic` / `Strategy Skeptic` normalization will be added to the validator as a separate change (see spec Files to Modify).
+**Validation**: CI validator B2 normalizes skeptic names (`product-skeptic` ->
+`SKEPTIC_NAME`, `accuracy-skeptic` -> `SKEPTIC_NAME`) before comparison. After
+normalization, blocks must be identical. The `strategy-skeptic` /
+`Strategy Skeptic` normalization will be added to the validator as a separate
+change (see spec Files to Modify).
 
-**Important**: The "Plan ready for review" row targets `accuracy-skeptic`, not `strategy-skeptic`. This matches the pattern in draft-investor-update where the first skeptic is the primary review target. Both skeptics still review during Phase 4, but the communication protocol routes plan review requests to the accuracy skeptic.
+**Important**: The "Plan ready for review" row targets `accuracy-skeptic`, not
+`strategy-skeptic`. This matches the pattern in draft-investor-update where the
+first skeptic is the primary review target. Both skeptics still review during
+Phase 4, but the communication protocol routes plan review requests to the
+accuracy skeptic.
 
 **Spec criteria mapped**: SC-12 (CI validator passes)
 
@@ -396,11 +518,13 @@ This is the ONLY allowed difference. The rest must be byte-identical.
 **Source**: System design Phase Details + spec Agent Team
 
 Each prompt must include these components:
+
 1. Role introduction ("You are the [Role] on the Sales Strategy Team.")
 2. Domain focus
 3. Critical rules (specific to role)
 4. Inputs to read
-5. Output format (Domain Brief for analysts, Cross-Reference Report for analysts in Phase 2, Review format for skeptics)
+5. Output format (Domain Brief for analysts, Cross-Reference Report for analysts
+   in Phase 2, Review format for skeptics)
 6. Communication instructions
 7. Write safety (role-scoped files)
 8. Checkpoint instructions
@@ -458,18 +582,22 @@ CHECKPOINT:
 ### 14b: Product Strategist Prompt
 
 Same structure as Market Analyst, with domain focus on:
+
 - Value proposition assessment
 - Product differentiation analysis
 - Product-market fit evaluation
-- Key questions: What problem does this solve? Why is this solution better? What is the unique value?
+- Key questions: What problem does this solve? Why is this solution better? What
+  is the unique value?
 
 ### 14c: GTM Analyst Prompt
 
 Same structure as Market Analyst, with domain focus on:
+
 - Go-to-market channel analysis
 - Pricing considerations
 - Customer acquisition strategy
-- Key questions: How do we reach customers? What should pricing look like? What channels work?
+- Key questions: How do we reach customers? What should pricing look like? What
+  channels work?
 
 ### 14d: Accuracy Skeptic Prompt
 
@@ -559,11 +687,20 @@ WRITE SAFETY:
 **Source**: System design "Output Artifact Format" section (lines 362-489)
 
 Copy the FULL template from the system design, including:
-- YAML frontmatter with `type: "sales-strategy"`, `period`, `generated`, `confidence`, `review_status`, `approved_by` (accuracy-skeptic + strategy-skeptic)
-- All 9 content sections: Executive Summary, Target Market (Primary Segment + Market Sizing), Competitive Positioning (Landscape + Differentiation + Positioning Statement), Value Proposition, Go-to-Market Strategy (Channels + Customer Acquisition + Sales Process), Pricing Considerations, Strategic Risks, Recommended Next Steps
-- 4 mandatory business quality sections: Assumptions & Limitations, Confidence Assessment, Falsification Triggers, External Validation Checkpoints
 
-**Spec criteria mapped**: SC-1 (complete assessment), SC-11 (all business quality sections)
+- YAML frontmatter with `type: "sales-strategy"`, `period`, `generated`,
+  `confidence`, `review_status`, `approved_by` (accuracy-skeptic +
+  strategy-skeptic)
+- All 9 content sections: Executive Summary, Target Market (Primary Segment +
+  Market Sizing), Competitive Positioning (Landscape + Differentiation +
+  Positioning Statement), Value Proposition, Go-to-Market Strategy (Channels +
+  Customer Acquisition + Sales Process), Pricing Considerations, Strategic
+  Risks, Recommended Next Steps
+- 4 mandatory business quality sections: Assumptions & Limitations, Confidence
+  Assessment, Falsification Triggers, External Validation Checkpoints
+
+**Spec criteria mapped**: SC-1 (complete assessment), SC-11 (all business
+quality sections)
 
 ---
 
@@ -571,9 +708,11 @@ Copy the FULL template from the system design, including:
 
 **Source**: System design "User Data Input" section (lines 500-547)
 
-Copy the full template. This is what gets created at `docs/sales-plans/_user-data.md` on first run.
+Copy the full template. This is what gets created at
+`docs/sales-plans/_user-data.md` on first run.
 
 Sections:
+
 - Product & Market
 - Market Context
 - Current Sales
@@ -589,7 +728,8 @@ Sections:
 
 **Source**: System design lines 173-200
 
-Copy the full structured format. This is referenced in spawn prompts and orchestration flow.
+Copy the full structured format. This is referenced in spawn prompts and
+orchestration flow.
 
 ```
 DOMAIN BRIEF: [Market Analysis | Product Strategy | Go-to-Market]
@@ -611,7 +751,8 @@ Agent: [agent name]
 
 **Source**: System design lines 228-267
 
-Copy the full structured format. Referenced in spawn prompts and orchestration flow.
+Copy the full structured format. Referenced in spawn prompts and orchestration
+flow.
 
 ```
 CROSS-REFERENCE REPORT: [agent name]
@@ -631,22 +772,22 @@ Reviewed: [names of the two briefs reviewed]
 
 ## Spec Success Criteria Coverage Matrix
 
-| SC# | Criterion | SKILL.md Section(s) |
-|-----|-----------|-------------------|
-| SC-1 | Complete assessment with all sections, both skeptics approve | Sections 9 (Orchestration), 10 (Quality Gate), 15 (Output Template) |
-| SC-2 | Collaborative Analysis executes: briefs + cross-refs + synthesis | Sections 9 (Orchestration), 17 (Domain Brief), 18 (Cross-Ref) |
-| SC-3 | Substantive cross-referencing | Section 9 (Phase 2 quality check), 18 (Cross-Ref format) |
-| SC-4 | Accuracy Skeptic verifies evidence tracing | Section 14d (Accuracy Skeptic prompt) |
-| SC-5 | Strategy Skeptic verifies coherence + alternatives + risks | Section 14e (Strategy Skeptic prompt) |
-| SC-6 | Both skeptics must approve | Section 10 (Quality Gate) |
-| SC-7 | --light uses Sonnet for analysts, Opus for skeptics | Section 7 (Lightweight Mode) |
-| SC-8 | status mode reports without spawning | Section 6 (Determine Mode) |
-| SC-9 | Creates docs/sales-plans/ and _user-data.md template | Section 3 (Setup) |
-| SC-10 | Reads and integrates _user-data.md | Section 3 (Setup), 14a-c (analyst prompts) |
-| SC-11 | All business quality sections in output | Section 15 (Output Template) |
-| SC-12 | CI validator passes (shared content + skeptic normalization) | Sections 12 (Shared Principles), 13 (Communication Protocol) |
-| SC-13 | First-run completes with warnings and low-confidence markers | Section 3 (Setup warning), 14a-c (analyst prompts handle missing data) |
-| SC-14 | Lead-driven synthesis with section-by-section + checkpoint | Section 9 (Phase 3) |
+| SC#   | Criterion                                                        | SKILL.md Section(s)                                                    |
+| ----- | ---------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| SC-1  | Complete assessment with all sections, both skeptics approve     | Sections 9 (Orchestration), 10 (Quality Gate), 15 (Output Template)    |
+| SC-2  | Collaborative Analysis executes: briefs + cross-refs + synthesis | Sections 9 (Orchestration), 17 (Domain Brief), 18 (Cross-Ref)          |
+| SC-3  | Substantive cross-referencing                                    | Section 9 (Phase 2 quality check), 18 (Cross-Ref format)               |
+| SC-4  | Accuracy Skeptic verifies evidence tracing                       | Section 14d (Accuracy Skeptic prompt)                                  |
+| SC-5  | Strategy Skeptic verifies coherence + alternatives + risks       | Section 14e (Strategy Skeptic prompt)                                  |
+| SC-6  | Both skeptics must approve                                       | Section 10 (Quality Gate)                                              |
+| SC-7  | --light uses Sonnet for analysts, Opus for skeptics              | Section 7 (Lightweight Mode)                                           |
+| SC-8  | status mode reports without spawning                             | Section 6 (Determine Mode)                                             |
+| SC-9  | Creates docs/sales-plans/ and \_user-data.md template            | Section 3 (Setup)                                                      |
+| SC-10 | Reads and integrates \_user-data.md                              | Section 3 (Setup), 14a-c (analyst prompts)                             |
+| SC-11 | All business quality sections in output                          | Section 15 (Output Template)                                           |
+| SC-12 | CI validator passes (shared content + skeptic normalization)     | Sections 12 (Shared Principles), 13 (Communication Protocol)           |
+| SC-13 | First-run completes with warnings and low-confidence markers     | Section 3 (Setup warning), 14a-c (analyst prompts handle missing data) |
+| SC-14 | Lead-driven synthesis with section-by-section + checkpoint       | Section 9 (Phase 3)                                                    |
 
 **All 14 success criteria are mapped.** No gaps.
 
@@ -654,32 +795,44 @@ Reviewed: [names of the two briefs reviewed]
 
 ## Files to Create/Modify
 
-| File | Action | Notes |
-|------|--------|-------|
-| `plugins/conclave/skills/plan-sales/SKILL.md` | **Create** | This plan |
-| `scripts/validators/skill-shared-content.sh` | **Modify** | Add 2 sed expressions for `strategy-skeptic`/`Strategy Skeptic` to `normalize_skeptic_names()` |
+| File                                          | Action     | Notes                                                                                                |
+| --------------------------------------------- | ---------- | ---------------------------------------------------------------------------------------------------- |
+| `plugins/conclave/skills/plan-sales/SKILL.md` | **Create** | This plan                                                                                            |
+| `scripts/validators/skill-shared-content.sh`  | **Modify** | Add 2 sed expressions for `strategy-skeptic`/`Strategy Skeptic` to `normalize_skeptic_names()`       |
 | `plugins/conclave/.claude-plugin/plugin.json` | **Modify** | Register new skill (if needed -- current plugin.json has no skills array, so may need investigation) |
 
 ---
 
 ## Key Design Decisions
 
-1. **Communication Protocol skeptic target**: `accuracy-skeptic` (not `strategy-skeptic`) in the "Plan ready for review" row. This matches the pattern where the first/primary skeptic receives plan review requests.
+1. **Communication Protocol skeptic target**: `accuracy-skeptic` (not
+   `strategy-skeptic`) in the "Plan ready for review" row. This matches the
+   pattern where the first/primary skeptic receives plan review requests.
 
-2. **Phase 3 phrasing**: Must be extremely explicit that the Team Lead writes the synthesis directly. Every other SKILL.md says "delegate mode" -- this one must break that pattern clearly for Phase 3 while maintaining orchestration role for other phases.
+2. **Phase 3 phrasing**: Must be extremely explicit that the Team Lead writes
+   the synthesis directly. Every other SKILL.md says "delegate mode" -- this one
+   must break that pattern clearly for Phase 3 while maintaining orchestration
+   role for other phases.
 
-3. **Cross-reference quality check**: Phase 2 includes explicit instruction to reject empty cross-reference reports. This is a spec constraint (SC-3) and must be in the orchestration flow, not just the spawn prompts.
+3. **Cross-reference quality check**: Phase 2 includes explicit instruction to
+   reject empty cross-reference reports. This is a spec constraint (SC-3) and
+   must be in the orchestration flow, not just the spawn prompts.
 
-4. **Context management for synthesis**: The section-by-section synthesis guidance from the system design must be included in Phase 3 instructions. Without it, the lead risks context exhaustion with 6 artifacts.
+4. **Context management for synthesis**: The section-by-section synthesis
+   guidance from the system design must be included in Phase 3 instructions.
+   Without it, the lead risks context exhaustion with 6 artifacts.
 
-5. **Disagreement preservation**: Must be stated in both the orchestration flow (Phase 2) and the analyst spawn prompts. Disagreements flow to synthesis; they are not resolved during cross-referencing.
+5. **Disagreement preservation**: Must be stated in both the orchestration flow
+   (Phase 2) and the analyst spawn prompts. Disagreements flow to synthesis;
+   they are not resolved during cross-referencing.
 
 ---
 
 ## Implementation Order
 
 1. Create the SKILL.md file with all sections in order
-2. Verify shared content blocks are byte-identical (principles) / structurally equivalent (communication protocol)
+2. Verify shared content blocks are byte-identical (principles) / structurally
+   equivalent (communication protocol)
 3. Run `scripts/validators/skill-shared-content.sh` to verify B1/B2/B3 pass
 4. Modify `skill-shared-content.sh` to add strategy-skeptic normalization
 5. Run validator again to confirm

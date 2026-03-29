@@ -15,7 +15,7 @@
 ### Daily Usage
 
 | Command                           | Purpose                                  |
-|-----------------------------------|------------------------------------------|
+| --------------------------------- | ---------------------------------------- |
 | `composer install`                | Install from lock file (deterministic)   |
 | `composer update`                 | Resolve constraints fresh, update lock   |
 | `composer update vendor/pkg`      | Update single package within constraints |
@@ -41,7 +41,7 @@ composer install \
 ```
 
 | Flag                       | Purpose                                |
-|----------------------------|----------------------------------------|
+| -------------------------- | -------------------------------------- |
 | `--no-dev`                 | Excludes `require-dev` packages        |
 | `--no-interaction`         | Prevents prompts in CI                 |
 | `--optimize-autoloader`    | Generates classmap for PSR-4 paths     |
@@ -72,16 +72,16 @@ Use tilde only when a package has history of breaking minor versions.
 
 ```json
 {
-    "minimum-stability": "stable",
-    "prefer-stable": true,
-    "require": {
-        "some/bleeding-edge": "^2.0@beta"
-    }
+  "minimum-stability": "stable",
+  "prefer-stable": true,
+  "require": {
+    "some/bleeding-edge": "^2.0@beta"
+  }
 }
 ```
 
 | Stability | Examples       | Use Case             |
-|-----------|----------------|----------------------|
+| --------- | -------------- | -------------------- |
 | `stable`  | `1.0.0`        | Production (default) |
 | `RC`      | `2.0.0-RC1`    | Release testing      |
 | `beta`    | `1.5.0-beta.2` | Early adopter        |
@@ -104,8 +104,8 @@ Inline aliases for temporary forks:
 
 ```json
 {
-    "repositories": [{ "type": "vcs", "url": "https://github.com/fork/package" }],
-    "require": { "vendor/package": "dev-fix-branch as 2.3.4" }
+  "repositories": [{ "type": "vcs", "url": "https://github.com/fork/package" }],
+  "require": { "vendor/package": "dev-fix-branch as 2.3.4" }
 }
 ```
 
@@ -115,15 +115,15 @@ Inline aliases for temporary forks:
 
 ```json
 {
-    "autoload": {
-        "psr-4": {
-            "App\\": "src/",
-            "Database\\Factories\\": "database/factories/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": { "Tests\\": "tests/" }
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/",
+      "Database\\Factories\\": "database/factories/"
     }
+  },
+  "autoload-dev": {
+    "psr-4": { "Tests\\": "tests/" }
+  }
 }
 ```
 
@@ -143,14 +143,15 @@ Use for legacy code not following PSR-4 naming.
 { "autoload": { "files": ["src/helpers.php"] } }
 ```
 
-Included on every request. Keep list short. Guard functions with `function_exists()`.
+Included on every request. Keep list short. Guard functions with
+`function_exists()`.
 
 ## Production Optimization
 
 ### Autoloader Modes
 
 | Mode                       | Dev   | Production | Behavior                            |
-|----------------------------|-------|------------|-------------------------------------|
+| -------------------------- | ----- | ---------- | ----------------------------------- |
 | Default PSR-4              | Best  | Avoid      | Filesystem probing on miss          |
 | `--optimize-autoloader`    | Slow  | Good       | PSR-4 to classmap, still falls back |
 | `--classmap-authoritative` | Avoid | Best       | Classmap only, no fallback          |
@@ -166,7 +167,8 @@ php artisan event:cache       # Cache event/listener mappings
 composer dump-autoload --optimize
 ```
 
-After `config:cache`, `.env` is not read at runtime. All `env()` calls outside `config/*.php` return `null`.
+After `config:cache`, `.env` is not read at runtime. All `env()` calls outside
+`config/*.php` return `null`.
 
 ## Private Repositories
 
@@ -174,7 +176,7 @@ After `config:cache`, `.env` is not read at runtime. All `env()` calls outside `
 
 ```json
 {
-    "repositories": [{ "type": "composer", "url": "https://satis.example.com" }]
+  "repositories": [{ "type": "composer", "url": "https://satis.example.com" }]
 }
 ```
 
@@ -182,10 +184,10 @@ After `config:cache`, `.env` is not read at runtime. All `env()` calls outside `
 
 ```json
 {
-    "repositories": [
-        { "type": "composer", "url": "https://repo.packagist.com/your-org/" },
-        { "packagist.org": false }
-    ]
+  "repositories": [
+    { "type": "composer", "url": "https://repo.packagist.com/your-org/" },
+    { "packagist.org": false }
+  ]
 }
 ```
 
@@ -203,16 +205,16 @@ COMPOSER_AUTH='{"http-basic":{"repo.packagist.com":{"username":"token","password
 
 ```json
 {
-    "config": {
-        "optimize-autoloader": true,
-        "preferred-install": "dist",
-        "sort-packages": true,
-        "allow-plugins": {
-            "pestphp/pest-plugin": true,
-            "phpstan/extension-installer": true
-        },
-        "platform": { "php": "8.2.0" }
-    }
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "sort-packages": true,
+    "allow-plugins": {
+      "pestphp/pest-plugin": true,
+      "phpstan/extension-installer": true
+    },
+    "platform": { "php": "8.2.0" }
+  }
 }
 ```
 
@@ -223,7 +225,7 @@ COMPOSER_AUTH='{"http-basic":{"repo.packagist.com":{"username":"token","password
 ### What to Commit
 
 | File            | Commit? | Notes                              |
-|-----------------|---------|------------------------------------|
+| --------------- | ------- | ---------------------------------- |
 | `composer.json` | Always  | Developer-authored constraints     |
 | `composer.lock` | Always  | Exact versions for reproducibility |
 | `vendor/`       | Never   | Regenerated from lock file         |
@@ -236,7 +238,8 @@ composer audit --no-dev              # Check for known CVEs
 composer audit --format=json         # Machine-readable output
 ```
 
-Use `roave/security-advisories` as a dev dependency to block installing packages with known vulnerabilities:
+Use `roave/security-advisories` as a dev dependency to block installing packages
+with known vulnerabilities:
 
 ```bash
 composer require --dev roave/security-advisories:dev-latest

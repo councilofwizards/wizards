@@ -15,7 +15,7 @@
 ## PDO Options
 
 | Option                    | Recommended                | Reason                                  |
-|---------------------------|----------------------------|-----------------------------------------|
+| ------------------------- | -------------------------- | --------------------------------------- |
 | `ATTR_ERRMODE`            | `ERRMODE_EXCEPTION`        | Silent failures never acceptable        |
 | `ATTR_DEFAULT_FETCH_MODE` | `FETCH_ASSOC`              | Simpler than stdClass                   |
 | `ATTR_EMULATE_PREPARES`   | `false`                    | Native types, no charset injection      |
@@ -96,7 +96,8 @@ final class ConnectionPool {
 }
 ```
 
-PHP-FPM: use external pools — ProxySQL/RDS Proxy (MySQL), PgBouncer transaction-mode (PostgreSQL).
+PHP-FPM: use external pools — ProxySQL/RDS Proxy (MySQL), PgBouncer
+transaction-mode (PostgreSQL).
 
 ### Read Replicas
 
@@ -137,7 +138,7 @@ class MigrationRunner {
 ### Reversibility
 
 | Operation         | Reversible? | down action  |
-|-------------------|-------------|--------------|
+| ----------------- | ----------- | ------------ |
 | ADD COLUMN        | Yes         | DROP COLUMN  |
 | CREATE TABLE      | Yes         | DROP TABLE   |
 | CREATE INDEX      | Yes         | DROP INDEX   |
@@ -145,8 +146,9 @@ class MigrationRunner {
 
 ### Zero-Downtime DDL
 
-MySQL 8.0+: instant DDL for ADD COLUMN DEFAULT. Older: `pt-online-schema-change` or `gh-ost`.
-PostgreSQL 11+: ADD COLUMN DEFAULT instant. Pre-11: add nullable -> backfill -> set NOT NULL.
+MySQL 8.0+: instant DDL for ADD COLUMN DEFAULT. Older: `pt-online-schema-change`
+or `gh-ost`. PostgreSQL 11+: ADD COLUMN DEFAULT instant. Pre-11: add nullable ->
+backfill -> set NOT NULL.
 
 ```sql
 -- MySQL index
@@ -173,7 +175,7 @@ function backfill(PDO $pdo, int $batch = 500): void {
 ### Query Builder Libraries
 
 | Library             | Notes                                   |
-|---------------------|-----------------------------------------|
+| ------------------- | --------------------------------------- |
 | `doctrine/dbal`     | Mature, type-safe, schema introspection |
 | `cakephp/database`  | Lightweight, standalone                 |
 | `latitude/latitude` | Purely functional, immutable            |
@@ -181,7 +183,7 @@ function backfill(PDO $pdo, int $batch = 500): void {
 ## ORM Comparison
 
 | Aspect      | Active Record (Eloquent)    | Data Mapper (Doctrine)        |
-|-------------|-----------------------------|-------------------------------|
+| ----------- | --------------------------- | ----------------------------- |
 | Boilerplate | Low                         | Higher                        |
 | Testability | Needs DB or complex mocking | Pure PHP, no DB needed        |
 | SRP         | Violates                    | Respects separation           |

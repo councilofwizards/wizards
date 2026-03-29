@@ -39,7 +39,7 @@ Route::resource('posts', PostController::class)->only(['index', 'show']);
 ```
 
 | HTTP Verb | URI                    | Method    | Route Name       |
-|-----------|------------------------|-----------|------------------|
+| --------- | ---------------------- | --------- | ---------------- |
 | GET       | `/photos`              | `index`   | `photos.index`   |
 | GET       | `/photos/create`       | `create`  | `photos.create`  |
 | POST      | `/photos`              | `store`   | `photos.store`   |
@@ -152,7 +152,8 @@ Route::get('/ping', PingController::class)->name('ping');
 
 ### Thin Controller Principle
 
-Controllers: (1) extract request data, (2) call service/action, (3) handle exceptions, (4) return response.
+Controllers: (1) extract request data, (2) call service/action, (3) handle
+exceptions, (4) return response.
 
 ```php
 final class OrderController extends Controller
@@ -185,7 +186,8 @@ final class LoginController extends Controller
 Route::post('/login', LoginController::class)->name('login');
 ```
 
-Use for: non-resource actions (login, import, report), complex operations deserving their own class.
+Use for: non-resource actions (login, import, report), complex operations
+deserving their own class.
 
 ---
 
@@ -307,14 +309,15 @@ public function handle(Request $request, Closure $next, string ...$roles): Respo
 
 ### Middleware Priority
 
-`$middleware->priority([...])` enforces ordering. Default: `SubstituteBindings` before `Authorize`.
+`$middleware->priority([...])` enforces ordering. Default: `SubstituteBindings`
+before `Authorize`.
 
 ---
 
 ## Anti-Patterns
 
 | Anti-Pattern                         | Fix                                 |
-|--------------------------------------|-------------------------------------|
+| ------------------------------------ | ----------------------------------- |
 | Unnamed routes                       | Always `->name()`                   |
 | Closure routes in web/api            | Invokable controllers               |
 | Hardcoded URLs                       | Use `route()` helper                |

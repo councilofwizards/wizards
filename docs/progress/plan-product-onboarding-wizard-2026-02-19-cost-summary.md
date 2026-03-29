@@ -9,22 +9,24 @@ completed: "2026-02-19"
 
 ## Team Composition
 
-| Agent | Model | Role |
-|-------|-------|------|
-| Team Lead (PO) | Opus | Orchestration, spec aggregation |
-| Researcher | Opus | Feasibility research, codebase analysis |
-| Architect | Opus | System design, ADR authoring |
-| DBA | Opus | Data model evaluation |
-| Product Skeptic | Opus | Quality gate, review all deliverables |
+| Agent           | Model | Role                                    |
+| --------------- | ----- | --------------------------------------- |
+| Team Lead (PO)  | Opus  | Orchestration, spec aggregation         |
+| Researcher      | Opus  | Feasibility research, codebase analysis |
+| Architect       | Opus  | System design, ADR authoring            |
+| DBA             | Opus  | Data model evaluation                   |
+| Product Skeptic | Opus  | Quality gate, review all deliverables   |
 
 ## Deliverables Produced
 
 1. **Research findings** — `docs/progress/onboarding-wizard-researcher.md`
 2. **System design** — `docs/architecture/onboarding-wizard-system-design.md`
 3. **ADR-003** — `docs/architecture/ADR-003-onboarding-wizard-single-agent.md`
-4. **Data model evaluation** — `docs/architecture/onboarding-wizard-data-model.md`
+4. **Data model evaluation** —
+   `docs/architecture/onboarding-wizard-data-model.md`
 5. **Final spec** — `docs/specs/onboarding-wizard/spec.md`
-6. **Roadmap update** — `docs/roadmap/P3-02-onboarding-wizard.md` (status: ready)
+6. **Roadmap update** — `docs/roadmap/P3-02-onboarding-wizard.md` (status:
+   ready)
 
 ## Review Cycles
 
@@ -40,10 +42,13 @@ completed: "2026-02-19"
 3. Templates embedded in SKILL.md (self-contained, no external dependencies)
 4. CLAUDE.md never silently overwritten (suggest-only when exists)
 5. Create-only for roadmaps (no augmentation of existing roadmap items)
-6. Validator adaptation required as prerequisite (type: single-agent frontmatter flag)
+6. Validator adaptation required as prerequisite (type: single-agent frontmatter
+   flag)
 
 ## Notes
 
 - Clean execution — no rejections, no deadlocks, no re-spawns needed
-- All agents reached consensus independently on single-agent + no-data-model conclusion
-- Critical finding: CI validator conflict identified early by Researcher, confirmed by all agents
+- All agents reached consensus independently on single-agent + no-data-model
+  conclusion
+- Critical finding: CI validator conflict identified early by Researcher,
+  confirmed by all agents

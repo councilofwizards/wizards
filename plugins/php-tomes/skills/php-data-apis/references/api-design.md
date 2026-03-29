@@ -17,13 +17,13 @@
 
 ## Resource Naming
 
-Plural nouns, lowercase, hyphens for multi-word. Max one sub-resource level. Query params for filtering/sorting. No
-verbs in paths.
+Plural nouns, lowercase, hyphens for multi-word. Max one sub-resource level.
+Query params for filtering/sorting. No verbs in paths.
 
 ## HTTP Verbs
 
 | Verb    | Semantics               | Idempotent | Safe | Typical Status     |
-|---------|-------------------------|------------|------|--------------------|
+| ------- | ----------------------- | ---------- | ---- | ------------------ |
 | GET     | Retrieve                | Yes        | Yes  | 200, 304, 404      |
 | POST    | Create / trigger action | No         | No   | 201, 202, 400, 422 |
 | PUT     | Replace entirely        | Yes        | No   | 200, 204, 404      |
@@ -34,13 +34,16 @@ verbs in paths.
 
 ## Status Codes
 
-**2xx:** 200 OK, 201 Created (+Location), 202 Accepted (+status URL), 204 No Content.
+**2xx:** 200 OK, 201 Created (+Location), 202 Accepted (+status URL), 204 No
+Content.
 
-**4xx:** 400 Bad Request (malformed), 401 Unauthorized (no/bad auth), 403 Forbidden (no permission), 404 Not Found, 405
-Method Not Allowed (+Allow header), 409 Conflict (duplicate/version), 410 Gone (permanent delete), 422 Unprocessable (
-validation), 429 Too Many Requests (+Retry-After).
+**4xx:** 400 Bad Request (malformed), 401 Unauthorized (no/bad auth), 403
+Forbidden (no permission), 404 Not Found, 405 Method Not Allowed (+Allow
+header), 409 Conflict (duplicate/version), 410 Gone (permanent delete), 422
+Unprocessable ( validation), 429 Too Many Requests (+Retry-After).
 
-**5xx:** 500 Internal (never leak traces), 502 Bad Gateway, 503 Service Unavailable (+Retry-After), 504 Gateway Timeout.
+**5xx:** 500 Internal (never leak traces), 502 Bad Gateway, 503 Service
+Unavailable (+Retry-After), 504 Gateway Timeout.
 
 ## RFC 7807 Problem Details
 
@@ -81,8 +84,9 @@ function negotiateContentType(ServerRequestInterface $request): string
 }
 ```
 
-Return `406 Not Acceptable` when no match. HATEOAS: include `self` on every resource, `next`/`prev`/`first`/`last` on
-collections. Show contextual action links (e.g., `publish` only on drafts).
+Return `406 Not Acceptable` when no match. HATEOAS: include `self` on every
+resource, `next`/`prev`/`first`/`last` on collections. Show contextual action
+links (e.g., `publish` only on drafts).
 
 ## Response Envelopes
 
@@ -126,9 +130,9 @@ final class ArticleTransformer extends TransformerAbstract {
 }
 ```
 
-**JSON:API:** `id` always string, `type` plural, related in `included` (sideloading),
-`Content-Type: application/vnd.api+json`. Higher structure overhead — best for relationship-heavy APIs with generic
-client tooling.
+**JSON:API:** `id` always string, `type` plural, related in `included`
+(sideloading), `Content-Type: application/vnd.api+json`. Higher structure
+overhead — best for relationship-heavy APIs with generic client tooling.
 
 ## Pagination
 
@@ -141,7 +145,8 @@ final readonly class PaginationMeta {
 }
 ```
 
-**Cursor** (`?after=eyJpZCI6NDJ9&limit=20`): stable, O(1), preferred for large datasets.
+**Cursor** (`?after=eyJpZCI6NDJ9&limit=20`): stable, O(1), preferred for large
+datasets.
 
 ```php
 function encodeCursor(array $pos): string { return base64_encode(json_encode($pos, JSON_THROW_ON_ERROR)); }
@@ -156,7 +161,8 @@ function decodeCursor(string $c): array {
 
 **URL** (public): `/api/v1/...` — obvious, cacheable, ~70% industry adoption.
 
-**Header** (internal): `Api-Version: 2` or `Accept: application/vnd.myapi.v2+json`. Set `Vary: Api-Version, Accept`.
+**Header** (internal): `Api-Version: 2` or
+`Accept: application/vnd.myapi.v2+json`. Set `Vary: Api-Version, Accept`.
 
 ```php
 function resolveApiVersion(ServerRequestInterface $request): string {
@@ -166,8 +172,9 @@ function resolveApiVersion(ServerRequestInterface $request): string {
 }
 ```
 
-**Non-breaking:** add optional fields/params/endpoints, relax validation. **Breaking:** remove/rename fields, change
-types/status codes/auth, make optional required.
+**Non-breaking:** add optional fields/params/endpoints, relax validation.
+**Breaking:** remove/rename fields, change types/status codes/auth, make
+optional required.
 
 ## Deprecation
 
@@ -189,18 +196,20 @@ Log deprecated endpoint requests. At sunset: return `410 Gone`.
 ## Rate Limiting
 
 | Algorithm      | Burst | Memory | Boundary | Best For             |
-|----------------|-------|--------|----------|----------------------|
+| -------------- | ----- | ------ | -------- | -------------------- |
 | Fixed Window   | No    | O(1)   | 2x burst | Simple internal APIs |
 | Sliding Window | No    | O(n)   | None     | Consumer-facing      |
 | Token Bucket   | Yes   | O(1)   | None     | Burst-tolerant       |
 
-Headers (always): `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`. On 429: `Retry-After` + RFC 7807
-body.
+Headers (always): `X-RateLimit-Limit`, `X-RateLimit-Remaining`,
+`X-RateLimit-Reset`. On 429: `Retry-After` + RFC 7807 body.
 
-Keys: `rate_limit:user:{id}`, `rate_limit:ip:{ip}`, `rate_limit:tier:{tier}:{id}`. Tiers: unauth 30/min, free 100/min,
-paid 1000/min.
+Keys: `rate_limit:user:{id}`, `rate_limit:ip:{ip}`,
+`rate_limit:tier:{tier}:{id}`. Tiers: unauth 30/min, free 100/min, paid
+1000/min.
 
-PSR-15 middleware with `RateLimiterInterface` and `KeyResolverInterface`. Use Redis atomic ops (pipeline/Lua).
+PSR-15 middleware with `RateLimiterInterface` and `KeyResolverInterface`. Use
+Redis atomic ops (pipeline/Lua).
 
 ```php
 final readonly class RateLimitResult {

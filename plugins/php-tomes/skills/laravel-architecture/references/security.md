@@ -16,7 +16,7 @@
 ## Authentication Overview
 
 | Package       | Purpose                             | When to Use                    |
-|---------------|-------------------------------------|--------------------------------|
+| ------------- | ----------------------------------- | ------------------------------ |
 | **Sanctum**   | Cookie sessions + opaque API tokens | SPAs, mobile apps, simple APIs |
 | **Passport**  | Full OAuth2 server                  | Third-party token issuance     |
 | **Fortify**   | Headless auth backend (no UI)       | Custom frontend                |
@@ -26,7 +26,7 @@
 ### Session vs Token Auth
 
 | Dimension    | Session (Cookie)               | Token (Bearer)       |
-|--------------|--------------------------------|----------------------|
+| ------------ | ------------------------------ | -------------------- |
 | CSRF         | Yes (mitigated by Sanctum)     | No                   |
 | XSS          | HttpOnly cookie (safe)         | localStorage exposed |
 | Revocation   | Immediate (delete session)     | Requires DB lookup   |
@@ -82,7 +82,7 @@ Never log or expose `plainTextToken` after initial creation.
 Use when issuing tokens to third-party applications.
 
 | Grant                     | Use Case                            |
-|---------------------------|-------------------------------------|
+| ------------------------- | ----------------------------------- |
 | Authorization Code        | Third-party web apps                |
 | Authorization Code + PKCE | Mobile/SPA (replaces Implicit)      |
 | Client Credentials        | Machine-to-machine                  |
@@ -321,7 +321,7 @@ protected $casts = [
 ## Anti-Patterns
 
 | Anti-Pattern                          | Risk                          | Fix                               |
-|---------------------------------------|-------------------------------|-----------------------------------|
+| ------------------------------------- | ----------------------------- | --------------------------------- |
 | `$guarded = []`                       | Mass assignment               | Use `$fillable`                   |
 | `$request->all()` in create/update    | Accepts unexpected fields     | `$request->validated()`           |
 | `DB::raw($userInput)`                 | SQL injection                 | Use bindings or whitelist         |

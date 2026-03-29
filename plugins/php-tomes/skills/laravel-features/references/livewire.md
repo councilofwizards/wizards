@@ -23,11 +23,13 @@
 
 ### Subsequent Updates
 
-`boot()` → `hydrate()` → `hydrate{Prop}()` → `updating($name, $val)` → `updating{Prop}($val)` → `updated($name, $val)` →
-`updated{Prop}($val)` → `rendering()` → `render()` → `rendered($view)` → `dehydrate()` → `dehydrate{Prop}()`
+`boot()` → `hydrate()` → `hydrate{Prop}()` → `updating($name, $val)` →
+`updating{Prop}($val)` → `updated($name, $val)` → `updated{Prop}($val)` →
+`rendering()` → `render()` → `rendered($view)` → `dehydrate()` →
+`dehydrate{Prop}()`
 
 | Hook                   | When                  | Use Case                         |
-|------------------------|-----------------------|----------------------------------|
+| ---------------------- | --------------------- | -------------------------------- |
 | `boot()`               | Every request         | Initialize non-serializable deps |
 | `mount(...$params)`    | Initial only          | Set state from route/parent      |
 | `hydrate()`            | After deserialization | Restore non-serializable state   |
@@ -40,7 +42,7 @@
 ### Data Binding
 
 | Directive                        | Behavior                     |
-|----------------------------------|------------------------------|
+| -------------------------------- | ---------------------------- |
 | `wire:model="prop"`              | Sync on form submit (lazy)   |
 | `wire:model.live="prop"`         | Sync on every input event    |
 | `wire:model.live.debounce.300ms` | Live with debounce           |
@@ -51,7 +53,7 @@
 ### Actions
 
 | Directive                     | Behavior                      |
-|-------------------------------|-------------------------------|
+| ----------------------------- | ----------------------------- |
 | `wire:click="method"`         | Call on click                 |
 | `wire:click="method('arg')"`  | Call with argument            |
 | `wire:submit="method"`        | Call on form submit           |
@@ -62,7 +64,7 @@
 ### UI State
 
 | Directive                         | Behavior                             |
-|-----------------------------------|--------------------------------------|
+| --------------------------------- | ------------------------------------ |
 | `wire:loading`                    | Show element while request in flight |
 | `wire:loading.class="opacity-50"` | Add class while loading              |
 | `wire:loading.attr="disabled"`    | Set attribute while loading          |
@@ -73,7 +75,7 @@
 ### Other
 
 | Directive                       | Behavior                         |
-|---------------------------------|----------------------------------|
+| ------------------------------- | -------------------------------- |
 | `wire:poll`                     | Re-render every 2s               |
 | `wire:poll.5s`                  | Re-render every 5s               |
 | `wire:poll.visible`             | Poll only when visible           |
@@ -157,7 +159,7 @@ Access in Blade: `$this->posts` (not `$posts`). Not serialized into snapshot.
 ## Component API
 
 | Method                                 | Description                           |
-|----------------------------------------|---------------------------------------|
+| -------------------------------------- | ------------------------------------- |
 | `$this->validate()`                    | Validate all `#[Validate]` properties |
 | `$this->validateOnly('prop')`          | Validate single property              |
 | `$this->reset('prop')`                 | Reset to default                      |
@@ -180,7 +182,7 @@ Access in Blade: `$this->posts` (not `$posts`). Not serialized into snapshot.
 ### $wire Proxy
 
 | API                              | Description                   |
-|----------------------------------|-------------------------------|
+| -------------------------------- | ----------------------------- |
 | `$wire.prop`                     | Read Livewire property        |
 | `$wire.prop = val`               | Write (queued sync)           |
 | `$wire.$set('prop', val)`        | Write + immediate roundtrip   |
@@ -206,7 +208,7 @@ Access in Blade: `$this->posts` (not `$posts`). Not serialized into snapshot.
 ### Alpine Plugins (Included)
 
 | Plugin    | Directive     | Purpose                      |
-|-----------|---------------|------------------------------|
+| --------- | ------------- | ---------------------------- |
 | Focus     | `x-trap`      | Trap keyboard focus (modals) |
 | Intersect | `x-intersect` | Viewport enter/leave         |
 | Persist   | `x-persist`   | localStorage persistence     |
@@ -216,7 +218,7 @@ Access in Blade: `$this->posts` (not `$posts`). Not serialized into snapshot.
 ## Volt API
 
 | Function               | Purpose                  |
-|------------------------|--------------------------|
+| ---------------------- | ------------------------ |
 | `state([...])`         | Declare properties       |
 | `state(...)->locked()` | Prevent browser mutation |
 | `computed(fn)`         | Computed property        |
@@ -248,4 +250,5 @@ Access in Blade: `$this->posts` (not `$posts`). Not serialized into snapshot.
 - Public properties are visible in snapshots — never store passwords/tokens
 - `#[Locked]` prevents browser modification of a property
 - Action arguments can be tampered — validate and authorize inside every action
-- Livewire performs implicit model binding on action params — authorization still required
+- Livewire performs implicit model binding on action params — authorization
+  still required

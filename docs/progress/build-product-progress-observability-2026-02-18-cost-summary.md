@@ -8,21 +8,21 @@ timestamp: "2026-02-18"
 
 ## Team Composition
 
-| Agent | Model | Role |
-|-------|-------|------|
-| team-lead | opus | Tech Lead (orchestration) |
-| impl-architect | opus | Implementation Architect |
-| backend-eng | sonnet | Backend Engineer |
-| frontend-eng | sonnet | Frontend Engineer |
-| quality-skeptic | opus | Quality Skeptic |
+| Agent           | Model  | Role                      |
+| --------------- | ------ | ------------------------- |
+| team-lead       | opus   | Tech Lead (orchestration) |
+| impl-architect  | opus   | Implementation Architect  |
+| backend-eng     | sonnet | Backend Engineer          |
+| frontend-eng    | sonnet | Frontend Engineer         |
+| quality-skeptic | opus   | Quality Skeptic           |
 
 ## Phase Summary
 
-| Phase | Agents Active | Notes |
-|-------|--------------|-------|
-| Planning | impl-architect, quality-skeptic | Plan created and approved |
-| Implementation | backend-eng, frontend-eng | Parallel execution |
-| Review | quality-skeptic | Post-implementation gate |
+| Phase          | Agents Active                   | Notes                     |
+| -------------- | ------------------------------- | ------------------------- |
+| Planning       | impl-architect, quality-skeptic | Plan created and approved |
+| Implementation | backend-eng, frontend-eng       | Parallel execution        |
+| Review         | quality-skeptic                 | Post-implementation gate  |
 
 ## Deliverables
 

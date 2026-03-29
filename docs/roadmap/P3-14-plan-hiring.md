@@ -14,8 +14,11 @@ updated: "2026-02-19"
 
 ## Problem
 
-Early-stage startups need to make critical hiring decisions (roles, timing, compensation, culture fit) without dedicated HR leadership, leading to costly mis-hires and suboptimal team composition.
+Early-stage startups need to make critical hiring decisions (roles, timing,
+compensation, culture fit) without dedicated HR leadership, leading to costly
+mis-hires and suboptimal team composition.
 
 ## Spec
 
-See [docs/specs/plan-hiring/spec.md](../../specs/plan-hiring/spec.md) -- approved by product-skeptic (2026-02-19).
+See [docs/specs/plan-hiring/spec.md](../../specs/plan-hiring/spec.md) --
+approved by product-skeptic (2026-02-19).

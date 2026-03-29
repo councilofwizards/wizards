@@ -59,7 +59,7 @@ protected $hidden = ['password', 'remember_token', 'api_key'];
 ## Type Casting
 
 | Cast                   | PHP Type          | Notes                        |
-|------------------------|-------------------|------------------------------|
+| ---------------------- | ----------------- | ---------------------------- |
 | `'boolean'`            | `bool`            |                              |
 | `'integer'`            | `int`             |                              |
 | `'float'`              | `float`           |                              |
@@ -117,7 +117,7 @@ protected $appends = ['full_name'];
 ### Type Reference
 
 | Method                        | Returns          | FK Location           |
-|-------------------------------|------------------|-----------------------|
+| ----------------------------- | ---------------- | --------------------- |
 | `hasOne`                      | model or null    | child table           |
 | `hasMany`                     | Collection       | child table           |
 | `belongsTo`                   | model or null    | this table            |
@@ -252,7 +252,7 @@ User::addSelect([
 ### Useful Methods
 
 | Method                       | Description                  |
-|------------------------------|------------------------------|
+| ---------------------------- | ---------------------------- |
 | `pluck('name', 'id')`        | Keyed array `[id => name]`   |
 | `value('name')`              | Single scalar from first row |
 | `exists()` / `doesntExist()` | Boolean check, no hydration  |
@@ -268,7 +268,7 @@ User::addSelect([
 ### Chunking
 
 | Method               | Best For                        |
-|----------------------|---------------------------------|
+| -------------------- | ------------------------------- |
 | `chunkById(500, fn)` | Mutation-safe batch operations  |
 | `chunk(500, fn)`     | Read-only, stable order         |
 | `lazy()`             | Pipeline with Collection API    |
@@ -322,8 +322,8 @@ final class CompleteOrder
 
 ### Repository Pattern
 
-Worth it when: multiple persistence stores, complex shared queries, unit tests without DB. Over-engineering for: simple
-CRUD, single Eloquent driver.
+Worth it when: multiple persistence stores, complex shared queries, unit tests
+without DB. Over-engineering for: simple CRUD, single Eloquent driver.
 
 ### Practical Middle Ground
 
@@ -336,7 +336,7 @@ CRUD, single Eloquent driver.
 ## Anti-Patterns
 
 | Anti-Pattern                               | Fix                                     |
-|--------------------------------------------|-----------------------------------------|
+| ------------------------------------------ | --------------------------------------- |
 | `$guarded = []` in production              | Use `$fillable`                         |
 | Missing `$casts` for non-string cols       | Define all casts                        |
 | N+1 queries                                | `with()`, enable `preventLazyLoading()` |
