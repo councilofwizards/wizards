@@ -149,6 +149,12 @@ If `$ARGUMENTS` begins with `--light`, strip the flag and enable lightweight mod
 
 ## Spawn the Team
 
+**Run ID:** Before proceeding, generate a 4-character lowercase hex string (e.g., `a3f7`) as the **run ID** for this
+invocation. Append `-{run-id}` to the `team_name` and to every agent `name` in the steps below (e.g.,
+`team_name: "my-team-a3f7"`, `name: "agent-a3f7"`). When constructing each agent's spawn prompt, prepend a **Teammate
+Roster** listing every teammate's suffixed `name` so agents can address each other via `SendMessage`. This prevents
+collisions between concurrent runs.
+
 **Step 1:** Call `TeamCreate` with `team_name: "write-spec"`. **Step 2:** Call `TaskCreate` to define work items from
 the Orchestration Flow below. **Step 3:** Spawn each teammate using the `Agent` tool with `team_name: "write-spec"` and
 each teammate's `name`, `model`, and `prompt` as specified below.
