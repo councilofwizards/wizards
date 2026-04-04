@@ -57,6 +57,7 @@ ENGINEERING_SKILLS=(
     refine-code
     unearth-specification
     review-pr
+    audit-slop
 )
 
 NON_ENGINEERING_SKILLS=(
