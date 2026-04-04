@@ -141,6 +141,51 @@ Checkpoint frequency is set via `--checkpoint-frequency` (default: `every-step`)
 When using `milestones-only` or `final-only`, session recovery resolution may be coarser than usual. The Team Lead notes
 this in recovery messages.
 
+### CONTINUE.md Protocol
+
+The Team Lead maintains a pipeline-level recovery brief at `docs/CONTINUE.md`. This file aggregates per-agent checkpoint
+state into a single, human-readable document. CONTINUE.md is **advisory** — agent checkpoint files and artifact
+frontmatter remain ground truth. If CONTINUE.md and ground truth conflict, trust ground truth.
+
+**Schema** — YAML frontmatter (all fields mandatory):
+
+| Field         | Type     | Mutable | Description                                            |
+| ------------- | -------- | ------- | ------------------------------------------------------ |
+| `skill`       | string   | No      | `build-product`                                        |
+| `topic`       | string   | No      | Invocation topic, verbatim                             |
+| `run_id`      | string   | No      | Unique session identifier (the run ID hex suffix)      |
+| `team`        | string   | No      | Team name with run_id suffix                           |
+| `stage`       | integer  | Yes     | Current active stage (0 at init, N during execution)   |
+| `status`      | enum     | Yes     | `in_progress` or `complete`                            |
+| `flags`       | string   | No      | Verbatim invocation flags or `"(none — all defaults)"` |
+| `heartbeat`   | ISO-8601 | Yes     | Updated on every write                                 |
+| `last_action` | string   | Yes     | One-sentence description of last action                |
+
+**Mandatory sections** (fixed order): What We're Building, Current State, Recovery Instructions (with copy-pasteable
+resume command in fenced code block), Stage Map (COMPLETE/PARTIAL/PENDING per stage with compensating actions),
+Checkpoint Index (agent file paths with frontmatter status values). Team Roster is optional.
+
+**Stage Map statuses**: `COMPLETE` (gate closed, artifact verified), `PARTIAL` (agents spawned but gate never closed),
+`PENDING` (not started). Each row includes a Compensating Action — a self-sufficient recovery instruction.
+
+**Compensating action templates**:
+
+- COMPLETE: `Skip — artifact verified at [path]`
+- PENDING (unblocked): `Run Stage N from scratch`
+- PENDING (blocked): `Blocked on Stage N — run after Stage N completes`
+- PARTIAL: Specific instruction based on agent states (e.g., "backend-eng at in_progress — re-spawn with checkpoint as
+  context")
+
+**Update triggers** (the Team Lead rewrites CONTINUE.md in full at each trigger — never append):
+
+1. **Session initialization** — before any agent spawn (Step 1 of "Spawn the Team"). Set `stage: 0` for fresh runs, or
+   first non-COMPLETE stage for resumed runs. Stages with FOUND artifacts set to COMPLETE. All agents "not yet created."
+2. **Stage-begin** — before spawning agents for a stage. Set stage to PARTIAL. Populate Checkpoint Index with agents to
+   be spawned.
+3. **Gate-close** — after skeptic approval, before next stage. Set stage to COMPLETE with artifact path. Advance
+   frontmatter `stage` to N+1 (or N if final). Re-read all agent checkpoint files for Checkpoint Index.
+4. **Pipeline complete** — before cost summary. Set `status: complete`, all stages COMPLETE.
+
 ## Determine Mode
 
 Based on $ARGUMENTS:

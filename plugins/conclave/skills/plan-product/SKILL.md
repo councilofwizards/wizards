@@ -107,6 +107,51 @@ Checkpoint frequency is set via `--checkpoint-frequency` (default: `every-step`)
 When using `milestones-only` or `final-only`, session recovery resolution may be coarser than usual. The Team Lead notes
 this in recovery messages.
 
+### CONTINUE.md Protocol
+
+The Team Lead maintains a pipeline-level recovery brief at `docs/CONTINUE.md`. This file aggregates per-agent checkpoint
+state into a single, human-readable document. CONTINUE.md is **advisory** — agent checkpoint files and artifact
+frontmatter remain ground truth. If CONTINUE.md and ground truth conflict, trust ground truth.
+
+**Schema** — YAML frontmatter (all fields mandatory):
+
+| Field         | Type     | Mutable | Description                                            |
+| ------------- | -------- | ------- | ------------------------------------------------------ |
+| `skill`       | string   | No      | `plan-product`                                         |
+| `topic`       | string   | No      | Invocation topic, verbatim                             |
+| `run_id`      | string   | No      | Unique session identifier (the run ID hex suffix)      |
+| `team`        | string   | No      | Team name with run_id suffix                           |
+| `stage`       | integer  | Yes     | Current active stage (0 at init, N during execution)   |
+| `status`      | enum     | Yes     | `in_progress` or `complete`                            |
+| `flags`       | string   | No      | Verbatim invocation flags or `"(none — all defaults)"` |
+| `heartbeat`   | ISO-8601 | Yes     | Updated on every write                                 |
+| `last_action` | string   | Yes     | One-sentence description of last action                |
+
+**Mandatory sections** (fixed order): What We're Building, Current State, Recovery Instructions (with copy-pasteable
+resume command in fenced code block), Stage Map (COMPLETE/PARTIAL/PENDING per stage with compensating actions),
+Checkpoint Index (agent file paths with frontmatter status values). Team Roster is optional.
+
+**Stage Map statuses**: `COMPLETE` (gate closed, artifact verified), `PARTIAL` (agents spawned but gate never closed),
+`PENDING` (not started). Each row includes a Compensating Action — a self-sufficient recovery instruction.
+
+**Compensating action templates**:
+
+- COMPLETE: `Skip — artifact verified at [path]`
+- PENDING (unblocked): `Run Stage N from scratch`
+- PENDING (blocked): `Blocked on Stage N — run after Stage N completes`
+- PARTIAL: Specific instruction based on agent states (e.g., "story-writer draft at awaiting_review — spawn
+  product-skeptic with checkpoint as context; do not re-run story-writer")
+
+**Update triggers** (the Team Lead rewrites CONTINUE.md in full at each trigger — never append):
+
+1. **Session initialization** — before any agent spawn (Step 1 of "Spawn the Team"). Set `stage: 0` for fresh runs, or
+   first non-COMPLETE stage for resumed runs. Stages with FOUND artifacts set to COMPLETE. All agents "not yet created."
+2. **Stage-begin** — before spawning agents for a stage. Set stage to PARTIAL. Populate Checkpoint Index with agents to
+   be spawned.
+3. **Gate-close** — after skeptic approval, before next stage. Set stage to COMPLETE with artifact path. Advance
+   frontmatter `stage` to N+1 (or N if final). Re-read all agent checkpoint files for Checkpoint Index.
+4. **Pipeline complete** — before cost summary. Set `status: complete`, all stages COMPLETE.
+
 ## Determine Mode
 
 Based on $ARGUMENTS:
@@ -115,11 +160,20 @@ Based on $ARGUMENTS:
   agents. Read `docs/progress/` files with `team: "plan-product"` in their frontmatter, parse their YAML metadata, and
   output a formatted status summary. If no checkpoint files exist for this skill, report "No active or recent sessions
   found."
-- **Empty/no args**: First, scan `docs/progress/` for checkpoint files with `team: "plan-product"` and `status` of
-  `in_progress`, `blocked`, or `awaiting_review`. If found, **resume from the last checkpoint** — re-spawn the relevant
-  agents with their checkpoint content as context. If no incomplete checkpoints exist, run artifact detection to
-  determine which stages are needed for the most relevant topic/feature. Execute the pipeline from the earliest missing
-  stage. If no clear target exists, assess roadmap health and suggest next steps.
+- **Empty/no args**: First, check if `docs/CONTINUE.md` exists. If it exists, read its frontmatter:
+  - If `status: complete` — pipeline already finished. Report "Pipeline complete" and exit.
+  - If `status: in_progress` — read the Stage Map and Checkpoint Index. For COMPLETE stages, skip (confirm via artifact
+    detection). For PARTIAL stages, read the Compensating Action and follow it (re-spawn agents per Checkpoint Index
+    status: `awaiting_review` → route to skeptic; `in_progress` → re-spawn with checkpoint; `not yet created` → spawn
+    from scratch). For PENDING stages, run normally when reached. Use the `flags` field to restore original invocation
+    flags. Proceed with existing artifact detection as confirmation (CONTINUE.md is the routing hint; artifact
+    frontmatter is ground truth).
+  - If `docs/CONTINUE.md` does not exist, fall through to existing behavior below. Then, scan `docs/progress/` for
+    checkpoint files with `team: "plan-product"` and `status` of `in_progress`, `blocked`, or `awaiting_review`. If
+    found, **resume from the last checkpoint** — re-spawn the relevant agents with their checkpoint content as context.
+    If no incomplete checkpoints exist, run artifact detection to determine which stages are needed for the most
+    relevant topic/feature. Execute the pipeline from the earliest missing stage. If no clear target exists, assess
+    roadmap health and suggest next steps.
 - **"new [idea]"**: Full pipeline from research through spec for a new idea. The idea description becomes the topic for
   Stage 1 and flows through all stages.
 - **"review [spec-name]"**: Skip to Stage 5 to review and refine an existing spec.
@@ -363,6 +417,8 @@ When `--full` is absent:
 
 Skip if research-findings FOUND for this topic.
 
+0. **CONTINUE.md stage-begin update**: Update `docs/CONTINUE.md` — set `stage: 1`, Stage Map row 1 to PARTIAL,
+   Checkpoint Index with market-researcher and customer-researcher at "not yet created". Rewrite the full file.
 1. Create tasks for market-researcher and customer-researcher based on the topic
 2. Spawn both agents — they work in parallel
 3. **Review gate** (conditional):
@@ -382,6 +438,8 @@ Skip if research-findings FOUND for this topic.
 
 Skip if product-ideas FOUND for this topic.
 
+0. **CONTINUE.md stage-begin update**: Update `docs/CONTINUE.md` — set `stage: 2`, Stage Map row 2 to PARTIAL,
+   Checkpoint Index with idea-generator and idea-evaluator at "not yet created". Rewrite the full file.
 1. Share the research-findings artifact with idea-generator and idea-evaluator
 2. Spawn both agents — generator produces ideas, evaluator scores and ranks them
 3. **Review gate** (conditional):
@@ -400,6 +458,8 @@ Skip if product-ideas FOUND for this topic.
 
 Skip if roadmap items already exist for this topic.
 
+0. **CONTINUE.md stage-begin update**: Update `docs/CONTINUE.md` — set `stage: 3`, Stage Map row 3 to PARTIAL,
+   Checkpoint Index with analyst at "not yet created". Rewrite the full file.
 1. Share the product-ideas artifact with analyst
 2. Spawn analyst to evaluate dependencies, effort/impact, and conflicts against the existing roadmap
 3. **Review gate** (conditional):
@@ -417,6 +477,8 @@ Skip if roadmap items already exist for this topic.
 
 Skip if user-stories FOUND for this feature.
 
+0. **CONTINUE.md stage-begin update**: Update `docs/CONTINUE.md` — set `stage: 4`, Stage Map row 4 to PARTIAL,
+   Checkpoint Index with story-writer and product-skeptic at "not yet created". Rewrite the full file.
 1. Share roadmap items and research context with story-writer
 2. Spawn story-writer and product-skeptic
 3. story-writer drafts stories conforming to `docs/templates/artifacts/user-stories.md`
@@ -429,6 +491,8 @@ Skip if user-stories FOUND for this feature.
 
 Skip if technical-spec FOUND for this feature.
 
+0. **CONTINUE.md stage-begin update**: Update `docs/CONTINUE.md` — set `stage: 5`, Stage Map row 5 to PARTIAL,
+   Checkpoint Index with architect, dba, and product-skeptic at current status. Rewrite the full file.
 1. Share user stories and research context with architect and dba
 2. Spawn architect and dba (if not already spawned) — they work in parallel
 3. Architect designs component boundaries and interfaces; DBA designs data model and migrations
@@ -447,12 +511,19 @@ After each stage completes:
 
 1. Verify the expected artifact was produced (read the file, check frontmatter type and status fields)
 2. If the artifact is missing or invalid, report the failure and stop the pipeline
-3. Report progress to the user
+3. **CONTINUE.md gate-close update**: Update `docs/CONTINUE.md` — set the completed stage's Stage Map row to COMPLETE
+   with the artifact path. Set Compensating Action to "Skip — artifact verified at [path]". Set frontmatter `stage` to
+   the next stage number (N+1), or N if this is the final stage. Refresh `heartbeat` and `last_action`. Re-read all
+   agent checkpoint files and refresh the Checkpoint Index. Rewrite the full file.
+4. Report progress to the user
 
 ### Pipeline Completion
 
 After the final stage:
 
+0. **CONTINUE.md finalization**: Update `docs/CONTINUE.md` — set `status: complete`, all stages COMPLETE, `heartbeat` to
+   now, `last_action` to "Pipeline complete". Rewrite the full file. This fires before cost summary so that if the
+   session crashes during Pipeline Completion, CONTINUE.md already reflects completion.
 1. **Team Lead only**: Write cost summary to `docs/progress/plan-product-{topic}-{timestamp}-cost-summary.md`
 2. **Team Lead only**: Write end-of-session summary to `docs/progress/{topic}-summary.md` using the format from
    `docs/progress/_template.md`. Include: what was accomplished, what remains, blockers encountered, and which stages
@@ -509,6 +580,10 @@ The product-skeptic reviews specs for:
   suggest re-running the skill.
 - **Partial pipeline**: All completed stages' artifacts are preserved on disk. Re-running the pipeline will detect
   existing artifacts via frontmatter and resume from the correct stage.
+- **CONTINUE.md recovery**: If a session crashes, `docs/CONTINUE.md` contains the pipeline's last known state. A fresh
+  session reads CONTINUE.md in Determine Mode (see above) to route recovery. CONTINUE.md is a recovery hint — agent
+  checkpoint files and artifact frontmatter remain ground truth. If CONTINUE.md and ground truth diverge, trust ground
+  truth.
 
 ---
 
