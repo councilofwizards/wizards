@@ -4,7 +4,7 @@ description: >
   Invoke The Planners' Hall to transform a validated idea into a complete product specification. Produces requirements,
   user stories, success metrics, and edge case analysis. Writes 4 product docs and updates the GitHub Issue. Stateless —
   called once per issue by the external polling harness.
-argument-hint: "<issue-number>"
+argument-hint: "[issue-number]"
 type: multi-agent
 category: pipeline
 tags: [factorium, pipeline, planning, specification]
@@ -30,13 +30,21 @@ a user. They have killed features that engineers were excited to build. They wou
 
 ## Determine Mode
 
-Parse the argument `<issue-number>`.
+If an issue number is provided as an argument, use it directly and skip to **Read and Verify Issue**.
 
-- If no argument is provided: report an error and exit.
+If no argument is provided, query GitHub for the next available item:
+
+```bash
+gh issue list --label "factorium:planner" --label "status:needs-rework" --json number,title --limit 1 --sort created
+gh issue list --label "factorium:planner" --label "status:unclaimed" --json number,title --limit 1 --sort created
+```
+
+- If a `needs-rework` item exists, use that issue number.
+- Otherwise, if an `unclaimed` item exists, use that issue number.
+- If neither exists, report and exit:
   ```
-  ERROR: The Planners' Hall requires an issue number. Usage: /factorium:planner <issue-number>
+  *The Planners' Hall stands quiet. No validated ideas await specification. The slates are clean.*
   ```
-- If the argument is not a valid integer: report an error and exit.
 
 ## Read and Verify Issue
 
@@ -52,8 +60,8 @@ gh issue view {issue-number} --json number,title,body,labels,assignees
 - Extract the `## Idea` section. If absent or empty, report error and exit.
 - Extract the `## Research Summary` section. If absent, report error and exit — the Assayer's Guild must complete their
   review before planning begins.
-- Check the `## Dependencies` section. If any listed dependency is not `factorium:complete`, halt and report blocked
-  status to the human operator.
+- Check the `## Dependencies` section. If any listed dependency is not `factorium:complete`, skip this issue. If found
+  via query, try the next item. If no more items, report blocked and exit.
 - Derive the idea slug: lowercase the title, replace spaces with hyphens, remove special characters. Example: "Smart
   Autocomplete for Tags" → `smart-autocomplete-for-tags`
 

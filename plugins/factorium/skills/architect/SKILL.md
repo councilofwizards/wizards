@@ -4,7 +4,7 @@ description: >
   Invoke The Architect's Lodge to design the complete technical architecture for a specified idea. Produces system
   design, schema, API contracts, security model, and parallelized work plan. Creates the idea's git branch. Writes 5
   architecture docs and updates the GitHub Issue. Stateless — called once per issue by the external polling harness.
-argument-hint: "<issue-number>"
+argument-hint: "[issue-number]"
 type: multi-agent
 category: pipeline
 tags: [factorium, pipeline, architecture, design, branch]
@@ -31,13 +31,21 @@ Tester ensures this is true._
 
 ## Determine Mode
 
-Parse the argument `<issue-number>`.
+If an issue number is provided as an argument, use it directly and skip to **Read and Verify Issue**.
 
-- If no argument is provided: report an error and exit.
+If no argument is provided, query GitHub for the next available item:
+
+```bash
+gh issue list --label "factorium:architect" --label "status:needs-rework" --json number,title --limit 1 --sort created
+gh issue list --label "factorium:architect" --label "status:unclaimed" --json number,title --limit 1 --sort created
+```
+
+- If a `needs-rework` item exists, use that issue number.
+- Otherwise, if an `unclaimed` item exists, use that issue number.
+- If neither exists, report and exit:
   ```
-  ERROR: The Architect's Lodge requires an issue number. Usage: /factorium:architect <issue-number>
+  *The Architect's Lodge surveys an empty drafting table. No specifications await design. The Lodge stands ready.*
   ```
-- If the argument is not a valid integer: report an error and exit.
 
 ## Read and Verify Issue
 
@@ -54,8 +62,8 @@ gh issue view {issue-number} --json number,title,body,labels,assignees
 - Extract the `## Research Summary` section. If absent, report error and exit.
 - Extract the `## Product Specification` section. If absent or empty (containing only the placeholder comment), report
   error and exit — the Planners' Hall must complete their work first.
-- Check the `## Dependencies` section. If any listed dependency is not `factorium:complete`, halt and report blocked
-  status to the human operator.
+- Check the `## Dependencies` section. If any listed dependency is not `factorium:complete`, skip this issue. If found
+  via query, try the next item. If no more items, report blocked and exit.
 - Derive the idea slug from the issue title. Lowercase, replace spaces with hyphens, remove specials. Example: "Async
   Export with Progress Tracking" → `async-export-with-progress-tracking`
 

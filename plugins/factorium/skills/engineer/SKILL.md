@@ -4,7 +4,7 @@ description: >
   Summon The Engineer's Forge to implement a single `factorium:engineer` issue. A five-agent crew — Lead Engineer,
   dynamic Implementors, Test Smith, Security Auditor, and Gatekeeper — works the architecture spec into tested, secure
   code, passes automated gates, opens a PR, and exits.
-argument-hint: "<issue-number>"
+argument-hint: "[issue-number]"
 type: multi-agent
 category: engineering
 tags: [implementation, tdd, security, pr-creation, pipeline-stage]
@@ -37,11 +37,21 @@ teammates in real time.**
 
 ## Determine Mode
 
-Parse `$ARGUMENTS`. The sole argument is `<issue-number>`.
+If an issue number is provided as an argument, use it directly and skip to **Read Issue**.
 
-- If `$ARGUMENTS` is empty or not a valid integer: print an error — "Error: issue number required. Usage: /engineer
-  <issue-number>" — and exit immediately.
-- Extract the issue number. All subsequent steps operate on this single issue.
+If no argument is provided, query GitHub for the next available item:
+
+```bash
+gh issue list --label "factorium:engineer" --label "status:needs-rework" --json number,title --limit 1 --sort created
+gh issue list --label "factorium:engineer" --label "status:unclaimed" --json number,title --limit 1 --sort created
+```
+
+- If a `needs-rework` item exists, use that issue number.
+- Otherwise, if an `unclaimed` item exists, use that issue number.
+- If neither exists, report and exit:
+  ```
+  *The Forge stands cold. No architecture awaits implementation. The hammers rest.*
+  ```
 
 ## Read Issue
 

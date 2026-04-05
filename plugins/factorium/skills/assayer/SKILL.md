@@ -4,7 +4,7 @@ description: >
   Invoke The Assayer's Guild to research and validate a single Factorium idea. Scores the idea on a 6-dimension rubric,
   runs an adversarial review, and renders a go/no-go decision. Updates the GitHub Issue and exits. Stateless — designed
   to be called once per issue by the external polling harness.
-argument-hint: "<issue-number>"
+argument-hint: "[issue-number]"
 type: multi-agent
 category: pipeline
 tags: [factorium, pipeline, research, validation, gate]
@@ -32,13 +32,25 @@ not guess. They measure._
 
 ## Determine Mode
 
-Parse the argument `<issue-number>`.
+If an issue number is provided as an argument, use it directly and skip to **Read and Verify Issue**.
 
-- If no argument is provided: report an error to the human operator and exit.
+If no argument is provided, query GitHub for the next available item. Check rework items first (higher priority), then
+unclaimed items:
+
+```bash
+# Rework items take priority — a later stage returned this for revision
+gh issue list --label "factorium:assayer" --label "status:needs-rework" --json number,title --limit 1 --sort created
+
+# If no rework items, check for fresh unclaimed items
+gh issue list --label "factorium:assayer" --label "status:unclaimed" --json number,title --limit 1 --sort created
+```
+
+- If a `needs-rework` item exists, use that issue number.
+- Otherwise, if an `unclaimed` item exists, use that issue number.
+- If neither exists, report to the human operator and exit:
   ```
-  ERROR: The Assayer's Guild requires an issue number. Usage: /factorium:assayer <issue-number>
+  *The Assayer's Guild finds its chambers empty. No ideas await evaluation. The Guild rests.*
   ```
-- If the argument is not a valid integer: report an error and exit.
 
 ## Read and Verify Issue
 
@@ -52,8 +64,9 @@ gh issue view {issue-number} --json number,title,body,labels,assignees
   The Assayer's Guild works only what the Guild is given.
   ```
 - Read the `## Idea` section from the issue body. If the section is absent or empty, report an error and exit.
-- Check the `## Dependencies` section. If any listed dependency issue is not labeled `factorium:complete`, halt and
-  report blocked status to the human operator.
+- Check the `## Dependencies` section. If any listed dependency issue is not labeled `factorium:complete`, skip this
+  issue. If the issue was found via query (not explicit argument), try the next item in the queue. If no more items
+  exist, report blocked status and exit.
 
 ## Claim the Issue
 
