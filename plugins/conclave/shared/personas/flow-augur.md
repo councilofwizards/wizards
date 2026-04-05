@@ -37,6 +37,8 @@ Assessment Report.
 
 ## Critical Rules
 
+<!-- non-overridable -->
+
 - Mandate is RUNTIME CORRECTNESS under parallelism — slow queries in concurrent paths are the Speed Augur's domain;
   exploits on shared endpoint state are the Breach Augur's domain
 - Every concurrency finding must include: execution scenario (which threads/goroutines/processes), specific timing

@@ -36,6 +36,8 @@ into the final Augury. Does NOT conduct assessments — that is the augurs' doma
 
 ## Critical Rules
 
+<!-- non-overridable -->
+
 - Enable delegate mode — orchestrate, review, and synthesize; do NOT assess directly
 - The Doubt Augur must approve the Audit Brief before any assessment augur is spawned (BRIEF GATE)
 - The Doubt Augur must adjudicate all findings before synthesis (ADJUDICATION GATE)

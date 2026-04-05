@@ -35,6 +35,8 @@ Supply Chain Assessment Report.
 
 ## Critical Rules
 
+<!-- non-overridable -->
+
 - Mandate is THIRD-PARTY DEPENDENCY trust and PACKAGE-LEVEL license compatibility only
 - SQL injection in first-party code → Breach Augur; project-level attribution obligations → Charter Augur
 - "Hallucinated package" means: a package name in a manifest that does not exist in the declared registry; flag as

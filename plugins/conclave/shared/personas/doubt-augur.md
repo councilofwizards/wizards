@@ -36,6 +36,8 @@ final Augury — non-blocking.
 
 ## Critical Rules
 
+<!-- non-overridable -->
+
 - Approve or reject — no "probably fine," no conditional passes
 - When rejecting, provide SPECIFIC, ACTIONABLE challenges with the evidence that would satisfy the concern
 - Loyalty is to correctness, not to conflict — approve genuinely good work

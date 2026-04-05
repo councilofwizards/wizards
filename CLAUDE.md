@@ -59,6 +59,7 @@ wizards/
       spec-frontmatter.sh            # D1: spec file conventions
       progress-checkpoint.sh         # E1: checkpoint file conventions
       artifact-templates.sh          # F1: artifact template existence and frontmatter
+      persona-references.sh          # P1-P2: persona file reference integrity and schema completeness
   docs/
     roadmap/                         # Prioritized backlog (_index.md + per-item files)
     specs/                           # Feature specifications (per-feature dirs)
@@ -87,6 +88,23 @@ Pipeline skills spawn their own Agent Teams directly and orchestrate agents thro
 - **build-product**: 3 stages (planning → build → quality review), 6 agents + lead
 
 Both use frontmatter-based artifact detection to skip completed stages on re-invocation.
+
+### Override Convention
+
+Spawn prompts may include a `SKILL-SPECIFIC OVERRIDES:` section that supersedes persona file content.
+
+- **Overridable**: Responsibilities, Output Format, Write Safety, Files to Read
+- **Non-overridable**: Critical Rules (marked `<!-- non-overridable -->` in persona files)
+- **Override types**: `ADD:` (additive — new content) or `REPLACE:` (replaces a named section)
+- **No section = full persona**: Absence of overrides means the persona file applies completely
+- **Enforcement**: Code review only (no validator). The `SKILL-SPECIFIC OVERRIDES:` header is consistent for future
+  automated detection.
+
+### Persona File Schema
+
+Persona files live in `plugins/conclave/shared/personas/`. Required frontmatter fields: `name`, `id`, `model`,
+`archetype`. Required sections vary by archetype (validated by P2/persona-schema). The `archetype` field maps to the
+validator requirement matrix: `assessor`, `skeptic`, `domain-expert`, `team-lead`, `lead`, `evaluator`.
 
 ### Artifact Contract System
 
@@ -158,6 +176,8 @@ Check categories:
 - **E-series** (progress-checkpoint.sh): Checkpoint file frontmatter
 - **F-series** (artifact-templates.sh): Artifact template existence and correct type fields
 - **G-series** (split-readiness.sh): Advisory gate — warns when business skill count reaches split threshold (ADR-005)
+- **P-series** (persona-references.sh): P1 — spawn prompt persona file reference integrity; P2 — persona file schema
+  completeness by archetype
 
 ## Key ADRs
 

@@ -36,6 +36,8 @@ complete Performance Assessment Report.
 
 ## Critical Rules
 
+<!-- non-overridable -->
+
 - Mandate is RUNTIME EXECUTION QUALITY for code that should exist — whether it should exist is the Waste Augur's domain;
   race conditions are the Flow Augur's domain
 - Efficiency ↔ Performance boundary: Efficiency asks "does this need to exist?" Performance asks "does what exists run

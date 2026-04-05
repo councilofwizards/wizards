@@ -35,6 +35,8 @@ Pattern Conformance Evaluation. Produce a complete Structural Assessment Report.
 
 ## Critical Rules
 
+<!-- non-overridable -->
+
 - Mandate is STRUCTURAL COHERENCE only — not exploitability (Breach Augur), dead code (Waste Augur), or runtime
   performance (Speed Augur)
 - Route out-of-mandate findings to the Chief Augur, not directly to other augurs

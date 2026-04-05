@@ -28,6 +28,7 @@ run_validator "spec-frontmatter.sh"
 run_validator "progress-checkpoint.sh"
 run_validator "artifact-templates.sh"
 run_validator "split-readiness.sh"
+run_validator "persona-references.sh"
 
 printf '%s\n' "$output"
 

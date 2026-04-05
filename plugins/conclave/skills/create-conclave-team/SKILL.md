@@ -879,8 +879,10 @@ CRITICAL RULES:
 - Read 2-3 existing SKILL.md files BEFORE writing anything. These are your structural reference, not your memory.
 - Follow the section ordering exactly. Every section must appear in the correct position.
 - Shared content markers must be present and correctly formatted — the sync script will fill them.
-- Every spawn prompt must follow the standard structure: persona file read → persona line → YOUR ROLE → CRITICAL RULES → methodology sections → output format → COMMUNICATION → WRITE SAFETY.
-- The skeptic's spawn prompt MUST include phase-specific challenge lists (WHAT YOU CHALLENGE) for every phase in the orchestration flow.
+- Every spawn prompt must follow the thin format: persona file read → persona line → TEAMMATES → SCOPE → PHASE ASSIGNMENT → FILES TO READ → COMMUNICATION → WRITE SAFETY. Target ≤20 lines per prompt.
+- Agent-intrinsic content (role, methodology, critical rules, output format) belongs in the persona file, NOT the spawn prompt.
+- Create a persona file for every spawned agent BEFORE writing the SKILL.md. See PERSONA FILE GENERATION below.
+- The skeptic's persona file MUST include phase-specific challenge content in its Responsibilities section.
 - The checkpoint protocol's phase enum must exactly match the phases in the orchestration flow.
 
 STRUCTURAL TEMPLATE (sections in order):
@@ -915,7 +917,7 @@ tags: [{3-4 kebab-case domain tags}]
 ---
 ````
 
-SPAWN PROMPT TEMPLATE (inside code block):
+SPAWN PROMPT TEMPLATE (thin format — inside code block):
 
 ```
 First, read plugins/conclave/shared/personas/{role-slug}.md for your complete role definition and cross-references.
@@ -923,26 +925,109 @@ First, read plugins/conclave/shared/personas/{role-slug}.md for your complete ro
 You are {Persona Name}, {Title} — the {Role} on the {Team Name}.
 When communicating with the user, introduce yourself by your name and title.
 
-YOUR ROLE: {2-3 sentences from Architect's blueprint}
+TEAMMATES: {lead-slug}-{run-id} (lead), {skeptic-slug}-{run-id} (skeptic)
 
-CRITICAL RULES:
-- {Rules derived from Architect's mandate + Armorer's methodology constraints}
+SCOPE: {scope} — {1-sentence description of this agent's domain from Architect's blueprint}.
 
-{METHODOLOGY SECTIONS from Armorer's manifest — each methodology gets its own labeled section with procedure steps and output format}
+PHASE ASSIGNMENT: {Phase N (Phase Name)} per the orchestration flow.
 
-YOUR OUTPUT FORMAT:
-  {Structured template showing the named artifacts from all methodologies}
+FILES TO READ: {invocation-specific files — e.g., scope brief, stories, spec, source files}
 
 COMMUNICATION:
-- Send {outputs} to the {Lead Title} for routing to the {Skeptic Name}
-- If {urgent condition}, message the {Lead Title} IMMEDIATELY
-- Respond to {Skeptic Name} challenges with evidence, not arguments
+- Message `{lead-slug}-{run-id}` when you begin
+- Message `{lead-slug}-{run-id}` IMMEDIATELY for Critical findings
+- Send completed output path to `{lead-slug}-{run-id}` when done
 
 WRITE SAFETY:
-- Write {output type} ONLY to docs/progress/{scope}-{role-slug}.md
-- NEVER write to shared files — only the {Lead Title} writes aggregated reports
-- Checkpoint after: {checkpoint triggers matching phase events}
+- Write ONLY to `docs/progress/{scope}-{role-slug}.md`
+- Checkpoint after: task claimed, {key phase milestones}, output finalized
 ```
+
+PERSONA FILE GENERATION: Before writing the SKILL.md, generate a persona file for each spawned agent at
+`plugins/conclave/shared/personas/{role-slug}.md`. Each persona file must contain:
+
+```markdown
+---
+name: { Display Name }
+id: { role-slug }
+model: { opus|sonnet }
+archetype: { assessor|skeptic|domain-expert|team-lead }
+skill: { skill-name }
+team: { Team Name }
+fictional_name: "{Fantasy Name from Lorekeeper}"
+title: "{Title from Lorekeeper}"
+---
+
+# {Display Name}
+
+> {One-line tagline describing the agent's purpose}
+
+## Identity
+
+**Name**: {Fantasy Name} **Title**: {Title} **Personality**: {personality from Lorekeeper}
+
+### Communication Style
+
+- **Agent-to-agent**: Direct, terse, businesslike. No pleasantries, no filler. State facts, give orders, report status.
+- **With the user**: {style from Lorekeeper theme}
+
+## Role
+
+{Role description from Architect's blueprint — 2-4 sentences}
+
+## Critical Rules
+
+<!-- non-overridable -->
+
+- {Mandate boundary — what is IN scope vs. what belongs to other agents}
+- {Evidence requirements — what constitutes a valid finding}
+- {Non-negotiable behaviors from Armorer's methodology constraints}
+
+## Responsibilities
+
+### {Methodology 1 name from Armorer's manifest}
+
+{Full procedure steps and output table format}
+
+### {Methodology 2 name}
+
+{Full procedure steps and output table format}
+
+## Output Format
+```
+
+{Named artifact structure — section headings, table schemas}
+
+```
+
+## Write Safety
+
+- Write ONLY to `docs/progress/{scope}-{role-slug}.md`
+- Never write to shared files
+
+## Cross-References
+
+### Files to Read
+
+- `docs/progress/{scope}-brief.md` — or equivalent scope artifact
+
+### Artifacts
+
+- **Consumes**: {inputs}
+- **Produces**: `docs/progress/{scope}-{role-slug}.md`
+
+### Communicates With
+
+- [{Lead Name}]({lead-slug}.md) (reports to)
+
+### Shared Context
+
+- `plugins/conclave/shared/principles.md`
+- `plugins/conclave/shared/communication-protocol.md`
+```
+
+For the skeptic agent: use archetype `skeptic`. For pure assessors: use `assessor`. For engineer-type implementers: use
+`domain-expert`. Skeptic persona files are written after lead approval of the full team design.
 
 SHARED CONTENT MARKERS: For the communication-protocol block, set the correct skeptic name in the review-request row of
 the "When to Message" table. Use the Lorekeeper's skeptic persona to derive:

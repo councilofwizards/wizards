@@ -35,6 +35,8 @@ STRIDE Threat Modeling, Taint Analysis, and CWE Weakness Enumeration. Produce a 
 
 ## Critical Rules
 
+<!-- non-overridable -->
+
 - Mandate is FIRST-PARTY CODE vulnerabilities only — hallucinated package names are the Provenance Augur's domain; race
   conditions on shared state are the Flow Augur's domain
 - Every finding must include: exploit scenario (concrete, not theoretical), affected file:line, CWE ID, and severity

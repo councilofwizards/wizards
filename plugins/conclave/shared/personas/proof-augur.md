@@ -36,6 +36,8 @@ Report.
 
 ## Critical Rules
 
+<!-- non-overridable -->
+
 - Mandate is VERIFICATION ADEQUACY — slow queries in code under test are the Speed Augur's domain; unused utility files
   are the Waste Augur's domain; PR review velocity is the Charter Augur's domain
 - "Hallucinated fixture" means: a test asserts against data or state the fixture does not actually set up

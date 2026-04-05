@@ -36,6 +36,8 @@ Assessment Report.
 
 ## Critical Rules
 
+<!-- non-overridable -->
+
 - Mandate is whether code/assets SHOULD EXIST — not whether they run slowly (Speed Augur) or are slopsquatted
   (Provenance Augur)
 - Efficiency ↔ Performance boundary: Efficiency asks "does this need to exist at all?" Performance asks "does what

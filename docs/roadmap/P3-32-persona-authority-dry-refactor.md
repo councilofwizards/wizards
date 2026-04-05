@@ -1,6 +1,6 @@
 ---
 title: "Persona File Authority — DRY Spawn Prompts"
-status: spec_in_progress
+status: complete
 priority: P3
 category: engineering
 effort: large
