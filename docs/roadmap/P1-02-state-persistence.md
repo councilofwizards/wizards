@@ -1,59 +1,27 @@
 ---
 title: "State Persistence & Checkpoints"
-status: "complete"
-priority: "P1"
-category: "core-framework"
-effort: "large"
-impact: "high"
-dependencies: ["concurrent-write-safety"]
-created: "2026-02-14"
-updated: "2026-02-14"
+status: complete
+priority: P1
+category: core-framework
+completed: "2026-02-14"
 ---
 
-# State Persistence & Checkpoints
+# P1-02: State Persistence & Checkpoints
 
-## Problem
+## Summary
 
-When an agent's context window fills up or a session is interrupted, all in-progress work is lost. The skills reference
-a recovery procedure ("summarize current state to `docs/progress/`"), but there's no structured checkpoint format.
-Recovery depends on agents voluntarily saving state before they lose context — which is unreliable.
+Added Checkpoint Protocol sections to all 3 SKILL.md files so agents write structured YAML-frontmatter checkpoints at
+key milestones (task claimed, plan drafted, review requested, complete). Skills scan `docs/progress/` for incomplete
+checkpoints on re-invocation to resume interrupted sessions.
 
-## Proposed Solution
+## What Was Built
 
-1. **Structured checkpoint format**: Define a YAML-frontmatter checkpoint file that agents write at key milestones (task
-   claimed, plan drafted, review requested, review approved).
-2. **Checkpoint convention in SKILL.md**: Add explicit instructions to spawn prompts requiring agents to write
-   checkpoints after each significant state change.
-3. **Resume protocol**: When `/build-product` or `/plan-product` is invoked with no arguments, scan `docs/progress/` for
-   incomplete checkpoints and resume from the last known state.
+- Checkpoint Protocol sections in plan-product, build-product, and review-quality SKILL.md files
+- Resume logic in Determine Mode sections (scan for matching `team` field)
+- Checkpoint triggers in spawn prompts requiring agents to write at each significant state change
+- Checkpoint format: YAML frontmatter (feature, team, agent, phase, status, last_action, updated) + progress notes
 
-## Checkpoint File Format
+## Key Dependencies
 
-```yaml
----
-feature: "feature-name"
-team: "plan-product"
-agent: "architect"
-phase: "design"           # research | design | review | implementation | testing
-status: "in_progress"     # in_progress | blocked | awaiting_review | complete
-last_action: "Submitted ADR to skeptic for review"
-updated: "2026-02-14T10:30:00Z"
----
-
-## Progress Notes
-
-- [10:00] Started architecture design for feature X
-- [10:15] Drafted ADR-002
-- [10:30] Sent to product-skeptic for review
-```
-
-## Architectural Considerations
-
-- Checkpoints must not create concurrent write conflicts (solved by P1-01).
-- The resume protocol adds complexity to the "Determine Mode" section of each skill.
-- Checkpoint writes should be lightweight — agents should not spend significant context on state management.
-
-## Success Criteria
-
-- A session interrupted mid-work can be resumed by re-invoking the same skill.
-- The resumed session picks up from the last checkpoint, not from scratch.
+- **Depends on**: P1-01 (concurrent-write-safety — role-scoped filenames prevent checkpoint conflicts)
+- **Depended on by**: P2-03 (progress-observability — status mode reads checkpoint files)

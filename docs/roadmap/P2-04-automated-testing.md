@@ -1,42 +1,31 @@
 ---
 title: "Automated Testing Pipeline"
-status: "complete"
-priority: "P2"
-category: "quality-reliability"
-effort: "large"
-impact: "high"
-dependencies: []
-created: "2026-02-14"
-updated: "2026-02-18"
+status: complete
+priority: P2
+category: quality-reliability
+completed: "2026-02-18"
 ---
 
-# Automated Testing Pipeline
+# P2-04: Automated Testing Pipeline
 
-## Problem
+## Summary
 
-The plugin has no automated tests. Skill files are complex markdown documents with precise formatting, cross-references,
-and behavioral contracts. Manual testing (invoking skills and watching agents) is slow and expensive. There's no way to
-catch regressions when editing SKILL.md files.
+Built a complete bash-based validation pipeline covering SKILL.md structure, shared content drift, roadmap frontmatter,
+and spec frontmatter. Integrated into GitHub Actions CI. All validation uses pure bash + coreutils with no external
+dependencies — compatible with bash 3.2 (macOS stock).
 
-## Proposed Solution
+## What Was Built
 
-1. **Structural validation**: A script that parses SKILL.md files and validates:
-   - YAML frontmatter is well-formed
-   - All referenced teammate names match spawn definitions
-   - Status conventions are consistent across skills
-   - Required sections (Setup, Spawn, Quality Gate, Recovery) are present
-2. **Contract tests**: Verify that the three skills reference the same shared principles, communication protocol, and
-   status conventions.
-3. **CI integration**: Run validation on every commit via GitHub Actions.
+- `scripts/validate.sh` — entry point; runs all validators, aggregates pass/fail, exits non-zero on failure
+- `scripts/validators/skill-structure.sh` — A1 (frontmatter), A2 (required sections), A3 (spawn definitions), A4 (shared
+  markers)
+- `scripts/validators/skill-shared-content.sh` — B1 (principles drift), B2 (protocol drift with skeptic name
+  normalization), B3 (authoritative source)
+- `scripts/validators/roadmap-frontmatter.sh` — C1 (required fields + enum validation), C2 (filename convention)
+- `scripts/validators/spec-frontmatter.sh` — D1 (required fields + enum validation)
+- `.github/workflows/validate.yml` — GitHub Actions CI on push/PR to main
 
-## Architectural Considerations
+## Key Dependencies
 
-- Tests operate on markdown files, not running code. A simple Node.js or Python script with YAML/markdown parsing is
-  sufficient.
-- Must not require Claude API access to run — tests validate structure, not agent behavior.
-- The roadmap file format (ADR-001) should also be validated by these tests.
-
-## Success Criteria
-
-- A PR that breaks SKILL.md structure (e.g., removes the Quality Gate section) fails CI.
-- A PR that introduces inconsistency between skills (e.g., different status conventions) fails CI.
+- **Depends on**: nothing
+- **Depended on by**: P2-03 (adds E-series), P2-08 (adds G-series), all items that add validators thereafter

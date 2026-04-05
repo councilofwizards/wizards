@@ -1,47 +1,30 @@
 ---
 title: "Content Deduplication"
-status: "complete"
-priority: "P2"
-category: "core-framework"
-effort: "medium"
-impact: "medium"
-dependencies: []
-created: "2026-02-14"
-updated: "2026-02-18"
+status: complete
+priority: P2
+category: core-framework
+completed: "2026-02-18"
 ---
 
-# Content Deduplication
+# P2-05: Content Deduplication
 
-## Problem
+## Summary
 
-The Shared Principles (~50 lines) and Communication Protocol (~50 lines) are duplicated verbatim in all three SKILL.md
-files — approximately 126 redundant lines total. This duplication wastes tokens on every skill invocation. With 5 Opus
-agents reading the same skill file, the cost compounds.
+Added HTML comment markers around the Shared Principles and Communication Protocol sections in all 3 SKILL.md files to
+enable drift detection. Normalized cosmetic inconsistencies in plan-product so shared content is byte-identical across
+files. Created ADR-002 documenting the validated duplication strategy (extraction deferred per portability constraint).
 
-The duplication was intentional (each skill must be self-contained for portability), but it creates a maintenance
-burden: any change to a shared principle must be applied to all three files identically.
+## What Was Built
 
-## Proposed Solution
+- `<!-- BEGIN SHARED: principles -->` / `<!-- END SHARED: principles -->` markers in 3 SKILL.md files
+- `<!-- BEGIN SHARED: communication-protocol -->` / `<!-- END SHARED: communication-protocol -->` markers in 3 SKILL.md
+  files
+- Authoritative source comment after each BEGIN marker
+- `<!-- BEGIN SKILL-SPECIFIC: communication-extras -->` marker for build-product's Contract Negotiation Pattern
+- Normalization of plan-product (quote style, table formatting, horizontal rule)
+- `docs/architecture/ADR-002-content-deduplication-strategy.md`
 
-1. **Extract shared content to CLAUDE.md or a shared reference file**: Move Shared Principles and Communication Protocol
-   to a project-level file (e.g., `CLAUDE.md` or `plugins/conclave/shared/principles.md`) that agents inherit via Claude
-   Code's context mechanism.
-2. **Replace in-skill duplication with a reference**: Each SKILL.md includes a brief note pointing to the shared file,
-   with a fallback summary for portability.
-3. **Validate consistency**: If full extraction isn't feasible (portability constraint), add a CI check (see P2-04) that
-   verifies the duplicated sections are identical across all three skills.
+## Key Dependencies
 
-## Architectural Considerations
-
-- Claude Code's plugin system may not support shared file injection. If not, option 3 (validated duplication) is the
-  pragmatic fallback.
-- CLAUDE.md is loaded into every conversation — it would give agents the shared principles without per-skill
-  duplication.
-- Must not break the self-contained skill contract. If a skill can't function without reading a separate file, that's a
-  regression.
-
-## Success Criteria
-
-- Shared content exists in exactly one authoritative location.
-- A change to a shared principle requires editing one file, not three.
-- No increase in per-invocation token cost (ideally a reduction).
+- **Depends on**: nothing
+- **Depended on by**: P2-07 (principles-split — builds on the shared/ + marker architecture)

@@ -1,48 +1,32 @@
 ---
 title: "Onboarding Wizard Skill"
-status: "complete"
-priority: "P3"
-category: "developer-experience"
-effort: "small"
-impact: "medium"
-dependencies: []
-created: "2026-02-14"
-updated: "2026-02-19"
+status: complete
+priority: P3
+category: developer-experience
+completed: "2026-02-19"
 ---
 
-# Onboarding Wizard Skill
+# P3-02: Onboarding Wizard Skill
 
-## Problem
+## Summary
 
-New users must read the README, understand the three skills, set environment variables, and figure out the plan → build
-→ review workflow. The learning curve is steeper than necessary for a tool meant to simplify development.
+Implemented `/setup-project`, a single-agent utility skill that bootstraps projects for the conclave plugin. It detects
+the tech stack, scaffolds the `docs/` directory structure, generates a project-specific `CLAUDE.md` and starter roadmap
+index, and guides users through next steps. Also introduced the `type: single-agent` validator code path so single-agent
+SKILL.md files pass CI.
 
-## Proposed Solution
+## What Was Built
 
-1. **`/setup-project` skill**: A lightweight skill (no multi-agent team needed — single agent) that:
-   - Detects the project's tech stack
-   - Creates the `docs/` directory structure if missing
-   - Generates starter `docs/roadmap/_index.md` with project-specific categories
-   - Writes a `CLAUDE.md` with project conventions
-   - Explains the workflow and next steps
+- `plugins/conclave/skills/setup-project/SKILL.md` — new single-agent skill (6-step pipeline: state detection, stack
+  detection, docs scaffolding, CLAUDE.md generation, roadmap index generation, summary output)
+- `scripts/validators/skill-structure.sh` — added `type: single-agent` code path (skips multi-agent section checks)
+- `scripts/validators/skill-shared-content.sh` — excluded single-agent skills from shared content drift checks
+- Supports `--force` (overwrite scaffolding) and `--dry-run` (no writes) flags
+- Idempotent by default — never overwrites existing files without confirmation
 
-## Architectural Considerations
+## Key Dependencies
 
-- This is a single-agent skill — no team spawning, no Skeptic. It's a setup utility.
-- Must be idempotent — running it twice should not overwrite existing docs.
-- Should detect and respect existing project configuration.
-- Prerequisite: CI validator must be adapted to support `type: single-agent` SKILL.md files.
-
-## Spec
-
-See [docs/specs/onboarding-wizard/spec.md](../specs/onboarding-wizard/spec.md)
-
-## Architecture
-
-- [ADR-003: Single-Agent Skill with File-Existence Idempotency](../architecture/ADR-003-onboarding-wizard-single-agent.md)
-- [System Design](../architecture/onboarding-wizard-system-design.md)
-- [Data Model Evaluation](../architecture/onboarding-wizard-data-model.md)
-
-## Success Criteria
-
-- A new user can go from install to first `/plan-product` invocation in under 5 minutes.
+- **Required by**: ADR-003 (single-agent skill pattern), A2 validator code path
+- **Depends on**: None (independent; validator adaptation was a prerequisite)
+- **Architecture**: `docs/architecture/ADR-003-onboarding-wizard-single-agent.md`, `onboarding-wizard-system-design.md`,
+  `onboarding-wizard-data-model.md`

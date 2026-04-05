@@ -1,52 +1,30 @@
 ---
 title: "Skill Discoverability Improvements"
-status: "complete"
-priority: "P2"
-category: "developer-experience"
-effort: "small"
-impact: "high"
-dependencies: []
-created: "2026-03-10"
-updated: "2026-03-10"
+status: complete
+priority: P2
+category: developer-experience
+completed: "2026-03-27"
 ---
 
-# Skill Discoverability Improvements
+# P2-10: Skill Discoverability Improvements
 
-## Problem
+## Summary
 
-Three production-quality business skills (draft-investor-update, plan-sales, plan-hiring) are invisible at the primary
-discovery point (`/wizard-guide`). New users completing setup-project are directed to `/plan-product` but never told
-about `/wizard-guide`. The wizard-guide lacks narrative framing and persona introductions that would set expectations
-for the fantasy-themed experience.
+Added Conclave lore preamble, persona spotlight (Meet the Council), and Business Skills section to wizard-guide.
+Restructured skill listing into 4 named category groups, removing all "Tier 1/Tier 2" references. Added `/wizard-guide`
+recommendation to setup-project's Step 6 Next Steps.
 
-## Proposed Solution
+## What Was Built
 
-Four bundled changes to wizard-guide and setup-project (single edit pass):
+- `## The Conclave` lore preamble (~107 words) added before Skill Ecosystem Overview in wizard-guide
+- `## Meet the Council` table with 5 personas (Eldara Voss, Seren Mapwright, Vance Hammerfall, Mira Flintridge, Bram
+  Copperfield)
+- Business Skills section in wizard-guide listing draft-investor-update, plan-sales, plan-hiring
+- Skill Ecosystem Overview restructured into 4 groups: Granular Skills, Pipeline Skills, Business Skills, Utility Skills
+- Business operations code block added to Common Workflows
+- `/wizard-guide` mention added as Step 6 item 2 in setup-project (before `/plan-product`)
 
-1. **Business Skills Section in wizard-guide** (Idea 2): Add a "Business Skills" section to the Skill Ecosystem Overview
-   listing draft-investor-update, plan-sales, and plan-hiring with descriptions. Add business workflow examples to
-   Common Workflows.
+## Key Dependencies
 
-2. **wizard-guide Mention in setup-project** (Idea 3): Add a bullet to setup-project's Step 6 Next Steps: "Run
-   `/wizard-guide` to explore all available skills and find the right one for your task." Place before the existing
-   `/plan-product` recommendation.
-
-3. **Conclave Lore Preamble** (Idea 6): Add a ~100-word narrative preamble to wizard-guide that sets the world stage
-   before listing skills.
-
-4. **Persona Spotlight** (Idea 7): Add a "Meet the Council" section introducing 4-5 key personas by fictional name,
-   title, and one-line personality. Cap at 5 to avoid overwhelming.
-
-## Evidence
-
-- Research finding #2 (HIGH severity): wizard-guide Skill Ecosystem Overview confirmed missing business skills
-- Research finding #3 (HIGH severity): setup-project Next Steps confirmed no wizard-guide mention
-- Research confirmed persona layer never surfaced to users pre-execution
-
-## Success Criteria
-
-- wizard-guide lists all 3 business skills with descriptions
-- setup-project Next Steps includes wizard-guide recommendation
-- wizard-guide opens with narrative preamble setting the Conclave context
-- wizard-guide introduces 4-5 key personas before skill listing
-- All validators pass after changes
+- **Depends on**: nothing
+- **Depended on by**: nothing

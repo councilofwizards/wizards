@@ -3,31 +3,27 @@ title: "Complexity-Adaptive Pipeline"
 status: complete
 priority: P3
 category: core-framework
-effort: Medium
-impact: Medium
-dependencies: []
-created: 2026-03-27
-updated: 2026-03-27
+completed: "2026-03-27"
 ---
 
 # P3-27: Complexity-Adaptive Pipeline
 
 ## Summary
 
-Add a complexity classifier at pipeline entry points (plan-product, build-product) that routes tasks to appropriate
-pipeline depths. Simple tasks skip directly to implementation; complex tasks get additional skeptic checkpoints.
+Added a complexity classifier at plan-product and build-product entry points that routes tasks to three pipeline depths:
+Simple (skip to build-implementation), Standard (normal pipeline), Complex (full pipeline + additional checkpoints).
+Implemented as Group A of the harness-improvements batch alongside P3-28.
 
-## Motivation
+## What Was Built
 
-Anthropic's harness design paper emphasizes that pipeline complexity should match task complexity. Currently, a simple
-bug fix enters the same pipeline as a greenfield feature. Existing artifact detection provides a partial fast-path (skip
-stages with existing artifacts), but there's no explicit "this is small enough to go direct" classification.
+- `### Flag Parsing` and `### Complexity Classification` subsections added to `## Determine Mode` in
+  `plan-product/SKILL.md` and `build-product/SKILL.md`
+- `### Complexity Routing` added to Orchestration Flow preamble in both pipeline skills
+- Artifact detection report format updated to include `Complexity:` field
+- `--complexity` flag support (simple/standard/complex override)
 
-## Scope
+## Key Dependencies
 
-- Complexity classifier prompt at plan-product and build-product entry
-- Three tiers: Simple (skip to build-implementation), Standard (normal pipeline), Complex (full pipeline + additional
-  checkpoints)
-- Classification criteria documented in SKILL.md
-
-> **Batching note**: Modifies the same SKILL.md files as P3-28 (Lead-as-Skeptic Fix). Recommend implementing together.
+- **Depends on**: Part of harness-improvements batch — see `docs/specs/harness-improvements/`
+- **Implemented alongside**: P3-28 (must batch — both modify plan-product Orchestration Flow)
+- **Files modified**: `plan-product/SKILL.md`, `build-product/SKILL.md`

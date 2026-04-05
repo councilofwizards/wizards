@@ -3,40 +3,31 @@ title: "Evaluator Tuning Mechanism"
 status: complete
 priority: P3
 category: quality-reliability
-effort: Medium
-impact: Medium
-dependencies:
-  - P2-11
-  - P2-12
-  - P2-13
-  - P3-28
-created: 2026-03-27
-updated: 2026-03-27
+completed: "2026-03-27"
 ---
 
 # P3-29: Evaluator Tuning Mechanism
 
 ## Summary
 
-Establish a few-shot calibration system for skeptic prompts: store graded examples of passing and failing outputs in
-`.claude/conclave/eval-examples/`, and add a post-mortem quality rating step to pipeline completion. Over time,
-calibration examples and quality ratings inform skeptic prompt refinement.
+Added a few-shot calibration system for skeptic prompts. Calibration examples stored in
+`.claude/conclave/eval-examples/{skill-name}/` are read at Setup and injected into skeptic spawn prompts. A post-mortem
+quality rating step appended to pipeline completion logs ratings to `docs/progress/quality-log.md`. Implemented as Group
+C of the harness-improvements batch.
 
-## Motivation
+## What Was Built
 
-Anthropic's harness design paper found that evaluator tuning required multiple refinement cycles. Out-of-the-box Claude
-is a poor QA agent — it identifies issues then talks itself out of flagging them. The best practices document recommends
-storing calibration examples separately from SKILL.md to keep skills lean while making evaluator rubrics precise and
-adjustable.
-
-## Scope
-
-- Calibration examples stored in `.claude/conclave/eval-examples/{skill-name}/` (user-writable, per P2-11 convention)
-- Skeptic spawn prompts read calibration examples if they exist
-- Post-mortem step appended to build-product and plan-product completion: user rates output quality
+- Eval examples Setup step added to `build-implementation/SKILL.md` and `plan-implementation/SKILL.md` (defensive read
+  from `.claude/conclave/eval-examples/`)
+- Post-mortem rating step added to Pipeline Completion in `build-implementation`, `plan-implementation`, `plan-product`,
+  `build-product`
+- `### Evaluator Calibration` instruction added inside skeptic spawn prompt code blocks (quality-skeptic, plan-skeptic,
+  product-skeptic)
+- User-writable calibration example directory: `.claude/conclave/eval-examples/{skill-name}/`
 - Quality ratings logged to `docs/progress/quality-log.md`
-- Periodic recalibration workflow documented
 
-## Implementation Note
+## Key Dependencies
 
-Best implemented after P2-11, P2-12, and P3-28 produce richer evaluation data to calibrate against.
+- **Depends on**: P2-11 (Sprint Contracts), P2-12, P2-13 (user-writable config convention), P3-28
+- **Files modified**: `build-implementation/SKILL.md`, `plan-implementation/SKILL.md`, `plan-product/SKILL.md`,
+  `build-product/SKILL.md`

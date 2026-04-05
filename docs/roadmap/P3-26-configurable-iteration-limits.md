@@ -3,31 +3,28 @@ title: "Configurable Skeptic Iteration Limits"
 status: complete
 priority: P3
 category: core-framework
-effort: Small
-impact: Medium
-dependencies: []
-created: 2026-03-27
-updated: 2026-03-27
+completed: "2026-03-27"
 ---
 
 # P3-26: Configurable Skeptic Iteration Limits
 
 ## Summary
 
-Add a `--max-iterations N` flag to multi-agent skills that controls the skeptic rejection cap before escalation to the
-user. Default remains 3 (current behavior). Allows more iterations for subjective outputs (research, ideation) where 5+
-rounds may be needed.
+Added `--max-iterations N` flag to all 14 multi-agent skills, replacing hard-coded `3 rejections` skeptic deadlock rules
+with a configurable ceiling (default: 3). Also added skeptic deadlock rules to 3 skills that lacked them
+(research-market, ideate-product, manage-roadmap). Implemented as part of the harness-improvements batch (P3-26 through
+P3-31).
 
-## Motivation
+## What Was Built
 
-Anthropic's harness design paper describes 5-15 iteration cycles between generator and evaluator for subjective tasks
-like frontend design. The current hard cap of 3 rejections before escalation is appropriate for implementation tasks
-(tests either pass or fail) but may be conservative for research, ideation, and story writing where refinement is more
-iterative.
+- `--max-iterations N` flag parsing in `## Determine Mode` of all 14 multi-agent SKILL.md files
+- Deadlock rule text updated from hard-coded `3 times` → `N times (default 3, set via --max-iterations)` in Failure
+  Recovery sections
+- Added missing deadlock rule to research-market, ideate-product, manage-roadmap
+- `## Common Flags` section added to `wizard-guide/SKILL.md`
 
-## Scope
+## Key Dependencies
 
-- `--max-iterations N` flag parsed at skill entry
-- Default: 3 (unchanged current behavior)
-- Update skeptic loop exit instructions across 14 multi-agent SKILL.md files
-- Document recommended defaults per skill type in wizard-guide
+- **Depends on**: Part of harness-improvements batch — see `docs/specs/harness-improvements/`
+- **Implemented alongside**: P3-27, P3-28, P3-30, P3-31 (Group B in implementation order)
+- **Depended on by**: P3-29 (Evaluator Tuning) uses iteration data to calibrate examples

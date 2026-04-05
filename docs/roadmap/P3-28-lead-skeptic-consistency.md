@@ -3,33 +3,27 @@ title: "Lead-as-Skeptic Consistency Fix"
 status: complete
 priority: P3
 category: quality-reliability
-effort: Medium
-impact: Medium
-dependencies:
-  - P2-09 (complete)
-created: 2026-03-27
-updated: 2026-03-27
+completed: "2026-03-27"
 ---
 
 # P3-28: Lead-as-Skeptic Consistency Fix
 
 ## Summary
 
-Add dedicated skeptic agents to plan-product Stages 1-3 (research, ideation, roadmap), gated behind a `--full` flag.
-Currently these stages use Lead-as-Skeptic while Stages 4-5 use a dedicated product-skeptic. The paper confirms
-dedicated evaluators always outperform self-evaluation.
+Added `--full` flag to plan-product that activates dedicated product-skeptic agents for Stages 1-3 (research, ideation,
+roadmap review), bringing them into consistency with Stages 4-5. Default behavior (Lead-as-Skeptic for early stages) is
+unchanged. Implemented as Group A of the harness-improvements batch alongside P3-27.
 
-## Motivation
+## What Was Built
 
-Anthropic's harness design paper's core finding is that separating generation from evaluation is more tractable than
-making generators self-critical. Having the Lead both orchestrate and evaluate in Stages 1-3 is the self-evaluation
-problem the paper warns against.
+- `--full` flag added to `plan-product/SKILL.md` Flag Parsing subsection
+- `### Full Skeptic Mode (--full)` subsection added to plan-product Orchestration Flow
+- Conditional skeptic gate blocks added to Stages 1-3 (if `--full` → product-skeptic gate, else → Lead-as-Skeptic)
+- Product Skeptic spawn definition updated to cover Stages 1-5 when `--full` is active
+- SCAFFOLD comment added above Lead-as-Skeptic Stage 1-3 blocks documenting the assumption
 
-## Scope
+## Key Dependencies
 
-- New skeptic spawn definitions for plan-product Stages 1-3
-- `--full` flag activates dedicated skeptics; default behavior unchanged
-- Skeptic personas needed for research, ideation, and roadmap review roles
-
-> **Batching note**: Modifies plan-product SKILL.md alongside P3-27 (Complexity-Adaptive Pipeline). Recommend
-> implementing together.
+- **Depends on**: P2-09 (complete), part of harness-improvements batch
+- **Implemented alongside**: P3-27 (must batch — both modify plan-product SKILL.md)
+- **Files modified**: `plan-product/SKILL.md` only

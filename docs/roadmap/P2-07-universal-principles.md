@@ -1,43 +1,31 @@
 ---
 title: "Role-Based Principles Split"
-status: "complete"
-priority: "P2"
-category: "core-framework"
-effort: "medium"
-impact: "medium"
-dependencies: ["content-deduplication"]
-created: "2026-02-19"
-updated: "2026-03-10"
+status: complete
+priority: P2
+category: core-framework
+completed: "2026-03-27"
 ---
 
-# Role-Based Principles Split
+# P2-07: Role-Based Principles Split
 
-## Problem
+## Summary
 
-> **Note**: The original goal of this item (extracting shared content into authoritative source files) was completed as
-> part of the shared content architecture: `plugins/conclave/shared/` + `scripts/sync-shared-content.sh` + B-series
-> validators. The remaining work is the role-based principles split described below.
+Split `plugins/conclave/shared/principles.md` into universal-principles (items 1-3, 9-12, all skills) and
+engineering-principles (items 4-8: TDD, mocks, SOLID, contracts — engineering skills only). Updated all 14 multi-agent
+SKILL.md files with new placeholder markers, the sync script with skill classification arrays, and the B/A-series
+validators for dual-block awareness.
 
-The shared principles block contains 4 engineering-specific rules (TDD, unit tests with mocks, SOLID/DRY, API contracts)
-that are synced to ALL 12 multi-agent skills. Non-engineering skills (research-market, ideate-product, manage-roadmap,
-plan-sales, plan-hiring, draft-investor-update) receive TDD guidance their agents cannot apply. Operational impact is
-low (agents ignore irrelevant rules), but it creates cognitive noise in context windows.
+## What Was Built
 
-## Proposed Solution
+- `plugins/conclave/shared/principles.md` split into two named blocks with new marker names
+- All 14 multi-agent SKILL.md files updated with `universal-principles` / `engineering-principles` markers
+- `scripts/sync-shared-content.sh` — ENGINEERING_SKILLS and NON_ENGINEERING_SKILLS arrays, `is_engineering_skill`
+  helper, dual-block injection, unknown-skill WARN
+- `scripts/validators/skill-shared-content.sh` — B1 dual-block awareness, B3 retired-marker check
+- `scripts/validators/skill-structure.sh` — A4 updated to check `universal-principles`
+- `CLAUDE.md` — Skill Classification section with canonical table
 
-Split `plugins/conclave/shared/principles.md` into two blocks:
+## Key Dependencies
 
-1. **Universal principles** (items 1-3, 9-12): Apply to all skills
-2. **Engineering principles** (items 4-8: TDD, mocks, SOLID, contracts): Apply only to implementation skills
-   (write-spec, plan-implementation, build-implementation, review-quality, run-task)
-
-Update `scripts/sync-shared-content.sh` to inject the appropriate block per skill type. Update B-series validators for
-dual-block awareness.
-
-## Success Criteria
-
-- Non-engineering skills receive only universal principles
-- Engineering skills receive both universal and engineering principles
-- Sync script correctly distinguishes skill types
-- B-series validators updated for dual-block checking
-- All validators pass after changes
+- **Depends on**: P2-05 (content-deduplication — shared/ architecture and marker convention)
+- **Depended on by**: P2-08 (plugin-organization — depends on this being done first)

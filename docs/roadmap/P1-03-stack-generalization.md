@@ -1,54 +1,26 @@
 ---
 title: "Stack Generalization"
-status: "complete"
-priority: "P1"
-category: "core-framework"
-effort: "medium"
-impact: "high"
-dependencies: []
-created: "2026-02-14"
-updated: "2026-02-14"
+status: complete
+priority: P1
+category: core-framework
+completed: "2026-02-14"
 ---
 
-# Stack Generalization
+# P1-03: Stack Generalization
 
-## Problem
+## Summary
 
-The skill spawn prompts currently hard-code Laravel/PHP assumptions (e.g., "Laravel Way", "Eloquent models", "PHP
-artisan"). This limits the plugin to Laravel projects. Users working with other stacks (Next.js, Django, Rails, Go,
-etc.) must manually edit SKILL.md files to remove Laravel references — a poor developer experience that also risks
-breaking the carefully tuned prompts.
+Removed all hard-coded Laravel/PHP references from the 3 original SKILL.md files, replacing them with framework-agnostic
+language. Added stack detection to each Setup section that reads dependency manifests and conditionally loads
+`docs/stack-hints/` files. Laravel-specific guidance was preserved as `docs/stack-hints/laravel.md`.
 
-## Proposed Solution
+## What Was Built
 
-1. **Stack-agnostic default prompts**: Replace Laravel-specific instructions with generic equivalents (e.g., "follow the
-   framework's conventions" instead of "follow the Laravel Way").
-2. **Stack detection**: At skill startup, read the project's package.json, composer.json, Gemfile, go.mod, etc. to
-   auto-detect the tech stack.
-3. **Stack-specific addenda**: Provide optional stack hint files (e.g., `docs/stack-hints/laravel.md`) that the skill
-   prepends to spawn prompts when the relevant stack is detected.
+- Stack detection step added to Setup sections in plan-product, build-product, review-quality SKILL.md files
+- Shared Principle #4 updated to framework-agnostic language ("follow the framework's conventions")
+- `docs/stack-hints/laravel.md` — Laravel-specific guidance preserved as an addendum file
 
-## Scope
+## Key Dependencies
 
-This item covers two layers of Laravel-specific content:
-
-1. **Spawn prompts**: Role-specific instructions that reference Laravel concepts (Eloquent, Form Requests, Resources,
-   Policies, Gates, migrations, artisan).
-2. **Shared Principle #4**: Currently reads "Prefer framework-provided tools over custom implementations (the 'Laravel
-   Way' for backend)." This must be updated to generic language (e.g., "follow the framework's conventions") since it's
-   duplicated in all three SKILL.md files.
-
-Both layers must be addressed — updating spawn prompts alone while leaving "the Laravel Way" in the shared principles
-would be an incomplete fix.
-
-## Architectural Considerations
-
-- The auto-detection logic runs once at skill startup (in the "Setup" phase) with minimal cost.
-- Stack hints are additive — they supplement the default prompts, not replace them.
-- Shared Principle #4 must be updated in all three SKILL.md files to use framework-agnostic language.
-- Must not increase SKILL.md size significantly — keep stack hints in separate files.
-
-## Success Criteria
-
-- A non-Laravel project can use all three skills without editing any SKILL.md files.
-- Laravel projects continue to get Laravel-specific guidance via stack hints.
+- **Depends on**: nothing
+- **Depended on by**: nothing (foundation change — all later skills inherit agnostic defaults)
