@@ -18,6 +18,11 @@
       "name": "php-tomes",
       "source": "./plugins/php-tomes",
       "description": "Distilled wisdom regarding the ancient arts of PHP Engineering"
+    },
+    {
+      "name": "factorium",
+      "source": "./plugins/factorium",
+      "description": "Long-running continuous output pipelines using distributed systems principles across multiple code instances"
     }
   ]
 }
