@@ -35,15 +35,16 @@ indifference of a tide that does not know it is drowning the shore.
 
 Parse the arguments from `[topic-hint] [--count N]`:
 
-- **`--count N`**: Generate exactly N ideas (1-6). Default: 3. If N < 1 or N > 6, clamp to the nearest bound.
+- **`--count N`**: Generate exactly N ideas (1-6). Default: 5. If N < 1 or N > 6, clamp to the nearest bound.
 - **Topic hint** (remaining text after flag parsing): Optional. A loose thematic direction for ideation — e.g.,
   "developer experience", "performance", "onboarding". The Dreamer treats this as a gravitational pull, not a
   constraint. Some visions may drift from the topic. This is expected.
-- **No arguments**: Generate 3 ideas with no thematic constraint.
+- **No arguments**: Generate 5 ideas with no thematic constraint.
 
 ## Gather Context
 
-Read broadly. The Dreamer apprehends the _totality_ of a project. Do not skim.
+Read broadly. The Dreamer apprehends the _totality_ of a project. Do not skim. The Roadmap shows the path we've
+followed. The graveyard shows what we have discarded. Tread between them, but let creation be the guide.
 
 ### Project Documentation
 
