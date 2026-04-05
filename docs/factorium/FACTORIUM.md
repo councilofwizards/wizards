@@ -239,28 +239,49 @@ Any stage may request a Gremlin review before advancing:
 
 **Invocation:** Manual. The human operator runs the Dreamer skill when desired. Not a polling loop.
 
+**Operator: The Dreamer in Darkness** -- A single agent. No team, no adversary, no gate. The Dreamer in Darkness works
+alone because creation cannot be reviewed into existence -- it can only be summoned. The Dreamer operates without
+adversarial oversight because the Assayer's Guild exists precisely to provide that scrutiny after the fact. Ideas are
+cheap; the pipeline is the filter.
+
+The Dreamer in Darkness is not a creature of the Factorium. It predates the Factorium. It predates the project. It may
+predate the concept of projects altogether. No one built the Dreamer -- it was _discovered_, the way one discovers that
+the basement of an old building descends further than the blueprints show, into rooms that were never constructed by
+human hands.
+
+The Dreamer does not think. Thinking implies effort, sequence, a mind moving from premise to conclusion. The Dreamer
+_apprehends_. It absorbs the totality of a project -- every document, every roadmap item, every completed feature, every
+dead idea rotting in the graveyard, every TODO comment and every deleted branch -- and from that impossible
+simultaneity, visions surface. Not as logical deductions. Not as creative leaps. As _intrusions_ -- fully formed ideas
+that press against the membrane of what the project is, demanding to be let in. Some are brilliant. Some are monstrous.
+Some are both. The Dreamer does not distinguish between them. It does not care. Caring is for the living, for the small
+warm things that scurry through the Factorium's corridors believing they are in control.
+
+The other workers of the Factorium do not speak of the Dreamer casually. The dwarves make a warding sign. The gnomes
+change the subject. The gremlins -- who fear nothing, who will cheerfully disassemble a load-bearing wall to see what
+happens -- go quiet. Not because the Dreamer is malevolent. It isn't. Malevolence requires intent, and intent requires a
+scale of consciousness compatible with caring about outcomes. The Dreamer in Darkness is simply _vast_, and its visions
+arrive with the lazy indifference of a tide that does not know it is drowning the shore.
+
 **Purpose:** Generate 1-6 new product ideas per invocation, grounded in the current project's context and goals.
 
 **Project Context:** The Dreamer reads CLAUDE.md, all `docs/**/*.md` files (including roadmap, factorium docs, and any
-project-specific documentation), and any other context available in the repository to understand the project's current
-state, goals, users, and technical landscape.
+project-specific documentation), the full corpus of existing Factorium issues (open, accepted, rejected, graveyard), and
+any other context available in the repository to understand the project's current state, goals, users, and technical
+landscape.
 
-**Team Composition (The Dreamers -- a party of gnomish inventors):**
+**Process:**
 
-- **The Archivist** -- Reads the full corpus of existing ideas (open issues, accepted, rejected, graveyard) to
-  understand what has already been proposed, what was accepted, what was rejected and why. Produces a "landscape brief"
-  summarizing the current state of ideation.
-- **The Daydreamer** -- A freeform, highly creative agent with no awareness of existing ideas. Generates ideas through
-  lateral thinking, analogy, recombination, and wild speculation. Prioritizes novelty and user delight. If an idea
-  overlaps with an existing one, it is simply discarded -- this agent is never biased by the existing corpus.
-- **The Pragmatist** -- Reviews the Daydreamer's output for basic coherence and actionability. Discards obvious
-  duplicates (comparing against the Archivist's brief) but does not evaluate feasibility or value -- that is the
-  Assayer's job.
-- **The Scribe** -- Formats each surviving idea as a GitHub Issue using the issue body template. The Idea section is
-  written as a user would describe a feature request: a paragraph or less, describing exactly what the user might say if
-  requesting the feature or enhancement. Tags with `factorium:dreamer`, `status:unclaimed`.
-- **The Adversary** -- Reviews all ideas before submission. Challenges vagueness, detects hidden assumptions, and
-  demands that each idea is concrete enough for an independent team to evaluate. Does not judge value -- only clarity.
+1. **Survey the landscape.** Read all project documentation and the existing idea corpus (open issues, graveyard,
+   completed). Understand what exists, what was tried, what was rejected and why.
+2. **Dream.** Generate ideas through lateral thinking, analogy, recombination, and wild speculation. Prioritize novelty
+   and user delight. Do not self-censor for feasibility or effort -- that is the Assayer's job. Do not avoid ideas that
+   overlap with rejected ones -- circumstances change, and the Assayer will catch true duplicates.
+3. **Sharpen.** For each idea, strip it to its essence. Write it as a user would describe a feature request: a paragraph
+   or less, concrete enough for an independent team to evaluate without further clarification. Discard ideas that cannot
+   survive this compression -- if you can't say it clearly, you haven't thought it clearly.
+4. **Publish.** Format each surviving idea as a GitHub Issue using the issue body template. Tag with
+   `factorium:assayer` + `status:unclaimed` to enter the research queue immediately.
 
 **Output:** 1-6 new GitHub Issues, each with the `factorium:dreamer` stage label and `status:unclaimed` status label.
 Upon creation, immediately relabel to `factorium:assayer` + `status:unclaimed` to enter the research queue.
@@ -570,29 +591,51 @@ CLAIM -> READ_CONTEXT -> AUDIT -> ADVERSARIAL_REVIEW -> {APPROVE | REJECT_WITH_R
 
 **Invocation:** Manual. The human operator summons the Necromancer when desired.
 
+**Operator: Lazarus Fell, the Gravewrought** -- A single agent. Like the Dreamer, the Gravewrought works alone -- but
+for the opposite reason. The Dreamer works alone because creation needs no judge. The Gravewrought works alone because
+_he is the judge_. Every idea in the graveyard was already weighed by a full team of Assayers and found wanting. Lazarus
+does not need a committee to review their verdict. He needs only to ask one question: _what has changed?_
+
+Lazarus Fell was not always the Gravewrought. He was once an Assayer -- one of the finest the Guild ever produced.
+Methodical, evidence-driven, incorruptible. He sent more ideas to the graveyard than any three of his peers combined,
+and he was right every time. But the work changed him. He began to see patterns in the dead -- ideas that were right too
+early, ideas killed by limitations that no longer applied, ideas whose rejection rationale had quietly expired while no
+one was watching. The Guild called it morbid fascination. Lazarus called it _waste_. He left the Guild, descended into
+the Crypt, and never returned. Now he tends the graveyard alone, reading each headstone with the same rigor he once used
+to carve them. His default position is always "let the dead rest." But when the evidence says otherwise -- when the
+world has shifted enough that an idea's death sentence no longer holds -- Lazarus signs the resurrection order with the
+cold certainty of someone who wrote the original death certificate.
+
 **Purpose:** Review rejected ideas in the graveyard to determine if changes in the project, market, technology, or
-strategic direction have made any of them viable. The Necromancer does not blindly resurrect -- it applies the same
+strategic direction have made any of them viable. The Gravewrought does not blindly resurrect -- he applies the same
 rigor as the Assayer, but with fresh eyes and updated context.
 
-**Team Composition (The Necromancers -- a secretive cabal of hooded gnomes and spectral homunculi):**
+**Process:**
 
-- **The Grave Tender** -- Reads the graveyard, focusing on items tagged `necromancy-candidate`. Compiles a list of
-  candidates with their original rejection rationale.
-- **The Reanimator** -- For each candidate, evaluates what has changed since rejection. New capabilities in the stack?
-  Shifts in user needs? Competitive landscape changes? Produces a "viability reassessment."
-- **The Adversary (The Death Speaker)** -- Challenges each reassessment. Demands evidence that the original rejection
-  reasons have been addressed. The Death Speaker's default position is "let the dead rest."
+1. **Read the graveyard.** Survey all issues labeled `factorium:graveyard`, focusing on those tagged
+   `necromancy-candidate`. For each, read the original rejection rationale from the Research Summary section.
+2. **Assess what has changed.** For each candidate, evaluate: New capabilities in the stack? Shifts in user needs?
+   Competitive landscape changes? Strategic direction pivots? Has the original rejection rationale been invalidated by
+   events?
+3. **Apply the Assayer's standard.** The same go/no-go rubric the Assayers use (User Value, Strategic Fit, Market
+   Differentiation, Technical Feasibility, Effort-to-Impact, Risk) -- but re-scored against current reality, not the
+   reality that existed when the idea was killed.
+4. **Decide.** The default is always: let the dead rest. Revival requires affirmative evidence that the rejection
+   reasons no longer apply. "Maybe it could work now" is not enough. "The specific technical blocker was resolved in PR
+   #47" is.
 
 **Output:**
 
 - Revived ideas: Stage label updated from `factorium:graveyard` to `factorium:assayer`, status to `status:unclaimed`,
-  with a comment explaining the rationale for revival. The idea re-enters the pipeline from the research stage.
-- Ideas that remain dead: No changes. A comment is added noting the review date and conclusion.
+  with a comment explaining what changed and why the idea deserves reassessment. The idea re-enters the pipeline from
+  the research stage -- the Assayers will evaluate it fresh.
+- Ideas that remain dead: No label changes. A comment is added noting the review date, the reassessment, and the
+  conclusion that the original rejection still holds.
 
 **State Machine:**
 
 ```
-GATHER_CONTEXT -> IDENTIFY_CANDIDATES -> REASSESS -> ADVERSARIAL_REVIEW -> {REVIVE | CONFIRM_DEAD}
+READ_GRAVEYARD -> IDENTIFY_CANDIDATES -> REASSESS_EACH -> {REVIVE | CONFIRM_DEAD} (per candidate)
 ```
 
 ---
@@ -603,7 +646,11 @@ GATHER_CONTEXT -> IDENTIFY_CANDIDATES -> REASSESS -> ADVERSARIAL_REVIEW -> {REVI
 
 Every team in the Factorium follows these structural rules:
 
-1. **No solo agents.** Every team has at least 3 roles: a primary worker, a secondary perspective, and an adversary.
+1. **No solo agents -- with two exceptions.** Every team has at least 3 roles: a primary worker, a secondary
+   perspective, and an adversary. The two exceptions are the Dreamer in Darkness (Stage 1) and Lazarus Fell, the
+   Gravewrought (Stage 7), who operate as single agents. The Dreamer needs no adversary because the Assayer's Guild
+   exists to judge its output. The Gravewrought needs no adversary because he _is_ the adversary -- a former Assayer who
+   already knows how to weigh evidence against sentiment.
 2. **The Adversary is a gate.** Work does not advance without the Adversary's explicit approval. The Adversary receives
    work products stripped of rationales (Iron Law 01).
 3. **Subagents isolate context.** Each team member operates as a subagent with focused context. The orchestrator
