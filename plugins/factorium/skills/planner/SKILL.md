@@ -65,6 +65,17 @@ gh issue view {issue-number} --json number,title,body,labels,assignees
 - Derive the idea slug: lowercase the title, replace spaces with hyphens, remove special characters. Example: "Smart
   Autocomplete for Tags" → `smart-autocomplete-for-tags`
 
+## Checkout Feature Branch
+
+The idea's feature branch was created by the Assayer. Check it out and pull:
+
+```bash
+git checkout factorium/{idea-slug}
+git pull origin factorium/{idea-slug}
+```
+
+If the branch doesn't exist, report an error and exit — the Assayer should have created it.
+
 ## Claim the Issue
 
 1. Assign the issue:
@@ -473,12 +484,18 @@ Spawn Seld (Skeptic of Scope) with the stripped packet.
 **Skeptic of Scope:** Approved.
 ```
 
-3. Append Product Specification section to the issue body via `gh issue edit`.
-4. Append Stage History entry:
+3. Commit and push all product docs to the feature branch:
+   ```bash
+   git add docs/factorium/{idea-slug}/product-*.md
+   git commit -m "factorium({idea-slug}): add product specification"
+   git push origin factorium/{idea-slug}
+   ```
+4. Append Product Specification section to the issue body via `gh issue edit`.
+5. Append Stage History entry:
    ```
    | {ISO-8601} | Planner | Completed | Planners' Hall | Specification complete — {N} FRs, {N} stories |
    ```
-5. Update labels:
+6. Update labels:
    ```bash
    gh issue edit {issue-number} \
      --remove-label "factorium:planner" \
@@ -486,7 +503,7 @@ Spawn Seld (Skeptic of Scope) with the stripped packet.
      --add-label "factorium:architect" \
      --add-label "status:unclaimed"
    ```
-6. Unassign:
+7. Unassign:
    ```bash
    gh issue edit {issue-number} --remove-assignee @me
    ```

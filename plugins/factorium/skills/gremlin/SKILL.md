@@ -69,6 +69,19 @@ gh issue view {issue-number} --json number,title,body,labels,assignees,state
 
 **Extract the idea slug** from the issue title (lowercase, spaces → hyphens, special characters removed).
 
+## Checkout Feature Branch
+
+The idea's feature branch contains all supporting docs and code. Check it out and pull:
+
+```bash
+git fetch origin
+git checkout factorium/{idea-slug}
+git pull origin factorium/{idea-slug}
+```
+
+If the branch doesn't exist, the Gremlin can still review using the PR diff via `gh pr diff` — but flag this as unusual
+in the review notes.
+
 ## Claim Issue
 
 Claim the issue per the Factorium claiming protocol:

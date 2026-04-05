@@ -343,16 +343,17 @@ Each idea is scored on a consistent rubric. Scores are 1-5 on each dimension:
 
 **Output:**
 
-- **Accepted ideas:** Stage label updated to `factorium:planner`, status to `status:unclaimed`. Research summary
-  appended to issue body.
-- **Rejected ideas:** Stage label updated to `factorium:graveyard`. Status label to `status:passed`. Research summary
-  appended with clear rationale for rejection. The `necromancy-candidate` label may be added if the idea has latent
-  potential that could be unlocked by future changes.
+- **Accepted ideas (go/conditional go):** Create the feature branch `factorium/{idea-slug}` from `main`. Stage label
+  updated to `factorium:planner`, status to `status:unclaimed`. Research summary appended to issue body. All subsequent
+  stages will work on this branch.
+- **Rejected ideas (no-go):** Stage label updated to `factorium:graveyard`. Status label to `status:passed`. No branch
+  created. Research summary appended with clear rationale for rejection. The `necromancy-candidate` label may be added
+  if the idea has latent potential that could be unlocked by future changes.
 
 **State Machine:**
 
 ```
-CLAIM -> RESEARCH -> EVALUATE -> ADVERSARIAL_REVIEW -> DECIDE -> {ADVANCE | REJECT | REQUEUE}
+CLAIM -> RESEARCH -> EVALUATE -> ADVERSARIAL_REVIEW -> DECIDE -> {ADVANCE + CREATE_BRANCH | REJECT | REQUEUE}
 ```
 
 - `CLAIM`: Claim the top unclaimed `factorium:assayer` issue per the claiming protocol.
@@ -361,8 +362,8 @@ CLAIM -> RESEARCH -> EVALUATE -> ADVERSARIAL_REVIEW -> DECIDE -> {ADVANCE | REJE
 - `ADVERSARIAL_REVIEW`: The Assayer General reviews all findings. Work products are submitted without rationales (Iron
   Law 01). The Adversary independently verifies claims and challenges weak evidence.
 - `DECIDE`: Final go/no-go rendered.
-- `ADVANCE`: Pass to Planners' Hall.
-- `REJECT`: Move to graveyard.
+- `ADVANCE + CREATE_BRANCH`: Create `factorium/{idea-slug}` branch from `main`, push it. Pass to Planners' Hall.
+- `REJECT`: Move to graveyard. No branch created.
 - `REQUEUE`: If the idea is promising but the research is inconclusive, requeue to self with notes on what additional
   research is needed.
 
@@ -449,7 +450,7 @@ in from the first moment.
   - `architecture-contracts.md` -- API contracts, interfaces, message formats.
   - `architecture-security.md` -- Threat model, security requirements.
   - `architecture-workplan.md` -- Parallelizable work units, integration order, inter-unit contracts.
-- Git branch created: `factorium/{idea-slug}` from `main` (if not already existing).
+- All docs committed and pushed to the `factorium/{idea-slug}` branch (created by the Assayer).
 - Stage label updated to `factorium:engineer`. Status to `status:unclaimed`.
 
 **State Machine:**
@@ -509,6 +510,7 @@ feature branch. The output is a pull request ready for human review.
   - `engineering-notes.md` -- Implementation decisions, deviations from spec (with justification), and technical debt
     incurred.
   - `engineering-test-report.md` -- Test results, coverage report.
+- Branch rebased from `main` before PR creation. Conflicts resolved. Tests re-run after rebase.
 - Pull request opened against `main` with a structured description referencing the issue and all supporting documents.
 - Stage label updated to `factorium:review`. Status to `status:unclaimed`.
 
@@ -698,19 +700,81 @@ error autonomously.
 ### Git Branching Strategy
 
 - **One branch per idea:** `factorium/{idea-slug}` created from `main`.
-- **Branch creation:** The Architect's Lodge creates the branch when it first claims the item (since this is the first
-  code-touching stage).
-- **All subsequent stages** for that idea work on the same branch.
+- **Branch creation:** The Assayer's Guild creates the branch when it renders a **go** or **conditional go** decision.
+  This is the earliest point at which an idea has proven viability, and all subsequent stages will commit their work to
+  this branch. No-go ideas never get a branch.
+- **All subsequent stages** check out the idea's branch, do their work, commit, and push. Product docs, architecture
+  docs, and code all live on the feature branch — not on `main`. The branch is the complete record of an idea's journey
+  through the pipeline.
 - **Requeued work:** When work is sent back to an earlier stage, all in-progress changes are committed to the branch
-  before requeuing. The earlier stage works on the same branch when it picks up the rework.
+  before requeuing. The earlier stage checks out the same branch, reads the rework comment, updates its artifacts, and
+  pushes. The branch accumulates work from every stage, including rework cycles.
+- **Rebase before PR:** The Engineer's Forge rebases the feature branch from `main` before opening the PR, resolving any
+  conflicts that accumulated while the idea was in the pipeline.
 - **PR creation:** The Engineer's Forge opens a PR from `factorium/{idea-slug}` to `main` upon completing
   implementation.
-- **Merge:** Human review and merge after Gremlin approval. When the pipeline has proven its quality, automated merges
-  after CI pass may be considered.
+- **Merge:** Human review and merge after Gremlin approval. Feature branch deleted after merge.
+- **Dead branches:** If an idea is sent to the graveyard after a branch was created (e.g., the Engineer requeues to the
+  Assayer, who then renders no-go on re-evaluation), the branch remains as a record but is not merged. Periodic cleanup
+  via `git branch -d` is acceptable.
+
+### Worktree Model
+
+Each Factorium terminal runs in its own git worktree. Worktrees provide isolated working directories from a single
+repository, allowing multiple branches to be checked out simultaneously without interference.
+
+```
+~/project/                              <- main checkout (reference, non-Factorium work)
+~/project/.worktrees/
+  dreamer/                              <- The Dreamer (always on main, reads docs)
+  assayer/                              <- The Assayer's Guild
+  planner/                              <- The Planners' Hall
+  architect/                            <- The Architect's Lodge
+  engineer-1/                           <- The Engineer's Forge (instance 1)
+  engineer-2/                           <- The Engineer's Forge (instance 2, optional)
+  gremlin/                              <- The Gremlin Warren
+  necromancer/                          <- The Necromancer's Crypt (on-demand)
+```
+
+**Worktree lifecycle per stage invocation:**
+
+1. Stage claims an issue.
+2. Stage checks out the idea's feature branch in its worktree: `git checkout factorium/{idea-slug}` and `git pull`.
+3. Stage does its work, commits to the branch, pushes.
+4. Stage advances the issue (label update, unassign).
+5. Worktree remains on the branch until the next claim (which checks out a different branch).
+
+**Setup:** Worktrees are created once per terminal:
+
+```bash
+# From the project root
+git worktree add .worktrees/assayer main
+git worktree add .worktrees/planner main
+git worktree add .worktrees/architect main
+git worktree add .worktrees/engineer-1 main
+git worktree add .worktrees/gremlin main
+```
+
+Each worktree starts on `main` and checks out the appropriate feature branch when it claims an issue.
+
+**Dependency installation:** Each worktree needs its own dependency install (`npm install`, `composer install`, etc.) if
+the project has application code. This is a one-time cost per worktree, with incremental updates when switching
+branches.
+
+**Test isolation:** Unit tests with mocks run independently per worktree. Feature/integration tests that touch a
+database need per-worktree database isolation (separate database names or SQLite in-memory). E2E tests need port
+isolation. The Engineer's skill is responsible for ensuring test isolation in its worktree.
+
+**The Dreamer exception:** The Dreamer always reads from `main` and never checks out a feature branch. It reads
+`docs/factorium/` on `main` (which contains only the shared docs — FACTORIUM.md, iron-laws.md, etc.) and queries GitHub
+Issues for the idea landscape. In-progress idea docs live on feature branches and are invisible to the Dreamer. This is
+correct — the Dreamer should see shipped features (merged to `main`), not half-baked specs.
 
 ### File Structure
 
-All Factorium files live under `docs/factorium/`:
+Shared Factorium docs live on `main`. Per-idea docs live on the idea's feature branch.
+
+**On `main` (shared, permanent):**
 
 ```
 docs/factorium/
@@ -718,18 +782,23 @@ docs/factorium/
 +-- iron-laws.md                    <- The Iron Laws of Agentic Coding (full text).
 +-- github-conventions.md           <- Label taxonomy, issue templates, query patterns.
 +-- evaluation-framework.md         <- The Assayer's scoring rubric (detailed version).
-+-- {idea-slug}/                    <- Per-idea working directory
-|   +-- product-requirements.md
-|   +-- product-stories.md
-|   +-- product-metrics.md
-|   +-- product-edge-cases.md
-|   +-- architecture-design.md
-|   +-- architecture-schema.md
-|   +-- architecture-contracts.md
-|   +-- architecture-security.md
-|   +-- architecture-workplan.md
-|   +-- engineering-notes.md
-|   +-- engineering-test-report.md
+```
+
+**On `factorium/{idea-slug}` branch (per-idea, merged to main on completion):**
+
+```
+docs/factorium/{idea-slug}/
++-- product-requirements.md         <- Written by the Planner
++-- product-stories.md              <- Written by the Planner
++-- product-metrics.md              <- Written by the Planner
++-- product-edge-cases.md           <- Written by the Planner
++-- architecture-design.md          <- Written by the Architect
++-- architecture-schema.md          <- Written by the Architect
++-- architecture-contracts.md       <- Written by the Architect
++-- architecture-security.md        <- Written by the Architect
++-- architecture-workplan.md        <- Written by the Architect
++-- engineering-notes.md            <- Written by the Engineer
++-- engineering-test-report.md      <- Written by the Engineer
 ```
 
 ---

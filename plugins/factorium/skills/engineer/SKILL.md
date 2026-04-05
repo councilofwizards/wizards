@@ -86,27 +86,18 @@ Claim the issue per the Factorium claiming protocol:
    ```
    Use `gh issue edit {number} --body "$(...)"` — read the current body first, append the row, rewrite in full.
 
-## Verify Branch
+## Checkout Feature Branch
 
-Check whether the feature branch exists:
+The idea's feature branch was created by the Assayer. Product and architecture docs were committed by the Planner and
+Architect. Check it out and pull:
 
 ```bash
 git fetch origin
-git branch -r --list "origin/factorium/{idea-slug}"
+git checkout factorium/{idea-slug}
+git pull origin factorium/{idea-slug}
 ```
 
-- **Branch exists:** Check it out locally and pull latest.
-  ```bash
-  git checkout factorium/{idea-slug}
-  git pull origin factorium/{idea-slug}
-  ```
-- **Branch does not exist:** Create it from `main`.
-  ```bash
-  git checkout main
-  git pull origin main
-  git checkout -b factorium/{idea-slug}
-  git push -u origin factorium/{idea-slug}
-  ```
+If the branch doesn't exist, report an error and exit — the Assayer should have created it.
 
 ## Read Architecture Specs
 
@@ -390,6 +381,19 @@ created: "{ISO-8601}"
 ```
 
 Commit all documentation to the `factorium/{idea-slug}` branch.
+
+**Rebase from main** before opening the PR. This resolves any conflicts that accumulated while the idea was in the
+pipeline:
+
+```bash
+git fetch origin main
+git rebase origin/main
+# If conflicts: resolve, then git rebase --continue
+# If conflicts are irresolvable: escalate to the human operator. Do NOT force-push over unresolved conflicts.
+git push origin factorium/{idea-slug} --force-with-lease
+```
+
+After rebase, re-run all automated gates to confirm nothing broke. If tests fail post-rebase, fix before proceeding.
 
 **Open Pull Request:**
 

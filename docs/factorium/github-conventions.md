@@ -159,7 +159,14 @@ The `sort:created-asc` ensures dependency ordering -- oldest items are processed
 ## Git Branching
 
 - Branch per idea: `factorium/{idea-slug}` from `main`
-- Created by the Architect's Lodge (first code-touching stage)
-- All subsequent stages work on the same branch
-- PR opened by the Engineer's Forge against `main`
-- Human review and merge after Gremlin approval
+- Created by the Assayer's Guild on go/conditional-go decisions. No-go ideas never get a branch.
+- All subsequent stages (Planner, Architect, Engineer, Gremlin) check out the feature branch, commit their work, push.
+- Product docs, architecture docs, and code all live on the feature branch — not on `main`.
+- Engineer rebases from `main` before opening the PR.
+- PR opened by the Engineer's Forge against `main`.
+- Human review and merge after Gremlin approval. Feature branch deleted after merge.
+
+## Worktrees
+
+Each terminal runs in its own git worktree (see FACTORIUM.md § Worktree Model). Stages check out the idea's feature
+branch in their worktree when claiming an issue. Setup: `git worktree add .worktrees/{stage} main`

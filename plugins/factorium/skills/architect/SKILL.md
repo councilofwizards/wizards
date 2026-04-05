@@ -2,8 +2,8 @@
 name: architect
 description: >
   Invoke The Architect's Lodge to design the complete technical architecture for a specified idea. Produces system
-  design, schema, API contracts, security model, and parallelized work plan. Creates the idea's git branch. Writes 5
-  architecture docs and updates the GitHub Issue. Stateless — called once per issue by the external polling harness.
+  design, schema, API contracts, security model, and parallelized work plan. Writes 5 architecture docs and updates the
+  GitHub Issue. Stateless — called once per issue by the external polling harness.
 argument-hint: "[issue-number]"
 type: multi-agent
 category: pipeline
@@ -67,9 +67,18 @@ gh issue view {issue-number} --json number,title,body,labels,assignees
 - Derive the idea slug from the issue title. Lowercase, replace spaces with hyphens, remove specials. Example: "Async
   Export with Progress Tracking" → `async-export-with-progress-tracking`
 
+## Checkout Feature Branch
+
+The idea's feature branch was created by the Assayer. Product docs were committed by the Planner. Check it out and pull:
+
+```bash
+git checkout factorium/{idea-slug}
+git pull origin factorium/{idea-slug}
+```
+
 ## Read Product Documents
 
-Read the four product docs from `docs/factorium/{idea-slug}/`:
+Read the four product docs from `docs/factorium/{idea-slug}/` (now on the feature branch):
 
 ```bash
 cat docs/factorium/{idea-slug}/product-requirements.md
@@ -86,7 +95,7 @@ ERROR: Product documents missing for idea {idea-slug}. Expected:
   docs/factorium/{idea-slug}/product-stories.md
   docs/factorium/{idea-slug}/product-metrics.md
   docs/factorium/{idea-slug}/product-edge-cases.md
-The Planners' Hall may not have written these to disk. Check the issue and requeue to factorium:planner if needed.
+The Planners' Hall may not have committed these to the branch. Check the issue and requeue to factorium:planner if needed.
 ```
 
 ## Claim the Issue
@@ -618,25 +627,15 @@ Spawn Drevna (Stress Tester) with the stripped packet and the product requiremen
 
 - Proceed to branch creation and issue update.
 
-## Create Branch
+## Commit Architecture Docs
 
-After Adversary approval, create the idea's git branch from `main`:
+After Adversary approval, commit and push the architecture docs to the feature branch:
 
 ```bash
-# Check if branch already exists (idempotent — Architect may be re-run)
-git fetch origin
-if git show-ref --verify --quiet refs/remotes/origin/factorium/{idea-slug}; then
-  echo "Branch factorium/{idea-slug} already exists — skipping creation"
-else
-  git checkout main
-  git pull origin main
-  git checkout -b factorium/{idea-slug}
-  git push -u origin factorium/{idea-slug}
-  git checkout main
-fi
+git add docs/factorium/{idea-slug}/architecture-*.md
+git commit -m "factorium({idea-slug}): add architecture specification"
+git push origin factorium/{idea-slug}
 ```
-
-Log the branch creation (or existence confirmation) in the Stage History.
 
 ## Update Issue and Exit
 
@@ -731,8 +730,8 @@ If any decisions were flagged as requiring human approval (Iron Law 16), list th
 - **Append only on the issue.** Do not overwrite Idea, Research Summary, or Product Specification sections.
 - **Correct stage label required.** Exit with error if the issue is not labeled `factorium:architect`.
 - **Product docs required.** Exit with error if any product document is missing.
-- **Branch from main.** The git branch `factorium/{idea-slug}` is always created from `main`. Never branch from another
-  feature branch.
+- **Branch already exists.** The feature branch `factorium/{idea-slug}` was created by the Assayer. Never create a new
+  branch from another feature branch.
 - **Idempotent branch creation.** If the branch already exists, log it and continue. Do not fail.
 - **Escalate on stalemate.** After 3 adversarial rounds without approval, surface to human operator.
 - **Halt on ambiguity.** Iron Law 02. Ambiguities not resolvable by the Lodge surface to human operator.

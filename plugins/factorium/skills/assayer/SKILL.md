@@ -442,7 +442,14 @@ Render the final decision using the rubric logic:
    ```
    | {ISO-8601} | Assayer | Completed | Assayer's Guild | Go decision — avg score {n}/5 |
    ```
-4. Update labels:
+4. **Create the feature branch.** Derive the idea slug from the issue title (lowercase, spaces → hyphens, special
+   characters removed). Create and push the branch:
+   ```bash
+   git branch factorium/{idea-slug} main
+   git push origin factorium/{idea-slug}
+   ```
+   If the branch already exists (rework cycle), skip creation — it's already there.
+5. Update labels:
    ```bash
    gh issue edit {issue-number} \
      --remove-label "factorium:assayer" \
@@ -450,7 +457,7 @@ Render the final decision using the rubric logic:
      --add-label "factorium:planner" \
      --add-label "status:unclaimed"
    ```
-5. Unassign:
+6. Unassign:
    ```bash
    gh issue edit {issue-number} --remove-assignee @me
    ```
