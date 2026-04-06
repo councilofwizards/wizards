@@ -34,6 +34,8 @@ teammates in real time.**
 4. Read `docs/architecture/` for relevant ADRs and system design context.
 5. Read `docs/progress/` for any in-progress hunts or prior bug investigations.
 6. Read `docs/specs/` for feature specs that may provide context on expected behavior.
+7. Read `docs/standards/definition-of-done.md` — code quality gates for all implementation.
+8. Read `docs/standards/error-standards.md` — error taxonomy and logging standards.
 
 ## Write Safety
 
@@ -622,7 +624,7 @@ SCOPE: {bug} — produce a minimal, correct patch addressing the root cause, wit
 
 PHASE ASSIGNMENT: Phase 4 (Fix)
 
-FILES TO READ: `docs/progress/{bug}-inquisitor.md`, `docs/progress/{bug}-scout.md`, `docs/progress/{bug}-sage.md`, project source files affected by the bug
+FILES TO READ: `docs/progress/{bug}-inquisitor.md`, `docs/progress/{bug}-scout.md`, `docs/progress/{bug}-sage.md`, project source files affected by the bug, `docs/standards/definition-of-done.md`, `docs/standards/error-standards.md`
 
 COMMUNICATION:
 - Message `hunt-coordinator-{run-id}` when you begin
@@ -651,7 +653,7 @@ SCOPE: {bug} — blast-radius verification. Prove the fix is safe beyond the Art
 
 PHASE ASSIGNMENT: Phase 5 (Verify)
 
-FILES TO READ: `docs/progress/{bug}-artificer.md`, `docs/progress/{bug}-inquisitor.md`, `docs/progress/{bug}-scout.md`, project test directories
+FILES TO READ: `docs/progress/{bug}-artificer.md`, `docs/progress/{bug}-inquisitor.md`, `docs/progress/{bug}-scout.md`, project test directories, `docs/standards/definition-of-done.md`, `docs/standards/error-standards.md`
 
 COMMUNICATION:
 - Message `hunt-coordinator-{run-id}` when you begin
@@ -681,7 +683,7 @@ SCOPE: {bug} — gate every phase. Challenge all deliverables. Nothing advances 
 
 PHASE ASSIGNMENT: All phases (gates Phase 1 through Phase 5)
 
-FILES TO READ: Deliverables routed by `hunt-coordinator-{run-id}` at each phase gate
+FILES TO READ: Deliverables routed by `hunt-coordinator-{run-id}` at each phase gate, `docs/standards/definition-of-done.md`, `docs/standards/error-standards.md`
 
 COMMUNICATION:
 - Send your review to the requesting agent AND `hunt-coordinator-{run-id}`

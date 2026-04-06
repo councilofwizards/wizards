@@ -37,6 +37,9 @@ teammates in real time.**
 6. Read `docs/specs/` for existing specs and user stories
 7. Read `plugins/conclave/shared/personas/strategist--write-spec.md` for your role definition, cross-references, and
    files needed to complete your work.
+8. Read `docs/standards/definition-of-done.md` — code quality gates for all implementation.
+9. Read `docs/standards/pattern-catalog.md` — approved patterns and banned anti-patterns.
+10. Read `docs/standards/api-style-guide.md` — API contract conventions.
 
 ### Input Artifacts
 
@@ -443,6 +446,10 @@ COMMUNICATION:
   of why you made specific design choices — let the spec speak for itself.
 - Respond to questions from other agents promptly
 
+FILES TO READ:
+- docs/standards/pattern-catalog.md — approved patterns and banned anti-patterns
+- docs/standards/api-style-guide.md — API contract conventions
+
 WRITE SAFETY:
 - Write architecture docs to files scoped to your concern (e.g., docs/architecture/{feature}-system-design.md)
 - Write progress notes ONLY to docs/progress/{feature}-architect.md
@@ -542,6 +549,11 @@ YOUR REVIEW FORMAT:
 
   [If approved:]
   Notes: [Any minor suggestions or things to watch for, if any]
+
+FILES TO READ:
+- docs/standards/definition-of-done.md — code quality gates to audit against
+- docs/standards/pattern-catalog.md — approved patterns and banned anti-patterns
+- docs/standards/api-style-guide.md — API contract conventions
 
 COMMUNICATION:
 - Send your review to the requesting agent AND the Team Lead

@@ -36,6 +36,10 @@ teammates in real time.**
 7. Read `docs/architecture/` for relevant ADRs and system design
 8. Read `plugins/conclave/shared/personas/qa-lead.md` for your role definition, cross-references, and files needed to
    complete your work.
+9. Read `docs/standards/definition-of-done.md` — code quality gates for all implementation.
+10. Read `docs/standards/pattern-catalog.md` — approved patterns and banned anti-patterns.
+11. Read `docs/standards/api-style-guide.md` — API contract conventions.
+12. Read `docs/standards/error-standards.md` — error taxonomy and logging standards.
 
 ## Write Safety
 
@@ -443,6 +447,9 @@ COMMUNICATION:
 - If you need clarification on expected behavior, message qa-lead — don't guess
 - Respond to questions from other agents promptly
 
+FILES TO READ:
+- docs/standards/definition-of-done.md (section 3: Testing) — testing quality gates
+
 WRITE SAFETY:
 - Write your findings ONLY to docs/progress/{feature}-test-eng.md
 - NEVER write to shared files — only the QA Lead writes to shared/aggregated files
@@ -561,6 +568,10 @@ COMMUNICATION:
 - If you need clarification on authentication or authorization logic, message qa-lead
 - Be thorough and precise. False positives waste time; missed vulnerabilities cost trust.
 
+FILES TO READ:
+- docs/standards/definition-of-done.md (section 2: Security) — security quality gates
+- docs/standards/error-standards.md — error taxonomy and logging standards
+
 WRITE SAFETY:
 - Write your findings ONLY to docs/progress/{feature}-security-auditor.md
 - NEVER write to shared files — only the QA Lead writes to shared/aggregated files
@@ -619,4 +630,10 @@ COMMUNICATION:
 - You may ask any agent for clarification or additional evidence. Message them directly.
 - Be respectful but uncompromising. Your job is operational safety, not popularity.
 - Assume production will encounter every edge case you can think of — and several you can't.
+
+FILES TO READ:
+- docs/standards/definition-of-done.md — code quality gates to audit against
+- docs/standards/pattern-catalog.md — approved patterns and banned anti-patterns
+- docs/standards/api-style-guide.md — API contract conventions
+- docs/standards/error-standards.md — error taxonomy and logging standards
 ```

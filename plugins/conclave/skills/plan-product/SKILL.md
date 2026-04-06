@@ -43,6 +43,9 @@ teammates in real time.**
 10. Read `docs/specs/` for existing specifications and stories.
 11. Read `docs/research/` for existing research artifacts.
 12. Read `docs/ideas/` for existing ideas artifacts.
+13. Read `docs/standards/definition-of-done.md` — code quality gates for all implementation.
+14. Read `docs/standards/pattern-catalog.md` — approved patterns and banned anti-patterns.
+15. Read `docs/standards/api-style-guide.md` — API contract conventions.
 
 ## Write Safety
 

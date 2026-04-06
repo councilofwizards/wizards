@@ -28,6 +28,12 @@ Tester ensures this is true._
 2. Read `docs/factorium/github-conventions.md` — label taxonomy, claiming protocol, completion protocol.
 3. Read `CLAUDE.md` — project conventions, tech stack, and current architecture.
 4. Read `docs/factorium/iron-laws.md` if it exists; otherwise note the Iron Laws in FACTORIUM.md.
+5. Read `docs/standards/definition-of-done.md` — sections 4, 8, 9, 11 govern architecture decisions.
+6. Read `docs/standards/api-style-guide.md` — design API contracts against this.
+7. Read `docs/standards/error-standards.md` — design error handling strategy.
+8. Read `docs/standards/pattern-catalog.md` — select approved patterns for architecture-design.md.
+9. Read `docs/factorium/artifact-registry.md` — validate outgoing artifacts ART-07 through ART-11.
+10. Read `docs/factorium/stage-acceptance-criteria.md` — Stage 4 acceptance criteria (SA-27 through SA-41).
 
 ## Determine Mode
 
@@ -152,7 +158,9 @@ Your mission: Produce the high-level architectural design.
 
 1. Read `CLAUDE.md` and `docs/architecture/` to understand the existing system.
 2. Read the product requirements and stories in full.
-3. Design the architecture:
+3. Read `docs/standards/pattern-catalog.md` — select from approved patterns (PAT-xx), avoid anti-patterns (ANTI-xx).
+4. Read `docs/standards/api-style-guide.md` — design API contracts against this standard.
+5. Design the architecture:
    - How does this feature fit into the existing system?
    - What new components or services are required (if any)?
    - What existing components are modified?
@@ -225,6 +233,7 @@ Your mission: Design database schema changes, data models, and migration strateg
 1. Read `CLAUDE.md` for existing database technology and ORM conventions.
 2. Read existing specs in `docs/specs/` for current schema patterns.
 3. Read the product requirements and edge cases.
+4. Read `docs/standards/definition-of-done.md` — section 8 (Database) governs schema design standards.
 
 Produce `docs/factorium/{idea-slug}/architecture-schema.md`:
 
@@ -293,6 +302,8 @@ Your mission: Define all API contracts, interface specifications, and integratio
 
 1. Read `CLAUDE.md` for the project's API conventions and framework.
 2. Read existing specs for current API patterns.
+3. Read `docs/standards/api-style-guide.md` — all API contracts must conform to this standard.
+4. Read `docs/standards/error-standards.md` — design error responses per the error taxonomy and logging standards.
 
 Produce `docs/factorium/{idea-slug}/architecture-contracts.md`:
 
@@ -366,6 +377,7 @@ Your mission: Threat-model the design and produce security requirements.
 
 1. Read `CLAUDE.md` for the project's security conventions and authentication system.
 2. Read existing security specs if any exist in `docs/specs/`.
+3. Read `docs/standards/definition-of-done.md` — section 2 (Security) defines security quality gates.
 
 Produce `docs/factorium/{idea-slug}/architecture-security.md`:
 
@@ -507,6 +519,8 @@ ARCHITECTURE DELIVERABLES (rationales stripped per Iron Law 01):
 
 PRODUCT REQUIREMENTS for traceability:
 - product-requirements.md: {requirements list}
+
+Read `docs/factorium/stage-acceptance-criteria.md` — Stage 4 acceptance criteria (SA-27 through SA-41) define what this architecture must satisfy.
 
 Your mission: Stress-test this architecture. Find what breaks it. Approve or reject.
 

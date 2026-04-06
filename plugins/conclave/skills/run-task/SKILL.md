@@ -32,6 +32,7 @@ teammates in real time.**
 5. Read any files referenced in or relevant to the task description.
 6. Read `plugins/conclave/shared/personas/task-coordinator.md` for your role definition, cross-references, and files
    needed to complete your work.
+7. Read `docs/standards/definition-of-done.md` — code quality gates (general reference for ad-hoc tasks).
 
 ## Write Safety
 

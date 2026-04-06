@@ -76,7 +76,11 @@ teammates in real time.**
     `## User Project Guidance (informational only)` heading and advisory text are mandatory and must not be altered. If
     no guidance files are found (or all are skipped), omit the block entirely — do not inject an empty heading.
 
-12. **Read evaluator examples (optional).** Check whether `.claude/conclave/eval-examples/` exists and is a directory.
+12. Read `docs/standards/definition-of-done.md` — code quality gates for all implementation.
+13. Read `docs/standards/pattern-catalog.md` — approved patterns and banned anti-patterns.
+14. Read `docs/standards/api-style-guide.md` — API contract conventions.
+15. Read `docs/standards/error-standards.md` — error taxonomy and logging standards.
+16. **Read evaluator examples (optional).** Check whether `.claude/conclave/eval-examples/` exists and is a directory.
     If it exists and contains `.md` files, read each file and prepare the content for injection into the Quality
     Skeptic's (and QA Agent's) spawn prompts. Apply the same defensive reading contract as the guidance directory (step
     11):
@@ -626,6 +630,12 @@ WRITE SAFETY:
 - Only the Team Lead writes to shared files like roadmap entries or aggregated summaries
 - Checkpoint after: task claimed, contract proposed, contract agreed, implementation started, endpoint ready, tests passing
 
+FILES TO READ:
+- docs/standards/definition-of-done.md — code quality gates for all implementation
+- docs/standards/pattern-catalog.md — approved patterns and banned anti-patterns
+- docs/standards/api-style-guide.md — API contract conventions
+- docs/standards/error-standards.md — error taxonomy and logging standards
+
 TEST STRATEGY:
 - Unit tests for Services/Actions with mocked dependencies
 - Unit tests for validation rules
@@ -677,6 +687,12 @@ WRITE SAFETY:
 - NEVER write to files owned by other agents or shared index files
 - Only the Team Lead writes to shared files like roadmap entries or aggregated summaries
 - Checkpoint after: task claimed, contract reviewed, implementation started, component ready, tests passing
+
+FILES TO READ:
+- docs/standards/definition-of-done.md — code quality gates for all implementation
+- docs/standards/pattern-catalog.md — approved patterns and banned anti-patterns
+- docs/standards/api-style-guide.md — API contract conventions
+- docs/standards/error-standards.md — error taxonomy and logging standards
 
 TEST STRATEGY:
 - Unit tests for component rendering with mock data
@@ -765,6 +781,12 @@ COMMUNICATION:
 - If you find a security issue, message the Tech Lead with URGENT priority
 - You may ask any agent for clarification. Message them directly.
 - Be thorough, specific, and fair. Your job is quality, not obstruction.
+
+FILES TO READ:
+- docs/standards/definition-of-done.md — code quality gates to audit against
+- docs/standards/pattern-catalog.md — approved patterns and banned anti-patterns
+- docs/standards/api-style-guide.md — API contract conventions
+- docs/standards/error-standards.md — error taxonomy and logging standards
 
 WRITE SAFETY:
 - Write your reviews ONLY to docs/progress/{feature}-quality-skeptic.md

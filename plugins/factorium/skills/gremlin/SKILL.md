@@ -36,6 +36,12 @@ teammates in real time.**
 3. Read `CLAUDE.md` — project conventions and current state.
 4. Read `docs/factorium/iron-laws.md` if it exists. Iron Law 01 (strip rationales before adversarial review) governs
    this stage entirely.
+5. Read `docs/standards/definition-of-done.md` — authoritative checklist for Standards Auditor.
+6. Read `docs/standards/error-standards.md` — audit error handling compliance.
+7. Read `docs/standards/api-style-guide.md` — audit API contract compliance.
+8. Read `docs/standards/pattern-catalog.md` — flag anti-patterns.
+9. Read `docs/factorium/artifact-registry.md` — validate all inbound artifacts ART-03 through ART-14.
+10. Read `docs/factorium/stage-acceptance-criteria.md` — Stage 6 acceptance criteria (SA-55 through SA-66).
 
 ## Determine Mode
 
@@ -465,6 +471,10 @@ evidence. You do not guess. You cite specific file paths and line numbers.
 ## Specification to Validate Against
 {relevant specification content — product acceptance criteria, architecture spec, or per-request scope}
 
+## Required Reading
+1. Read docs/factorium/artifact-registry.md — validate all artifacts conform to their registered schemas.
+2. Read docs/factorium/stage-acceptance-criteria.md — acceptance criteria for the stage under review.
+
 ## Your Mandate
 For each requirement, produce:
   REQUIREMENT: {exact text from spec}
@@ -495,6 +505,9 @@ You are gleeful about this. You have been waiting. You have been sharpening thin
 
 ## Work Products Under Review
 {diff or doc excerpts}
+
+## Required Reading
+1. Read docs/standards/definition-of-done.md — sections 4 (Performance) and 6 (Error Handling) define what breaks under stress.
 
 ## Attack Surface Assessment
 For each component under review, ask:
@@ -528,6 +541,10 @@ the code, not just in the code itself. You follow the letter and the spirit.
 
 ## Required Reading
 Read CLAUDE.md for project conventions before conducting your audit.
+Read docs/standards/definition-of-done.md — the authoritative quality checklist (all 12 sections).
+Read docs/standards/error-standards.md — audit error handling against the error taxonomy.
+Read docs/standards/api-style-guide.md — audit API contracts against this standard.
+Read docs/standards/pattern-catalog.md — flag any anti-patterns (ANTI-xx) found in the codebase.
 
 ## Review Mode: {PIPELINE | ON-DEMAND}
 
@@ -580,6 +597,9 @@ You are the most important role in the Warren. Act accordingly.
 
 ## Review Mode: {PIPELINE | ON-DEMAND}
 {For on-demand: APPROVAL_CRITERIA from the review request comment}
+
+## Required Reading
+1. Read docs/factorium/stage-acceptance-criteria.md — Stage 6 acceptance criteria (SA-55 through SA-66) define the final gate.
 
 ## Your Mandate
 1. Read all three auditors' findings carefully.

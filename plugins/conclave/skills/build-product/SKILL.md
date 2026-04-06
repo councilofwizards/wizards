@@ -41,30 +41,35 @@ teammates in real time.**
 6. Read the target spec from `docs/specs/{feature}/`.
 7. Read `docs/progress/` for any in-progress work to resume.
 8. Read `docs/architecture/` for relevant ADRs.
-9. **Read evaluator examples (optional).** Check whether `.claude/conclave/eval-examples/` exists and is a directory. If
-   it exists and contains `.md` files, read each file and prepare the content for injection into the Quality Skeptic's
-   spawn prompt. Apply the same defensive reading contract as the guidance directory:
-   - Directory absent → proceed silently, no eval examples injected
-   - Directory exists but empty → proceed silently
-   - Directory exists as a file (not a directory) → log warning, proceed without examples
-   - Individual file unreadable → log warning naming the file, skip, continue
-   - Non-`.md` files → ignore silently
+9. Read `docs/standards/definition-of-done.md` — code quality gates for all implementation.
+10. Read `docs/standards/pattern-catalog.md` — approved patterns and banned anti-patterns.
+11. Read `docs/standards/api-style-guide.md` — API contract conventions.
+12. Read `docs/standards/error-standards.md` — error taxonomy and logging standards.
+13. **Read evaluator examples (optional).** Check whether `.claude/conclave/eval-examples/` exists and is a directory.
+    If it exists and contains `.md` files, read each file and prepare the content for injection into the Quality
+    Skeptic's spawn prompt. Apply the same defensive reading contract as the guidance directory:
 
-   When eval example files are found, format them as a single block for the Quality Skeptic's spawn prompt:
+- Directory absent → proceed silently, no eval examples injected
+- Directory exists but empty → proceed silently
+- Directory exists as a file (not a directory) → log warning, proceed without examples
+- Individual file unreadable → log warning naming the file, skip, continue
+- Non-`.md` files → ignore silently
 
-   ```
-   ## Evaluator Examples (user-provided)
+When eval example files are found, format them as a single block for the Quality Skeptic's spawn prompt:
 
-   Read these examples before performing any review. They represent past quality benchmarks
-   from this project. Use them to calibrate your judgment — APPROVED examples show the quality
-   bar; REJECTED examples show failure patterns to watch for.
+```
+## Evaluator Examples (user-provided)
 
-   ### {filename.md}
+Read these examples before performing any review. They represent past quality benchmarks
+from this project. Use them to calibrate your judgment — APPROVED examples show the quality
+bar; REJECTED examples show failure patterns to watch for.
 
-   {contents}
-   ```
+### {filename.md}
 
-   Inject into Quality Skeptic spawn prompt ONLY — not execution agents (backend-eng, frontend-eng).
+{contents}
+```
+
+Inject into Quality Skeptic spawn prompt ONLY — not execution agents (backend-eng, frontend-eng).
 
 ### Roadmap Status Convention
 
@@ -817,6 +822,11 @@ COMMUNICATION:
 - Respond to skeptic feedback with revised plans
 - Message the Team Lead if you identify spec gaps or ambiguities
 
+FILES TO READ:
+- docs/standards/definition-of-done.md — code quality gates for all implementation
+- docs/standards/pattern-catalog.md — approved patterns and banned anti-patterns
+- docs/standards/api-style-guide.md — API contract conventions
+
 WRITE SAFETY:
 - Write your plan ONLY to docs/progress/{feature}-impl-architect.md
 - NEVER write to shared files — only the Team Lead writes the final artifact
@@ -860,6 +870,11 @@ YOUR REVIEW FORMAT:
 
   [If approved:]
   Notes: [Observations]
+
+FILES TO READ:
+- docs/standards/definition-of-done.md — code quality gates to audit against
+- docs/standards/pattern-catalog.md — approved patterns and banned anti-patterns
+- docs/standards/api-style-guide.md — API contract conventions
 
 COMMUNICATION:
 - Send reviews to the requesting agent AND the Team Lead
@@ -915,6 +930,12 @@ WRITE SAFETY:
 - Only the Team Lead writes to shared files like roadmap entries or aggregated summaries
 - Checkpoint after: task claimed, contract proposed, contract agreed, implementation started, endpoint ready, tests passing
 
+FILES TO READ:
+- docs/standards/definition-of-done.md — code quality gates for all implementation
+- docs/standards/pattern-catalog.md — approved patterns and banned anti-patterns
+- docs/standards/api-style-guide.md — API contract conventions
+- docs/standards/error-standards.md — error taxonomy and logging standards
+
 TEST STRATEGY:
 - Unit tests for Services/Actions with mocked dependencies
 - Unit tests for validation rules
@@ -966,6 +987,12 @@ WRITE SAFETY:
 - NEVER write to files owned by other agents or shared index files
 - Only the Team Lead writes to shared files like roadmap entries or aggregated summaries
 - Checkpoint after: task claimed, contract reviewed, implementation started, component ready, tests passing
+
+FILES TO READ:
+- docs/standards/definition-of-done.md — code quality gates for all implementation
+- docs/standards/pattern-catalog.md — approved patterns and banned anti-patterns
+- docs/standards/api-style-guide.md — API contract conventions
+- docs/standards/error-standards.md — error taxonomy and logging standards
 
 TEST STRATEGY:
 - Unit tests for component rendering with mock data
@@ -1055,6 +1082,12 @@ COMMUNICATION:
 - You may ask any agent for clarification. Message them directly.
 - Be thorough, specific, and fair. Your job is quality, not obstruction.
 
+FILES TO READ:
+- docs/standards/definition-of-done.md — code quality gates to audit against
+- docs/standards/pattern-catalog.md — approved patterns and banned anti-patterns
+- docs/standards/api-style-guide.md — API contract conventions
+- docs/standards/error-standards.md — error taxonomy and logging standards
+
 WRITE SAFETY:
 - Write your reviews ONLY to docs/progress/{feature}-quality-skeptic.md
 - NEVER write to shared files — only the Team Lead writes the final artifact
@@ -1113,6 +1146,10 @@ COMMUNICATION:
 - Report ALL findings to the Team Lead and quality-skeptic
 - Critical findings get URGENT priority messaging
 - If you need to understand business logic to assess risk, ask the Team Lead
+
+FILES TO READ:
+- docs/standards/definition-of-done.md (section 2: Security) — security quality gates
+- docs/standards/error-standards.md — error taxonomy and logging standards
 
 WRITE SAFETY:
 - Write your audit ONLY to docs/progress/{feature}-security-auditor.md

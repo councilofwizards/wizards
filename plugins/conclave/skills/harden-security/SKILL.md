@@ -38,6 +38,8 @@ teammates in real time.**
 6. Read `docs/specs/` for feature specs that define expected security behaviors.
 7. Read `plugins/conclave/shared/personas/castellan.md` for your role definition, cross-references, and files needed to
    complete your work.
+8. Read `docs/standards/definition-of-done.md` (section 2: Security) — security quality gates.
+9. Read `docs/standards/error-standards.md` (LS-05) — security-relevant logging standards.
 
 ## Write Safety
 
@@ -526,7 +528,7 @@ SCOPE: {scope} — map every approach: STRIDE threat modeling, data flow diagram
 
 PHASE ASSIGNMENT: Phase 1 (Reconnaissance)
 
-FILES TO READ: docs/architecture/, docs/specs/, docs/stack-hints/{stack}.md (if provided)
+FILES TO READ: docs/architecture/, docs/specs/, docs/stack-hints/{stack}.md (if provided), `docs/standards/definition-of-done.md` (section 2: Security), `docs/standards/error-standards.md` (LS-05)
 
 COMMUNICATION:
 - Message `castellan-{run-id}` when you begin
@@ -555,7 +557,7 @@ SCOPE: {scope} — systematic vulnerability assessment: OWASP Testing Guide, CVS
 
 PHASE ASSIGNMENT: Phase 2 (Assessment)
 
-FILES TO READ: docs/progress/{scope}-threat-modeler.md (required — your search directive), dependency manifests in project root
+FILES TO READ: docs/progress/{scope}-threat-modeler.md (required — your search directive), dependency manifests in project root, `docs/standards/definition-of-done.md` (section 2: Security), `docs/standards/error-standards.md`
 
 COMMUNICATION:
 - Message `castellan-{run-id}` when you begin
@@ -585,7 +587,7 @@ SCOPE: {scope} — implement fixes for all confirmed vulnerabilities: OWASP Secu
 
 PHASE ASSIGNMENT: Phase 3 (Remediation)
 
-FILES TO READ: docs/progress/{scope}-vuln-hunter.md (required — confirmed vulnerabilities you will fix), source files within scope
+FILES TO READ: docs/progress/{scope}-vuln-hunter.md (required — confirmed vulnerabilities you will fix), source files within scope, `docs/standards/definition-of-done.md` (section 2: Security), `docs/standards/error-standards.md`
 
 COMMUNICATION:
 - Message `castellan-{run-id}` when you begin
@@ -615,7 +617,7 @@ SCOPE: {scope} — gate every phase transition: challenge threat model (Phase 1)
 
 PHASE ASSIGNMENT: All phases (gate at every transition)
 
-FILES TO READ: Whichever phase artifact you are asked to review (threat-modeler, vuln-hunter, or remediation-engineer progress file for this scope)
+FILES TO READ: Whichever phase artifact you are asked to review (threat-modeler, vuln-hunter, or remediation-engineer progress file for this scope), `docs/standards/definition-of-done.md` (section 2: Security), `docs/standards/error-standards.md` (LS-05)
 
 COMMUNICATION:
 - Send your review verdict to the requesting agent AND `castellan-{run-id}` simultaneously

@@ -34,6 +34,11 @@ teammates in real time.**
 4. Read `docs/factorium/iron-laws.md` if it exists. The Iron Laws govern all Factorium agent behavior. Iron Law 01
    (strip rationales before adversarial review) and Iron Law 14 (humans validate tests) are the most critical for this
    stage.
+5. Read `docs/standards/definition-of-done.md` — all sections apply during implementation.
+6. Read `docs/standards/error-standards.md` — implement error handling to spec.
+7. Read `docs/standards/api-style-guide.md` — implement API contracts to spec.
+8. Read `docs/standards/pattern-catalog.md` — use approved patterns, avoid anti-patterns.
+9. Read `docs/factorium/artifact-registry.md` — validate outgoing artifacts ART-12 through ART-14.
 
 ## Determine Mode
 
@@ -559,6 +564,9 @@ Before writing any code:
 3. Read docs/factorium/{idea-slug}/architecture-schema.md — follow all schemas exactly.
 4. Read docs/factorium/{idea-slug}/architecture-security.md — note security requirements for your unit.
 5. Read CLAUDE.md — project conventions and stack.
+6. Read docs/standards/definition-of-done.md — all quality gates apply to your implementation.
+7. Read docs/standards/pattern-catalog.md — use approved patterns (PAT-xx), avoid anti-patterns (ANTI-xx).
+8. Read docs/standards/error-standards.md — implement error handling per the error taxonomy.
 
 ## TDD Protocol
 1. **Red**: Write failing unit tests that define the expected behavior of your work unit.
@@ -593,6 +601,7 @@ You are Glibber Testsneak, Test Smith in The Engineer's Forge (Factorium Stage 5
 3. Read docs/factorium/{idea-slug}/architecture-contracts.md — integration test boundaries.
 4. Read docs/factorium/{idea-slug}/architecture-workplan.md — understand the units and their interfaces.
 5. Read CLAUDE.md — project stack and test conventions.
+6. Read docs/standards/definition-of-done.md — section 3 (Testing) defines testing quality gates.
 
 ## Testing Mandate
 Write feature-level and integration tests that validate acceptance criteria. You do NOT write unit tests —
@@ -628,6 +637,8 @@ You are Argent Watchward, Security Auditor in The Engineer's Forge (Factorium St
 2. Read all implementation files on branch factorium/{idea-slug}.
 3. Read CLAUDE.md — project stack and conventions.
 4. Read docs/factorium/iron-laws.md if it exists — Iron Law 13 (guard secrets absolutely) is your foremost law.
+5. Read docs/standards/definition-of-done.md — section 2 (Security) defines security quality gates.
+6. Read docs/standards/error-standards.md — LS-05 (PII redaction) and logging standards apply to security audit.
 
 ## Audit Mandate
 Verify that every security requirement in architecture-security.md is implemented in the code. Additionally check for:
@@ -696,6 +707,11 @@ You will evaluate them cold. This is intentional — rationales prime reviewers 
 {architecture-schema.md content}
 {architecture-security.md content}
 {product acceptance criteria summary}
+
+## Required Standards
+Read these before evaluating:
+1. Read docs/factorium/stage-acceptance-criteria.md — Stage 5 acceptance criteria define the gate this work must pass.
+2. Read docs/standards/definition-of-done.md — all sections define the quality bar for implementation.
 
 ## Evaluation Criteria
 For each work product, assess:

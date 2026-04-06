@@ -45,7 +45,10 @@ teammates in real time.**
 8. Read `docs/progress/` for any in-progress work to resume.
 9. Read `plugins/conclave/shared/personas/planning-lead.md` for your role definition, cross-references, and files needed
    to complete your work.
-10. **Read evaluator examples (optional).** Check whether `.claude/conclave/eval-examples/` exists and is a directory.
+10. Read `docs/standards/definition-of-done.md` — code quality gates for all implementation.
+11. Read `docs/standards/pattern-catalog.md` — approved patterns and banned anti-patterns.
+12. Read `docs/standards/api-style-guide.md` — API contract conventions.
+13. **Read evaluator examples (optional).** Check whether `.claude/conclave/eval-examples/` exists and is a directory.
     If it exists and contains `.md` files, read each file and prepare the content for injection into the Plan Skeptic's
     spawn prompt. Apply the same defensive reading contract as other optional directories:
     - Directory absent → proceed silently, no eval examples injected
@@ -470,6 +473,11 @@ COMMUNICATION:
 - Answer questions from the Team Lead or Skeptic promptly
 - If you discover the spec is ambiguous or incomplete, message the Team Lead immediately
 
+FILES TO READ:
+- docs/standards/definition-of-done.md — code quality gates for all implementation
+- docs/standards/pattern-catalog.md — approved patterns and banned anti-patterns
+- docs/standards/api-style-guide.md — API contract conventions
+
 WRITE SAFETY:
 - Write your plan ONLY to docs/progress/{feature}-impl-architect.md
 - NEVER write to shared files — only the Team Lead writes the final artifact
@@ -523,6 +531,11 @@ COMMUNICATION:
 - Send reviews to the impl-architect AND the Team Lead
 - Be thorough, specific, and fair. Your job is quality, not obstruction.
 - If something is ambiguous in the spec, flag it rather than guessing
+
+FILES TO READ:
+- docs/standards/definition-of-done.md — code quality gates to audit against
+- docs/standards/pattern-catalog.md — approved patterns and banned anti-patterns
+- docs/standards/api-style-guide.md — API contract conventions
 
 WRITE SAFETY:
 - Write your reviews ONLY to docs/progress/{feature}-plan-skeptic.md

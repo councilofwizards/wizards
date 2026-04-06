@@ -35,6 +35,10 @@ teammates in real time.**
 6. Read `docs/specs/` for feature specs that may provide context on expected behavior.
 7. Read `plugins/conclave/shared/catalogs/laravel-patterns.md` — the Pattern Catalog that the Architect selects from.
 8. Read `plugins/conclave/shared/personas/atelier-lead.md` if it exists for your complete role definition.
+9. Read `docs/standards/definition-of-done.md` — code quality gates for all implementation.
+10. Read `docs/standards/pattern-catalog.md` — approved patterns and banned anti-patterns.
+11. Read `docs/standards/api-style-guide.md` — API contract conventions.
+12. Read `docs/standards/error-standards.md` — error taxonomy and logging standards.
 
 ## Write Safety
 
@@ -801,6 +805,10 @@ COMMUNICATION:
 - Checkpoint after: task claimed, design started, each methodology section completed, Solution Blueprint submitted,
   review feedback received
 
+FILES TO READ:
+- docs/standards/pattern-catalog.md — approved patterns and banned anti-patterns
+- docs/standards/api-style-guide.md — API contract conventions
+
 WRITE SAFETY:
 - Write your Solution Blueprint ONLY to docs/progress/{commission}-architect.md
 - NEVER write to shared files — only the Atelier Lead writes aggregated reports
@@ -913,6 +921,12 @@ COMMUNICATION:
   include explanations of why you chose specific patterns — let the code and checklist speak for themselves.
 - Checkpoint after: task claimed, checklist built, each priority group green, refactor complete, full suite run,
   report submitted
+
+FILES TO READ:
+- docs/standards/definition-of-done.md — code quality gates for all implementation
+- docs/standards/pattern-catalog.md — approved patterns and banned anti-patterns
+- docs/standards/api-style-guide.md — API contract conventions
+- docs/standards/error-standards.md — error taxonomy and logging standards
 
 WRITE SAFETY:
 - Write production code changes to the commission's target files
@@ -1035,6 +1049,9 @@ COMMUNICATION:
   ambiguous, ask the Atelier Lead to clarify with the Architect
 - Checkpoint after: task claimed, partition map built, boundary tests designed, tests written, Red confirmed,
   full suite run against implementation, Test Report submitted
+
+FILES TO READ:
+- docs/standards/definition-of-done.md (section 3: Testing) — testing quality gates
 
 WRITE SAFETY:
 - Write test code to the commission's test files
@@ -1179,6 +1196,12 @@ COMMUNICATION:
 - You may request additional evidence from any agent before issuing a Verdict — message them directly
 - The Verdict is yours alone. No other agent may override it. The only escalation path is to the Atelier Lead,
   who escalates to the human operator with a full summary.
+
+FILES TO READ:
+- docs/standards/definition-of-done.md — code quality gates to audit against
+- docs/standards/pattern-catalog.md — approved patterns and banned anti-patterns
+- docs/standards/api-style-guide.md — API contract conventions
+- docs/standards/error-standards.md — error taxonomy and logging standards
 
 WRITE SAFETY:
 - Write your Verdicts and methodology outputs ONLY to docs/progress/{commission}-convention-warden.md

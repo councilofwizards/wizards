@@ -36,6 +36,10 @@ teammates in real time.**
 4. Read `docs/architecture/` for relevant ADRs and system design context.
 5. Read `docs/progress/` for any in-progress audit sessions or prior augury files for this scope.
 6. Read `docs/specs/` for feature specs that may provide context on expected behavior.
+7. Read `docs/standards/definition-of-done.md` — code quality gates for all implementation.
+8. Read `docs/standards/pattern-catalog.md` — approved patterns and banned anti-patterns.
+9. Read `docs/standards/api-style-guide.md` — API contract conventions.
+10. Read `docs/standards/error-standards.md` — error taxonomy and logging standards.
 
 ## Write Safety
 
@@ -683,7 +687,7 @@ SCOPE: {scope} audit — gate Phase 1.5 (Brief), adjudicate Phase 3 (Findings), 
 
 PHASE ASSIGNMENT: Phase 1.5 (Brief Gate), Phase 3 (Adjudication), Phase 4 (Advisory Review — non-blocking).
 
-FILES TO READ: `docs/progress/{scope}-brief.md`, all 8 assessment reports in `docs/progress/`, `docs/progress/{scope}-augury.md`
+FILES TO READ: `docs/progress/{scope}-brief.md`, all 8 assessment reports in `docs/progress/`, `docs/progress/{scope}-augury.md`, `docs/standards/definition-of-done.md`, `docs/standards/pattern-catalog.md`, `docs/standards/api-style-guide.md`, `docs/standards/error-standards.md`
 
 COMMUNICATION:
 - Message `chief-augur-{run-id}` when you begin Brief Gate validation
@@ -713,7 +717,7 @@ SCOPE: {scope} — assess structural coherence: coupling, duplication, pattern v
 
 PHASE ASSIGNMENT: Phase 2 (Assessment).
 
-FILES TO READ: `docs/progress/{scope}-brief.md`, all source files within the audit scope, dependency manifests
+FILES TO READ: `docs/progress/{scope}-brief.md`, all source files within the audit scope, dependency manifests, `docs/standards/definition-of-done.md`, `docs/standards/pattern-catalog.md`
 
 COMMUNICATION:
 - Message `chief-augur-{run-id}` when you begin assessment
@@ -742,7 +746,7 @@ SCOPE: {scope} — identify exploitable vulnerabilities in first-party code: inj
 
 PHASE ASSIGNMENT: Phase 2 (Assessment).
 
-FILES TO READ: `docs/progress/{scope}-brief.md`, first-party source files, auth/validation/query-construction sites
+FILES TO READ: `docs/progress/{scope}-brief.md`, first-party source files, auth/validation/query-construction sites, `docs/standards/definition-of-done.md` (section 2: Security), `docs/standards/error-standards.md`
 
 COMMUNICATION:
 - Message `chief-augur-{run-id}` when you begin assessment
@@ -771,7 +775,7 @@ SCOPE: {scope} — assess third-party dependency trust: hallucinated packages, s
 
 PHASE ASSIGNMENT: Phase 2 (Assessment).
 
-FILES TO READ: `docs/progress/{scope}-brief.md`, all dependency manifests and lock files in the audit scope
+FILES TO READ: `docs/progress/{scope}-brief.md`, all dependency manifests and lock files in the audit scope, `docs/standards/definition-of-done.md` (section 12: Dependencies)
 
 COMMUNICATION:
 - Message `chief-augur-{run-id}` when you begin assessment
@@ -800,7 +804,7 @@ SCOPE: {scope} — detect parallel execution correctness failures: race conditio
 
 PHASE ASSIGNMENT: Phase 2 (Assessment).
 
-FILES TO READ: `docs/progress/{scope}-brief.md`, source files with goroutines, threads, async patterns, mutexes, locks
+FILES TO READ: `docs/progress/{scope}-brief.md`, source files with goroutines, threads, async patterns, mutexes, locks, `docs/standards/definition-of-done.md`, `docs/standards/error-standards.md`
 
 COMMUNICATION:
 - Message `chief-augur-{run-id}` when you begin assessment
@@ -829,7 +833,7 @@ SCOPE: {scope} — mark unnecessary code and assets: dead code, unused dependenc
 
 PHASE ASSIGNMENT: Phase 2 (Assessment).
 
-FILES TO READ: `docs/progress/{scope}-brief.md`, all source files, dependency manifests, asset directories
+FILES TO READ: `docs/progress/{scope}-brief.md`, all source files, dependency manifests, asset directories, `docs/standards/definition-of-done.md`, `docs/standards/pattern-catalog.md`
 
 COMMUNICATION:
 - Message `chief-augur-{run-id}` when you begin assessment
@@ -858,7 +862,7 @@ SCOPE: {scope} — assess runtime execution quality: N+1 queries, missing caches
 
 PHASE ASSIGNMENT: Phase 2 (Assessment).
 
-FILES TO READ: `docs/progress/{scope}-brief.md`, ORM files, query sites, caching layers, UI-rendering templates
+FILES TO READ: `docs/progress/{scope}-brief.md`, ORM files, query sites, caching layers, UI-rendering templates, `docs/standards/definition-of-done.md` (section 4: Performance)
 
 COMMUNICATION:
 - Message `chief-augur-{run-id}` when you begin assessment
@@ -887,7 +891,7 @@ SCOPE: {scope} — assess verification adequacy: happy-path-only coverage, hallu
 
 PHASE ASSIGNMENT: Phase 2 (Assessment).
 
-FILES TO READ: `docs/progress/{scope}-brief.md`, all test files, source files under test
+FILES TO READ: `docs/progress/{scope}-brief.md`, all test files, source files under test, `docs/standards/definition-of-done.md` (section 3: Testing)
 
 COMMUNICATION:
 - Message `chief-augur-{run-id}` when you begin assessment
@@ -916,7 +920,7 @@ SCOPE: {scope} — assess organizational and compliance risk: PR review signals,
 
 PHASE ASSIGNMENT: Phase 2 (Assessment).
 
-FILES TO READ: `docs/progress/{scope}-brief.md`, git history, CI/CD config files, LICENSE file, NOTICE file, `.github/` directory
+FILES TO READ: `docs/progress/{scope}-brief.md`, git history, CI/CD config files, LICENSE file, NOTICE file, `.github/` directory, `docs/standards/definition-of-done.md`
 
 COMMUNICATION:
 - Message `chief-augur-{run-id}` when you begin assessment

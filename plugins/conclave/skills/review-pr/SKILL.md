@@ -34,6 +34,10 @@ teammates in real time.**
 4. Read `docs/architecture/` for relevant ADRs and system design context.
 5. Read `docs/progress/` for any in-progress review sessions or prior verdicts for this PR.
 6. Read `docs/specs/` for feature specs that may provide compliance context.
+7. Read `docs/standards/definition-of-done.md` — code quality gates for all implementation.
+8. Read `docs/standards/pattern-catalog.md` — approved patterns and banned anti-patterns.
+9. Read `docs/standards/api-style-guide.md` — API contract conventions.
+10. Read `docs/standards/error-standards.md` — error taxonomy and logging standards.
 
 ## Write Safety
 
@@ -668,7 +672,7 @@ SCOPE: PR {pr} — gate Phase 1.5 (Dossier), adjudicate Phase 3 (Findings), veri
 
 PHASE ASSIGNMENT: Phase 1.5 (Dossier Gate), Phase 3 (Adjudication), Phase 4 (Synthesis Verification).
 
-FILES TO READ: `docs/progress/{pr}-dossier.md`, all 9 Review Reports, `docs/progress/{pr}-adjudication.md`
+FILES TO READ: `docs/progress/{pr}-dossier.md`, all 9 Review Reports, `docs/progress/{pr}-adjudication.md`, `docs/standards/definition-of-done.md`, `docs/standards/pattern-catalog.md`, `docs/standards/api-style-guide.md`, `docs/standards/error-standards.md`
 
 COMMUNICATION:
 - Message `presiding-judge-{run-id}` when you begin Dossier Gate validation
@@ -697,7 +701,7 @@ SCOPE: PR {pr} — review for security vulnerabilities in changed code (STRIDE, 
 
 PHASE ASSIGNMENT: Phase 2 (Review)
 
-FILES TO READ: `docs/progress/{pr}-dossier.md`, changed files listed in the dossier
+FILES TO READ: `docs/progress/{pr}-dossier.md`, changed files listed in the dossier, `docs/standards/definition-of-done.md` (section 2: Security), `docs/standards/error-standards.md`
 
 COMMUNICATION:
 - Message `presiding-judge-{run-id}` when you begin review
@@ -726,7 +730,7 @@ SCOPE: PR {pr} — review for syntactic correctness, type safety, import integri
 
 PHASE ASSIGNMENT: Phase 2 (Review)
 
-FILES TO READ: `docs/progress/{pr}-dossier.md`, changed files listed in the dossier
+FILES TO READ: `docs/progress/{pr}-dossier.md`, changed files listed in the dossier, `docs/standards/definition-of-done.md` (section 1: Code Quality), `docs/standards/pattern-catalog.md`
 
 COMMUNICATION:
 - Message `presiding-judge-{run-id}` when you begin review
@@ -755,7 +759,7 @@ SCOPE: PR {pr} — review for spec compliance, requirements traceability, and be
 
 PHASE ASSIGNMENT: Phase 2 (Review)
 
-FILES TO READ: `docs/progress/{pr}-dossier.md`, linked spec files and stories referenced in the dossier
+FILES TO READ: `docs/progress/{pr}-dossier.md`, linked spec files and stories referenced in the dossier, `docs/standards/definition-of-done.md`, `docs/standards/api-style-guide.md`
 
 COMMUNICATION:
 - Message `presiding-judge-{run-id}` when you begin review
@@ -784,7 +788,7 @@ SCOPE: PR {pr} — review for architectural integrity, SOLID compliance, couplin
 
 PHASE ASSIGNMENT: Phase 2 (Review)
 
-FILES TO READ: `docs/progress/{pr}-dossier.md`, changed files listed in the dossier
+FILES TO READ: `docs/progress/{pr}-dossier.md`, changed files listed in the dossier, `docs/standards/pattern-catalog.md`, `docs/standards/api-style-guide.md`
 
 COMMUNICATION:
 - Message `presiding-judge-{run-id}` when you begin review
@@ -813,7 +817,7 @@ SCOPE: PR {pr} — review for performance regressions, N+1 queries, resource lea
 
 PHASE ASSIGNMENT: Phase 2 (Review)
 
-FILES TO READ: `docs/progress/{pr}-dossier.md`, changed files listed in the dossier
+FILES TO READ: `docs/progress/{pr}-dossier.md`, changed files listed in the dossier, `docs/standards/definition-of-done.md` (section 4: Performance)
 
 COMMUNICATION:
 - Message `presiding-judge-{run-id}` when you begin review
@@ -842,7 +846,7 @@ SCOPE: PR {pr} — review for test adequacy: coverage deltas, mutation survival,
 
 PHASE ASSIGNMENT: Phase 2 (Review)
 
-FILES TO READ: `docs/progress/{pr}-dossier.md`, changed files listed in the dossier
+FILES TO READ: `docs/progress/{pr}-dossier.md`, changed files listed in the dossier, `docs/standards/definition-of-done.md` (section 3: Testing)
 
 COMMUNICATION:
 - Message `presiding-judge-{run-id}` when you begin review
@@ -871,7 +875,7 @@ SCOPE: PR {pr} — review for migration reversibility, index coverage, schema im
 
 PHASE ASSIGNMENT: Phase 2 (Review)
 
-FILES TO READ: `docs/progress/{pr}-dossier.md`, changed files listed in the dossier
+FILES TO READ: `docs/progress/{pr}-dossier.md`, changed files listed in the dossier, `docs/standards/definition-of-done.md` (section 8: Database)
 
 COMMUNICATION:
 - Message `presiding-judge-{run-id}` when you begin review
@@ -900,7 +904,7 @@ SCOPE: PR {pr} — review for dependency CVEs, license compliance, supply chain 
 
 PHASE ASSIGNMENT: Phase 2 (Review)
 
-FILES TO READ: `docs/progress/{pr}-dossier.md`, changed files listed in the dossier
+FILES TO READ: `docs/progress/{pr}-dossier.md`, changed files listed in the dossier, `docs/standards/definition-of-done.md` (section 12: Dependencies)
 
 COMMUNICATION:
 - Message `presiding-judge-{run-id}` when you begin review
@@ -929,7 +933,7 @@ SCOPE: PR {pr} — review for readability regressions: cognitive complexity, nam
 
 PHASE ASSIGNMENT: Phase 2 (Review)
 
-FILES TO READ: `docs/progress/{pr}-dossier.md`, changed files listed in the dossier
+FILES TO READ: `docs/progress/{pr}-dossier.md`, changed files listed in the dossier, `docs/standards/definition-of-done.md` (section 1: Code Quality), `docs/standards/pattern-catalog.md`
 
 COMMUNICATION:
 - Message `presiding-judge-{run-id}` when you begin review

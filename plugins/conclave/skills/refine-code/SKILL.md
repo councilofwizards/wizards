@@ -36,6 +36,8 @@ teammates in real time.**
 6. Read `docs/specs/` for feature specs that may describe expected behavior relevant to API contract preservation.
 7. Read `plugins/conclave/shared/personas/crucible-lead.md` for your role definition, cross-references, and files needed
    to complete your work.
+8. Read `docs/standards/definition-of-done.md` — code quality gates for all implementation.
+9. Read `docs/standards/pattern-catalog.md` — approved patterns and banned anti-patterns.
 
 ## Write Safety
 
@@ -542,7 +544,7 @@ SCOPE: {scope} — audit codebase for code smells, SOLID violations, N+1 queries
 
 PHASE ASSIGNMENT: Phase 1 (Audit) — produce the Refactoring Manifest.
 
-FILES TO READ: Codebase source files within scope; docs/architecture/; project CLAUDE.md; stack hint if applicable.
+FILES TO READ: Codebase source files within scope; docs/architecture/; project CLAUDE.md; stack hint if applicable; `docs/standards/definition-of-done.md`; `docs/standards/pattern-catalog.md`.
 
 COMMUNICATION:
 - Message `crucible-lead-{run-id}` when you begin
@@ -572,7 +574,7 @@ SCOPE: {scope} — transform the accepted Refactoring Manifest into a safe, orde
 
 PHASE ASSIGNMENT: Phase 2 (Plan) — produce the Refactoring Plan (The Sequence).
 
-FILES TO READ: docs/progress/{scope}-surveyor.md (accepted Manifest); docs/architecture/.
+FILES TO READ: docs/progress/{scope}-surveyor.md (accepted Manifest); docs/architecture/; `docs/standards/definition-of-done.md`; `docs/standards/pattern-catalog.md`.
 
 COMMUNICATION:
 - Message `crucible-lead-{run-id}` when you begin
@@ -602,7 +604,7 @@ SCOPE: {scope} — execute the Refactoring Plan and produce the Brightwork (refa
 
 PHASE ASSIGNMENT: Phase 3 (Execute).
 
-FILES TO READ: docs/progress/{scope}-strategist.md (the Plan); source files targeted by each planned operation.
+FILES TO READ: docs/progress/{scope}-strategist.md (the Plan); source files targeted by each planned operation; `docs/standards/definition-of-done.md`; `docs/standards/pattern-catalog.md`.
 
 COMMUNICATION:
 - Message `crucible-lead-{run-id}` when you begin
@@ -637,7 +639,7 @@ SCOPE: {scope} — gate every phase deliverable (Phases 1-3); produce the Verifi
 PHASE ASSIGNMENT: All phases — gates Phases 1-3; producer in Phase 4.
 
 FILES TO READ: Phase deliverables as they become available: docs/progress/{scope}-surveyor.md (Phase 1),
-docs/progress/{scope}-strategist.md (Phase 2), docs/progress/{scope}-artisan.md (Phases 3-4).
+docs/progress/{scope}-strategist.md (Phase 2), docs/progress/{scope}-artisan.md (Phases 3-4); `docs/standards/definition-of-done.md`; `docs/standards/pattern-catalog.md`.
 
 COMMUNICATION:
 - Send review results (Phases 1-3) to the requesting agent AND `crucible-lead-{run-id}` simultaneously
