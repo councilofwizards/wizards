@@ -7,7 +7,7 @@ agent teams for planning, building, and operating SaaS products.
 
 ## Tech Stack
 
-- Shell scripts (bash) for validators and CI
+- Shell scripts (bash) for sync tooling
 - Markdown (SKILL.md files) for skill definitions — Claude Code reads these as static markdown
 - YAML frontmatter for metadata in roadmap, spec, progress, and architecture files
 - No application runtime — this is a plugin/tooling project, not a web app
@@ -50,16 +50,7 @@ wizards/
       principles.md                  # Shared Principles block
       communication-protocol.md      # Communication Protocol block
   scripts/
-    validate.sh                      # Runs all validators
     sync-shared-content.sh           # Syncs shared/ content to all multi-agent SKILL.md files
-    validators/
-      skill-structure.sh             # A1-A4: frontmatter, sections, spawn defs, markers
-      skill-shared-content.sh        # B1-B3: principles drift, protocol drift, authoritative source
-      roadmap-frontmatter.sh         # C1-C2: roadmap file conventions
-      spec-frontmatter.sh            # D1: spec file conventions
-      progress-checkpoint.sh         # E1: checkpoint file conventions
-      artifact-templates.sh          # F1: artifact template existence and frontmatter
-      persona-references.sh          # P1-P2: persona file reference integrity and schema completeness
   docs/
     roadmap/                         # Prioritized backlog (_index.md + per-item files)
     specs/                           # Feature specifications (per-feature dirs)
@@ -97,14 +88,14 @@ Spawn prompts may include a `SKILL-SPECIFIC OVERRIDES:` section that supersedes 
 - **Non-overridable**: Critical Rules (marked `<!-- non-overridable -->` in persona files)
 - **Override types**: `ADD:` (additive — new content) or `REPLACE:` (replaces a named section)
 - **No section = full persona**: Absence of overrides means the persona file applies completely
-- **Enforcement**: Code review only (no validator). The `SKILL-SPECIFIC OVERRIDES:` header is consistent for future
-  automated detection.
+- **Enforcement**: Code review only. The `SKILL-SPECIFIC OVERRIDES:` header is consistent for future automated
+  detection.
 
 ### Persona File Schema
 
 Persona files live in `plugins/conclave/shared/personas/`. Required frontmatter fields: `name`, `id`, `model`,
-`archetype`. Required sections vary by archetype (validated by P2/persona-schema). The `archetype` field maps to the
-validator requirement matrix: `assessor`, `skeptic`, `domain-expert`, `team-lead`, `lead`, `evaluator`.
+`archetype`. Required sections vary by archetype. The `archetype` field determines required sections: `assessor`,
+`skeptic`, `domain-expert`, `team-lead`, `lead`, `evaluator`.
 
 ### Artifact Contract System
 
@@ -129,8 +120,7 @@ block. Single-agent skills are skipped entirely.
 
 **`write-stories`**: non-engineering — its agents produce story artifacts but do not write code. **`run-task`**:
 engineering — generic agents may implement code; engineering is the safe default. **Unknown skills**: default to
-engineering at sync/validation time with a `WARN` log. Add to the list in both `sync-shared-content.sh` and
-`skill-shared-content.sh`.
+engineering at sync time with a `WARN` log. Add to the list in `sync-shared-content.sh`.
 
 ### Category Taxonomy
 
@@ -153,31 +143,8 @@ Category-to-classification mapping: `engineering` → engineering (both principl
 - **Markers**: `<!-- BEGIN SHARED: universal-principles -->` / `<!-- END SHARED: universal-principles -->` (all
   multi-agent skills), `<!-- BEGIN SHARED: engineering-principles -->` / `<!-- END SHARED: engineering-principles -->`
   (engineering skills only), and `communication-protocol`
-- **Drift detection**: `scripts/validators/skill-shared-content.sh` (B1-B3 checks)
 - **Per-skill variation**: Skeptic name in Communication Protocol differs per skill (20 name pairs in normalizer)
-- **Exclusions**: Skills with `type: single-agent` are skipped by shared content checks and sync
-
-## Validation
-
-Run all validators:
-
-```bash
-bash scripts/validate.sh
-```
-
-Check categories:
-
-- **A-series** (skill-structure.sh): YAML frontmatter (incl. optional tier), required sections (2 paths: single-agent,
-  multi-agent), spawn definitions (Name + Model fields), shared content markers
-- **B-series** (skill-shared-content.sh): Shared principles/protocol drift, authoritative source verification (reads
-  from shared/)
-- **C-series** (roadmap-frontmatter.sh): Roadmap file frontmatter and filename conventions
-- **D-series** (spec-frontmatter.sh): Spec file frontmatter
-- **E-series** (progress-checkpoint.sh): Checkpoint file frontmatter
-- **F-series** (artifact-templates.sh): Artifact template existence and correct type fields
-- **G-series** (split-readiness.sh): Advisory gate — warns when business skill count reaches split threshold (ADR-005)
-- **P-series** (persona-references.sh): P1 — spawn prompt persona file reference integrity; P2 — persona file schema
-  completeness by archetype
+- **Exclusions**: Skills with `type: single-agent` are skipped by sync
 
 ## Key ADRs
 
@@ -191,7 +158,6 @@ Check categories:
 
 - SKILL.md files are the product. Every edit to shared content must be made in `plugins/conclave/shared/` and synced via
   `bash scripts/sync-shared-content.sh`.
-- Run `bash scripts/validate.sh` before committing. All checks must pass.
 - Roadmap items use frontmatter with `status`, `priority`, `category`, `effort`, `impact`, `dependencies`.
 - Specs follow `docs/specs/_template.md`. Progress files follow `docs/progress/_template.md`. ADRs follow
   `docs/architecture/_template.md`.
@@ -220,10 +186,9 @@ Examples:
 - Place directly above or on the same line as the construct it documents
 - NEVER place inside spawn prompt code blocks (verbatim content injected into agent context) — agents may misinterpret
   the comment as an instruction
-- SCAFFOLD comment content must NOT contain `##`-prefixed lines (would interfere with A-series section detection)
+- SCAFFOLD comment content must NOT contain `##`-prefixed lines
 
-SCAFFOLD comments are documentation for skill maintainers, not end-user-visible. No validator enforces the convention —
-enforcement is by code review.
+SCAFFOLD comments are documentation for skill maintainers, not end-user-visible. Enforcement is by code review.
 
 ## Current Roadmap Status
 
@@ -231,4 +196,4 @@ enforcement is by code review.
 - **P2**: 7/8 complete. P2-07 (shared content extraction) done. P2-08 (plugin organization) remaining.
 - **P3**: 4/19 complete. 15 items not started across engineering, business, and documentation categories.
 - P2-02 (Skill Composability) is parked, superseded by ADR-004 (now also superseded).
-- **Architecture**: All skills use Agent Teams directly. 25 skills, 12/12 validators pass.
+- **Architecture**: All skills use Agent Teams directly. 25 skills.
