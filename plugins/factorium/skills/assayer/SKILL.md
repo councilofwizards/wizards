@@ -34,23 +34,29 @@ not guess. They measure._
 
 If an issue number is provided as an argument, use it directly and skip to **Read and Verify Issue**.
 
-If no argument is provided, query GitHub for the next available item. Check rework items first (higher priority), then
-unclaimed items:
+If no argument is provided, query GitHub for the next available item. Run these **sequentially** — the second is only
+needed if the first returns empty:
+
+**Step 1** — Check for rework items first (highest priority — a later stage returned this for revision):
 
 ```bash
-# Rework items take priority — a later stage returned this for revision
-gh issue list --label "factorium:assayer" --label "status:needs-rework" --json number,title --limit 1 --sort created
-
-# If no rework items, check for fresh unclaimed items
-gh issue list --label "factorium:assayer" --label "status:unclaimed" --json number,title --limit 1 --sort created
+gh issue list --search "label:factorium:assayer label:status:needs-rework sort:created-asc" --json number,title --limit 1
 ```
 
-- If a `needs-rework` item exists, use that issue number.
-- Otherwise, if an `unclaimed` item exists, use that issue number.
-- If neither exists, report to the human operator and exit:
-  ```
-  *The Assayer's Guild finds its chambers empty. No ideas await evaluation. The Guild rests.*
-  ```
+If a `needs-rework` item exists, use that issue number and skip to **Read and Verify Issue**.
+
+**Step 2** — Only if Step 1 returned `[]`, check for fresh unclaimed items:
+
+```bash
+gh issue list --search "label:factorium:assayer label:status:unclaimed sort:created-asc" --json number,title --limit 1
+```
+
+If an `unclaimed` item exists, use that issue number. If neither query returned results, report to the human operator
+and exit:
+
+```
+*The Assayer's Guild finds its chambers empty. No ideas await evaluation. The Guild rests.*
+```
 
 ## Read and Verify Issue
 

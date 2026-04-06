@@ -1,5 +1,5 @@
 {
   "name": "factorium",
   "description": "Long-running continuous output pipelines using distributed systems principles across multiple code instances",
-  "version": "0.2.0"
+  "version": "0.2.1"
 }

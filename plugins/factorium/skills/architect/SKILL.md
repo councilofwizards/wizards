@@ -39,19 +39,28 @@ Tester ensures this is true._
 
 If an issue number is provided as an argument, use it directly and skip to **Read and Verify Issue**.
 
-If no argument is provided, query GitHub for the next available item:
+If no argument is provided, query GitHub for the next available item. Run these **sequentially** — the second is only
+needed if the first returns empty:
+
+**Step 1** — Check for rework items first (highest priority):
 
 ```bash
-gh issue list --label "factorium:architect" --label "status:needs-rework" --json number,title --limit 1 --sort created
-gh issue list --label "factorium:architect" --label "status:unclaimed" --json number,title --limit 1 --sort created
+gh issue list --search "label:factorium:architect label:status:needs-rework sort:created-asc" --json number,title --limit 1
 ```
 
-- If a `needs-rework` item exists, use that issue number.
-- Otherwise, if an `unclaimed` item exists, use that issue number.
-- If neither exists, report and exit:
-  ```
-  *The Architect's Lodge surveys an empty drafting table. No specifications await design. The Lodge stands ready.*
-  ```
+If a `needs-rework` item exists, use that issue number and skip to **Read and Verify Issue**.
+
+**Step 2** — Only if Step 1 returned `[]`, check for unclaimed items:
+
+```bash
+gh issue list --search "label:factorium:architect label:status:unclaimed sort:created-asc" --json number,title --limit 1
+```
+
+If an `unclaimed` item exists, use that issue number. If neither query returned results, report and exit:
+
+```
+*The Architect's Lodge surveys an empty drafting table. No specifications await design. The Lodge stands ready.*
+```
 
 ## Read and Verify Issue
 
