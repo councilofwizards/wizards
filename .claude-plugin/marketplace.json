@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "Curated Claude Code plugins for orchestrating AI agent teams to plan, build, and operate SaaS products",
-    "version": "2.1.0",
+    "version": "2.1.1",
     "pluginRoot": "./plugins"
   },
   "plugins": [
