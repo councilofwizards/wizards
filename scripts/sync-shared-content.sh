@@ -68,6 +68,7 @@ NON_ENGINEERING_SKILLS=(
     plan-sales
     plan-hiring
     draft-investor-update
+    profile-competitor
 )
 
 is_engineering_skill() {

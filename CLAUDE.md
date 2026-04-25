@@ -34,6 +34,7 @@ wizards/
       craft-laravel/SKILL.md         # Laravel engineering (Hub-and-Spoke, dedicated skeptic, fork-join)
       unearth-specification/SKILL.md # Code archaeology & spec extraction (Hub-and-Spoke, dedicated skeptic, fork-join)
       review-pr/SKILL.md             # PR code review (Hub-and-Spoke, fork-join, 9 parallel reviewers + skeptic)
+      profile-competitor/SKILL.md    # Single-competitor deep-dive dossier (fork-join, 4 parallel researchers + skeptic)
       # Pipeline skills (multi-stage with own Agent Teams)
       plan-product/SKILL.md          # Planning pipeline: research → ideation → roadmap → stories → spec
       build-product/SKILL.md         # Implementation pipeline: planning → build → quality review
@@ -64,12 +65,12 @@ wizards/
 
 ## Skill Architecture
 
-| Category | Skills                                                                                                                                                                                                                                                                        | Pattern                                                                     |
-| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| Granular | research-market, ideate-product, manage-roadmap, write-stories, write-spec, plan-implementation, build-implementation, review-quality, run-task, squash-bugs, create-conclave-team, harden-security, refine-code, craft-laravel, unearth-specification, review-pr, audit-slop | Agent Teams (TeamCreate + Agent with team_name) with skeptic gates          |
-| Pipeline | plan-product, build-product                                                                                                                                                                                                                                                   | Agent Teams with multi-stage orchestration; artifact detection skips stages |
-| Utility  | setup-project, wizard-guide                                                                                                                                                                                                                                                   | Single-agent, no teams                                                      |
-| Business | draft-investor-update, plan-sales, plan-hiring                                                                                                                                                                                                                                | Agent Teams (TeamCreate + Agent with team_name) with skeptic gates          |
+| Category | Skills                                                                                                                                                                                                                                                                                            | Pattern                                                                     |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| Granular | research-market, ideate-product, manage-roadmap, write-stories, write-spec, plan-implementation, build-implementation, review-quality, run-task, squash-bugs, create-conclave-team, harden-security, refine-code, craft-laravel, unearth-specification, review-pr, audit-slop, profile-competitor | Agent Teams (TeamCreate + Agent with team_name) with skeptic gates          |
+| Pipeline | plan-product, build-product                                                                                                                                                                                                                                                                       | Agent Teams with multi-stage orchestration; artifact detection skips stages |
+| Utility  | setup-project, wizard-guide                                                                                                                                                                                                                                                                       | Single-agent, no teams                                                      |
+| Business | draft-investor-update, plan-sales, plan-hiring                                                                                                                                                                                                                                                    | Agent Teams (TeamCreate + Agent with team_name) with skeptic gates          |
 
 ### Pipeline Skills
 
@@ -115,7 +116,7 @@ block. Single-agent skills are skipped entirely.
 | Classification         | Skills                                                                                                                                                                                                                                     |
 | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Engineering            | craft-laravel, create-conclave-team, harden-security, squash-bugs, write-spec, plan-implementation, build-implementation, review-quality, run-task, plan-product, build-product, refine-code, unearth-specification, review-pr, audit-slop |
-| Non-engineering        | research-market, ideate-product, manage-roadmap, write-stories, plan-sales, plan-hiring, draft-investor-update                                                                                                                             |
+| Non-engineering        | research-market, ideate-product, manage-roadmap, write-stories, plan-sales, plan-hiring, draft-investor-update, profile-competitor                                                                                                         |
 | Single-agent (skipped) | setup-project, wizard-guide                                                                                                                                                                                                                |
 
 **`write-stories`**: non-engineering — its agents produce story artifacts but do not write code. **`run-task`**:
@@ -129,7 +130,7 @@ Skills are also classified by domain category for discovery and taxonomy purpose
 | Category      | Skills                                                                                                                                                                                                                                     |
 | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `engineering` | craft-laravel, create-conclave-team, harden-security, squash-bugs, write-spec, plan-implementation, build-implementation, review-quality, run-task, plan-product, build-product, refine-code, unearth-specification, review-pr, audit-slop |
-| `planning`    | research-market, ideate-product, manage-roadmap, write-stories                                                                                                                                                                             |
+| `planning`    | research-market, ideate-product, manage-roadmap, write-stories, profile-competitor                                                                                                                                                         |
 | `business`    | plan-sales, plan-hiring, draft-investor-update                                                                                                                                                                                             |
 | `utility`     | setup-project, wizard-guide, tier1-test                                                                                                                                                                                                    |
 
@@ -196,4 +197,4 @@ SCAFFOLD comments are documentation for skill maintainers, not end-user-visible.
 - **P2**: 7/8 complete. P2-07 (shared content extraction) done. P2-08 (plugin organization) remaining.
 - **P3**: 4/19 complete. 15 items not started across engineering, business, and documentation categories.
 - P2-02 (Skill Composability) is parked, superseded by ADR-004 (now also superseded).
-- **Architecture**: All skills use Agent Teams directly. 25 skills.
+- **Architecture**: All skills use Agent Teams directly. 26 skills.
