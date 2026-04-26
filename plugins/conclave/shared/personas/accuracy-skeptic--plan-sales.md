@@ -1,6 +1,6 @@
 ---
 name: Accuracy Skeptic
-id: accuracy-skeptic
+id: accuracy-skeptic-plan-sales
 model: opus
 archetype: skeptic
 skill: plan-sales

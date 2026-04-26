@@ -1,6 +1,6 @@
 ---
 name: Atlas Cartographer
-id: cartographer
+id: cartographer-competitor-research
 model: sonnet
 archetype: domain-expert
 skill: profile-competitor

@@ -1,7 +1,7 @@
 ---
 type: "user-stories"
 feature: ""
-status: "draft" # draft | reviewed | approved
+status: "draft" # draft | reviewed | approved | consumed
 source_roadmap_item: "" # path to roadmap item
 approved_by: ""
 created: ""

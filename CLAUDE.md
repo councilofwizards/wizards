@@ -2,8 +2,11 @@
 
 ## What This Is
 
-A Claude Code plugin marketplace (`wizards`) containing the `conclave` plugin — 23 skills that spawn coordinated AI
-agent teams for planning, building, and operating SaaS products.
+A Claude Code plugin marketplace (`wizards`) containing the `conclave` plugin — 25 user-facing skills (plus one internal
+PoC) that spawn coordinated AI agent teams for planning, building, and operating SaaS products.
+
+A comprehensive realignment for Opus 4.7 was executed in April 2026 — see
+`docs/architecture/conclave-realignment-opus-4-7.md` for the change set, rationale, and risk register.
 
 ## Tech Stack
 
@@ -45,11 +48,14 @@ wizards/
       draft-investor-update/SKILL.md # Investor updates (Pipeline)
       plan-sales/SKILL.md            # Sales strategy (Collaborative Analysis)
       plan-hiring/SKILL.md           # Hiring plans (Structured Debate)
-      # PoC / Test
-      tier1-test/SKILL.md            # Phase 0 PoC Tier 1 test skill
+      # Internal / dev-only (hidden from user picker via category: internal)
+      tier1-test/SKILL.md            # PoC skill validator
     shared/                          # Authoritative shared content
-      principles.md                  # Shared Principles block
+      principles.md                  # Universal + Engineering Principles
       communication-protocol.md      # Communication Protocol block
+      skeptic-protocol.md            # Skeptic escalation/escape protocol (referenced by skeptic personas)
+      personas/                      # Persona files (~100 files; lead, skeptic, domain-expert, evaluator, assessor)
+      catalogs/                      # Framework pattern catalogs (e.g., laravel-patterns.md)
   scripts/
     sync-shared-content.sh           # Syncs shared/ content to all multi-agent SKILL.md files
   docs/
@@ -81,22 +87,27 @@ Pipeline skills spawn their own Agent Teams directly and orchestrate agents thro
 
 Both use frontmatter-based artifact detection to skip completed stages on re-invocation.
 
-### Override Convention
+### Override Convention (variant files)
 
-Spawn prompts may include a `SKILL-SPECIFIC OVERRIDES:` section that supersedes persona file content.
+Per-skill persona variation uses **variant filenames** with double-dash suffix:
 
-- **Overridable**: Responsibilities, Output Format, Write Safety, Files to Read
-- **Non-overridable**: Critical Rules (marked `<!-- non-overridable -->` in persona files)
-- **Override types**: `ADD:` (additive — new content) or `REPLACE:` (replaces a named section)
-- **No section = full persona**: Absence of overrides means the persona file applies completely
-- **Enforcement**: Code review only. The `SKILL-SPECIFIC OVERRIDES:` header is consistent for future automated
-  detection.
+- Base: `plugins/conclave/shared/personas/strategist.md` — id: `strategist`
+- Variants: `strategist--write-spec.md` (id: `strategist-write-spec`), `strategist--write-stories.md` (id:
+  `strategist-write-stories`), etc.
+
+Each variant is a complete persona file in its own right. The `id` field MUST be unique across all persona files (the
+sync-script coverage check enforces this). When a SKILL.md needs a per-skill variant of a shared role, it Reads the
+variant file directly in its Setup step.
+
+**Critical Rules** marked `<!-- non-overridable -->` in any persona file are non-negotiable for that role and any
+descendants.
 
 ### Persona File Schema
 
 Persona files live in `plugins/conclave/shared/personas/`. Required frontmatter fields: `name`, `id`, `model`,
-`archetype`. Required sections vary by archetype. The `archetype` field determines required sections: `assessor`,
-`skeptic`, `domain-expert`, `team-lead`, `lead`, `evaluator`.
+`archetype`. The `archetype` field is one of: `assessor`, `skeptic`, `domain-expert`, `lead`, `evaluator`. (The former
+`team-lead` archetype was collapsed into `lead` — they were functionally identical.) `id` MUST be unique across the
+persona directory.
 
 ### Artifact Contract System
 
@@ -104,8 +115,16 @@ Skills produce and consume typed artifacts with YAML frontmatter. Templates at `
 
 - `research-findings.md` — produced by research-market / plan-product, consumed by ideate-product
 - `product-ideas.md` — produced by ideate-product / plan-product, consumed by manage-roadmap
+- `roadmap-item.md` — produced by manage-roadmap / plan-product Stage 3, consumed by write-stories
 - `user-stories.md` — produced by write-stories / plan-product, consumed by write-spec
 - `implementation-plan.md` — produced by plan-implementation / build-product, consumed by build-implementation
+- `sprint-contract.md` — produced by plan-implementation / build-product Stage 1, consumed by build-implementation +
+  Quality Skeptic + QA Agent (referenced by path, not inlined)
+
+**State vocabulary (standardized April 2026)**: every artifact uses `draft → reviewed → approved → consumed`. The
+sprint-contract and implementation-plan templates also use `in_progress` and `complete` for runtime tracking. Every
+"Lead writes final artifact" step in a pipeline must end with: set status to `approved`, set `approved_by` to the
+skeptic role, set `updated` to today, then re-read and verify the frontmatter matches the next stage's detection rule.
 
 ## Skill Classification
 
@@ -150,10 +169,16 @@ Category-to-classification mapping: `engineering` → engineering (both principl
 ## Key ADRs
 
 - **ADR-001**: Roadmap file structure (one file per item, YAML frontmatter)
-- **ADR-002**: Content deduplication strategy (validated duplication with HTML markers)
+- **ADR-002**: Content deduplication strategy (SUPERSEDED by P2-07 shared/ extraction; current architecture centralizes
+  in `plugins/conclave/shared/` and syncs via `sync-shared-content.sh`)
 - **ADR-003**: Onboarding wizard single-agent pattern
-- **ADR-004**: Two-tier skill architecture (superseded — flattened to single tier)
-- **ADR-005**: Plugin split readiness gate (keep single plugin until business skills reach 7)
+- **ADR-004**: Two-tier skill architecture (SUPERSEDED — flattened to single tier 2026-03-10)
+- **ADR-005**: Plugin split readiness gate. Note: the cited `scripts/validators/split-readiness.sh` was removed with the
+  rest of the validators on 2026-04-05; ADR is informational only until rewritten.
+
+**Note on validators (deleted 2026-04-05)**: do not reference `scripts/validate.sh` or `scripts/validators/` anywhere —
+that infrastructure no longer exists. Drift detection now lives in `scripts/sync-shared-content.sh` (coverage checks:
+persona-existence, classification-coverage, deleted-skill detection).
 
 ## Development Guidelines
 
@@ -197,4 +222,5 @@ SCAFFOLD comments are documentation for skill maintainers, not end-user-visible.
 - **P2**: 7/8 complete. P2-07 (shared content extraction) done. P2-08 (plugin organization) remaining.
 - **P3**: 4/19 complete. 15 items not started across engineering, business, and documentation categories.
 - P2-02 (Skill Composability) is parked, superseded by ADR-004 (now also superseded).
-- **Architecture**: All skills use Agent Teams directly. 26 skills.
+- **Architecture**: All skills use Agent Teams directly. **26 skill directories** (25 user-facing + `tier1-test`
+  internal PoC).

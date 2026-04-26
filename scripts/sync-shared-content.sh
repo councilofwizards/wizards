@@ -19,7 +19,6 @@
 #   - Only modifies content between <!-- BEGIN SHARED --> and <!-- END SHARED --> markers
 #   - Content before/after markers is untouched
 #   - Idempotent — running multiple times produces the same result
-#   - Run scripts/validate.sh after to confirm all checks pass
 
 set -euo pipefail
 
@@ -34,6 +33,7 @@ if [ -n "${CONCLAVE_SHARED_DIR:-}" ] && [ ! -d "$SHARED_DIR" ]; then
 fi
 PRINCIPLES_SOURCE="$SHARED_DIR/principles.md"
 PROTOCOL_SOURCE="$SHARED_DIR/communication-protocol.md"
+PREAMBLE_SOURCE="$SHARED_DIR/orchestrator-preamble.md"
 
 # Engineering skills receive both universal-principles and engineering-principles.
 # Non-engineering skills receive only universal-principles.
@@ -41,7 +41,6 @@ PROTOCOL_SOURCE="$SHARED_DIR/communication-protocol.md"
 # Unknown skills default to engineering (safe default: more principles, not fewer).
 #
 # To classify a new skill: add it to one of the two arrays below.
-# Also update the matching list in scripts/validators/skill-shared-content.sh.
 ENGINEERING_SKILLS=(
     craft-laravel
     create-conclave-team
@@ -240,6 +239,67 @@ if [ -z "$auth_protocol" ]; then
     exit 1
 fi
 
+auth_preamble="$(cat "$PREAMBLE_SOURCE")"
+
+if [ -z "$auth_preamble" ]; then
+    echo "ERROR: $PREAMBLE_SOURCE is empty"
+    exit 1
+fi
+
+# ===== Coverage checks (run before sync; abort on errors) =====
+coverage_errors=0
+
+# Coverage check 1: every persona file referenced by any SKILL.md must exist on disk
+echo "Coverage check 1: persona references..."
+referenced_personas="$(grep -ohE 'plugins/conclave/shared/personas/[a-z][a-z0-9-]*\.md' "${skill_files[@]}" 2>/dev/null | sort -u)"
+while IFS= read -r persona_path; do
+    [ -z "$persona_path" ] && continue
+    full_path="$REPO_ROOT/$persona_path"
+    if [ ! -f "$full_path" ]; then
+        echo "  ERROR  Referenced persona file does not exist: $persona_path"
+        coverage_errors=$((coverage_errors + 1))
+    fi
+done <<< "$referenced_personas"
+
+# Coverage check 2: every classification array entry must correspond to an existing skill directory
+echo "Coverage check 2: deleted-skill detection..."
+all_classified=("${ENGINEERING_SKILLS[@]}" "${NON_ENGINEERING_SKILLS[@]}")
+for s in "${all_classified[@]}"; do
+    if [ ! -f "$REPO_ROOT/plugins/conclave/skills/$s/SKILL.md" ]; then
+        echo "  ERROR  Classification array references missing skill directory: $s"
+        coverage_errors=$((coverage_errors + 1))
+    fi
+done
+
+# Coverage check 3: every multi-agent skill on disk must be classified (warning only)
+echo "Coverage check 3: classification coverage..."
+for filepath in "${skill_files[@]}"; do
+    skill_name="$(basename "$(dirname "$filepath")")"
+    if should_skip_sync "$filepath"; then
+        continue
+    fi
+    if ! is_known_skill "$skill_name"; then
+        echo "  WARN   Skill not in classification arrays: $skill_name (defaulting to engineering)"
+    fi
+done
+
+# Coverage check 4: every persona id must be unique
+echo "Coverage check 4: persona id uniqueness..."
+dup_ids="$(awk -F: '/^id:/ {gsub(/[" ]/,"",$2); print $2}' "$REPO_ROOT/plugins/conclave/shared/personas/"*.md 2>/dev/null | sort | uniq -c | awk '$1>1 {print $2}')"
+if [ -n "$dup_ids" ]; then
+    echo "  ERROR  Duplicate persona ids found:"
+    echo "$dup_ids" | sed 's/^/         /'
+    coverage_errors=$((coverage_errors + 1))
+fi
+
+if [ "$coverage_errors" -gt 0 ]; then
+    echo ""
+    echo "ABORTING: $coverage_errors coverage error(s) — fix before re-running sync."
+    exit 1
+fi
+echo "Coverage checks passed."
+echo ""
+
 # Authoritative skeptic names (for substitution)
 AUTH_SKEPTIC_SLUG="{skill-skeptic}"
 AUTH_SKEPTIC_DISPLAY="{Skill Skeptic}"
@@ -279,6 +339,14 @@ for filepath in "${skill_files[@]}"; do
         echo "  WARN  $skill_name: Missing communication-protocol markers, skipping"
         skipped=$((skipped + 1))
         continue
+    fi
+
+    # Inject orchestrator-preamble if markers present (added in 2.5.0)
+    if grep -q "<!-- BEGIN SHARED: orchestrator-preamble -->" "$filepath"; then
+        replace_block "$filepath" \
+            "<!-- BEGIN SHARED: orchestrator-preamble -->" \
+            "<!-- END SHARED: orchestrator-preamble -->" \
+            "$auth_preamble"
     fi
 
     # Extract the target's skeptic names BEFORE replacing content
@@ -324,4 +392,3 @@ done
 
 echo ""
 echo "Sync complete: $synced synced, $skipped skipped (of ${#skill_files[@]} total)"
-echo "Run 'bash scripts/validate.sh' to verify."

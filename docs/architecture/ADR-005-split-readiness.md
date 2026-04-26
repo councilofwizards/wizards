@@ -1,14 +1,26 @@
 ---
 title: "Plugin Split Readiness Gate"
-status: "accepted"
+status: "informational"
 created: "2026-03-27"
-updated: "2026-03-27"
+updated: "2026-04-25"
 superseded_by: ""
 ---
 
 # ADR-005: Plugin Split Readiness Gate
 
 ## Status
+
+**Informational only** (2026-04-25). The enforcement mechanism cited below — `scripts/validators/split-readiness.sh` —
+was removed with the rest of the validators on 2026-04-05. The split-readiness gate is no longer automatically enforced.
+The decision logic in this ADR remains useful as a manual checklist, but it is not currently load-bearing. The skill
+count cited in the original Context section ("17 skills") is also stale; current count is 26 skill directories (25
+user-facing + 1 internal PoC).
+
+The original decision is preserved below for historical context.
+
+---
+
+## Original Status
 
 Accepted
 

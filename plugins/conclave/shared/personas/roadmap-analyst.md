@@ -1,6 +1,6 @@
 ---
 name: Analyst
-id: analyst
+id: roadmap-analyst
 model: sonnet
 archetype: domain-expert
 skill: manage-roadmap

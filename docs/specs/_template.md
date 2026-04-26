@@ -1,6 +1,8 @@
 ---
+type: "technical-spec"
 title: ""
-status: "draft" # draft | ready_for_review | approved | ready_for_implementation
+feature: "" # slug used by build-product / build-implementation to locate this spec
+status: "draft" # draft | reviewed | approved | consumed
 priority: "" # P1 | P2 | P3
 category: "" # core-framework | new-skills | developer-experience | quality-reliability | documentation
 approved_by: "" # agent or role that approved

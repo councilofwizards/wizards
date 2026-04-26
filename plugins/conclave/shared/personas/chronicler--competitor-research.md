@@ -1,6 +1,6 @@
 ---
 name: Dossier-Binder
-id: chronicler
+id: chronicler-competitor-research
 model: sonnet
 archetype: domain-expert
 skill: profile-competitor

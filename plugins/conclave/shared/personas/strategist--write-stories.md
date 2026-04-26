@@ -1,6 +1,6 @@
 ---
 name: Strategist
-id: strategist
+id: strategist-write-stories
 model: opus
 archetype: team-lead
 skill: write-stories

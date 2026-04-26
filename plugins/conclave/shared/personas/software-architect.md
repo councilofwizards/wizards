@@ -1,6 +1,6 @@
 ---
 name: Software Architect
-id: architect
+id: software-architect
 model: opus
 archetype: domain-expert
 skill: write-spec

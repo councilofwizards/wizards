@@ -1,8 +1,10 @@
 ---
-name: "Wren Cinderglass"
-id: "product-skeptic"
-model: "claude-opus-4-6"
+name: Product Skeptic
+id: product-skeptic
+model: opus
 archetype: skeptic
+fictional_name: "Wren Cinderglass"
+title: "Siege Inspector"
 skill: "plan-product"
 team: "product-planning"
 fictional_name: "Wren Cinderglass"

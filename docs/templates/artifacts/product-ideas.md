@@ -1,7 +1,10 @@
 ---
 type: "product-ideas"
 topic: ""
+status: "draft" # draft | reviewed | approved | consumed
+approved_by: "" # skeptic role that approved
 generated: ""
+updated: ""
 source_research: "" # path to research-findings artifact
 ---
 

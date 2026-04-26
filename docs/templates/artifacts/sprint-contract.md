@@ -1,8 +1,8 @@
 ---
 type: "sprint-contract"
 feature: ""
-status: "draft" # draft | negotiating | signed
-signed-by: [] # e.g. ["planning-lead", "plan-skeptic"]
+status: "draft" # draft | reviewed | approved | consumed (sprint contracts use 'approved' as their signed state)
+signed-by: [] # e.g. ["planning-lead", "plan-skeptic"] or ["implementation-coordinator", "quality-skeptic"]
 created: ""
 updated: ""
 ---

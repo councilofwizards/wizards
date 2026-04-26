@@ -1,8 +1,9 @@
 ---
 type: "implementation-plan"
 feature: ""
-status: "draft" # draft | approved | in_progress | complete
+status: "draft" # draft | reviewed | approved | consumed
 source_spec: "" # path to technical spec
+sprint_contract: "" # optional: path to signed sprint contract
 approved_by: ""
 created: ""
 updated: ""

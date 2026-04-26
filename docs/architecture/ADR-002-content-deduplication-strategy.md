@@ -1,14 +1,27 @@
 ---
 title: "Content Deduplication Strategy"
-status: "accepted"
+status: "superseded"
 created: "2026-02-18"
-updated: "2026-02-18"
-superseded_by: ""
+updated: "2026-04-25"
+superseded_by:
+  "P2-07 (Shared Content Extraction) — content now centralized in plugins/conclave/shared/ and propagated via
+  scripts/sync-shared-content.sh"
 ---
 
 # ADR-002: Content Deduplication Strategy
 
 ## Status
+
+**SUPERSEDED** (2026-04-25). The validated-duplication decision recorded here was reversed by P2-07: shared content
+(principles, communication-protocol, skeptic-protocol) is now authored once in `plugins/conclave/shared/` and synced
+into each multi-agent SKILL.md by `scripts/sync-shared-content.sh`. The HTML markers described here are still in use,
+but the source of truth has moved from "duplicated in each SKILL.md" to "centralized in shared/".
+
+The original decision is preserved below for historical context.
+
+---
+
+## Original Status
 
 Accepted
 

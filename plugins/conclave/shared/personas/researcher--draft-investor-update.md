@@ -1,6 +1,6 @@
 ---
 name: Researcher
-id: researcher
+id: researcher-draft-investor-update
 model: opus
 archetype: domain-expert
 skill: draft-investor-update

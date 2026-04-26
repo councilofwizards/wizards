@@ -2,7 +2,10 @@
 type: "research-findings"
 topic: "" # research topic or market segment
 feature: "" # feature name if scoped to a specific feature
+status: "draft" # draft | reviewed | approved | consumed
+approved_by: "" # skeptic role that approved
 generated: "" # YYYY-MM-DD
+updated: "" # YYYY-MM-DD
 confidence: "" # high | medium | low
 expires: "" # YYYY-MM-DD (30 days from generation by default)
 ---

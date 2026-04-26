@@ -1,6 +1,6 @@
 ---
 name: Accuracy Skeptic
-id: accuracy-skeptic
+id: accuracy-skeptic-draft-investor-update
 model: opus
 archetype: skeptic
 skill: draft-investor-update

@@ -17,75 +17,64 @@ skeptic gate, and no checkpoint protocol. Read the available skills and help the
 ## Setup
 
 1. Read the plugin manifest at `plugins/conclave/.claude-plugin/plugin.json` to understand the plugin structure.
-2. Read the skill directory listing: find all `plugins/conclave/skills/*/SKILL.md` files.
-3. For each skill, read the YAML frontmatter (name, description, argument-hint, tier, type, chains) — do NOT read the
-   full SKILL.md content unless the user asks to explain a specific skill.
-4. Build an internal catalog of available skills with their metadata.
+2. List `plugins/conclave/skills/` to enumerate available skills. For each skill directory, read **only the YAML
+   frontmatter** of `SKILL.md` (fields: `name`, `description`, `argument-hint`, `type`, `category`, `tags`). Do NOT read
+   the full SKILL.md unless the user invokes `explain`.
+3. Build an internal catalog grouped by `category`. Skip any skill with `category: internal` (these are PoC / dev-only
+   skills, not for end users).
+4. Do not invent or omit skills. The catalog is whatever the filesystem says it is.
 
 ## Determine Mode
 
-Based on $ARGUMENTS:
+Based on `$ARGUMENTS`:
 
-- **Empty/no args**: First, ask the user about their role to personalize the skill listing:
+- **Empty/no args**: Show the lore preamble, the Council spotlight, and the catalog grouped by category. Do NOT gate
+  output on a role question. If the user wants a tailored view, suggest at the bottom: _"For a role-tailored view, ask:
+  'show only engineering skills' or 'show only business skills'."_
 
-  > **What best describes your role?**
-  >
-  > 1. **Technical Founder** — I wear both hats, show me everything
-  > 2. **Engineering Team** — I build software, show me engineering skills
-  > 3. **Business / Operations** — I run the business, show me business skills
-  >
-  > _(Or just ask me anything — I'll show all skills by default.)_
+- **"list"**: Output a compact table of all skills with `name`, `category`, and `description`. No lore, no preamble.
 
-  Based on selection, filter the Skill Ecosystem Overview:
-  - **Technical Founder** (or no selection): Show all skills grouped by category (current behavior). Open with the lore
-    preamble and persona spotlight.
-  - **Engineering Team**: Show `engineering` + `planning` + `utility` category skills. Omit `business` skills from the
-    primary listing.
-  - **Business / Operations**: Show `business` + `utility` category skills. Omit `engineering` and `planning` skills
-    from the primary listing.
+- **"recommend [goal]"**: Analyze the goal and recommend a skill or sequence. Use the catalog you built in Setup — match
+  by description and tags. Disambiguate the six "review/audit" skills using the table below.
 
-  Always include: "Ask me about any skill by name to see details — no skill is hidden, just prioritized for your role."
+- **"explain [skill-name]"**: Read the full SKILL.md for the named skill. Provide a detailed explanation: what it does,
+  what agents it spawns, what artifacts it produces/consumes, and how to invoke it. Include example invocations.
 
-  If the user doesn't answer the role prompt and just asks a question directly, default to Technical Founder (show all)
-  and answer their question. Omit preamble and spotlight in list mode and explain mode.
+## When to use which "review" skill
 
-- **"list"**: Output a concise table of all skills with name, category, and one-line description. No narrative, no lore
-  preamble, no persona spotlight — just the reference table. Include all 16 skills (granular, pipeline, business,
-  utility).
+Six skills do code review or audit. Pick by the trigger, not the team name.
 
-- **"recommend [goal]"**: The user has a goal but doesn't know which skill to use. Analyze the goal and recommend the
-  best skill (or pipeline of skills). Examples:
-  - "I want to add a new feature" → `/plan-product new {feature}` for full pipeline, or individual granular skills if
-    they want control
-  - "I need to refactor something" → `/run-task {description}`
-  - "I want to check code quality" → `/review-quality`
-  - "I want to understand the market" → `/research-market {topic}`
-  - "I need to draft an investor update" → `/draft-investor-update`
-  - "I want to plan our sales strategy" → `/plan-sales {topic}`
-  - "I need a hiring plan" → `/plan-hiring {role}`
-
-- **"explain [skill-name]"**: Read the full SKILL.md for the named skill and provide a detailed explanation: what it
-  does, what agents it spawns, what artifacts it produces/consumes, and how to invoke it. Include example invocations.
+| Skill             | Use when                                                                                              | Read-only?                           |
+| ----------------- | ----------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| `review-pr`       | A specific PR is open and you want a 9-angle review (security, syntax, spec, arch, perf, tests, ...). | Yes                                  |
+| `review-quality`  | Pre-deploy / regression sweep on an existing feature. Mode-based (`status` / `regression` / etc).     | Yes                                  |
+| `audit-slop`      | Inheriting code or merging a large AI-generated PR — looks for AI-shaped quality and security rot.    | Yes                                  |
+| `harden-security` | Threat model + vulnerability assessment + (optional) remediation. `audit` mode for compliance only.   | `audit` mode = yes; `remediate` = no |
+| `refine-code`     | Refactoring / cleanup pass on a specific scope. Audit → plan → execute → verify.                      | No                                   |
+| `squash-bugs`     | A specific bug or class of bugs needs triage, root-cause analysis, and a patch.                       | No                                   |
 
 ## Common Flags
 
-These flags are accepted by all 14 multi-agent skills. Single-agent skills (setup-project, wizard-guide) ignore them.
+These flags are accepted by all multi-agent skills (skip for single-agent skills like `setup-project`, `wizard-guide`).
 
 | Flag                     | Values                                        | Default      | Description                                                   |
 | ------------------------ | --------------------------------------------- | ------------ | ------------------------------------------------------------- |
-| `--max-iterations N`     | Positive integer                              | 3            | Skeptic rejection ceiling before escalation to operator       |
+| `--max-iterations N`     | Positive integer                              | 3            | Skeptic rejection ceiling before escalation to user           |
 | `--checkpoint-frequency` | `every-step`, `milestones-only`, `final-only` | `every-step` | How often agents write progress checkpoints                   |
 | `--light`                | (flag, no value)                              | off          | Reduce agent models for cost savings; quality gates stay Opus |
 
-Pipeline skills (plan-product, build-product) also accept:
+`plan-product` also accepts:
 
-| Flag           | Values                          | Default       | Description                                           |
-| -------------- | ------------------------------- | ------------- | ----------------------------------------------------- |
-| `--complexity` | `simple`, `standard`, `complex` | auto-inferred | Force complexity tier for stage routing               |
-| `--full`       | (flag, no value)                | off           | plan-product only: dedicated skeptic for all 5 stages |
+| Flag     | Values           | Default | Description                                                                     |
+| -------- | ---------------- | ------- | ------------------------------------------------------------------------------- |
+| `--full` | (flag, no value) | off     | Dedicated skeptic for all 5 stages (default: Stages 1-3 use Lead Inline Review) |
 
-Example: `/write-spec my-feature --max-iterations 5` Example:
-`/plan-product new auth-redesign --complexity=complex --full`
+Examples:
+
+```
+/write-spec my-feature --max-iterations 5
+/plan-product new auth-redesign --full
+```
 
 ## The Conclave
 
@@ -112,43 +101,24 @@ A few of the wizards you will encounter:
 | **Mira Flintridge**  | Master Inspector       | Quality Skeptic — guards two mandatory gates before any code ships; nothing passes without her seal            |
 | **Bram Copperfield** | Foundry Smith          | Backend Engineer — shapes server-side code with TDD discipline; negotiates API contracts before writing a line |
 
-The full Council is larger. Run `/wizard-guide explain <skill-name>` to meet the team assigned to any skill.
+The full Council is larger. Run `/wizard-guide explain <skill-name>` to see the team for any skill.
 
-## Skill Ecosystem Overview
+## Skill Ecosystem
 
-Use this reference when explaining the ecosystem to users:
+Build this view dynamically from the catalog you assembled in Setup. Group by `category`. Within each category, list
+each skill with its `description` field (one-line). For each artifact-producing skill, also note inputs/outputs.
 
-### Granular Skills (invoke directly for fine-grained control)
+**Pipeline composition primer:**
 
-**Planning Pipeline:**
+- The **planning pipeline** flows: `research-market` → `ideate-product` → `manage-roadmap` → `write-stories` →
+  `write-spec`. Each stage's output is the next stage's input. `/plan-product` runs the whole pipeline.
+- The **build pipeline** flows: `plan-implementation` → `build-implementation` → `review-quality`. `/build-product` runs
+  the whole pipeline starting from a `technical-spec` artifact.
+- Engineering one-offs (`refine-code`, `squash-bugs`, `craft-laravel`, `harden-security`, `review-pr`, `audit-slop`,
+  `unearth-specification`, `run-task`) operate on existing code without requiring the planning pipeline.
+- Business skills (`plan-sales`, `plan-hiring`, `draft-investor-update`) operate independently.
 
-1. `research-market` — Market research and competitive analysis
-2. `ideate-product` — Feature ideation from research findings
-3. `manage-roadmap` — Roadmap prioritization and maintenance
-4. `write-stories` — User stories with acceptance criteria
-5. `write-spec` — Technical specifications
-
-**Implementation Pipeline:** 6. `plan-implementation` — File-by-file implementation plans 7. `build-implementation` —
-Code writing with TDD and contract negotiation 8. `review-quality` — Security audits, performance, deployment readiness
-
-### Pipeline Skills (orchestrate full workflows automatically)
-
-9. `plan-product` — Full planning pipeline: research → ideation → roadmap → stories → spec
-10. `build-product` — Full build pipeline: planning → implementation → quality review
-
-### Business Skills
-
-11. `draft-investor-update` — Draft a structured investor update from roadmap, progress, and spec data
-12. `plan-sales` — Sales strategy for early-stage startups: market, positioning, and go-to-market
-13. `plan-hiring` — Hiring plan for early-stage startups: growth vs. efficiency debate with dual-skeptic validation
-
-### Utility Skills
-
-14. `setup-project` — Bootstrap project structure and CLAUDE.md
-15. `run-task` — Ad-hoc tasks with dynamic team composition
-16. `wizard-guide` — This skill. Help and guidance.
-
-### Common Workflows
+## Common Workflows
 
 **New feature (full pipeline):**
 
@@ -157,17 +127,17 @@ Code writing with TDD and contract negotiation 8. `review-quality` — Security 
 /build-product {feature}       # Plan → Build → Review
 ```
 
-**New feature (step by step):**
+**New feature (step by step, granular):**
 
 ```
-/research-market {topic}
-/ideate-product {topic}
-/manage-roadmap ingest docs/ideas/{topic}-ideas.md
-/write-stories {feature}
-/write-spec {feature}
-/plan-implementation {feature}
-/build-implementation {feature}
-/review-quality {feature}
+/research-market {topic}                                     # writes docs/research/{topic}-research.md
+/ideate-product {topic}                                      # reads above, writes docs/ideas/{topic}-ideas.md
+/manage-roadmap ingest docs/ideas/{topic}-ideas.md           # writes docs/roadmap/ items
+/write-stories {feature}                                     # writes docs/specs/{feature}/stories.md
+/write-spec {feature}                                        # writes docs/specs/{feature}/spec.md
+/plan-implementation {feature}                               # writes docs/specs/{feature}/implementation-plan.md
+/build-implementation {feature}                              # writes code; reviews via quality-skeptic
+/review-quality {feature}                                    # final pre-deploy sweep
 ```
 
 **Quick task:**
@@ -180,17 +150,17 @@ Code writing with TDD and contract negotiation 8. `review-quality` — Security 
 
 ```
 /draft-investor-update          # Draft investor update from project data
-/plan-sales {topic}             # Sales strategy for a market or product
-/plan-hiring {role}             # Hiring plan for a role or team
+/plan-sales {topic}             # Sales strategy
+/plan-hiring {role}             # Hiring plan
 ```
 
-**Project setup:**
+**Project setup (run first on any new project):**
 
 ```
 /setup-project
 ```
 
-### Project Configuration
+## Project Configuration
 
 Conclave skills read project-specific configuration from `.claude/conclave/`. This is separate from `docs/` (which holds
 skill outputs like artifacts, specs, and progress files). The plugin cache is read-only, so user configuration lives
@@ -201,17 +171,15 @@ Run `/setup-project` to scaffold the directory structure, or create it manually:
 ```
 .claude/conclave/
   templates/       # Override built-in artifact templates
-  eval-examples/   # Skeptic calibration examples (reserved for P3-29)
+  eval-examples/   # Skeptic calibration examples
   guidance/        # Project-specific agent guidance
 ```
 
-**What goes where:**
-
-| Subdirectory     | Purpose                                                                    | Active Consumers                 |
-| ---------------- | -------------------------------------------------------------------------- | -------------------------------- |
-| `templates/`     | Override default artifact templates with project-specific versions         | Sprint Contracts (P2-11, future) |
-| `eval-examples/` | Per-skill few-shot examples to calibrate skeptic evaluations               | Reserved (P3-29, future)         |
-| `guidance/`      | Project conventions, tech stack preferences, patterns for agents to follow | `build-implementation`           |
+| Subdirectory     | Purpose                                                            | Consumers                               |
+| ---------------- | ------------------------------------------------------------------ | --------------------------------------- |
+| `templates/`     | Override default artifact templates with project-specific versions | `plan-implementation`, `build-product`  |
+| `eval-examples/` | Per-skill few-shot examples to calibrate skeptic evaluations       | All skeptic gates                       |
+| `guidance/`      | Project conventions, tech stack preferences, patterns              | `build-implementation`, `craft-laravel` |
 
 **Example:** Create `.claude/conclave/guidance/stack-preferences.md` with `prefer Pest over PHPUnit` to nudge build
 skills toward Pest.
@@ -227,5 +195,7 @@ configuration. Remove the `.gitignore` entry if you want to track your conclave 
 - Be concise and helpful. Don't over-explain.
 - Use code blocks for skill invocations so users can copy them.
 - If the user's goal spans multiple skills, show both the composite (easy) and granular (control) paths.
-- If a skill requires prerequisites (e.g., ideate-product needs research-findings), mention this.
-- Never fabricate skills that don't exist. Only reference skills from the catalog you built in Setup.
+- If a skill requires prerequisites (e.g., `ideate-product` needs `research-findings`), mention this in the
+  recommendation.
+- Never fabricate skills that don't exist. The catalog is whatever the filesystem says it is.
+- For "review code" or "audit code" requests, use the disambiguation table above before recommending.

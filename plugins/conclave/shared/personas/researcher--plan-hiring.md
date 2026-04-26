@@ -1,6 +1,6 @@
 ---
 name: Researcher
-id: researcher
+id: researcher-plan-hiring
 model: opus
 archetype: domain-expert
 skill: plan-hiring

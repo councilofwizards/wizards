@@ -1,6 +1,6 @@
 ---
 name: Market-Watch Envoy
-id: gtm-analyst
+id: gtm-analyst-competitor-research
 model: sonnet
 archetype: domain-expert
 skill: profile-competitor

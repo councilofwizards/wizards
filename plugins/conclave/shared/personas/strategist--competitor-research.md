@@ -1,6 +1,6 @@
 ---
 name: Gap-Reader
-id: strategist
+id: strategist-competitor-research
 model: opus
 archetype: assessor
 skill: profile-competitor

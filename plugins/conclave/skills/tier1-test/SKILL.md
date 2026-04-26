@@ -1,13 +1,12 @@
 ---
 name: tier1-test
 description: >
-  Phase 0 PoC: Minimal Tier 1 skill that produces a test artifact. Used to validate Tier 2 -> Tier 1 invocation via the
-  Skill tool.
+  INTERNAL DEV-ONLY PoC. Minimal skill that produces a test artifact. Used to validate skill invocation via the Skill
+  tool. Hidden from end-user discovery via category: internal.
 argument-hint: "[text to pass through]"
-tier: 1
 type: single-agent
-category: utility
-tags: [testing, poc, validation]
+category: internal
+tags: [testing, poc, validation, internal]
 ---
 
 # Tier 1 Test Skill
