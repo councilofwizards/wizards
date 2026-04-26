@@ -3,7 +3,7 @@ name: build-implementation
 description: >
   Execute an implementation plan. Write code following TDD, negotiate API contracts between frontend and backend, and
   produce tested code. Mirrors the proven build-product pattern with dedicated quality gates.
-argument-hint: "[--light] [status | <feature-name> | review | (empty for next plan)]"
+argument-hint: "<feature-or-empty> [status | review] [--light] [--max-iterations N]"
 category: engineering
 tags: [implementation, tdd, code-generation]
 ---
@@ -22,13 +22,52 @@ skill to a sub-Task agent. Run the orchestration here in the primary thread and 
 
 ## Bootstrap Check
 
-Before proceeding to Setup, verify the project is bootstrapped for conclave. Check whether `docs/` exists at the
-working-directory root. If it does NOT, abort with:
+Before proceeding to Setup, verify the project is bootstrapped for conclave. Check that ALL of the following exist at
+the working-directory root:
 
-> "This project hasn't been bootstrapped for conclave. Run `/conclave:setup-project` first, then re-invoke this skill."
+- `docs/`
+- `docs/roadmap/`
+- `docs/templates/artifacts/`
 
-If `docs/` exists, proceed to Setup. (The `mkdir`-if-missing safety net in Setup remains as a backstop for projects that
-are partially bootstrapped, but the user-facing message above ensures they know what to run.)
+If any are missing, abort with:
+
+> "This project isn't fully bootstrapped for conclave (missing: `<list>`). Run `/conclave:setup-project` first, then
+> re-invoke this skill."
+
+If all exist, proceed to Setup. (The `mkdir`-if-missing safety net in Setup remains as a backstop, but the user-facing
+message above prevents partial-bootstrap silent failures.)
+
+## Threshold Check
+
+After Bootstrap Check passes and the skill has parsed `$ARGUMENTS`, output a Threshold Check **before** spawning any
+team. This makes the skill's empty-state, resume-state, and named-arg behavior visible to the user.
+
+**Format** — emit exactly five lines, in this order:
+
+```
+[skill-name] — Threshold Check
+  Mode resolved:        {empty | resume | named:<arg> | subcommand:<x>}
+  Checkpoints found:    {none | <N> in_progress | <N> awaiting_review | <N> blocked}
+  Required input:       {artifact-type at expected-path — FOUND/STALE/NOT_FOUND/N_A}
+  Decision:             {abort with next-step | resume from <stage> | proceed with <topic>}
+```
+
+**Behavior on user silence:** the default action is **proceed**. The user can interrupt at any time by typing in chat.
+Skills MUST NOT block on silent timeouts.
+
+**Override semantics** (skills should accept these as conventional follow-up arguments):
+
+- Reply `abort` — skill stops, no team spawned
+- Reply `--refresh` (or `--refresh <stage>`) — re-run the named stage even if its artifact is FOUND
+- Reply `use <other-arg>` — re-resolve mode against the new argument
+
+**When the Threshold Check decides "abort with next-step":** include the next-step command in the abort message.
+Example:
+
+> `Decision: abort with next-step — no `technical-spec`found for "auth-redesign". Run`/conclave:write-spec
+> auth-redesign`first, or`/conclave:plan-product new auth-redesign` for the full pipeline.`
+
+**Exemptions:** single-agent skills (`setup-project`, `wizard-guide`) skip the Threshold Check.
 
 <!-- END SHARED: orchestrator-preamble -->
 
@@ -217,9 +256,14 @@ Based on $ARGUMENTS:
   metadata, and output a formatted status summary. If no checkpoint files exist for this skill, report "No active or
   recent sessions found."
 - **Empty/no args**: Scan `docs/progress/` for checkpoint files with `team: "build-implementation"` and `status` of
-  `in_progress`, `blocked`, or `awaiting_review`. If found, **resume from the last checkpoint** — re-spawn the relevant
-  agents with their checkpoint content as context and pick up where they left off. If no incomplete checkpoints exist,
-  find the next feature with an approved implementation plan and build it.
+  `in_progress`, `blocked`, or `awaiting_review`. **Output the Threshold Check** (per
+  `plugins/conclave/shared/orchestrator-preamble.md`) before spawning any team. The Threshold Check makes the resolved
+  mode, checkpoint state, required input availability, and decision visible to the user. Default action on user silence
+  is **proceed**; the user can interrupt at any time. The Threshold Check MUST name what was inferred and from where
+  (e.g., "Inferring next feature with approved implementation-plan: docs/specs/auth/implementation-plan.md. Use this?
+  proceed or specify feature-name."). If found, **resume from the last checkpoint** — re-spawn the relevant agents with
+  their checkpoint content as context and pick up where they left off. If no incomplete checkpoints exist, find the next
+  feature with an approved implementation plan and build it.
 - **"[feature-name]"**: Implement the named feature from its implementation plan.
 - **"review"**: Review current implementation status and identify blockers.
 
@@ -236,11 +280,11 @@ If `$ARGUMENTS` begins with `--light`, strip the flag and enable lightweight mod
 
 ## Spawn the Team
 
-**Run ID:** Before proceeding, generate a 4-character lowercase hex string (e.g., `a3f7`) as the **run ID** for this
+**Run ID:** Before proceeding, generate a 8-character lowercase hex string (e.g., `a3f7b91d`) as the **run ID** for this
 invocation. Append `-{run-id}` to the `team_name` and to every agent `name` in the steps below (e.g.,
-`team_name: "my-team-a3f7"`, `name: "agent-a3f7"`). When constructing each agent's spawn prompt, prepend a **Teammate
-Roster** listing every teammate's suffixed `name` so agents can address each other via `SendMessage`. This prevents
-collisions between concurrent runs.
+`team_name: "my-team-a3f7b91d"`, `name: "agent-a3f7b91d"`). When constructing each agent's spawn prompt, prepend a
+**Teammate Roster** listing every teammate's suffixed `name` so agents can address each other via `SendMessage`. This
+prevents collisions between concurrent runs.
 
 **Step 1:** Call `TeamCreate` with `team_name: "build-implementation"`. **Step 2:** Call `TaskCreate` to define work
 items from the Orchestration Flow below. **Step 3:** Spawn each teammate using the `Agent` tool with
@@ -299,26 +343,38 @@ ordering ensures user guidance and contract context are available before the rol
 
 ## Orchestration Flow
 
-1. Share the implementation plan, technical spec, and user stories with the team
-2. Backend + Frontend negotiate API contracts → document them
-3. Quality Skeptic reviews plan + contracts (GATE — blocks implementation)
-4. Backend + Frontend implement in parallel, communicating frequently
-5. Quality Skeptic reviews all code (GATE — blocks delivery)
-6. **QA Agent verifies runtime behavior (QA GATE — blocks delivery)**
-   - Spawn `qa-agent` (if not already spawned). Inject: (1) guidance block (if found), (2) sprint contract (if signed),
-     (3) QA agent role prompt.
-   - QA agent reads acceptance criteria, writes Playwright tests, executes them, delivers verdict.
-   - If APPROVED → proceed to step 7.
-   - If REJECTED → route failing test details back to backend-eng/frontend-eng for fixes. After fixes, QA re-runs failed
-     tests only. Max N rejection cycles (default 3, set via `--max-iterations`) (same deadlock protocol as Skeptic
-     gates).
-   - If BLOCKED → Lead escalates to human operator with the blocker details. Pipeline halts at QA gate.
-7. Each agent writes their progress notes to `docs/progress/{feature}-{role}.md` (their own role-scoped file)
-8. **Team Lead only**: Update roadmap status and write aggregated summary to `docs/progress/{feature}-summary.md` using
-   the format from `docs/progress/_template.md`. Include: what was accomplished, what remains, blockers encountered, and
-   whether the feature is complete or in-progress. If the session is interrupted before completion, still write a
-   partial summary noting the interruption point.
-9. **Team Lead only**: Write cost summary to `docs/progress/{skill}-{feature}-{timestamp}-cost-summary.md`
+1.  Share the implementation plan, technical spec, and user stories with the team
+2.  Backend + Frontend negotiate API contracts → document them
+3.  Quality Skeptic reviews plan + contracts (GATE — blocks implementation)
+4.  Backend + Frontend write tests FIRST (TDD), then implement to make them pass, then refactor. 4b. **TEST VALIDATION
+    GATE (Iron Law #14, blocking — new in 4.0.0):** After tests are written for the critical paths of this stage, the
+    Lead pauses orchestration and surfaces a Test Strategy Summary to the user: ``` Test Validation Gate — {feature}
+    Tests written: <N> for {component-list} Critical assertions: <list> Coverage targets: {unit / integration / e2e
+    breakdown}
+
+        Reply 'approve' to proceed to implementation. Reply with feedback to revise.
+        Reply '--yes' (or invoke the skill with --yes) to skip this gate in CI / non-interactive contexts.
+        ```
+        Default action on user silence: **proceed**. The user can interrupt at any time. The gate honors `--yes` for
+        non-interactive runs (CI). This gate fires ONCE per stage; not per file.
+
+5.  Quality Skeptic reviews all code (GATE — blocks delivery)
+6.  **QA Agent verifies runtime behavior (QA GATE — blocks delivery)**
+    - Spawn `qa-agent` (if not already spawned). Inject: (1) guidance block (if found), (2) sprint contract (if signed),
+      (3) QA agent role prompt.
+    - QA agent reads acceptance criteria, writes Playwright tests, executes them, delivers verdict.
+    - If APPROVED → proceed to step 7.
+    - If REJECTED → route failing test details back to backend-eng/frontend-eng for fixes. After fixes, QA re-runs
+      failed tests only. Max N rejection cycles (default 3, set via `--max-iterations`) (same deadlock protocol as
+      Skeptic gates).
+    - If BLOCKED → Lead escalates to human operator with the blocker details. Pipeline halts at QA gate.
+7.  Each agent writes their progress notes to `docs/progress/{feature}-{role}.md` (their own role-scoped file)
+8.  **Team Lead only**: Update roadmap status and write aggregated summary to `docs/progress/{feature}-summary.md` using
+    the format from `docs/progress/_template.md`. Include: what was accomplished, what remains, blockers encountered,
+    and whether the feature is complete or in-progress. If the session is interrupted before completion, still write a
+    partial summary noting the interruption point. 8b. Report:
+    `"Build complete for {feature}. Code reviewed and QA approved. Next: /conclave:review-quality deploy {feature}"`
+9.  **Team Lead only**: Write cost summary to `docs/progress/{skill}-{feature}-{timestamp}-cost-summary.md`
 10. **Post-Mortem Rating (optional).** Ask the user: "How would you rate the quality of this pipeline run? [1-5, or
     skip]"
     - If the user provides a rating (1-5): write post-mortem to `docs/progress/{feature}-postmortem.md` with

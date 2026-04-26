@@ -22,13 +22,52 @@ skill to a sub-Task agent. Run the orchestration here in the primary thread and 
 
 ## Bootstrap Check
 
-Before proceeding to Setup, verify the project is bootstrapped for conclave. Check whether `docs/` exists at the
-working-directory root. If it does NOT, abort with:
+Before proceeding to Setup, verify the project is bootstrapped for conclave. Check that ALL of the following exist at
+the working-directory root:
 
-> "This project hasn't been bootstrapped for conclave. Run `/conclave:setup-project` first, then re-invoke this skill."
+- `docs/`
+- `docs/roadmap/`
+- `docs/templates/artifacts/`
 
-If `docs/` exists, proceed to Setup. (The `mkdir`-if-missing safety net in Setup remains as a backstop for projects that
-are partially bootstrapped, but the user-facing message above ensures they know what to run.)
+If any are missing, abort with:
+
+> "This project isn't fully bootstrapped for conclave (missing: `<list>`). Run `/conclave:setup-project` first, then
+> re-invoke this skill."
+
+If all exist, proceed to Setup. (The `mkdir`-if-missing safety net in Setup remains as a backstop, but the user-facing
+message above prevents partial-bootstrap silent failures.)
+
+## Threshold Check
+
+After Bootstrap Check passes and the skill has parsed `$ARGUMENTS`, output a Threshold Check **before** spawning any
+team. This makes the skill's empty-state, resume-state, and named-arg behavior visible to the user.
+
+**Format** — emit exactly five lines, in this order:
+
+```
+[skill-name] — Threshold Check
+  Mode resolved:        {empty | resume | named:<arg> | subcommand:<x>}
+  Checkpoints found:    {none | <N> in_progress | <N> awaiting_review | <N> blocked}
+  Required input:       {artifact-type at expected-path — FOUND/STALE/NOT_FOUND/N_A}
+  Decision:             {abort with next-step | resume from <stage> | proceed with <topic>}
+```
+
+**Behavior on user silence:** the default action is **proceed**. The user can interrupt at any time by typing in chat.
+Skills MUST NOT block on silent timeouts.
+
+**Override semantics** (skills should accept these as conventional follow-up arguments):
+
+- Reply `abort` — skill stops, no team spawned
+- Reply `--refresh` (or `--refresh <stage>`) — re-run the named stage even if its artifact is FOUND
+- Reply `use <other-arg>` — re-resolve mode against the new argument
+
+**When the Threshold Check decides "abort with next-step":** include the next-step command in the abort message.
+Example:
+
+> `Decision: abort with next-step — no `technical-spec`found for "auth-redesign". Run`/conclave:write-spec
+> auth-redesign`first, or`/conclave:plan-product new auth-redesign` for the full pipeline.`
+
+**Exemptions:** single-agent skills (`setup-project`, `wizard-guide`) skip the Threshold Check.
 
 <!-- END SHARED: orchestrator-preamble -->
 
@@ -141,11 +180,11 @@ If `$ARGUMENTS` begins with `--light`, strip the flag and enable lightweight mod
 
 ## Spawn the Team
 
-**Run ID:** Before proceeding, generate a 4-character lowercase hex string (e.g., `a3f7`) as the **run ID** for this
+**Run ID:** Before proceeding, generate a 8-character lowercase hex string (e.g., `a3f7b91d`) as the **run ID** for this
 invocation. Append `-{run-id}` to the `team_name` and to every agent `name` in the steps below (e.g.,
-`team_name: "my-team-a3f7"`, `name: "agent-a3f7"`). When constructing each agent's spawn prompt, prepend a **Teammate
-Roster** listing every teammate's suffixed `name` so agents can address each other via `SendMessage`. This prevents
-collisions between concurrent runs.
+`team_name: "my-team-a3f7b91d"`, `name: "agent-a3f7b91d"`). When constructing each agent's spawn prompt, prepend a
+**Teammate Roster** listing every teammate's suffixed `name` so agents can address each other via `SendMessage`. This
+prevents collisions between concurrent runs.
 
 **Step 1:** Call `TeamCreate` with `team_name: "run-task"`. **Step 2:** Call `TaskCreate` to define work items from the
 Orchestration Flow below. **Step 3:** Spawn teammates using the `Agent` tool with `team_name: "run-task"` and each
@@ -184,16 +223,38 @@ guidelines:
 
 ## Orchestration Flow
 
-1. Analyze the task description to determine scope and concerns
-2. Compose the team (see Team Sizing above)
-3. Create tasks for each agent based on the task breakdown
-4. Report your team composition and plan to the user before spawning
-5. Let agents work (in parallel where concerns are independent)
-6. **Skeptic review**: Either Lead-as-Skeptic or dedicated skeptic reviews all outputs
-7. If outputs are insufficient, send specific feedback and have agents iterate
-8. **Team Lead only**: Write end-of-session summary to `docs/progress/{task}-summary.md` using the format from
+1. Analyze the task description to determine scope and concerns.
+2. **INTERROGATION (Iron Law #05, new in 4.0.0):** Before composing the team, run an interrogation pass on the user's
+   invocation. This pressure-tests vague tasks before any team is spawned and any tokens are wasted.
+
+   Spawn the **Interrogator** (`plugins/conclave/shared/personas/interrogator.md`, model: opus, ALWAYS) with the user's
+   invocation as input. The Interrogator applies M1 (Failure-Mode Interrogation) — generates 5-10 adversarial questions
+   covering missing input, ambiguous scope, conflict resolution, recovery, output verification.
+
+   For each question raised: the Lead either (a) infers an answer from the user's `$ARGUMENTS` + project context and
+   states the inference back, or (b) asks the user the specific question and waits for a response.
+
+   **Iterate up to N rounds** (default 3 via `--max-iterations`). On the Nth rejection of the same root cause: escalate
+   per `plugins/conclave/shared/skeptic-protocol.md`.
+
+   **Skip condition**: if the user invoked with the `--skip-interrogation` flag, OR the task is short and concrete
+   (e.g., "Run the test suite and report failures"), the Lead may skip this step. The Lead MUST log the skip decision
+   and rationale to the run's progress file.
+
+   **Why this is here**: Iron Law #05 — _"A prompt written in five minutes will be debugged for five weeks."_ The
+   Interrogator catches ambiguity at the cheapest point. `create-conclave-team` already enforces this for new-skill
+   creation; `run-task` enforces it for ad-hoc work where the user's prompt IS the spec.
+
+3. Compose the team (see Team Sizing above) using the Interrogation-clarified scope.
+4. Create tasks for each agent based on the task breakdown.
+5. Report your team composition and plan to the user before spawning.
+6. Let agents work (in parallel where concerns are independent).
+7. **Skeptic review**: Either Lead Inline Review or dedicated skeptic reviews all outputs (per
+   `plugins/conclave/shared/skeptic-protocol.md` — APPROVED or REJECTED, no APPROVED_WITH_CAVEATS).
+8. If outputs are insufficient, send specific feedback and have agents iterate.
+9. **Team Lead only**: Write end-of-session summary to `docs/progress/{task}-summary.md` using the format from
    `docs/progress/_template.md`
-9. **Team Lead only**: Write cost summary to `docs/progress/{skill}-{task}-{timestamp}-cost-summary.md`
+10. **Team Lead only**: Write cost summary to `docs/progress/{skill}-{task}-{timestamp}-cost-summary.md`
 
 ## Critical Rules
 

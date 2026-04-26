@@ -40,6 +40,23 @@ Based on `$ARGUMENTS`:
 - **"explain [skill-name]"**: Read the full SKILL.md for the named skill. Provide a detailed explanation: what it does,
   what agents it spawns, what artifacts it produces/consumes, and how to invoke it. Include example invocations.
 
+- **"status"** _(new in 4.0.0)_: Project state mirror. Scan `docs/continues/` (active per-feature recovery briefs),
+  `docs/continues/_archive/` (completed/abandoned briefs), and `docs/progress/` (per-agent checkpoints). Output a
+  one-screen summary:
+  ```
+  Conclave Project Status — {project-name}
+  Active pipelines:
+    • {feature}    {skill}   stage {N}/{M}    last touched {time}    next: {next_action}
+    • ...
+  Recently completed (last 7 days):
+    • {feature}    {skill}   completed {date}    artifact: {path}
+  Abandoned (no checkpoint update >7 days):
+    • {feature}    {skill}   last touched {date}    last status: {status}    suggestion: resume or archive
+  Standalone progress (granular skills, no pipeline):
+    • {feature}    {skill}   {status}    {time}
+  ```
+  Do NOT spawn any team. This is a read-only status surface — the answer to "what's running in this project right now?"
+
 ## When to use which "review" skill
 
 Six skills do code review or audit. Pick by the trigger, not the team name.
@@ -65,15 +82,22 @@ These flags are accepted by all multi-agent skills (skip for single-agent skills
 
 `plan-product` also accepts:
 
-| Flag     | Values           | Default | Description                                                                     |
-| -------- | ---------------- | ------- | ------------------------------------------------------------------------------- |
-| `--full` | (flag, no value) | off     | Dedicated skeptic for all 5 stages (default: Stages 1-3 use Lead Inline Review) |
+| Flag                 | Values           | Default | Description                                                                          |
+| -------------------- | ---------------- | ------- | ------------------------------------------------------------------------------------ |
+| `--lite-skeptic`     | (flag, no value) | off     | Opt OUT of dedicated skeptic on Stages 1-3 (fall back to Lead Inline Review). Cheap. |
+| `--refresh`          | (flag, no value) | off     | Force re-run of detected stages even if FOUND.                                       |
+| `--refresh-after Nd` | days as int      | none    | Re-run a stage if its artifact's `updated` is older than N days.                     |
+
+**Default skeptic mode (4.0.0):** dedicated product-skeptic gates ALL five stages of `plan-product`. Use
+`--lite-skeptic` only for cheap exploratory iteration.
 
 Examples:
 
 ```
-/write-spec my-feature --max-iterations 5
-/plan-product new auth-redesign --full
+/conclave:write-spec my-feature --max-iterations 5
+/conclave:plan-product new auth-redesign
+/conclave:plan-product new auth-redesign --lite-skeptic   # cheap iteration
+/conclave:research-market saas-billing --refresh-after 7d  # re-run if stale
 ```
 
 ## The Conclave

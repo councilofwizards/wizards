@@ -3,7 +3,7 @@ name: manage-roadmap
 description: >
   Prioritize and maintain the product roadmap. Optionally ingest new items from ideation or research artifacts. Analyze
   dependencies, resolve conflicts, and update priorities.
-argument-hint: "[--light] [status | reprioritize | ingest <source> | <item-id> | (empty for review)]"
+argument-hint: "<item-or-empty> [status | ingest <source> | reprioritize] [--light] [--max-iterations N]"
 category: planning
 tags: [roadmap, prioritization, backlog]
 ---
@@ -22,13 +22,52 @@ skill to a sub-Task agent. Run the orchestration here in the primary thread and 
 
 ## Bootstrap Check
 
-Before proceeding to Setup, verify the project is bootstrapped for conclave. Check whether `docs/` exists at the
-working-directory root. If it does NOT, abort with:
+Before proceeding to Setup, verify the project is bootstrapped for conclave. Check that ALL of the following exist at
+the working-directory root:
 
-> "This project hasn't been bootstrapped for conclave. Run `/conclave:setup-project` first, then re-invoke this skill."
+- `docs/`
+- `docs/roadmap/`
+- `docs/templates/artifacts/`
 
-If `docs/` exists, proceed to Setup. (The `mkdir`-if-missing safety net in Setup remains as a backstop for projects that
-are partially bootstrapped, but the user-facing message above ensures they know what to run.)
+If any are missing, abort with:
+
+> "This project isn't fully bootstrapped for conclave (missing: `<list>`). Run `/conclave:setup-project` first, then
+> re-invoke this skill."
+
+If all exist, proceed to Setup. (The `mkdir`-if-missing safety net in Setup remains as a backstop, but the user-facing
+message above prevents partial-bootstrap silent failures.)
+
+## Threshold Check
+
+After Bootstrap Check passes and the skill has parsed `$ARGUMENTS`, output a Threshold Check **before** spawning any
+team. This makes the skill's empty-state, resume-state, and named-arg behavior visible to the user.
+
+**Format** — emit exactly five lines, in this order:
+
+```
+[skill-name] — Threshold Check
+  Mode resolved:        {empty | resume | named:<arg> | subcommand:<x>}
+  Checkpoints found:    {none | <N> in_progress | <N> awaiting_review | <N> blocked}
+  Required input:       {artifact-type at expected-path — FOUND/STALE/NOT_FOUND/N_A}
+  Decision:             {abort with next-step | resume from <stage> | proceed with <topic>}
+```
+
+**Behavior on user silence:** the default action is **proceed**. The user can interrupt at any time by typing in chat.
+Skills MUST NOT block on silent timeouts.
+
+**Override semantics** (skills should accept these as conventional follow-up arguments):
+
+- Reply `abort` — skill stops, no team spawned
+- Reply `--refresh` (or `--refresh <stage>`) — re-run the named stage even if its artifact is FOUND
+- Reply `use <other-arg>` — re-resolve mode against the new argument
+
+**When the Threshold Check decides "abort with next-step":** include the next-step command in the abort message.
+Example:
+
+> `Decision: abort with next-step — no `technical-spec`found for "auth-redesign". Run`/conclave:write-spec
+> auth-redesign`first, or`/conclave:plan-product new auth-redesign` for the full pipeline.`
+
+**Exemptions:** single-agent skills (`setup-project`, `wizard-guide`) skip the Threshold Check.
 
 <!-- END SHARED: orchestrator-preamble -->
 
@@ -127,8 +166,14 @@ Based on $ARGUMENTS:
 - **"status"**: Read all checkpoint files for this skill and generate a consolidated status report. Do NOT spawn any
   agents. Read `docs/progress/` files with `team: "manage-roadmap"` in their frontmatter. If none exist, report "No
   active or recent sessions found."
-- **Empty/no args**: First, scan `docs/progress/` for incomplete checkpoints with `team: "manage-roadmap"`. If found,
-  **resume from the last checkpoint**. If no incomplete checkpoints exist, proceed with a general roadmap health review.
+- **Empty/no args**: First, scan `docs/progress/` for incomplete checkpoints with `team: "manage-roadmap"`. **Output the
+  Threshold Check** (per `plugins/conclave/shared/orchestrator-preamble.md`) before spawning any team. The Threshold
+  Check makes the resolved mode, checkpoint state, required input availability, and decision visible to the user.
+  Default action on user silence is **proceed**; the user can interrupt at any time. The Threshold Check MUST name what
+  was inferred and from where (e.g., "No checkpoints found; inferring scope as full roadmap-health review across
+  docs/roadmap/ (N items, last updated 5 days ago). Use this? proceed, reprioritize, ingest <file>, or <item-id>."). If
+  found, **resume from the last checkpoint**. If no incomplete checkpoints exist, proceed with a general roadmap health
+  review.
 - **"reprioritize"**: Full roadmap reassessment. Analyst evaluates all items, Lead reprioritizes.
 - **"ingest [source]"**: Read the specified artifact (typically a product-ideas file from `docs/ideas/`) and create new
   roadmap items from it.
@@ -145,11 +190,11 @@ If `$ARGUMENTS` begins with `--light`, strip the flag and enable lightweight mod
 
 ## Spawn the Team
 
-**Run ID:** Before proceeding, generate a 4-character lowercase hex string (e.g., `a3f7`) as the **run ID** for this
+**Run ID:** Before proceeding, generate a 8-character lowercase hex string (e.g., `a3f7b91d`) as the **run ID** for this
 invocation. Append `-{run-id}` to the `team_name` and to every agent `name` in the steps below (e.g.,
-`team_name: "my-team-a3f7"`, `name: "agent-a3f7"`). When constructing each agent's spawn prompt, prepend a **Teammate
-Roster** listing every teammate's suffixed `name` so agents can address each other via `SendMessage`. This prevents
-collisions between concurrent runs.
+`team_name: "my-team-a3f7b91d"`, `name: "agent-a3f7b91d"`). When constructing each agent's spawn prompt, prepend a
+**Teammate Roster** listing every teammate's suffixed `name` so agents can address each other via `SendMessage`. This
+prevents collisions between concurrent runs.
 
 **Step 1:** Call `TeamCreate` with `team_name: "manage-roadmap"`. **Step 2:** Call `TaskCreate` to define work items
 from the Orchestration Flow below. **Step 3:** Spawn each teammate using the `Agent` tool with
@@ -173,10 +218,13 @@ from the Orchestration Flow below. **Step 3:** Spawn each teammate using the `Ag
 5. If analysis is insufficient, send specific feedback and have the analyst iterate
 6. **Team Lead only**: Make prioritization decisions and write updated roadmap items to `docs/roadmap/`
 7. **Team Lead only**: For new items (from ingest), create new files following existing roadmap conventions (frontmatter
-   with title, status, priority, category, effort, impact, dependencies, created, updated)
+   with title, status, priority, category, effort, impact, dependencies, created, updated,
+   `next_action: "/conclave:write-stories {feature}"` where `{feature}` is the roadmap-item slug)
 8. **Team Lead only**: Write cost summary to `docs/progress/{skill}-{feature}-{timestamp}-cost-summary.md`
 9. **Team Lead only**: Write end-of-session summary to `docs/progress/{feature}-summary.md` using the format from
    `docs/progress/_template.md`
+10. Report: `"Roadmap updated. Items written to docs/roadmap/. Next: /conclave:write-stories {feature}"` (substitute the
+    highest-priority new/updated item's slug for `{feature}`; if multiple items, list each)
 
 ## Critical Rules
 

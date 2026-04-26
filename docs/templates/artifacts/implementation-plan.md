@@ -1,6 +1,7 @@
 ---
 type: "implementation-plan"
 feature: ""
+next_action: "" # set on approval to "/conclave:build-implementation <feature>" or "/conclave:build-product <feature>"
 status: "draft" # draft | reviewed | approved | consumed
 source_spec: "" # path to technical spec
 sprint_contract: "" # optional: path to signed sprint contract

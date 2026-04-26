@@ -1,6 +1,7 @@
 ---
 type: "product-ideas"
 topic: ""
+next_action: "" # set on approval to "/conclave:manage-roadmap ingest <path-to-this-file>"
 status: "draft" # draft | reviewed | approved | consumed
 approved_by: "" # skeptic role that approved
 generated: ""

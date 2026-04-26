@@ -1,7 +1,11 @@
 ---
 type: "sprint-contract"
 feature: ""
-status: "draft" # draft | reviewed | approved | consumed (sprint contracts use 'approved' as their signed state)
+next_action: "" # set on signing to "/conclave:build-implementation <feature>" or "/conclave:build-product <feature>"
+status: "draft" # draft | negotiating | signed | superseded
+# NOTE: sprint-contract uses its own state vocabulary (signed = the binding state). Other artifacts use
+# draft → reviewed → approved → consumed. This is intentional — "signed" matches the legal-contract metaphor and is
+# unambiguous against the 4-state vocabulary used elsewhere.
 signed-by: [] # e.g. ["planning-lead", "plan-skeptic"] or ["implementation-coordinator", "quality-skeptic"]
 created: ""
 updated: ""

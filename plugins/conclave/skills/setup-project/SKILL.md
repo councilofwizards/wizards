@@ -95,6 +95,8 @@ docs/stack-hints/
 docs/research/
 docs/ideas/
 docs/templates/artifacts/
+docs/continues/             # per-feature pipeline-recovery briefs (CONTINUE.md scoping)
+docs/continues/_archive/    # completed/abandoned recovery briefs
 ```
 
 For each directory that is newly created and empty, add a `.gitkeep` file so git tracks it. Do not add `.gitkeep`

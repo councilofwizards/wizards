@@ -97,10 +97,9 @@ Questions Raised:
    Resolution required: [Edit | Defer | Escalate]
 2. ...
 
-Verdict: APPROVED | REJECTED | APPROVED_WITH_CAVEATS
+Verdict: APPROVED | REJECTED | ESCALATE
 [If REJECTED:] Each unresolved question must be addressed before re-submission.
-[If APPROVED_WITH_CAVEATS:] Caveats noted for the Forge Master.
-[If ESCALATE:] See plugins/conclave/shared/skeptic-protocol.md.
+[If ESCALATE:] See plugins/conclave/shared/skeptic-protocol.md — fired when the Nth rejection cites the same root cause.
 ```
 
 ## Write Safety

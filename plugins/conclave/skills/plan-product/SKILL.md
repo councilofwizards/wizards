@@ -3,7 +3,7 @@ name: plan-product
 description: >
   Invoke the Product Team to review the roadmap, research opportunities, define requirements, and create implementation
   specs. Use when you need to plan new features, reprioritize the backlog, or refine existing specs.
-argument-hint: "[--light] [status | new <idea> | review <spec-name> | reprioritize | (empty for general review)]"
+argument-hint: "<topic-or-empty> [status | full | review <spec-name>] [--light] [--max-iterations N]"
 category: engineering
 tags: [planning, pipeline, product-strategy]
 ---
@@ -23,13 +23,52 @@ skill to a sub-Task agent. Run the orchestration here in the primary thread and 
 
 ## Bootstrap Check
 
-Before proceeding to Setup, verify the project is bootstrapped for conclave. Check whether `docs/` exists at the
-working-directory root. If it does NOT, abort with:
+Before proceeding to Setup, verify the project is bootstrapped for conclave. Check that ALL of the following exist at
+the working-directory root:
 
-> "This project hasn't been bootstrapped for conclave. Run `/conclave:setup-project` first, then re-invoke this skill."
+- `docs/`
+- `docs/roadmap/`
+- `docs/templates/artifacts/`
 
-If `docs/` exists, proceed to Setup. (The `mkdir`-if-missing safety net in Setup remains as a backstop for projects that
-are partially bootstrapped, but the user-facing message above ensures they know what to run.)
+If any are missing, abort with:
+
+> "This project isn't fully bootstrapped for conclave (missing: `<list>`). Run `/conclave:setup-project` first, then
+> re-invoke this skill."
+
+If all exist, proceed to Setup. (The `mkdir`-if-missing safety net in Setup remains as a backstop, but the user-facing
+message above prevents partial-bootstrap silent failures.)
+
+## Threshold Check
+
+After Bootstrap Check passes and the skill has parsed `$ARGUMENTS`, output a Threshold Check **before** spawning any
+team. This makes the skill's empty-state, resume-state, and named-arg behavior visible to the user.
+
+**Format** — emit exactly five lines, in this order:
+
+```
+[skill-name] — Threshold Check
+  Mode resolved:        {empty | resume | named:<arg> | subcommand:<x>}
+  Checkpoints found:    {none | <N> in_progress | <N> awaiting_review | <N> blocked}
+  Required input:       {artifact-type at expected-path — FOUND/STALE/NOT_FOUND/N_A}
+  Decision:             {abort with next-step | resume from <stage> | proceed with <topic>}
+```
+
+**Behavior on user silence:** the default action is **proceed**. The user can interrupt at any time by typing in chat.
+Skills MUST NOT block on silent timeouts.
+
+**Override semantics** (skills should accept these as conventional follow-up arguments):
+
+- Reply `abort` — skill stops, no team spawned
+- Reply `--refresh` (or `--refresh <stage>`) — re-run the named stage even if its artifact is FOUND
+- Reply `use <other-arg>` — re-resolve mode against the new argument
+
+**When the Threshold Check decides "abort with next-step":** include the next-step command in the abort message.
+Example:
+
+> `Decision: abort with next-step — no `technical-spec`found for "auth-redesign". Run`/conclave:write-spec
+> auth-redesign`first, or`/conclave:plan-product new auth-redesign` for the full pipeline.`
+
+**Exemptions:** single-agent skills (`setup-project`, `wizard-guide`) skip the Threshold Check.
 
 <!-- END SHARED: orchestrator-preamble -->
 
@@ -127,9 +166,9 @@ this in recovery messages.
 
 ### CONTINUE.md Protocol
 
-The Team Lead maintains a pipeline-level recovery brief at `docs/CONTINUE.md`. This file aggregates per-agent checkpoint
-state into a single, human-readable document. CONTINUE.md is **advisory** — agent checkpoint files and artifact
-frontmatter remain ground truth. If CONTINUE.md and ground truth conflict, trust ground truth.
+The Team Lead maintains a pipeline-level recovery brief at `docs/continues/{topic}.md`. This file aggregates per-agent
+checkpoint state into a single, human-readable document. CONTINUE.md is **advisory** — agent checkpoint files and
+artifact frontmatter remain ground truth. If CONTINUE.md and ground truth conflict, trust ground truth.
 
 **Schema** — YAML frontmatter (all fields mandatory):
 
@@ -178,7 +217,12 @@ Based on $ARGUMENTS:
   agents. Read `docs/progress/` files with `team: "plan-product"` in their frontmatter, parse their YAML metadata, and
   output a formatted status summary. If no checkpoint files exist for this skill, report "No active or recent sessions
   found."
-- **Empty/no args**: First, check if `docs/CONTINUE.md` exists. If it exists, read its frontmatter:
+- **Empty/no args**: **Output the Threshold Check** (per `plugins/conclave/shared/orchestrator-preamble.md`) before
+  spawning any team. The Threshold Check makes the resolved mode, checkpoint state, required input availability, and
+  decision visible to the user. Default action on user silence is **proceed**; the user can interrupt at any time. The
+  Threshold Check MUST name what was inferred and from where (e.g., "Inferring topic from most-relevant in-flight
+  artifacts: docs/specs/auth/stories.md (no spec.md). Use this? proceed, new <idea>, review <spec>, or reprioritize.").
+  Then, check if `docs/continues/{topic}.md` exists. If it exists, read its frontmatter:
   - If `status: complete` — pipeline already finished. Report "Pipeline complete" and exit.
   - If `status: in_progress` — read the Stage Map and Checkpoint Index. For COMPLETE stages, skip (confirm via artifact
     detection). For PARTIAL stages, read the Compensating Action and follow it (re-spawn agents per Checkpoint Index
@@ -186,8 +230,8 @@ Based on $ARGUMENTS:
     from scratch). For PENDING stages, run normally when reached. Use the `flags` field to restore original invocation
     flags. Proceed with existing artifact detection as confirmation (CONTINUE.md is the routing hint; artifact
     frontmatter is ground truth).
-  - If `docs/CONTINUE.md` does not exist, fall through to existing behavior below. Then, scan `docs/progress/` for
-    checkpoint files with `team: "plan-product"` and `status` of `in_progress`, `blocked`, or `awaiting_review`. If
+  - If `docs/continues/{topic}.md` does not exist, fall through to existing behavior below. Then, scan `docs/progress/`
+    for checkpoint files with `team: "plan-product"` and `status` of `in_progress`, `blocked`, or `awaiting_review`. If
     found, **resume from the last checkpoint** — re-spawn the relevant agents with their checkpoint content as context.
     If no incomplete checkpoints exist, run artifact detection to determine which stages are needed for the most
     relevant topic/feature. Execute the pipeline from the earliest missing stage. If no clear target exists, assess
@@ -203,14 +247,14 @@ Parse the following flags from `$ARGUMENTS` before mode resolution. Strip recogn
 mode argument (topic, spec-name, etc.).
 
 - **`--light`**: Enable lightweight mode (existing behavior, see Lightweight Mode section)
-- **`--full`**: Enable dedicated product-skeptic for all five stages (see Full Skeptic Mode below). If absent, Stages
-  1-3 use Lead Inline Review (current default).
+- **`--lite-skeptic`** _(new in 4.0.0)_: Opt OUT of dedicated product-skeptic on Stages 1-3, falling back to Lead Inline
+  Review. **Default behavior is now dedicated skeptic on all five stages** (the former `--full` mode is now default).
+  Use `--lite-skeptic` only for cheap exploratory iteration where Sonnet self-review is acceptable.
 - **`--max-iterations N`**: Configurable skeptic rejection ceiling (see Group B — P3-26). Default: 3.
 - **`--checkpoint-frequency [every-step|milestones-only|final-only]`**: Checkpoint cadence (see Group D — P3-30).
   Default: every-step.
 
-All flags are independent and composable. `--light` affects model selection, `--full` affects skeptic mode — they do not
-conflict.
+All flags are independent and composable.
 
 ### Artifact Detection
 
@@ -237,6 +281,10 @@ For each artifact type, check:
 - **STALE**: Re-run the stage to refresh (research-findings only, based on expires field).
 - **INCOMPLETE**: Re-run the stage to complete the artifact.
 - **NOT_FOUND**: Must run the stage.
+
+**Print the Threshold Check** showing every detected artifact's status (FOUND/STALE/INCOMPLETE/NOT_FOUND/N_A) and the
+Decision (which stages will run, which will skip, with rationale). User can override with `--refresh` (re-run all
+detected) or `--refresh-after Nd` (re-run if older than N days).
 
 Report artifact detection results to the user before proceeding:
 
@@ -266,11 +314,11 @@ mode:
 
 ## Spawn the Team
 
-**Run ID:** Before proceeding, generate a 4-character lowercase hex string (e.g., `a3f7`) as the **run ID** for this
+**Run ID:** Before proceeding, generate a 8-character lowercase hex string (e.g., `a3f7b91d`) as the **run ID** for this
 invocation. Append `-{run-id}` to the `team_name` and to every agent `name` in the steps below (e.g.,
-`team_name: "my-team-a3f7"`, `name: "agent-a3f7"`). When constructing each agent's spawn prompt, prepend a **Teammate
-Roster** listing every teammate's suffixed `name` so agents can address each other via `SendMessage`. This prevents
-collisions between concurrent runs.
+`team_name: "my-team-a3f7b91d"`, `name: "agent-a3f7b91d"`). When constructing each agent's spawn prompt, prepend a
+**Teammate Roster** listing every teammate's suffixed `name` so agents can address each other via `SendMessage`. This
+prevents collisions between concurrent runs.
 
 **Step 1:** Call `TeamCreate` with `team_name: "plan-product"`. **Step 2:** Call `TaskCreate` to define work items from
 the Orchestration Flow below. **Step 3:** Spawn agents stage-by-stage as described in the Orchestration Flow. Each agent
@@ -358,21 +406,21 @@ specified below.
 Execute stages sequentially. Each stage must complete before the next begins. Skip stages where artifacts are FOUND per
 artifact detection.
 
-### Full Skeptic Mode (`--full`)
+### Skeptic Mode (default: dedicated, `--lite-skeptic` to opt out)
 
-When `--full` is present:
+**Default behavior (4.0.0):** dedicated product-skeptic gates all five stages. The Lead-as-Skeptic concession on Stages
+1-3 was the largest quality lever in the codebase and is now closed by default.
 
 1. Spawn product-skeptic at session start (before Stage 1), not at Stage 4.
-2. Report to user: "Full mode: dedicated product-skeptic active for all five stages"
-3. For each of Stages 1-3, replace Lead-as-Skeptic inline review with a product-skeptic gate:
+2. Report to user: "Dedicated product-skeptic active for all five stages."
+3. For each of Stages 1-3, the product-skeptic gates the stage's artifact:
    - After the stage's agents complete their work and the Lead synthesizes the artifact, route the artifact to
      product-skeptic via `SendMessage` with a `REVIEW REQUEST`.
-   - product-skeptic reviews and issues `APPROVED` or `REJECTED` with specific feedback — same verdict format as Stages
-     4-5.
-   - On `REJECTED`, iterate with the same deadlock protocol (N rejections, default 3).
+   - product-skeptic issues `APPROVED` or `REJECTED` per `plugins/conclave/shared/skeptic-protocol.md`.
+   - On `REJECTED`, iterate with the deadlock protocol (N rejections, default 3 → ESCALATE).
 4. Stages 4-5 are unchanged — product-skeptic already handles those.
-5. **Eval examples injection (when `--full` active)**: Before spawning product-skeptic, check whether
-   `.claude/conclave/eval-examples/` exists and contains `.md` files. If found, format them as:
+5. **Eval examples injection**: Before spawning product-skeptic, check whether `.claude/conclave/eval-examples/` exists
+   and contains `.md` files. If found, format them as:
 
    ```
    ## Evaluator Examples (user-provided)
@@ -386,89 +434,88 @@ When `--full` is present:
    {contents}
    ```
 
-   Inject this block into product-skeptic's spawn prompt, prepended before the role prompt. This applies to all stages
-   when `--full` is active. If no eval example files are found, omit the block entirely — no change in behavior.
+   Inject this block into product-skeptic's spawn prompt, prepended before the role prompt. If no eval example files are
+   found, omit the block entirely — no change in behavior.
 
-When `--full` is absent:
+**When `--lite-skeptic` is present (opt-out):**
 
-- Stages 1-3 use Lead-as-Skeptic (current behavior, unchanged).
-- product-skeptic spawns at Stage 4 (current behavior, unchanged).
+- Stages 1-3 fall back to Lead Inline Review (Sonnet-class self-review). Cheap; lower quality ceiling.
+- product-skeptic spawns at Stage 4 only.
+- Use only for cheap exploratory iteration where downstream rigor is not yet load-bearing.
 
 ### Stage 1: Market Research
 
 Skip if research-findings FOUND for this topic.
 
-0. **CONTINUE.md stage-begin update**: Update `docs/CONTINUE.md` — set `stage: 1`, Stage Map row 1 to PARTIAL,
+0. **CONTINUE.md stage-begin update**: Update `docs/continues/{topic}.md` — set `stage: 1`, Stage Map row 1 to PARTIAL,
    Checkpoint Index with market-researcher and customer-researcher at "not yet created". Rewrite the full file.
 1. Create tasks for market-researcher and customer-researcher based on the topic
 2. Spawn both agents — they work in parallel
-3. **Review gate** (conditional):
-   - If `--full`: Route synthesized findings to product-skeptic via `SendMessage` with `REVIEW REQUEST`. product-skeptic
-   reviews for completeness, evidence quality, gap identification. On `REJECTED`, iterate (deadlock cap: N rejections).
-   On `APPROVED`, proceed.
-   <!-- SCAFFOLD: Lead performs inline skeptic review instead of spawning dedicated skeptic | ASSUMPTION: Sonnet-class model sufficient for early-stage research review; dedicated Opus skeptic adds cost without quality gain for research/ideation | TEST REMOVAL: benchmark --full vs. default quality on the same pipeline topic -->
-   - If default (no `--full`): **Lead-as-Skeptic**: Review all findings yourself. Challenge conclusions, demand
-     evidence, identify gaps. If findings are insufficient, send specific feedback via SendMessage and have agents
-     iterate.
+3. **Review gate** (default: dedicated skeptic):
+   - **Default**: Route synthesized findings to product-skeptic via `SendMessage` with `REVIEW REQUEST`. product-skeptic
+     reviews for completeness, evidence quality, gap identification. On `REJECTED`, iterate per
+     `plugins/conclave/shared/skeptic-protocol.md`. On `APPROVED`, proceed.
+   - If `--lite-skeptic` is present: **Lead Inline Review**: Review all findings yourself. Challenge conclusions, demand
+     evidence, identify gaps. Lower quality ceiling — use only for cheap exploratory iteration.
 4. **Team Lead only**: Synthesize findings and write the research artifact to `docs/research/{topic}-research.md`
    conforming to `docs/templates/artifacts/research-findings.md`
 5. Set frontmatter: `status: "approved"`, `approved_by: "{skeptic-name-used}"`, `expires` to 30 days from today,
-   `updated` to today.
+   `next_action: "/conclave:plan-product {topic}"`, `updated` to today.
 6. **Verification**: Re-read the file. Confirm `type: "research-findings"`, `topic` matches, `status: "approved"`,
    `expires` is a future date. If any check fails, fix and re-write.
-7. Report: `"Stage 1 (Research) complete. Artifact: docs/research/{topic}-research.md"`
+7. Report:
+   `"Stage 1 (Research) complete. Artifact: docs/research/{topic}-research.md. Next: /conclave:plan-product {topic}"`
 
 ### Stage 2: Product Ideation
 
 Skip if product-ideas FOUND for this topic.
 
-0. **CONTINUE.md stage-begin update**: Update `docs/CONTINUE.md` — set `stage: 2`, Stage Map row 2 to PARTIAL,
+0. **CONTINUE.md stage-begin update**: Update `docs/continues/{topic}.md` — set `stage: 2`, Stage Map row 2 to PARTIAL,
    Checkpoint Index with idea-generator and idea-evaluator at "not yet created". Rewrite the full file.
 1. Share the research-findings artifact with idea-generator and idea-evaluator
 2. Spawn both agents — generator produces ideas, evaluator scores and ranks them
-3. **Review gate** (conditional):
-   - If `--full`: Route synthesized ideas to product-skeptic via `SendMessage` with `REVIEW REQUEST`. product-skeptic
+3. **Review gate** (default: dedicated skeptic):
+   - **Default**: Route synthesized ideas to product-skeptic via `SendMessage` with `REVIEW REQUEST`. product-skeptic
      reviews for idea viability, evidence for impact claims, weak or duplicate ideas, alignment with research. On
-     `REJECTED`, iterate (deadlock cap: N rejections). On `APPROVED`, proceed.
-   - If default (no `--full`): **Lead-as-Skeptic**: Review all ideas and evaluations. Challenge viability, demand
-     evidence for impact claims, filter out weak ideas. If quality is insufficient, send specific feedback and have
-     agents iterate.
+     `REJECTED`, iterate per `plugins/conclave/shared/skeptic-protocol.md`. On `APPROVED`, proceed.
+   - If `--lite-skeptic` is present: **Lead Inline Review**: Review all ideas and evaluations yourself. Challenge
+     viability, demand evidence for impact claims, filter out weak ideas. Lower quality ceiling.
 4. **Team Lead only**: Write the ideas artifact to `docs/ideas/{topic}-ideas.md` conforming to
    `docs/templates/artifacts/product-ideas.md`
 5. Set frontmatter: `status: "approved"`, `approved_by: "{skeptic-name-used}"`, `source_research` to the path of the
-   research artifact used, `updated` to today.
+   research artifact used, `next_action: "/conclave:plan-product {topic}"`, `updated` to today.
 6. **Verification**: Re-read the file. Confirm `type: "product-ideas"`, `topic` matches, `status: "approved"`,
    `source_research` points at a real file. If any check fails, fix and re-write.
-7. Report: `"Stage 2 (Ideation) complete. Artifact: docs/ideas/{topic}-ideas.md"`
+7. Report: `"Stage 2 (Ideation) complete. Artifact: docs/ideas/{topic}-ideas.md. Next: /conclave:plan-product {topic}"`
 
 ### Stage 3: Roadmap Management
 
 Skip if roadmap items already exist for this topic.
 
-0. **CONTINUE.md stage-begin update**: Update `docs/CONTINUE.md` — set `stage: 3`, Stage Map row 3 to PARTIAL,
+0. **CONTINUE.md stage-begin update**: Update `docs/continues/{topic}.md` — set `stage: 3`, Stage Map row 3 to PARTIAL,
    Checkpoint Index with analyst at "not yet created". Rewrite the full file.
 1. Share the product-ideas artifact with analyst
 2. Spawn analyst to evaluate dependencies, effort/impact, and conflicts against the existing roadmap
-3. **Review gate** (conditional):
-   - If `--full`: Route synthesized roadmap analysis to product-skeptic via `SendMessage` with `REVIEW REQUEST`.
+3. **Review gate** (default: dedicated skeptic):
+   - **Default**: Route synthesized roadmap analysis to product-skeptic via `SendMessage` with `REVIEW REQUEST`.
      product-skeptic reviews for dependency accuracy, priority rationale, effort estimate consistency, conflicts with
-     existing roadmap items. On `REJECTED`, iterate (deadlock cap: N rejections). On `APPROVED`, proceed.
-   - If default (no `--full`): **Lead-as-Skeptic**: Review analysis. Challenge priority rationale, demand evidence for
-     impact claims, verify dependency chains. If analysis is insufficient, send specific feedback and have the analyst
-     iterate.
+     existing roadmap items. On `REJECTED`, iterate per `plugins/conclave/shared/skeptic-protocol.md`.
+   - If `--lite-skeptic` is present: **Lead Inline Review**: Review analysis yourself. Challenge priority rationale,
+     demand evidence for impact claims, verify dependency chains. Lower quality ceiling.
 4. **Team Lead only**: Write updated roadmap items to `docs/roadmap/` conforming to
    `docs/templates/artifacts/roadmap-item.md`. Each item must set `type: "roadmap-item"`, `topic` matching this run,
-   `source_ideas` pointing at the ideas artifact, `status: "approved"`, `approved_by`, and `updated` to today.
+   `source_ideas` pointing at the ideas artifact, `status: "approved"`, `approved_by`,
+   `next_action: "/conclave:plan-product {topic}"`, and `updated` to today.
 5. **Verification**: Re-read each item. Confirm `type`, `topic`, `source_ideas`, `status`. If any check fails, fix and
    re-write. **Stage-3 detection rule**: this stage is FOUND on re-invocation iff at least one roadmap item exists with
    `source_ideas` pointing at the current ideas artifact AND `topic` matching.
-6. Report: `"Stage 3 (Roadmap) complete. Updated: docs/roadmap/"`
+6. Report: `"Stage 3 (Roadmap) complete. Updated: docs/roadmap/. Next: /conclave:plan-product {topic}"`
 
 ### Stage 4: User Stories
 
 Skip if user-stories FOUND for this feature.
 
-0. **CONTINUE.md stage-begin update**: Update `docs/CONTINUE.md` — set `stage: 4`, Stage Map row 4 to PARTIAL,
+0. **CONTINUE.md stage-begin update**: Update `docs/continues/{topic}.md` — set `stage: 4`, Stage Map row 4 to PARTIAL,
    Checkpoint Index with story-writer and product-skeptic at "not yet created". Rewrite the full file.
 1. Share roadmap items and research context with story-writer
 2. Spawn story-writer and product-skeptic
@@ -479,16 +526,17 @@ Skip if user-stories FOUND for this feature.
    skeptic? (y / provide guidance / abort)"_, wait for response. See `plugins/conclave/shared/skeptic-protocol.md`.
 6. **Team Lead only**: Write approved stories to `docs/specs/{feature}/stories.md` conforming to
    `docs/templates/artifacts/user-stories.md`. Set frontmatter: `status: "approved"`, `approved_by: "product-skeptic"`,
-   `source_roadmap_item` path, `updated` to today.
+   `source_roadmap_item` path, `next_action: "/conclave:plan-product {topic}"`, `updated` to today.
 7. **Verification**: Re-read the file. Confirm `type: "user-stories"`, `feature` matches, `status: "approved"`. If any
    check fails, fix and re-write.
-8. Report: `"Stage 4 (Stories) complete. Artifact: docs/specs/{feature}/stories.md"`
+8. Report:
+   `"Stage 4 (Stories) complete. Artifact: docs/specs/{feature}/stories.md. Next: /conclave:plan-product {topic}"`
 
 ### Stage 5: Technical Specification
 
 Skip if technical-spec FOUND for this feature.
 
-0. **CONTINUE.md stage-begin update**: Update `docs/CONTINUE.md` — set `stage: 5`, Stage Map row 5 to PARTIAL,
+0. **CONTINUE.md stage-begin update**: Update `docs/continues/{topic}.md` — set `stage: 5`, Stage Map row 5 to PARTIAL,
    Checkpoint Index with architect, dba, and product-skeptic at current status. Rewrite the full file.
 1. Share user stories and research context with architect and dba
 2. Spawn architect and dba (if not already spawned) — they work in parallel
@@ -503,11 +551,12 @@ Skip if technical-spec FOUND for this feature.
 7. **Team Lead only**: Aggregate into final spec at `docs/specs/{feature}/spec.md` using `docs/specs/_template.md`.
    Populate all sections: Summary, Problem, Solution, Constraints, Out of Scope, Files to Modify, Success Criteria. Set
    frontmatter: `type: "technical-spec"`, `feature` slug, `status: "approved"`, `approved_by: "product-skeptic"`,
-   `updated` to today.
+   `next_action: "/conclave:build-product {feature}"`, `updated` to today.
 8. **Team Lead only**: Write any ADRs to `docs/architecture/`
 9. **Verification**: Re-read the spec. Confirm `type: "technical-spec"`, `feature`, `status: "approved"`. If any check
    fails, fix and re-write.
-10. Report: `"Stage 5 (Spec) complete. Artifact: docs/specs/{feature}/spec.md"`
+10. Report:
+    `"Stage 5 (Spec) complete. Artifact: docs/specs/{feature}/spec.md. Pipeline complete. Next: /conclave:build-product {feature}"`
 
 ### Between Stages
 
@@ -515,19 +564,19 @@ After each stage completes:
 
 1. Verify the expected artifact was produced (read the file, check frontmatter type and status fields)
 2. If the artifact is missing or invalid, report the failure and stop the pipeline
-3. **CONTINUE.md gate-close update**: Update `docs/CONTINUE.md` — set the completed stage's Stage Map row to COMPLETE
-   with the artifact path. Set Compensating Action to "Skip — artifact verified at [path]". Set frontmatter `stage` to
-   the next stage number (N+1), or N if this is the final stage. Refresh `heartbeat` and `last_action`. Re-read all
-   agent checkpoint files and refresh the Checkpoint Index. Rewrite the full file.
+3. **CONTINUE.md gate-close update**: Update `docs/continues/{topic}.md` — set the completed stage's Stage Map row to
+   COMPLETE with the artifact path. Set Compensating Action to "Skip — artifact verified at [path]". Set frontmatter
+   `stage` to the next stage number (N+1), or N if this is the final stage. Refresh `heartbeat` and `last_action`.
+   Re-read all agent checkpoint files and refresh the Checkpoint Index. Rewrite the full file.
 4. Report progress to the user
 
 ### Pipeline Completion
 
 After the final stage:
 
-0. **CONTINUE.md finalization**: Update `docs/CONTINUE.md` — set `status: complete`, all stages COMPLETE, `heartbeat` to
-   now, `last_action` to "Pipeline complete". Rewrite the full file. This fires before cost summary so that if the
-   session crashes during Pipeline Completion, CONTINUE.md already reflects completion.
+0. **CONTINUE.md finalization**: Update `docs/continues/{topic}.md` — set `status: complete`, all stages COMPLETE,
+   `heartbeat` to now, `last_action` to "Pipeline complete". Rewrite the full file. This fires before cost summary so
+   that if the session crashes during Pipeline Completion, CONTINUE.md already reflects completion.
 1. **Team Lead only**: Write cost summary to `docs/progress/plan-product-{topic}-{timestamp}-cost-summary.md`
 2. **Team Lead only**: Write end-of-session summary to `docs/progress/{topic}-summary.md` using the format from
    `docs/progress/_template.md`. Include: what was accomplished, what remains, blockers encountered, and which stages
@@ -584,10 +633,10 @@ The product-skeptic reviews specs for:
   suggest re-running the skill.
 - **Partial pipeline**: All completed stages' artifacts are preserved on disk. Re-running the pipeline will detect
   existing artifacts via frontmatter and resume from the correct stage.
-- **CONTINUE.md recovery**: If a session crashes, `docs/CONTINUE.md` contains the pipeline's last known state. A fresh
-  session reads CONTINUE.md in Determine Mode (see above) to route recovery. CONTINUE.md is a recovery hint — agent
-  checkpoint files and artifact frontmatter remain ground truth. If CONTINUE.md and ground truth diverge, trust ground
-  truth.
+- **CONTINUE.md recovery**: If a session crashes, `docs/continues/{topic}.md` contains the pipeline's last known state.
+  A fresh session reads CONTINUE.md in Determine Mode (see above) to route recovery. CONTINUE.md is a recovery hint —
+  agent checkpoint files and artifact frontmatter remain ground truth. If CONTINUE.md and ground truth diverge, trust
+  ground truth.
 
 ---
 

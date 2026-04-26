@@ -11,9 +11,16 @@ updated: "2026-04-03"
 
 ## Overview
 
-CONTINUE.md is a fixed-schema, human-readable recovery brief at the fixed path `docs/CONTINUE.md`. It is a materialized
-view over pipeline state — agent progress files are ground truth; CONTINUE.md is the index. The file is always rewritten
-in full (atomic writes, never appended). Format: YAML frontmatter + markdown body.
+> **CONTINUE.md SCOPING UPDATED 2026-04-26 (conclave 4.0.0):** the file path is no longer fixed at `docs/CONTINUE.md`.
+> It is now per-feature: `docs/continues/{feature-or-topic}.md` (for `build-product` use `{feature}`; for `plan-product`
+> use `{topic}`). Completed and abandoned briefs move to `docs/continues/_archive/{date}-{feature-or-topic}.md` at
+> pipeline-complete. The schema below is unchanged; only the path is per-instance. CONTINUE.md is pipeline-only;
+> granular skills do not produce one (they use checkpoint files only). The original "fixed path" wording is preserved
+> below for historical context.
+
+CONTINUE.md is a fixed-schema, human-readable recovery brief, originally at the fixed path `docs/CONTINUE.md` (now
+per-feature). It is a materialized view over pipeline state — agent progress files are ground truth; CONTINUE.md is the
+index. The file is always rewritten in full (atomic writes, never appended). Format: YAML frontmatter + markdown body.
 
 ---
 

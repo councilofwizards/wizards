@@ -2,6 +2,7 @@
 type: "research-findings"
 topic: "" # research topic or market segment
 feature: "" # feature name if scoped to a specific feature
+next_action: "" # set on approval to "/conclave:ideate-product <topic>"
 status: "draft" # draft | reviewed | approved | consumed
 approved_by: "" # skeptic role that approved
 generated: "" # YYYY-MM-DD

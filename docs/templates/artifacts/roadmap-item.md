@@ -3,9 +3,10 @@ type: "roadmap-item"
 title: ""
 topic: "" # the planning topic this item belongs to (matches the topic field in product-ideas)
 source_ideas: "" # path to product-ideas artifact this item was derived from
-status: "draft" # draft | reviewed | approved | consumed | in_progress | complete
+next_action: "" # static map: when status=approved, set to "/conclave:write-stories <feature>"; downstream skills set their own
+status: "draft" # draft | reviewed | approved | consumed | in_progress | complete | live | retired
 priority: "" # P1 | P2 | P3
-category: "" # core-framework | new-skills | developer-experience | quality-reliability | documentation
+category: "" # project-defined; e.g. "auth" | "billing" | "platform" | "growth". This is YOUR project's taxonomy, not the conclave's.
 effort: "" # small | medium | large
 impact: "" # low | medium | high
 dependencies: [] # list of roadmap-item titles or IDs this item depends on
@@ -35,3 +36,10 @@ updated: "" # YYYY-MM-DD
 ## Out of Scope
 
 <!-- What this item explicitly does NOT cover. Prevents scope creep during downstream planning. -->
+
+## Lifecycle Notes
+
+<!-- Optional. Track post-deploy state transitions:
+     - status: live (date) — feature shipped to production on YYYY-MM-DD; tracked at <link>
+     - status: retired (date) — feature removed YYYY-MM-DD; reason: <reason>
+     The conclave does not automate these transitions. The user marks them manually after deploy / removal. -->

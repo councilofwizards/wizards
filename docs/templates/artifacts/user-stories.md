@@ -1,6 +1,7 @@
 ---
 type: "user-stories"
 feature: ""
+next_action: "" # set on approval to "/conclave:write-spec <feature>"
 status: "draft" # draft | reviewed | approved | consumed
 source_roadmap_item: "" # path to roadmap item
 approved_by: ""

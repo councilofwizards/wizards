@@ -1,17 +1,15 @@
-<!-- This is the LEGACY spec template location. The canonical template now lives at
-     docs/templates/artifacts/technical-spec.md alongside the other artifact templates.
-     This file is kept for backwards-compatibility with skills that read docs/specs/_template.md;
-     it mirrors the canonical template. New consumers should read the canonical path. -->
-
 ---
-
-type: "technical-spec" title: "" feature: "" # slug used by build-product / build-implementation to locate this spec
+type: "technical-spec"
+title: ""
+feature: "" # slug used by build-product / build-implementation to locate this spec
 next_action: "" # set on approval to "/conclave:plan-implementation <feature>" or "/conclave:build-product <feature>"
-status: "draft" # draft | reviewed | approved | consumed priority: "" # P1 | P2 | P3 category: "" # project-defined;
-e.g. "auth" | "billing" | "platform" | "growth". This is YOUR project's taxonomy. approved_by: "" # agent or role that
-approved source_roadmap_item: "" # path to roadmap-item this spec implements (optional but recommended) created: "" #
-YYYY-MM-DD updated: "" # YYYY-MM-DD
-
+status: "draft" # draft | reviewed | approved | consumed
+priority: "" # P1 | P2 | P3
+category: "" # project-defined; e.g. "auth" | "billing" | "platform" | "growth". This is YOUR project's taxonomy.
+approved_by: "" # agent or role that approved
+source_roadmap_item: "" # path to roadmap-item this spec implements (optional but recommended)
+created: "" # YYYY-MM-DD
+updated: "" # YYYY-MM-DD
 ---
 
 # {Title} Specification

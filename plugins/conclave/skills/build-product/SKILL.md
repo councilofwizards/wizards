@@ -3,7 +3,7 @@ name: build-product
 description: >
   Invoke the Implementation Team to build a feature from an existing spec. Picks up the next ready item from the roadmap
   if no spec is specified. Resumes in-progress work if any exists.
-argument-hint: "[--light] [status | <spec-name> | review | (empty for next item)]"
+argument-hint: "<spec-or-empty> [status | review] [--light] [--max-iterations N]"
 category: engineering
 tags: [implementation, pipeline, quality-review]
 ---
@@ -22,13 +22,52 @@ skill to a sub-Task agent. Run the orchestration here in the primary thread and 
 
 ## Bootstrap Check
 
-Before proceeding to Setup, verify the project is bootstrapped for conclave. Check whether `docs/` exists at the
-working-directory root. If it does NOT, abort with:
+Before proceeding to Setup, verify the project is bootstrapped for conclave. Check that ALL of the following exist at
+the working-directory root:
 
-> "This project hasn't been bootstrapped for conclave. Run `/conclave:setup-project` first, then re-invoke this skill."
+- `docs/`
+- `docs/roadmap/`
+- `docs/templates/artifacts/`
 
-If `docs/` exists, proceed to Setup. (The `mkdir`-if-missing safety net in Setup remains as a backstop for projects that
-are partially bootstrapped, but the user-facing message above ensures they know what to run.)
+If any are missing, abort with:
+
+> "This project isn't fully bootstrapped for conclave (missing: `<list>`). Run `/conclave:setup-project` first, then
+> re-invoke this skill."
+
+If all exist, proceed to Setup. (The `mkdir`-if-missing safety net in Setup remains as a backstop, but the user-facing
+message above prevents partial-bootstrap silent failures.)
+
+## Threshold Check
+
+After Bootstrap Check passes and the skill has parsed `$ARGUMENTS`, output a Threshold Check **before** spawning any
+team. This makes the skill's empty-state, resume-state, and named-arg behavior visible to the user.
+
+**Format** — emit exactly five lines, in this order:
+
+```
+[skill-name] — Threshold Check
+  Mode resolved:        {empty | resume | named:<arg> | subcommand:<x>}
+  Checkpoints found:    {none | <N> in_progress | <N> awaiting_review | <N> blocked}
+  Required input:       {artifact-type at expected-path — FOUND/STALE/NOT_FOUND/N_A}
+  Decision:             {abort with next-step | resume from <stage> | proceed with <topic>}
+```
+
+**Behavior on user silence:** the default action is **proceed**. The user can interrupt at any time by typing in chat.
+Skills MUST NOT block on silent timeouts.
+
+**Override semantics** (skills should accept these as conventional follow-up arguments):
+
+- Reply `abort` — skill stops, no team spawned
+- Reply `--refresh` (or `--refresh <stage>`) — re-run the named stage even if its artifact is FOUND
+- Reply `use <other-arg>` — re-resolve mode against the new argument
+
+**When the Threshold Check decides "abort with next-step":** include the next-step command in the abort message.
+Example:
+
+> `Decision: abort with next-step — no `technical-spec`found for "auth-redesign". Run`/conclave:write-spec
+> auth-redesign`first, or`/conclave:plan-product new auth-redesign` for the full pipeline.`
+
+**Exemptions:** single-agent skills (`setup-project`, `wizard-guide`) skip the Threshold Check.
 
 <!-- END SHARED: orchestrator-preamble -->
 
@@ -163,9 +202,9 @@ this in recovery messages.
 
 ### CONTINUE.md Protocol
 
-The Team Lead maintains a pipeline-level recovery brief at `docs/CONTINUE.md`. This file aggregates per-agent checkpoint
-state into a single, human-readable document. CONTINUE.md is **advisory** — agent checkpoint files and artifact
-frontmatter remain ground truth. If CONTINUE.md and ground truth conflict, trust ground truth.
+The Team Lead maintains a pipeline-level recovery brief at `docs/continues/{feature}.md`. This file aggregates per-agent
+checkpoint state into a single, human-readable document. CONTINUE.md is **advisory** — agent checkpoint files and
+artifact frontmatter remain ground truth. If CONTINUE.md and ground truth conflict, trust ground truth.
 
 **Schema** — YAML frontmatter (all fields mandatory):
 
@@ -215,9 +254,12 @@ Based on $ARGUMENTS:
   output a formatted status summary. If no checkpoint files exist for this skill, report "No active or recent sessions
   found."
 - **Empty/no args**: First, scan `docs/progress/` for checkpoint files with `team: "build-product"` and `status` of
-  `in_progress`, `blocked`, or `awaiting_review`. If found, **resume from the last checkpoint** — re-spawn the relevant
-  agents with their checkpoint content as context. If no incomplete checkpoints exist, run artifact detection, then
-  execute the pipeline from the earliest missing stage. If no specs are ready for implementation, report:
+  `in_progress`, `blocked`, or `awaiting_review`. **Output the Threshold Check** (per
+  `plugins/conclave/shared/orchestrator-preamble.md`) before spawning any team. The Threshold Check makes the resolved
+  mode, checkpoint state, required input availability, and decision visible to the user. Default action on user silence
+  is **proceed**; the user can interrupt at any time. If found, **resume from the last checkpoint** — re-spawn the
+  relevant agents with their checkpoint content as context. If no incomplete checkpoints exist, run artifact detection,
+  then execute the pipeline from the earliest missing stage. If no specs are ready for implementation, report:
   `"No features ready for implementation. Run /plan-product to create a spec first."`
 - **"[spec-name]"**: Build the named spec through the full pipeline.
 - **"review"**: Run Stage 3 (Quality Review) only for the current implementation.
@@ -267,6 +309,10 @@ Sprint-contract detection logic:
 - **INCOMPLETE / IN_PROGRESS**: Resume the stage (re-spawn agents with checkpoint context).
 - **NOT_FOUND**: Must run the stage.
 
+**Print the Threshold Check** showing every detected artifact's status (FOUND/STALE/INCOMPLETE/NOT_FOUND/N_A) and the
+Decision (which stages will run, which will skip, with rationale). User can override with `--refresh` (re-run all
+detected) or `--refresh-after Nd` (re-run if older than N days).
+
 Report artifact detection results to the user before proceeding:
 
 ```
@@ -301,11 +347,11 @@ mode:
 
 ## Spawn the Team
 
-**Run ID:** Before proceeding, generate a 4-character lowercase hex string (e.g., `a3f7`) as the **run ID** for this
+**Run ID:** Before proceeding, generate a 8-character lowercase hex string (e.g., `a3f7b91d`) as the **run ID** for this
 invocation. Append `-{run-id}` to the `team_name` and to every agent `name` in the steps below (e.g.,
-`team_name: "my-team-a3f7"`, `name: "agent-a3f7"`). When constructing each agent's spawn prompt, prepend a **Teammate
-Roster** listing every teammate's suffixed `name` so agents can address each other via `SendMessage`. This prevents
-collisions between concurrent runs.
+`team_name: "my-team-a3f7b91d"`, `name: "agent-a3f7b91d"`). When constructing each agent's spawn prompt, prepend a
+**Teammate Roster** listing every teammate's suffixed `name` so agents can address each other via `SendMessage`. This
+prevents collisions between concurrent runs.
 
 **Step 1:** Call `TeamCreate` with `team_name: "build-product"`. **Step 2:** Call `TaskCreate` to define work items from
 the Orchestration Flow below. **Step 3:** Spawn agents stage-by-stage as described in the Orchestration Flow. Each agent
@@ -409,12 +455,14 @@ Skip if implementation-plan FOUND with status "approved".
 8. **Team Lead only**: Write the final plan to `docs/specs/{feature}/implementation-plan.md` conforming to
    `docs/templates/artifacts/implementation-plan.md`. Set frontmatter: `type: "implementation-plan"`, `feature` slug,
    `status: "approved"`, `approved_by: "plan-skeptic"`, `source_spec`,
-   `sprint_contract: "docs/specs/{feature}/sprint-contract.md"`, `updated` to today.
+   `sprint_contract: "docs/specs/{feature}/sprint-contract.md"`, `next_action: "/conclave:build-product {feature}"`,
+   `updated` to today.
 9. **Verification**: Re-read the file. Confirm `type: "implementation-plan"`, `feature`, `status: "approved"`,
    `sprint_contract` resolves to a real file. If any check fails, fix and re-write.
-10. **CONTINUE.md stage-begin update for Stage 2**: Update `docs/CONTINUE.md` — set `stage: 2`, Stage Map row 2 to
-    PARTIAL, Checkpoint Index entries for backend-eng / frontend-eng / quality-skeptic at "not yet created".
-11. Report: `"Stage 1 (Planning) complete. Artifact: docs/specs/{feature}/implementation-plan.md"`
+10. **CONTINUE.md stage-begin update for Stage 2**: Update `docs/continues/{feature}.md` — set `stage: 2`, Stage Map row
+    2 to PARTIAL, Checkpoint Index entries for backend-eng / frontend-eng / quality-skeptic at "not yet created".
+11. Report:
+    `"Stage 1 (Planning) complete. Artifact: docs/specs/{feature}/implementation-plan.md. Next: /conclave:build-product {feature}"`
 
 ### Stage 2: Build Implementation
 
@@ -457,7 +505,8 @@ Skip if build progress checkpoints show status "complete".
     - If BLOCKED → Lead escalates to human operator with the blocker details. Pipeline halts at QA gate.
 8.  Each agent writes progress to `docs/progress/{feature}-{role}.md`
 9.  Update roadmap status to 🔵 In progress (implementation)
-10. Report: `"Stage 2 (Build) complete. Code implemented, reviewed, and QA approved."`
+10. Report:
+    `"Stage 2 (Build) complete. Code implemented, reviewed, and QA approved. Next: Stage 3 (Quality Review) runs automatically."`
 
 ### Stage 3: Quality Review
 
@@ -475,9 +524,10 @@ Always runs — quality review should catch regressions even if a prior review e
    escalation.
 6. Update roadmap status to ✅ Complete (if review passes). If the implementation-plan or spec status is `approved`,
    advance to `consumed`.
-7. **CONTINUE.md stage-begin update for Stage 3**: Update `docs/CONTINUE.md` — set `stage: 3`, then on completion the
-   gate-close update marks it COMPLETE.
-8. Report: `"Stage 3 (Quality Review) complete. Feature approved for delivery."`
+7. **CONTINUE.md stage-begin update for Stage 3**: Update `docs/continues/{feature}.md` — set `stage: 3`, then on
+   completion the gate-close update marks it COMPLETE.
+8. Report:
+   `"Stage 3 (Quality Review) complete. Feature approved for delivery. Pipeline complete. Mark roadmap-item status: live in docs/roadmap/{item}.md when shipped."`
 
 ### Between Stages
 
